@@ -16,5 +16,4 @@ public class Module extends AbstractModule {
     public void configure() {
 
     }
-
 }

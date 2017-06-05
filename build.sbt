@@ -7,4 +7,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
 scalaVersion := "2.11.11"
 
-libraryDependencies += filters
+libraryDependencies ++= Seq(
+  filters,
+  "org.projectlombok" % "lombok" % "1.16.16" % "provided"
+)

@@ -1,10 +1,11 @@
 package controllers;
 
+import data.ReportData;
+import lombok.val;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
-
 import javax.inject.Inject;
 
 /**
@@ -24,14 +25,14 @@ public class ReportController extends Controller {
     }
 
     public Result reportPost() {
-        Form<ReportData> boundForm = reportForm.bindFromRequest();
+
+        val boundForm = reportForm.bindFromRequest();
+
         if (boundForm.hasErrors()) {
             return badRequest(views.html.report.form.render(boundForm));
         } else {
-            ReportData report = boundForm.get();
-            flash("success", "Report " + report);
+            flash("success", "Report " + boundForm.get());
             return redirect(routes.ReportController.reportGet());
         }
     }
-
 }
