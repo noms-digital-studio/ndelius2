@@ -1,14 +1,14 @@
 package data;
 
 import lombok.Data;
-import play.data.validation.Constraints;
+import play.data.validation.Constraints.Required;
 
 @Data
 public class ReportData {
 
-    @Constraints.Required
+    @Required
     private String name;
 
-    @Constraints.Required
+    @Required
     private Integer age;
 }
