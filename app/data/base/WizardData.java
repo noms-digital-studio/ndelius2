@@ -6,6 +6,7 @@ import data.annotations.RequiredOnPage;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class WizardData {
 
             try {
                 return field.getAnnotation(RequiredOnPage.class).value() <= pageNumber &&
-                        Strings.isNullOrEmpty(field.get(this).toString());
+                        Strings.isNullOrEmpty(Optional.ofNullable(field.get(this)).map(Object::toString).orElse(null));
             }
             catch (IllegalAccessException ex) {
                 return true;

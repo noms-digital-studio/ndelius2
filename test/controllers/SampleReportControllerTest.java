@@ -1,5 +1,11 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
+import interfaces.PdfGenerator;
+import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import lombok.val;
 import org.junit.Test;
 import play.Application;
 import play.filters.csrf.*;
@@ -7,23 +13,154 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Result;
 import play.test.WithApplication;
 
-import java.util.HashMap;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 
-//@TODO: CONVERT TO GROOVY/SPOCK TESTS? - sbt runner for groovy code??
+public class SampleReportControllerTest extends WithApplication implements PdfGenerator {
 
-public class SampleReportControllerTest extends WithApplication {
+    @Test
+    public void getSampleReportOK() {
+
+        val request = new RequestBuilder().method(GET).uri("/sampleReport");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void postSampleReportPage1TitleOnlyReturnsBadRequest() {
+
+        val formData = ImmutableMap.of(
+                "salutation", "Mr",
+                "pageNumber", "1"
+        );
+        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
+
+        Result result = route(app, addCsrfToken(request));
+
+        assertEquals(BAD_REQUEST, result.status());
+    }
+
+    @Test
+    public void postSampleReportPage1AllFieldsReturnsOK() {
+
+        val formData = ImmutableMap.of(
+                "salutation", "Mr",
+                "forename", "John",
+                "surname", "Smith",
+                "pageNumber", "1"
+        );
+        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
+
+        Result result = route(app, addCsrfToken(request));
+
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void postSampleReportPage2SomeFieldsMissingReturnsBadRequest() {
+
+        val formData = ImmutableMap.of(
+                "salutation", "Mr",
+                "forename", "John",
+                "surname", "Smith",
+                "address1", "10 High Street",
+                "pageNumber", "2"
+        );
+        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
+
+        Result result = route(app, addCsrfToken(request));
+
+        assertEquals(BAD_REQUEST, result.status());
+    }
+
+    @Test
+    public void postSampleReportPage2AllRequiredFieldsReturnsOK() {
+
+        val formData = new HashMap<String, String>() {
+            {
+                put("salutation", "Mr");
+                put("forename", "John");
+                put("surname", "Smith");
+                put("address1", "10 High Street");
+                put("address2", "Some Town");
+                put("pageNumber", "2");
+            }
+        };
+        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
+
+        Result result = route(app, addCsrfToken(request));
+
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void postSampleReportPage3SomeFieldsMissingReturnsBadRequest() {
+
+        val formData = new HashMap<String, String>() {
+            {
+                put("salutation", "Mr");
+                put("forename", "John");
+                put("surname", "Smith");
+                put("address1", "10 High Street");
+                put("address2", "Some Town");
+                put("pageNumber", "3");
+            }
+        };
+        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
+
+        Result result = route(app, addCsrfToken(request));
+
+        assertEquals(BAD_REQUEST, result.status());
+    }
+
+    @Test
+    public void postSampleReportPage3AllRequiredFieldsReturnsOKAndPdfGenerated() {
+
+        val formData = new HashMap<String, String>() {
+            {
+                put("salutation", "Mr");
+                put("forename", "John");
+                put("surname", "Smith");
+                put("address1", "10 High Street");
+                put("address2", "Some Town");
+                put("caseNumber", "12345");
+                put("pageNumber", "3");
+            }
+        };
+        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
+        pdfGenerated = false;
+
+        Result result = route(app, addCsrfToken(request));
+
+        assertEquals(OK, result.status());
+        assertEquals("application/pdf", result.contentType().orElse(""));
+        assertTrue(pdfGenerated);
+    }
+
+    private boolean pdfGenerated;
+
+    @Override
+    public <T> CompletionStage<Byte[]> generate(String templateName, T values) {
+
+        pdfGenerated = true;
+
+        return CompletableFuture.supplyAsync(() -> new Byte[0]);    // Mocked PdfGenerator returns empty Byte array
+    }
 
     @Override
     protected Application provideApplication() {
-        return new GuiceApplicationBuilder().build();
+
+        return new GuiceApplicationBuilder().
+                overrides(bind(PdfGenerator.class).toInstance(this)). // Mock out PdfGenerator to this Test Class
+                build();
     }
 
-    protected RequestBuilder addCsrfToken(RequestBuilder requestBuilder) {
+    private RequestBuilder addCsrfToken(RequestBuilder requestBuilder) {
         final CSRFFilter csrfFilter = app.injector().instanceOf(CSRFFilter.class);
         final CSRFConfig csrfConfig = app.injector().instanceOf(CSRFConfigProvider.class).get();
         final String token = csrfFilter.tokenProvider().generateToken();
@@ -34,34 +171,5 @@ public class SampleReportControllerTest extends WithApplication {
 
         return requestBuilder;
     }
-
-    @Test
-    public void testReportGet() {
-        RequestBuilder request = new RequestBuilder()
-                .method(GET)
-                .uri("/sampleReport");
-
-        Result result = route(app, request);
-        assertEquals(OK, result.status());
-    }
-
-
-    @Test
-    public void testReportPost() {
-        HashMap<String, String> formData = new HashMap<>();
-        formData.put("salutation", "Mr");
-        formData.put("forename", "John");
-        formData.put("surname", "Smith");
-        formData.put("pageNumber", "1");
-        RequestBuilder request = addCsrfToken(new RequestBuilder()
-                .header("Host", "localhost")
-                .method(POST)
-                .bodyForm(formData)
-                .uri("/sampleReport"));
-
-        Result result = route(app, request);
-        assertEquals(OK, result.status());
-    }
 }
 
-//@TODO: Tests of form wizard pages and injected config. Do a second sample form.

@@ -18,7 +18,5 @@ public class Module extends AbstractModule {
     public void configure() {
 
         bind(PdfGenerator.class).to(RestPdfGenerator.class);
-
-        //@TODO: Swap out for mock when testing, see https://www.playframework.com/documentation/2.5.x/JavaTestingWithGuice
     }
 }
