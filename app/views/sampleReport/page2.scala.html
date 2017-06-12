@@ -1,0 +1,20 @@
+@import data._
+@import helper._
+
+@(reportForm: Form[ReportData])
+
+@main("Sample Report Generator") {
+
+  <h1>Page 2</h1>
+
+  @helper.form(action = routes.SampleReportController.wizardPost()) {
+    @CSRF.formField
+    @inputHidden(reportForm("salutation"))
+    @inputHidden(reportForm("forename"))
+    @inputHidden(reportForm("surname"))
+    @inputText(reportForm("address1"))
+    @inputText(reportForm("address2"))
+    @inputText(reportForm("address3"))
+    @pageNumber(2, "Next")
+  }
+}

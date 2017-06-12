@@ -1,4 +1,6 @@
 import com.google.inject.AbstractModule;
+import interfaces.PdfGenerator;
+import services.RestPdfGenerator;
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -15,5 +17,8 @@ public class Module extends AbstractModule {
     @Override
     public void configure() {
 
+        bind(PdfGenerator.class).to(RestPdfGenerator.class);
+
+        //@TODO: Swap out for mock when testing, see https://www.playframework.com/documentation/2.5.x/JavaTestingWithGuice
     }
 }
