@@ -6,7 +6,7 @@ import data.base.WizardData;
 import lombok.Data;
 
 @Data
-public class ReportData extends WizardData {
+public class SampleReportData extends WizardData {
 
     @RequiredOnPage(1)
     @JsonProperty("SALUTATION")

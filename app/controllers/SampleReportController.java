@@ -1,7 +1,7 @@
 package controllers;
 
 import controllers.base.WizardController;
-import data.ReportData;
+import data.SampleReportData;
 import interfaces.PdfGenerator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,24 +13,24 @@ import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Result;
 
-public class SampleReportController extends WizardController<ReportData>
+public class SampleReportController extends WizardController<SampleReportData>
 {
     private final PdfGenerator pdfGenerator;
 
     @Inject
     public SampleReportController(HttpExecutionContext ec, Environment environment, FormFactory formFactory, PdfGenerator pdfGenerator) {
 
-        super(ec, environment, formFactory, ReportData.class, "views.html.sampleReport.page");
+        super(ec, environment, formFactory, SampleReportData.class, "views.html.sampleReport.page");
 
         this.pdfGenerator = pdfGenerator;
     }
 
     @Override
-    protected CompletionStage<Result> completedWizard(ReportData reportData) {
+    protected CompletionStage<Result> completedWizard(SampleReportData sampleReportData) {
 
-        reportData.setReportDate(new SimpleDateFormat("dd MMMM yyy").format(new Date()));
+        sampleReportData.setReportDate(new SimpleDateFormat("dd MMMM yyy").format(new Date()));
 
-        return pdfGenerator.generate("helloWorld", reportData).thenApply(result ->
+        return pdfGenerator.generate("helloWorld", sampleReportData).thenApply(result ->
                 ok(ArrayUtils.toPrimitive(result)).as("application/pdf"));
     }
 }
