@@ -11,6 +11,7 @@ import play.Application;
 import play.filters.csrf.*;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Result;
+import play.test.Helpers;
 import play.test.WithApplication;
 
 import static org.junit.Assert.*;
@@ -32,6 +33,17 @@ public class SampleReportControllerTest extends WithApplication implements PdfGe
     }
 
     @Test
+    public void getSampleReportConsumesDtoQueryStrings() {
+
+        val request = new RequestBuilder().method(GET).uri("/sampleReport?identifier=abc123&foobar=xyz987");
+
+        val content = Helpers.contentAsString(route(app, request));
+
+        assertTrue(content.contains("abc123"));
+        assertFalse(content.contains("xyz987"));
+    }
+
+    @Test
     public void postSampleReportPage1TitleOnlyReturnsBadRequest() {
 
         val formData = ImmutableMap.of(
@@ -40,7 +52,7 @@ public class SampleReportControllerTest extends WithApplication implements PdfGe
         );
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
 
-        Result result = route(app, addCsrfToken(request));
+        val result = route(app, addCsrfToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -56,7 +68,7 @@ public class SampleReportControllerTest extends WithApplication implements PdfGe
         );
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
 
-        Result result = route(app, addCsrfToken(request));
+        val result = route(app, addCsrfToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -73,7 +85,7 @@ public class SampleReportControllerTest extends WithApplication implements PdfGe
         );
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
 
-        Result result = route(app, addCsrfToken(request));
+        val result = route(app, addCsrfToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -93,7 +105,7 @@ public class SampleReportControllerTest extends WithApplication implements PdfGe
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
 
-        Result result = route(app, addCsrfToken(request));
+        val result = route(app, addCsrfToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -113,7 +125,7 @@ public class SampleReportControllerTest extends WithApplication implements PdfGe
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
 
-        Result result = route(app, addCsrfToken(request));
+        val result = route(app, addCsrfToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -135,7 +147,7 @@ public class SampleReportControllerTest extends WithApplication implements PdfGe
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
         pdfGenerated = false;
 
-        Result result = route(app, addCsrfToken(request));
+        val result = route(app, addCsrfToken(request));
 
         assertEquals(OK, result.status());
         assertEquals("application/pdf", result.contentType().orElse(""));

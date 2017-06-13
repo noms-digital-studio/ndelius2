@@ -1,5 +1,6 @@
 package data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import data.annotations.RequiredOnPage;
 import data.base.WizardData;
@@ -7,6 +8,9 @@ import lombok.Data;
 
 @Data
 public class SampleReportData extends WizardData {
+
+    @JsonIgnore
+    private String identifier;
 
     @RequiredOnPage(1)
     @JsonProperty("SALUTATION")

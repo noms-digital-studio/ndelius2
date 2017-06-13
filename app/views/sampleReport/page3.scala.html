@@ -9,6 +9,7 @@
 
   @helper.form(action = routes.SampleReportController.wizardPost()) {
     @CSRF.formField
+    @inputHidden(reportForm("identifier"))
     @inputHidden(reportForm("salutation"))
     @inputHidden(reportForm("forename"))
     @inputHidden(reportForm("surname"))

@@ -2,9 +2,12 @@ package controllers.base;
 
 import data.base.WizardData;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import lombok.val;
 import play.Environment;
 import play.data.Form;
@@ -34,7 +37,12 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     }
 
     public Result wizardGet() {
-        return ok(formRenderer(baseViewName + 1).apply(wizardForm));
+
+        val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
+
+        params.put("pageNumber", "0");
+
+        return ok(formRenderer(baseViewName + 1).apply(wizardForm.bind(params)));
     }
 
     public CompletionStage<Result> wizardPost() {
