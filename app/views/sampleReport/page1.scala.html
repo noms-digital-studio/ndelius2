@@ -3,9 +3,11 @@
 
 @(reportForm: Form[SampleReportData])
 
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
 @main("Sample Report Generator") {
 
-  <h1>Page 1</h1>
+  <h3 class="heading-medium">Page 1</h3>
 
   @helper.form(action = routes.SampleReportController.wizardPost()) {
     @CSRF.formField
