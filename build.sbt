@@ -11,7 +11,7 @@ scalaVersion := "2.11.11"
 libraryDependencies ++= Seq(
   filters,
   javaWs.exclude("commons-logging", "commons-logging"),
-  "org.languagetool" % "language-en" % "3.7",
+  ("org.languagetool" % "language-en" % "3.7").exclude("commons-logging", "commons-logging"),
   "org.projectlombok" % "lombok" % "1.16.16" % "provided"
 )
 
