@@ -1,5 +1,7 @@
 import com.google.inject.AbstractModule;
+import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import services.AlfrescoStore;
 import services.RestPdfGenerator;
 
 /**
@@ -18,5 +20,6 @@ public class Module extends AbstractModule {
     public void configure() {
 
         bind(PdfGenerator.class).to(RestPdfGenerator.class);
+        bind(DocumentStore.class).to(AlfrescoStore.class);
     }
 }

@@ -6,6 +6,7 @@ import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
 import lombok.val;
 import play.Configuration;
+import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 
@@ -29,7 +30,10 @@ public class RestPdfGenerator implements PdfGenerator {
                 "values", values
         );
 
-        return wsClient.url(pdfGeneratorUrl + "generate").post(Json.toJson(request)).
+        Logger.info("Generating PDF: " + request);
+
+        return wsClient.url(pdfGeneratorUrl + "generate").
+                post(Json.toJson(request)).
                 thenApply(wsResponse -> Json.fromJson(wsResponse.asJson(), Byte[].class));
     }
 }
