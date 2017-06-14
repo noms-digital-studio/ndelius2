@@ -3,6 +3,7 @@ package data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import data.annotations.RequiredOnPage;
+import data.annotations.SpellCheck;
 import data.base.WizardData;
 import lombok.Data;
 
@@ -38,6 +39,10 @@ public class SampleReportData extends WizardData {
     @RequiredOnPage(3)
     @JsonProperty("CASE_NUMBER")
     private String caseNumber;
+
+    @SpellCheck
+    @JsonProperty("LETTER_NOTES")
+    private String letterNotes;
 
     @JsonProperty("DD_MMM_YYYY")
     private String reportDate;
