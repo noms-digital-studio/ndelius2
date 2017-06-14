@@ -6,5 +6,9 @@
     <span class="form-hint">@elements.infos.mkString(", ")</span>
     <span class="error-message">@elements.errors.mkString(", ")</span>
   </label>
-  <input class="form-control@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.field.name" name="@elements.field.name" value="@elements.field.value" />
+  @if(elements.input.body.contains("textarea id=")) {
+    <textarea class="form-control@if(elements.hasErrors) { form-control-error}" id="@elements.field.name" name="@elements.field.name">@elements.field.value</textarea>
+  } else {
+    <input class="form-control@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.field.name" name="@elements.field.name" value="@elements.field.value" />
+  }
 </div>
