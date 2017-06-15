@@ -3,8 +3,12 @@
 <div class="form-group@if(elements.hasErrors) { form-group-error}">
   <label for="@elements.id">
     <span class="form-label-bold">@elements.label</span>
-    <span class="form-hint">@elements.infos.mkString(", ")</span>
-    <span class="error-message">@elements.errors.mkString(", ")</span>
+    @for(info <- elements.infos) {
+      <span class="form-hint">@info</span>
+    }
+    @for(error <- elements.errors) {
+      <span class="error-message">@error</span>
+    }
   </label>
   @if(elements.input.body.contains("textarea id=")) {
     <textarea class="form-control@if(elements.hasErrors) { form-control-error}" id="@elements.field.name" name="@elements.field.name">@elements.field.value</textarea>

@@ -6,6 +6,7 @@ import data.annotations.RequiredOnPage;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -35,16 +36,19 @@ public class WizardData {
             field.setAccessible(true);
 
             try {
-                val matches = spelling.check(Optional.ofNullable(field.get(this)).map(Object::toString).orElse(""));
+                val value = Optional.ofNullable(field.get(this)).map(Object::toString).orElse("");
+                val matches = spelling.check(value);
 
-                return String.join(" | ", matches.stream().map(match -> String.join(", ", match.getSuggestedReplacements())).collect(Collectors.toList()));
+                return matches.stream().map(match -> "'" + value.substring(match.getFromPos(), match.getToPos()) + "' could be " +
+                        String.join(" or ", match.getSuggestedReplacements().stream().
+                                map(r -> String.format("'%s'", r)).collect(Collectors.toList()))).collect(Collectors.toList());
             }
             catch (IllegalAccessException | IOException ex) {
-                return "";
+                return new ArrayList<String>();
             }
 
-        })).entrySet().stream().filter(entry -> !Strings.isNullOrEmpty(entry.getValue())).
-                map(entry -> new ValidationError(entry.getKey(), entry.getValue())).collect(Collectors.toList());
+        })).entrySet().stream().filter(entry -> !entry.getValue().isEmpty()).
+                flatMap(entry -> entry.getValue().stream().map(s -> new ValidationError(entry.getKey(), s))).collect(Collectors.toList());
 
         validationErrors.addAll(requiredFields().filter(field -> {
 
