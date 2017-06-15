@@ -19,4 +19,4 @@ jobs:
                     apt-get install sbt
             - run:
                 name: Run sbt build
-                command: sbt assemble
+                command: sbt assembly
