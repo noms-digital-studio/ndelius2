@@ -6,8 +6,10 @@ import data.annotations.RequiredOnPage;
 import data.annotations.SpellCheck;
 import data.base.WizardData;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class SampleReportData extends WizardData {
 
     @JsonIgnore
