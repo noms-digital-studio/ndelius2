@@ -140,6 +140,7 @@ public class SampleReportControllerTest extends WithApplication implements PdfGe
                 put("surname", "Smith");
                 put("address1", "10 High Street");
                 put("address2", "Some Town");
+                put("caseNumber", "12345");
                 put("letterNotes", "This texxt has speeling mistakes");
                 put("pageNumber", "3");
             }
