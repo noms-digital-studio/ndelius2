@@ -62,13 +62,18 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
             if (thisPage < wizardData.totalPages()) {
 
-                return CompletableFuture.supplyAsync(() -> ok(renderPage.apply(thisPage + 1)), ec.current());
+                return CompletableFuture.supplyAsync(() -> ok(renderPage.apply(nextPage(wizardData))), ec.current());
 
             } else {
 
                 return completedWizard(wizardData);
             }
         }
+    }
+
+    protected Integer nextPage(T wizardData) {
+
+        return wizardData.getPageNumber() + 1;  // Can alter in derived WizardController to skip pages based on wizardData
     }
 
     protected abstract CompletionStage<Result> completedWizard(T wizardData);
