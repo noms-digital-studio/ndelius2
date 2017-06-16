@@ -1,4 +1,4 @@
-# 'NDelius2' Web Application
+# 'NDelius New Technology' Web Application
 
 A [Play Framework](https://www.playframework.com/) based website, developed in [Java 8](http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html) with additional [Lombok](https://projectlombok.org/features/all) support.
 
@@ -6,16 +6,16 @@ Fully asynchronous and non-blocking from the ground up, with the potential to se
 
 ### Building and running
 
-Build command (includes running unit and integration tests):
+Prerequisites:
+- sbt (Scala Build Tool) http://www.scala-sbt.org/release/docs
 
+Build command (includes running unit and integration tests):
 - `sbt assembly`
 
 Run locally:
-
 - `sbt run`
 
 Running deployable fat jar (after building):
-
 - `APPLICATION_SECRET=abcdefghijk java -jar ndelius2.jar` (in the `target/scala-2.11` directory)
 
 Configuration parameters can be supplied via environment variables, e.g.:
