@@ -153,6 +153,29 @@ public class SampleReportControllerTest extends WithApplication implements PdfGe
     }
 
     @Test
+    public void postSampleReportPage3WithSpellingMistakeAndOverrideReturnsOK() {
+
+        val formData = new HashMap<String, String>() {
+            {
+                put("salutation", "Mr");
+                put("forename", "John");
+                put("surname", "Smith");
+                put("address1", "10 High Street");
+                put("address2", "Some Town");
+                put("caseNumber", "12345");
+                put("letterNotes", "This texxt has speeling mistakes");
+                put("ignoreNotesErrors", "true");
+                put("pageNumber", "3");
+            }
+        };
+        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/sampleReport");
+
+        val result = route(app, addCsrfToken(request));
+
+        assertEquals(OK, result.status());
+    }
+
+    @Test
     public void postSampleReportPage3AllRequiredFieldsReturnsOKAndPdfGenerated() {
 
         val formData = new HashMap<String, String>() {

@@ -35,6 +35,25 @@ public class WizardData {
 
             field.setAccessible(true);
 
+            val overrideName = field.getAnnotation(SpellCheck.class).overrideField();
+
+            val overrideEnabled = !Strings.isNullOrEmpty(overrideName) &&
+                    allFields().filter(overrideField -> overrideField.getName().equals(overrideName)).findAny().flatMap(overrideField -> {
+
+                overrideField.setAccessible(true);
+
+                try {
+                    return Optional.ofNullable(overrideField.get(this)).map(value -> Boolean.parseBoolean(value.toString()));
+                }
+                catch (IllegalAccessException ex) {
+                    return Optional.of(false);
+                }
+            }).orElse(false);
+
+            if (overrideEnabled) {
+                return new ArrayList<String>();
+            }
+
             try {
                 val value = Optional.ofNullable(field.get(this)).map(Object::toString).orElse("");
                 val matches = spelling.check(value);
@@ -84,6 +103,11 @@ public class WizardData {
 
     private Stream<Field> annotatedFields(Class<? extends Annotation> annotationClass) {
 
-        return Arrays.stream(this.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(annotationClass));
+        return allFields().filter(field -> field.isAnnotationPresent(annotationClass));
+    }
+
+    private Stream<Field> allFields() {
+
+        return Arrays.stream(this.getClass().getDeclaredFields());
     }
 }

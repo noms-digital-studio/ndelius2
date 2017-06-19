@@ -42,9 +42,12 @@ public class SampleReportData extends WizardData {
     @JsonProperty("CASE_NUMBER")
     private String caseNumber;
 
-    @SpellCheck
+    @SpellCheck(overrideField = "ignoreNotesErrors")
     @JsonProperty("LETTER_NOTES")
     private String letterNotes;
+
+    @JsonIgnore
+    private Boolean ignoreNotesErrors;  //@TODO: Add a matching checkbox on screen
 
     @JsonProperty("DD_MMM_YYYY")
     private String reportDate;
