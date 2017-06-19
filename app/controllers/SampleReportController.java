@@ -40,10 +40,9 @@ public class SampleReportController extends WizardController<SampleReportData>
 
         Logger.info("Sample Report Data: " + sampleReportData);
 
-        return pdfGenerator.generate("helloWorld", sampleReportData).thenApply(result -> {
-
-//              documentStore.uploadNewPdf(result, "sampleReport.pdf", "someUser", "crn", "author", 12345);
-                return ok(ArrayUtils.toPrimitive(result)).as("application/pdf");
-        });
+        return pdfGenerator.generate("helloWorld", sampleReportData).
+//                thenCompose(result -> documentStore.uploadNewPdf(result, "sampleReport.pdf", "someUser", "crn", "author", 12345).
+//                        thenApply(map -> result)).
+                thenApply(result -> ok(ArrayUtils.toPrimitive(result)).as("application/pdf"));
     }
 }

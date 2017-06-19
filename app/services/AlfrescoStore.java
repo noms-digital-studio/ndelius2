@@ -66,7 +66,13 @@ public class AlfrescoStore implements DocumentStore {
                     setHeader("X-DocRepository-Remote-User", alfrescoUser).
                     setHeader("X-DocRepository-Real-Remote-User", onBehalfOfUser).
                     post(Source.from(parts)).
-                    thenApply(wsResponse -> Json.fromJson(wsResponse.asJson(), Map.class));
+                    thenApply(wsResponse -> {
+
+                        val result = Json.fromJson(wsResponse.asJson(), Map.class);
+
+                        Logger.info("Stored PDF: " + result);
+                        return result;
+                    });
         }
         catch (IOException ex) {
 
