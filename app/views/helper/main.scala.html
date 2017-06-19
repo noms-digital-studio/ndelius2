@@ -10,14 +10,19 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
     </head>
     <body>
-        <div class="phase-banner">
-            <p>
-                <strong class="phase-tag">ALPHA</strong>
-                <span>NDelius Document Generation Pre-Discovery</span>
-            </p>
-        </div>
 
-        @content
+        <main id="content">
+
+            <div class="phase-banner">
+                <p>
+                    <strong class="phase-tag">ALPHA</strong>
+                    <span>NDelius Document Generation Pre-Discovery</span>
+                </p>
+            </div>
+
+            @content
+
+        </main>
 
         <script src="@routes.Assets.versioned("javascripts/main.js")" type="text/javascript"></script>
     </body>
