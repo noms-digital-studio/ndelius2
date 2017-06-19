@@ -8,4 +8,12 @@
   border-left: #231f20 3px solid;
   font-size: 27px;
   line-height: 30px;
+
+  @include media(mobile) {
+    padding: 25px 0 0 7px;
+    background-size: auto 25px;
+    border-left: #231f20 2px solid;
+    font-size: 18px;
+    line-height: 20px;
+  }
 }
