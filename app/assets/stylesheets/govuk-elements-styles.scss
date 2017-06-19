@@ -6,4 +6,5 @@ $path: "/assets/images/";
 @import "govuk-elements";
 
 // Import the project specific styles
-@import "project";
+@import "project/logo";
+@import "project/spacing";
