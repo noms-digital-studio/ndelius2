@@ -1,0 +1,9 @@
+.margin-top {
+  margin-top: 10px;
+  &.medium {
+    margin-top: 20px;
+  }
+  &.large {
+    margin-top: 30px;
+  }
+}

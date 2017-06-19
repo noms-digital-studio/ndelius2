@@ -4,3 +4,6 @@ $path: "/assets/images/";
 
 // Import all the govuk-elements partials listed in _govuk-elements.scss
 @import "govuk-elements";
+
+// Import the project specific styles
+@import "project";
