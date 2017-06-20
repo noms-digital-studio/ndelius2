@@ -2,7 +2,7 @@
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
   <div class="multiple-choice">
-    @elements.input
+    <input type="checkbox" id="@elements.id" name="@elements.field.name" value="true" />
     <label for="@elements.id">@elements.label</label>
   </div>
 } else {
@@ -17,9 +17,9 @@
       }
     </label>
     @if(elements.input.body.contains("textarea id=")) {
-      <textarea class="form-control@if(elements.hasErrors) { form-control-error}" id="@elements.field.name" name="@elements.field.name">@elements.field.value</textarea>
+      <textarea class="form-control@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">@elements.field.value</textarea>
     } else {
-      <input class="form-control@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.field.name" name="@elements.field.name" value="@elements.field.value" />
+      <input class="form-control@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.id" name="@elements.field.name" value="@elements.field.value" />
     }
   </div>
 }
