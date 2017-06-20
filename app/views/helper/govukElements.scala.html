@@ -2,7 +2,7 @@
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
   <div class="multiple-choice">
-    <input type="checkbox" id="@elements.id" name="@elements.field.name" value="true" />
+    <input type="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(elements.field.value.isDefined) { checked="checked"} />
     <label for="@elements.id">@elements.label</label>
   </div>
 } else {
