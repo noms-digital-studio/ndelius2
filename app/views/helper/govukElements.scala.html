@@ -1,18 +1,25 @@
 @(elements: helper.FieldElements)
 
-<div class="form-group@if(elements.hasErrors) { form-group-error}">
-  <label for="@elements.id">
-    <span class="form-label-bold">@elements.label</span>
-    @for(info <- elements.infos) {
-      <span class="form-hint">@info</span>
+@if(elements.input.body.contains("type=\"checkbox\"")) {
+  <div class="multiple-choice">
+    @elements.input
+    <label for="@elements.id">@elements.label</label>
+  </div>
+} else {
+  <div class="form-group@if(elements.hasErrors) { form-group-error}">
+    <label for="@elements.id">
+      <span class="form-label-bold">@elements.label</span>
+      @for(info <- elements.infos) {
+        <span class="form-hint">@info</span>
+      }
+      @for(error <- elements.errors) {
+        <span class="error-message">@error</span>
+      }
+    </label>
+    @if(elements.input.body.contains("textarea id=")) {
+      <textarea class="form-control@if(elements.hasErrors) { form-control-error}" id="@elements.field.name" name="@elements.field.name">@elements.field.value</textarea>
+    } else {
+      <input class="form-control@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.field.name" name="@elements.field.name" value="@elements.field.value" />
     }
-    @for(error <- elements.errors) {
-      <span class="error-message">@error</span>
-    }
-  </label>
-  @if(elements.input.body.contains("textarea id=")) {
-    <textarea class="form-control@if(elements.hasErrors) { form-control-error}" id="@elements.field.name" name="@elements.field.name">@elements.field.value</textarea>
-  } else {
-    <input class="form-control@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.field.name" name="@elements.field.name" value="@elements.field.value" />
-  }
-</div>
+  </div>
+}

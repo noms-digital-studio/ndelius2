@@ -47,7 +47,7 @@ public class SampleReportData extends WizardData {
     private String letterNotes;
 
     @JsonIgnore
-    private Boolean ignoreNotesErrors;  //@TODO: Add a matching checkbox on screen
+    private Boolean ignoreNotesErrors;
 
     @JsonProperty("DD_MMM_YYYY")
     private String reportDate;
