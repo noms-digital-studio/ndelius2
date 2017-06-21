@@ -127,5 +127,4 @@ public class ShortFormatPreSentenceReportData extends WizardData {
 
     @JsonProperty("DD_MMM_YYYY")
     private String reportDate;
-
 }
