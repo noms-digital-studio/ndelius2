@@ -47,12 +47,40 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @JsonProperty("LOCAL_JUSTICE_AREA")
     private String localJusticeArea;
 
+    @JsonProperty("INTERVIEW_INFORMATION_SOURCE")
+    private String interviewInformationSource;
+
+    @JsonProperty("SERVICE_RECORDS_INFORMATION_SOURCE")
+    private String serviceRecordsInformationSource;
+
+    @JsonProperty("CPS_SUMMARY_INFORMATION_SOURCE")
+    private String cpsSummaryInformationSource;
+
+    @JsonProperty("OASYS_ASSESSMENTS_INFORMATION_SOURCE")
+    private String oasysAssessmentsInformationSource;
+
+    @JsonProperty("PREVIOUS_CONVICTIONS_INFORMATION_SOURCE")
+    private String previousConvictionsInformationSource;
+
+    @JsonProperty("VICTIM_STATEMENT_INFORMATION_SOURCE")
+    private String victimStatementInformationSource;
+
+    @JsonProperty("CHILDREN_SERVICES_INFORMATION_SOURCE")
+    private String childrenServicesInformationSource;
+
+    @JsonProperty("POLICE_INFORMATION_SOURCE")
+    private String policeInformationSource;
+
     @RequiredOnPage(3)
-    @SpellCheck(overrideField = "ignoreOtherInformationSourceSpelling")
     @JsonProperty("OTHER_INFORMATION_SOURCE")
     private String otherInformationSource;
 
+    @RequiredOnPage(3)
+    @SpellCheck(overrideField = "ignoreOtherInformationSourceDetailsSpelling")
+    @JsonProperty("OTHER_INFORMATION_SOURCE_DETAILS")
+    private String otherInformationSourceDetails;
+
     @JsonIgnore
-    private Boolean ignoreOtherInformationSourceSpelling;
+    private Boolean ignoreOtherInformationSourceDetailsSpelling;
 
 }
