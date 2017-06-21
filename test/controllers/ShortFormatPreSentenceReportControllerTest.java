@@ -20,7 +20,7 @@ import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 
-public class SampleReportControllerTest extends WithApplication implements PdfGenerator {
+public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGenerator {
 
     @Test
     public void getSampleReportOK() {

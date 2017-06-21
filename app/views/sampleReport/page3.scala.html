@@ -1,26 +1,31 @@
 @import data._
 @import helper._
 
-@(reportForm: Form[SampleReportData])
+@(reportForm: Form[ShortFormatPreSentenceReportData])
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @main("Sample Report Generator") {
 
-  <h3 class="heading-medium">Page 3</h3>
+    <h3 class="heading-medium">Sources of Information</h3>
 
-  @helper.form(action = routes.SampleReportController.wizardPost()) {
-    @CSRF.formField
-    @inputHidden(reportForm("identifier"))
-    @inputHidden(reportForm("salutation"))
-    @inputHidden(reportForm("forename"))
-    @inputHidden(reportForm("surname"))
-    @inputHidden(reportForm("address1"))
-    @inputHidden(reportForm("address2"))
-    @inputHidden(reportForm("address3"))
-    @inputText(reportForm("caseNumber"))
-    @textarea(reportForm("letterNotes"))
-    @checkbox(reportForm("ignoreNotesErrors"))
-    @pageNumber(3, "Generate")
-  }
+    @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
+        @CSRF.formField
+
+        @inputHidden(reportForm("name"))
+        @inputHidden(reportForm("dateOfBirth"))
+        @inputHidden(reportForm("age"))
+        @inputHidden(reportForm("address"))
+        @inputHidden(reportForm("crn"))
+        @inputHidden(reportForm("pcn"))
+
+        @inputHidden(reportForm("court"))
+        @inputHidden(reportForm("dateOfHearing"))
+        @inputHidden(reportForm("localJusticeArea"))
+
+        @textarea(reportForm("otherInformationSource"), '_label -> "Other (please specify below)")
+        @checkbox(reportForm("IgnoreOtherInformationSourceSpelling"), '_label -> "Ignore spelling")
+
+        @pageNumber(3, "Confirm")
+    }
 }

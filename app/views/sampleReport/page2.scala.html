@@ -1,25 +1,34 @@
 @import data._
 @import helper._
 
-@(reportForm: Form[SampleReportData])
+@(reportForm: Form[ShortFormatPreSentenceReportData])
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @main("Sample Report Generator") {
 
-  <h3 class="heading-medium">Page 2</h3>
+  <h3 class="heading-medium">Sentencing Court Details</h3>
 
-  @helper.form(action = routes.SampleReportController.wizardPost()) {
+  @readOnlyField(reportForm("court"), "Court")
+  @readOnlyField(reportForm("dateOfHearing"), "Date of Hearing")
+  @readOnlyField(reportForm("localJusticeArea"), "Local Justice Area")
+
+  @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
     @CSRF.formField
-    @inputHidden(reportForm("identifier"))
-    @inputHidden(reportForm("salutation"))
-    @inputHidden(reportForm("forename"))
-    @inputHidden(reportForm("surname"))
-    @inputText(reportForm("address1"))
-    @inputText(reportForm("address2"))
-    @inputText(reportForm("address3"))
-    @inputHidden(reportForm("caseNumber"))
-    @inputHidden(reportForm("letterNotes"))
-    @pageNumber(2, "Next")
+
+    @inputHidden(reportForm("name"))
+    @inputHidden(reportForm("dateOfBirth"))
+    @inputHidden(reportForm("age"))
+    @inputHidden(reportForm("address"))
+    @inputHidden(reportForm("crn"))
+    @inputHidden(reportForm("pcn"))
+
+    @inputHidden(reportForm("court"))
+    @inputHidden(reportForm("dateOfHearing"))
+    @inputHidden(reportForm("localJusticeArea"))
+
+    @inputHidden(reportForm("otherInformationSource"))
+
+    @pageNumber(2, "Confirm")
   }
 }
