@@ -4,7 +4,7 @@ import helpers.Encryption;
 import lombok.val;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class EncryptionTest {
 
@@ -18,5 +18,6 @@ public class EncryptionTest {
         val decrypted = Encryption.decrypt(encrypted, secretKey);
 
         assertEquals(plainText, decrypted);
+        assertNotEquals(plainText, encrypted);
     }
 }
