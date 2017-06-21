@@ -23,9 +23,21 @@
         @inputHidden(reportForm("dateOfHearing"))
         @inputHidden(reportForm("localJusticeArea"))
 
-        @textarea(reportForm("otherInformationSource"), '_label -> "Other (please specify below)")
-        @checkbox(reportForm("IgnoreOtherInformationSourceSpelling"), '_label -> "Ignore spelling")
+        @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
+        @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service Records")
+        @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS Summary")
+        @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys Assessments")
+        @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous Convictions")
+        @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim Statement")
+        @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Children Services Checks")
+        @checkbox(reportForm("policeInformationSource"), '_label -> "Police Information")
+        @checkbox(reportForm("otherInformationSource"), '_label -> "Other", '_help -> "(please specify below)")
 
-        @pageNumber(3, "Confirm")
+        <div class="panel panel-border-narrow">
+            @textarea(reportForm("otherInformationSourceDetails"), '_label -> "Other Source(s) of Information")
+            @checkbox(reportForm("IgnoreOtherInformationSourceDetailsSpelling"), '_label -> "Ignore spelling")
+        </div>
+
+        @pageNumber(3, "Next")
     }
 }
