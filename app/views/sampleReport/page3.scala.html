@@ -33,7 +33,7 @@
         @checkbox(reportForm("policeInformationSource"), '_label -> "Police Information")
         @checkbox(reportForm("otherInformationSource"), '_label -> "Other", '_help -> "(please specify below)")
 
-        <div class="panel panel-border-narrow">
+        <div class="panel panel-border-narrow js-hidden" id="other-information">
             @textarea(reportForm("otherInformationSourceDetails"), '_label -> "Other Source(s) of Information")
             @checkbox(reportForm("IgnoreOtherInformationSourceDetailsSpelling"), '_label -> "Ignore spelling")
         </div>
