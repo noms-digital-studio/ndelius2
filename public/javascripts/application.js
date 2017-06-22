@@ -1,15 +1,17 @@
 $(function() {
-    var showHideContent = new GOVUK.ShowHideContent();
-    showHideContent.init();
 
+  // Show/hide content
+  var showHideContent = new GOVUK.ShowHideContent();
+  showHideContent.init();
+
+  /**
+   * Navigation items
+   */
   $('.nav-item').click(function(e) {
 
     e.preventDefault();
 
     var target = $(this).data('target');
-
-    console.log('Jumping to page:', target);
-
     $('#jumpNumber').val(target);
     $('#reportForm').submit();
   });
