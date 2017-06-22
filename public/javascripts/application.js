@@ -12,8 +12,10 @@ $(function() {
     e.preventDefault();
 
     var target = $(this).data('target');
-    $('#jumpNumber').val(target);
-    $('#reportForm').submit();
+    if (!$(this).hasClass('active')) {
+      $('#jumpNumber').val(target);
+      $('#reportForm').submit();
+    }
   });
 
 });
