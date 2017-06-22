@@ -38,10 +38,10 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
 
         shortFormatPreSentenceReportData.setReportDate(new SimpleDateFormat("dd MMMM yyy").format(new Date()));
 
-        Logger.info("Sample Report Data: " + shortFormatPreSentenceReportData);
+        Logger.info("Short Format Pre Sentence Report Data: " + shortFormatPreSentenceReportData);
 
         return pdfGenerator.generate("helloWorld", shortFormatPreSentenceReportData).
-//                thenCompose(result -> documentStore.uploadNewPdf(result, "sampleReport.pdf", "someUser", "crn", "author", 12345).
+//                thenCompose(result -> documentStore.uploadNewPdf(result, "shortFormatPreSentenceReport.pdf", "someUser", shortFormatPreSentenceReportData.getCrn(), "author", 12345).
 //                        thenApply(map -> result)).
                 thenApply(result -> ok(ArrayUtils.toPrimitive(result)).as("application/pdf"));
     }
