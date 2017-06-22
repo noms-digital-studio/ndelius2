@@ -31,23 +31,23 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
     }
-/*
+
     @Test
     public void getSampleReportConsumesDtoQueryStrings() {
 
-        val request = new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?identifier=abc123&foobar=xyz987");
+        val request = new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=Alan%20Smith&foobar=xyz987");
 
         val content = Helpers.contentAsString(route(app, request));
 
-        assertTrue(content.contains("abc123"));
+        assertTrue(content.contains("Alan Smith"));
         assertFalse(content.contains("xyz987"));
     }
-*/
+
     @Test
     public void postSampleReportPage1TitleOnlyReturnsBadRequest() {
 
         val formData = ImmutableMap.of(
-                "salutation", "Mr",
+                "name", "",
                 "pageNumber", "1"
         );
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
@@ -56,16 +56,21 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(BAD_REQUEST, result.status());
     }
-/*
+
     @Test
     public void postSampleReportPage1AllFieldsReturnsOK() {
 
-        val formData = ImmutableMap.of(
-                "salutation", "Mr",
-                "forename", "John",
-                "surname", "Smith",
-                "pageNumber", "1"
-        );
+        val formData = new HashMap<String, String>() {
+            {
+                put("name", "John Smith");
+                put("dateOfBirth", "06/02/1976");
+                put("age", "41");
+                put("address", "10 High Street");
+                put("crn", "B56789");
+                put("pcn", "98793030");
+                put("pageNumber", "1");
+            }
+        };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
         val result = route(app, addCsrfToken(request));
@@ -76,13 +81,18 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage2SomeFieldsMissingReturnsBadRequest() {
 
-        val formData = ImmutableMap.of(
-                "salutation", "Mr",
-                "forename", "John",
-                "surname", "Smith",
-                "address1", "10 High Street",
-                "pageNumber", "2"
-        );
+        val formData = new HashMap<String, String>() {
+            {
+                put("name", "John Smith");
+                put("dateOfBirth", "06/02/1976");
+                put("age", "41");
+                put("address", "10 High Street");
+                put("crn", "B56789");
+                put("pcn", "98793030");
+                put("court", "Manchester and Salford Magistrates Court");
+                put("pageNumber", "2");
+            }
+        };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
         val result = route(app, addCsrfToken(request));
@@ -95,11 +105,15 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         val formData = new HashMap<String, String>() {
             {
-                put("salutation", "Mr");
-                put("forename", "John");
-                put("surname", "Smith");
-                put("address1", "10 High Street");
-                put("address2", "Some Town");
+                put("name", "John Smith");
+                put("dateOfBirth", "06/02/1976");
+                put("age", "41");
+                put("address", "10 High Street");
+                put("crn", "B56789");
+                put("pcn", "98793030");
+                put("court", "Manchester and Salford Magistrates Court");
+                put("dateOfHearing", "01/02/2017");
+                put("localJusticeArea", "Greater Manchester");
                 put("pageNumber", "2");
             }
         };
@@ -109,17 +123,22 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(OK, result.status());
     }
-*/
+
     @Test
     public void postSampleReportPage3SomeFieldsMissingReturnsBadRequest() {
 
         val formData = new HashMap<String, String>() {
             {
-                put("salutation", "Mr");
-                put("forename", "John");
-                put("surname", "Smith");
-                put("address1", "10 High Street");
-                put("address2", "Some Town");
+                put("name", "John Smith");
+                put("dateOfBirth", "06/02/1976");
+                put("age", "41");
+                put("address", "10 High Street");
+                put("crn", "B56789");
+                put("pcn", "98793030");
+                put("court", "Manchester and Salford Magistrates Court");
+                put("dateOfHearing", "01/02/2017");
+                put("localJusticeArea", "Greater Manchester");
+                put("otherInformationSource", "true");
                 put("pageNumber", "3");
             }
         };
@@ -135,13 +154,17 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         val formData = new HashMap<String, String>() {
             {
-                put("salutation", "Mr");
-                put("forename", "John");
-                put("surname", "Smith");
-                put("address1", "10 High Street");
-                put("address2", "Some Town");
-                put("caseNumber", "12345");
-                put("letterNotes", "This texxt has speeling mistakes");
+                put("name", "John Smith");
+                put("dateOfBirth", "06/02/1976");
+                put("age", "41");
+                put("address", "10 High Street");
+                put("crn", "B56789");
+                put("pcn", "98793030");
+                put("court", "Manchester and Salford Magistrates Court");
+                put("dateOfHearing", "01/02/2017");
+                put("localJusticeArea", "Greater Manchester");
+                put("otherInformationSource", "true");
+                put("otherInformationDetails", "This texxt has speeling mistakes");
                 put("pageNumber", "3");
             }
         };
@@ -151,20 +174,24 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         assertEquals(BAD_REQUEST, result.status());
     }
-/*
+
     @Test
     public void postSampleReportPage3WithSpellingMistakeAndOverrideReturnsOK() {
 
         val formData = new HashMap<String, String>() {
             {
-                put("salutation", "Mr");
-                put("forename", "John");
-                put("surname", "Smith");
-                put("address1", "10 High Street");
-                put("address2", "Some Town");
-                put("caseNumber", "12345");
-                put("letterNotes", "This texxt has speeling mistakes");
-                put("ignoreNotesErrors", "true");
+                put("name", "John Smith");
+                put("dateOfBirth", "06/02/1976");
+                put("age", "41");
+                put("address", "10 High Street");
+                put("crn", "B56789");
+                put("pcn", "98793030");
+                put("court", "Manchester and Salford Magistrates Court");
+                put("dateOfHearing", "01/02/2017");
+                put("localJusticeArea", "Greater Manchester");
+                put("otherInformationSource", "true");
+                put("otherInformationDetails", "This texxt has speeling mistakes");
+                put("ignoreOtherInformationDetailsSpelling", "true");
                 put("pageNumber", "3");
             }
         };
@@ -176,18 +203,70 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void postSampleReportPage3AllRequiredFieldsReturnsOKAndPdfGenerated() {
+    public void postSampleReportPage3AllRequiredFieldsReturnsOK() {
 
         val formData = new HashMap<String, String>() {
             {
-                put("salutation", "Mr");
-                put("forename", "John");
-                put("surname", "Smith");
-                put("address1", "10 High Street");
-                put("address2", "Some Town");
-                put("caseNumber", "12345");
-                put("letterNotes", "These notes are spelled correctly");
+                put("name", "John Smith");
+                put("dateOfBirth", "06/02/1976");
+                put("age", "41");
+                put("address", "10 High Street");
+                put("crn", "B56789");
+                put("pcn", "98793030");
+                put("court", "Manchester and Salford Magistrates Court");
+                put("dateOfHearing", "01/02/2017");
+                put("localJusticeArea", "Greater Manchester");
+                put("interviewInformationSource", "true");
+                put("serviceRecordsInformationSource", "true");
+                put("cpsSummaryInformationSource", "true");
+                put("oasysAssessmentsInformationSource", "true");
+                put("previousConvictionsInformationSource", "true");
+                put("victimStatementInformationSource", "true");
+                put("childrenServicesInformationSource", "true");
+                put("policeInformationSource", "true");
+                put("otherInformationSource", "true");
+                put("otherInformationDetails", "These notes are spelled correctly");
+                put("ignoreOtherInformationDetailsSpelling", "false");
                 put("pageNumber", "3");
+            }
+        };
+        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
+
+        val result = route(app, addCsrfToken(request));
+
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void postSampleReportPage4AllRequiredFieldsReturnsOKAndPdfGenerated() {
+
+        val formData = new HashMap<String, String>() {
+            {
+                put("name", "John Smith");
+                put("dateOfBirth", "06/02/1976");
+                put("age", "41");
+                put("address", "10 High Street");
+                put("crn", "B56789");
+                put("pcn", "98793030");
+                put("court", "Manchester and Salford Magistrates Court");
+                put("dateOfHearing", "01/02/2017");
+                put("localJusticeArea", "Greater Manchester");
+                put("interviewInformationSource", "true");
+                put("serviceRecordsInformationSource", "true");
+                put("cpsSummaryInformationSource", "true");
+                put("oasysAssessmentsInformationSource", "true");
+                put("previousConvictionsInformationSource", "true");
+                put("victimStatementInformationSource", "true");
+                put("childrenServicesInformationSource", "true");
+                put("policeInformationSource", "true");
+                put("otherInformationSource", "true");
+                put("otherInformationDetails", "These notes are spelled correctly");
+                put("ignoreOtherInformationDetailsSpelling", "false");
+                put("mainOffence", "Some offence");
+                put("offenceSummary", "Some offence summary");
+                put("offenceAnalysis", "Some offence analysis");
+                put("offenderAssessment", "Some assessment");
+                put("pageNumber", "4");
             }
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
@@ -199,7 +278,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals("application/pdf", result.contentType().orElse(""));
         assertTrue(pdfGenerated);
     }
-*/
+
     private boolean pdfGenerated;
 
     @Override
