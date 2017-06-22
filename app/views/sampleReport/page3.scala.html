@@ -7,47 +7,60 @@
 
 @main("Sample Report Generator") {
 
-  <h3 class="heading-medium">Sources of Information</h3>
+  <div class="grid-row">
+    <div class="column-two-thirds">
 
-  @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
-    @CSRF.formField
+      <h3 class="heading-medium">Sources of Information</h3>
 
-    @inputHidden(reportForm("name"))
-    @inputHidden(reportForm("dateOfBirth"))
-    @inputHidden(reportForm("age"))
-    @inputHidden(reportForm("address"))
-    @inputHidden(reportForm("crn"))
-    @inputHidden(reportForm("pcn"))
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
+        @CSRF.formField
 
-    @inputHidden(reportForm("court"))
-    @inputHidden(reportForm("dateOfHearing"))
-    @inputHidden(reportForm("localJusticeArea"))
+        @inputHidden(reportForm("name"))
+        @inputHidden(reportForm("dateOfBirth"))
+        @inputHidden(reportForm("age"))
+        @inputHidden(reportForm("address"))
+        @inputHidden(reportForm("crn"))
+        @inputHidden(reportForm("pcn"))
 
-    @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
-    @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service Records")
-    @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS Summary")
-    @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys Assessments")
-    @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous Convictions")
-    @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim Statement")
-    @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Children Services Checks")
-    @checkbox(reportForm("policeInformationSource"), '_label -> "Police Information")
-    @checkbox(reportForm("otherInformationSource"), '_label -> "Other", '_help -> "(please specify below)", Symbol("data-target") -> "other-information")
+        @inputHidden(reportForm("court"))
+        @inputHidden(reportForm("dateOfHearing"))
+        @inputHidden(reportForm("localJusticeArea"))
 
-    <div class="panel panel-border-narrow js-hidden" id="other-information">
-        @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information")
-        @checkbox(reportForm("ignoreOtherInformationDetailsSpelling"), '_label -> "Ignore spelling")
+        @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
+        @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service Records")
+        @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS Summary")
+        @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys Assessments")
+        @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous Convictions")
+        @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim Statement")
+        @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Children Services Checks")
+        @checkbox(reportForm("policeInformationSource"), '_label -> "Police Information")
+        @checkbox(reportForm("otherInformationSource"), '_label -> "Other", '_help -> "(please specify below)", Symbol("data-target") -> "other-information")
+
+        <div class="panel panel-border-narrow js-hidden" id="other-information">
+            @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information")
+            @checkbox(reportForm("ignoreOtherInformationDetailsSpelling"), '_label -> "Ignore spelling")
+        </div>
+
+        @inputHidden(reportForm("mainOffence"))
+        @inputHidden(reportForm("ignoreMainOffenceSpelling"))
+        @inputHidden(reportForm("offenceSummary"))
+        @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
+        @inputHidden(reportForm("offenceAnalysis"))
+        @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
+
+        @inputHidden(reportForm("offenderAssessment"))
+        @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
+
+        <input type="hidden" id="jumpNumber" name="jumpNumber" />
+
+        @pageNumber(3, "Next")
+      }
     </div>
+    <div class="column-one-third">
 
-    @inputHidden(reportForm("mainOffence"))
-    @inputHidden(reportForm("ignoreMainOffenceSpelling"))
-    @inputHidden(reportForm("offenceSummary"))
-    @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
-    @inputHidden(reportForm("offenceAnalysis"))
-    @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
+      @navigation(3)
 
-    @inputHidden(reportForm("offenderAssessment"))
-    @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
+    </div>
+  </div>
 
-    @pageNumber(3, "Next")
-  }
 }

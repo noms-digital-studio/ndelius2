@@ -7,44 +7,58 @@
 
 @main("Sample Report Generator") {
 
-  <h3 class="heading-medium">Sentencing Court Details</h3>
+  <div class="grid-row">
+    <div class="column-two-thirds">
 
-  @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
-    @CSRF.formField
+      <h3 class="heading-medium">Sentencing Court Details</h3>
 
-    @inputHidden(reportForm("name"))
-    @inputHidden(reportForm("dateOfBirth"))
-    @inputHidden(reportForm("age"))
-    @inputHidden(reportForm("address"))
-    @inputHidden(reportForm("crn"))
-    @inputHidden(reportForm("pcn"))
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
+        @CSRF.formField
 
-    @readOnlyField(reportForm("court"), "Court")
-    @readOnlyField(reportForm("dateOfHearing"), "Date of Hearing")
-    @readOnlyField(reportForm("localJusticeArea"), "Local Justice Area")
+        @inputHidden(reportForm("name"))
+        @inputHidden(reportForm("dateOfBirth"))
+        @inputHidden(reportForm("age"))
+        @inputHidden(reportForm("address"))
+        @inputHidden(reportForm("crn"))
+        @inputHidden(reportForm("pcn"))
 
-    @inputHidden(reportForm("interviewInformationSource"))
-    @inputHidden(reportForm("serviceRecordsInformationSource"))
-    @inputHidden(reportForm("cpsSummaryInformationSource"))
-    @inputHidden(reportForm("oasysAssessmentsInformationSource"))
-    @inputHidden(reportForm("previousConvictionsInformationSource"))
-    @inputHidden(reportForm("victimStatementInformationSource"))
-    @inputHidden(reportForm("childrenServicesInformationSource"))
-    @inputHidden(reportForm("policeInformationSource"))
-    @inputHidden(reportForm("otherInformationSource"))
-    @inputHidden(reportForm("otherInformationDetails"))
-    @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
+        @readOnlyField(reportForm("court"), "Court")
+        @readOnlyField(reportForm("dateOfHearing"), "Date of Hearing")
+        @readOnlyField(reportForm("localJusticeArea"), "Local Justice Area")
 
-    @inputHidden(reportForm("mainOffence"))
-    @inputHidden(reportForm("ignoreMainOffenceSpelling"))
-    @inputHidden(reportForm("offenceSummary"))
-    @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
-    @inputHidden(reportForm("offenceAnalysis"))
-    @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
+        @inputHidden(reportForm("interviewInformationSource"))
+        @inputHidden(reportForm("serviceRecordsInformationSource"))
+        @inputHidden(reportForm("cpsSummaryInformationSource"))
+        @inputHidden(reportForm("oasysAssessmentsInformationSource"))
+        @inputHidden(reportForm("previousConvictionsInformationSource"))
+        @inputHidden(reportForm("victimStatementInformationSource"))
+        @inputHidden(reportForm("childrenServicesInformationSource"))
+        @inputHidden(reportForm("policeInformationSource"))
+        @inputHidden(reportForm("otherInformationSource"))
+        @inputHidden(reportForm("otherInformationDetails"))
+        @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
-    @inputHidden(reportForm("offenderAssessment"))
-    @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
+        @inputHidden(reportForm("mainOffence"))
+        @inputHidden(reportForm("ignoreMainOffenceSpelling"))
+        @inputHidden(reportForm("offenceSummary"))
+        @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
+        @inputHidden(reportForm("offenceAnalysis"))
+        @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
-    @pageNumber(2, "Confirm")
-  }
+        @inputHidden(reportForm("offenderAssessment"))
+        @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
+
+        <input type="hidden" id="jumpNumber" name="jumpNumber" />
+
+        @pageNumber(2, "Confirm")
+      }
+
+    </div>
+    <div class="column-one-third">
+
+      @navigation(2)
+
+    </div>
+  </div>
+
 }

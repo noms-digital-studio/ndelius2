@@ -7,46 +7,59 @@
 
 @main("Sample Report Generator") {
 
-  <h3 class="heading-medium">Offender Details</h3>
+  <div class="grid-row">
+    <div class="column-two-thirds">
 
-  @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
-    @CSRF.formField
+      <h3 class="heading-medium">Offence Details</h3>
 
-    @inputHidden(reportForm("name"))
-    @inputHidden(reportForm("dateOfBirth"))
-    @inputHidden(reportForm("age"))
-    @inputHidden(reportForm("address"))
-    @inputHidden(reportForm("crn"))
-    @inputHidden(reportForm("pcn"))
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
+        @CSRF.formField
 
-    @inputHidden(reportForm("court"))
-    @inputHidden(reportForm("dateOfHearing"))
-    @inputHidden(reportForm("localJusticeArea"))
+        @inputHidden(reportForm("name"))
+        @inputHidden(reportForm("dateOfBirth"))
+        @inputHidden(reportForm("age"))
+        @inputHidden(reportForm("address"))
+        @inputHidden(reportForm("crn"))
+        @inputHidden(reportForm("pcn"))
 
-    @inputHidden(reportForm("interviewInformationSource"))
-    @inputHidden(reportForm("serviceRecordsInformationSource"))
-    @inputHidden(reportForm("cpsSummaryInformationSource"))
-    @inputHidden(reportForm("oasysAssessmentsInformationSource"))
-    @inputHidden(reportForm("previousConvictionsInformationSource"))
-    @inputHidden(reportForm("victimStatementInformationSource"))
-    @inputHidden(reportForm("childrenServicesInformationSource"))
-    @inputHidden(reportForm("policeInformationSource"))
-    @inputHidden(reportForm("otherInformationSource"))
-    @inputHidden(reportForm("otherInformationDetails"))
-    @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
+        @inputHidden(reportForm("court"))
+        @inputHidden(reportForm("dateOfHearing"))
+        @inputHidden(reportForm("localJusticeArea"))
 
-    @textarea(reportForm("mainOffence"), '_label -> "Main Offence and Dates")
-    @checkbox(reportForm("ignoreMainOffenceSpelling"), '_label -> "Ignore spelling")
+        @inputHidden(reportForm("interviewInformationSource"))
+        @inputHidden(reportForm("serviceRecordsInformationSource"))
+        @inputHidden(reportForm("cpsSummaryInformationSource"))
+        @inputHidden(reportForm("oasysAssessmentsInformationSource"))
+        @inputHidden(reportForm("previousConvictionsInformationSource"))
+        @inputHidden(reportForm("victimStatementInformationSource"))
+        @inputHidden(reportForm("childrenServicesInformationSource"))
+        @inputHidden(reportForm("policeInformationSource"))
+        @inputHidden(reportForm("otherInformationSource"))
+        @inputHidden(reportForm("otherInformationDetails"))
+        @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
-    @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence")
-    @checkbox(reportForm("ignoreOffenceSummarySpelling"), '_label -> "Ignore spelling")
+        @textarea(reportForm("mainOffence"), '_label -> "Main Offence and Dates")
+        @checkbox(reportForm("ignoreMainOffenceSpelling"), '_label -> "Ignore spelling")
 
-    @textarea(reportForm("offenceAnalysis"), '_label -> "Offence Alaysis")
-    @checkbox(reportForm("ignoreOffenceAnalysisSpelling"), '_label -> "Ignore spelling")
+        @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence")
+        @checkbox(reportForm("ignoreOffenceSummarySpelling"), '_label -> "Ignore spelling")
 
-    @textarea(reportForm("offenderAssessment"), '_label -> "Offender Assessment")
-    @checkbox(reportForm("ignoreOffenderAssessmentSpelling"), '_label -> "Ignore spelling")
+        @textarea(reportForm("offenceAnalysis"), '_label -> "Offence Alaysis")
+        @checkbox(reportForm("ignoreOffenceAnalysisSpelling"), '_label -> "Ignore spelling")
 
-    @pageNumber(4, "Next")
-  }
+        @textarea(reportForm("offenderAssessment"), '_label -> "Offender Assessment")
+        @checkbox(reportForm("ignoreOffenderAssessmentSpelling"), '_label -> "Ignore spelling")
+
+        <input type="hidden" id="jumpNumber" name="jumpNumber" />
+
+        @pageNumber(4, "Generate")
+      }
+    </div>
+    <div class="column-one-third">
+
+      @navigation(4)
+
+    </div>
+  </div>
+
 }
