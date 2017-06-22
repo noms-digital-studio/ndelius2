@@ -46,7 +46,7 @@ public class WizardData {
                     return Optional.ofNullable(overrideField.get(this)).map(value -> Boolean.parseBoolean(value.toString()));
                 }
                 catch (IllegalAccessException ex) {
-                    return Optional.of(false);
+                    return Optional.empty();
                 }
             }).orElse(false);
 
@@ -72,6 +72,25 @@ public class WizardData {
         validationErrors.addAll(requiredFields().filter(field -> {
 
             field.setAccessible(true);
+
+            val onlyIfName = field.getAnnotation(RequiredOnPage.class).onlyIfField();
+
+            val requiredEnforced = !Strings.isNullOrEmpty(onlyIfName) &&
+                    allFields().filter(onlyIfField -> onlyIfField.getName().equals(onlyIfName)).findAny().flatMap(onlyIfField -> {
+
+                        onlyIfField.setAccessible(true);
+
+                        try {
+                            return Optional.ofNullable(onlyIfField.get(this)).map(value -> Boolean.parseBoolean(value.toString()));
+                        }
+                        catch (IllegalAccessException ex) {
+                            return Optional.empty();
+                        }
+                    }).orElse(true); // Default to required is enforced if no onlyIfField exists, otherwise use onlyIfField value
+
+            if (!requiredEnforced) {
+                return false;
+            }
 
             try {
                 return field.getAnnotation(RequiredOnPage.class).value() <= pageNumber &&
