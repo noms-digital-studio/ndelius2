@@ -9,22 +9,15 @@
 
   <h3 class="heading-medium">Offender Details</h3>
 
-  @readOnlyField(reportForm("name"), "Name")
-  @readOnlyField(reportForm("dateOfBirth"), "Date of Birth")
-  @readOnlyField(reportForm("age"), "Age")
-  @readOnlyField(reportForm("address"), "Address")
-  @readOnlyField(reportForm("crn"), "Delius CRN")
-  @readOnlyField(reportForm("pcn"), "PCN ID")
-
   @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
     @CSRF.formField
 
-    @inputHidden(reportForm("name"))
-    @inputHidden(reportForm("dateOfBirth"))
-    @inputHidden(reportForm("age"))
-    @inputHidden(reportForm("address"))
-    @inputHidden(reportForm("crn"))
-    @inputHidden(reportForm("pcn"))
+    @readOnlyField(reportForm("name"), "Name")
+    @readOnlyField(reportForm("dateOfBirth"), "Date of Birth")
+    @readOnlyField(reportForm("age"), "Age")
+    @readOnlyField(reportForm("address"), "Address")
+    @readOnlyField(reportForm("crn"), "Delius CRN")
+    @readOnlyField(reportForm("pcn"), "PCN ID")
 
     @inputHidden(reportForm("court"))
     @inputHidden(reportForm("dateOfHearing"))

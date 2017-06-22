@@ -9,10 +9,6 @@
 
   <h3 class="heading-medium">Sentencing Court Details</h3>
 
-  @readOnlyField(reportForm("court"), "Court")
-  @readOnlyField(reportForm("dateOfHearing"), "Date of Hearing")
-  @readOnlyField(reportForm("localJusticeArea"), "Local Justice Area")
-
   @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
     @CSRF.formField
 
@@ -23,9 +19,9 @@
     @inputHidden(reportForm("crn"))
     @inputHidden(reportForm("pcn"))
 
-    @inputHidden(reportForm("court"))
-    @inputHidden(reportForm("dateOfHearing"))
-    @inputHidden(reportForm("localJusticeArea"))
+    @readOnlyField(reportForm("court"), "Court")
+    @readOnlyField(reportForm("dateOfHearing"), "Date of Hearing")
+    @readOnlyField(reportForm("localJusticeArea"), "Local Justice Area")
 
     @inputHidden(reportForm("interviewInformationSource"))
     @inputHidden(reportForm("serviceRecordsInformationSource"))
