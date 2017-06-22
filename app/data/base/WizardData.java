@@ -80,15 +80,15 @@ public class WizardData {
 
             val requiredEnforced = getField(onlyIfName).flatMap(onlyIfField -> {
 
-                        onlyIfField.setAccessible(true); // Don't perform required check if a control boolean exists and is false
+                onlyIfField.setAccessible(true); // Don't perform required check if a control boolean exists and is false
 
-                        try {
-                            return Optional.ofNullable(onlyIfField.get(this)).map(value -> Boolean.parseBoolean(value.toString()));
-                        }
-                        catch (IllegalAccessException ex) {
-                            return Optional.empty();
-                        }
-                    }).orElse(true); // Default to required is enforced if no onlyIfField exists, otherwise use onlyIfField value
+                try {
+                    return Optional.ofNullable(onlyIfField.get(this)).map(value -> Boolean.parseBoolean(value.toString()));
+                }
+                catch (IllegalAccessException ex) {
+                    return Optional.empty();
+                }
+            }).orElse(true); // Default to required is enforced if no onlyIfField exists, otherwise use onlyIfField value
 
             if (!requiredEnforced) {
                 return false;
