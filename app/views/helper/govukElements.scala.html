@@ -2,7 +2,7 @@
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
   <div class="multiple-choice">
-    <input type="checkbox" id="@elements.id" name="@elements.field.name" @if(elements.field.value) { checked="checked"} />
+    <input type="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse(""))) { checked="checked"} />
     @govukLabel(elements)
   </div>
   <div class="clearfix"></div>

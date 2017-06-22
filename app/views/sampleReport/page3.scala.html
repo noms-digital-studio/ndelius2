@@ -34,8 +34,8 @@
         @checkbox(reportForm("otherInformationSource"), '_label -> "Other", '_help -> "(please specify below)")
 
         <div class="panel panel-border-narrow js-hidden" id="other-information">
-            @textarea(reportForm("otherInformationSourceDetails"), '_label -> "Other Source(s) of Information")
-            @checkbox(reportForm("IgnoreOtherInformationSourceDetailsSpelling"), '_label -> "Ignore spelling")
+            @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information")
+            @checkbox(reportForm("ignoreOtherInformationDetailsSpelling"), '_label -> "Ignore spelling")
         </div>
 
         @pageNumber(3, "Next")
