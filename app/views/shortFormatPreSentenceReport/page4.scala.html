@@ -10,17 +10,17 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Offender Details</h3>
+      <h3 class="heading-medium">Offence Details</h3>
 
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
 
-        @readOnlyField(reportForm("name"), "Name")
-        @readOnlyField(reportForm("dateOfBirth"), "Date of Birth")
-        @readOnlyField(reportForm("age"), "Age")
-        @readOnlyField(reportForm("address"), "Address")
-        @readOnlyField(reportForm("crn"), "Delius CRN")
-        @readOnlyField(reportForm("pcn"), "PCN ID")
+        @inputHidden(reportForm("name"))
+        @inputHidden(reportForm("dateOfBirth"))
+        @inputHidden(reportForm("age"))
+        @inputHidden(reportForm("address"))
+        @inputHidden(reportForm("crn"))
+        @inputHidden(reportForm("pcn"))
 
         @inputHidden(reportForm("court"))
         @inputHidden(reportForm("dateOfHearing"))
@@ -38,23 +38,21 @@
         @inputHidden(reportForm("otherInformationDetails"))
         @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
-        @inputHidden(reportForm("mainOffence"))
-        @inputHidden(reportForm("ignoreMainOffenceSpelling"))
-        @inputHidden(reportForm("offenceSummary"))
-        @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
-        @inputHidden(reportForm("offenceAnalysis"))
-        @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
+        @textarea(reportForm("mainOffence"), '_label -> "Main Offence and Dates")
+        @checkbox(reportForm("ignoreMainOffenceSpelling"), '_label -> "Ignore spelling")
+        @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence")
+        @checkbox(reportForm("ignoreOffenceSummarySpelling"), '_label -> "Ignore spelling")
+        @textarea(reportForm("offenceAnalysis"), '_label -> "Offence Alaysis")
+        @checkbox(reportForm("ignoreOffenceAnalysisSpelling"), '_label -> "Ignore spelling")
+        @textarea(reportForm("offenderAssessment"), '_label -> "Offender Assessment")
+        @checkbox(reportForm("ignoreOffenderAssessmentSpelling"), '_label -> "Ignore spelling")
 
-        @inputHidden(reportForm("offenderAssessment"))
-        @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
-
-        @pageNumber(1, "Confirm")
+        @pageNumber(4, "Generate")
       }
-
     </div>
     <div class="column-one-third">
 
-      @navigation(1)
+      @navigation(4)
 
     </div>
   </div>

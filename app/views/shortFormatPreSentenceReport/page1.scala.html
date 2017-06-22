@@ -10,21 +10,21 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Sentencing Court Details</h3>
+      <h3 class="heading-medium">Offender Details</h3>
 
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
 
-        @inputHidden(reportForm("name"))
-        @inputHidden(reportForm("dateOfBirth"))
-        @inputHidden(reportForm("age"))
-        @inputHidden(reportForm("address"))
-        @inputHidden(reportForm("crn"))
-        @inputHidden(reportForm("pcn"))
+        @readOnlyField(reportForm("name"), "Name")
+        @readOnlyField(reportForm("dateOfBirth"), "Date of Birth")
+        @readOnlyField(reportForm("age"), "Age")
+        @readOnlyField(reportForm("address"), "Address")
+        @readOnlyField(reportForm("crn"), "Delius CRN")
+        @readOnlyField(reportForm("pcn"), "PCN ID")
 
-        @readOnlyField(reportForm("court"), "Court")
-        @readOnlyField(reportForm("dateOfHearing"), "Date of Hearing")
-        @readOnlyField(reportForm("localJusticeArea"), "Local Justice Area")
+        @inputHidden(reportForm("court"))
+        @inputHidden(reportForm("dateOfHearing"))
+        @inputHidden(reportForm("localJusticeArea"))
 
         @inputHidden(reportForm("interviewInformationSource"))
         @inputHidden(reportForm("serviceRecordsInformationSource"))
@@ -48,13 +48,13 @@
         @inputHidden(reportForm("offenderAssessment"))
         @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
 
-        @pageNumber(2, "Confirm")
+        @pageNumber(1, "Confirm")
       }
 
     </div>
     <div class="column-one-third">
 
-      @navigation(2)
+      @navigation(1)
 
     </div>
   </div>

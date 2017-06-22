@@ -14,7 +14,7 @@ $(function() {
     var target = $(this).data('target');
     if (!$(this).hasClass('active')) {
       $('#jumpNumber').val(target);
-      $('#reportForm').submit();
+      $('form').submit();
     }
   });
 

@@ -27,7 +27,7 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
                                                   PdfGenerator pdfGenerator,
                                                   DocumentStore documentStore) {
 
-        super(ec, environment, formFactory, ShortFormatPreSentenceReportData.class, "views.html.sampleReport.page");
+        super(ec, environment, formFactory, ShortFormatPreSentenceReportData.class, "views.html.shortFormatPreSentenceReport.page");
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
