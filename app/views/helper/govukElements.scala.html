@@ -1,8 +1,8 @@
 @(elements: helper.FieldElements)
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
-  <div class="multiple-choice" @if(elements.args.get(Symbol("data-target"))) { data-target="@elements.args.get(Symbol("data-target"))" }>
-    <input type="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse(""))) { checked="checked" } />
+  <div class="multiple-choice" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>
+    <input type="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse("false"))) { checked="checked" } />
     @govukLabel(elements)
   </div>
   <div class="clearfix"></div>
