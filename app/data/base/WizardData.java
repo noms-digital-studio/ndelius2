@@ -80,7 +80,7 @@ public class WizardData {
 
             val requiredEnforced = getField(onlyIfName).flatMap(onlyIfField -> {
 
-                        onlyIfField.setAccessible(true);
+                        onlyIfField.setAccessible(true); // Don't perform required check if a control boolean exists and is false
 
                         try {
                             return Optional.ofNullable(onlyIfField.get(this)).map(value -> Boolean.parseBoolean(value.toString()));
@@ -93,11 +93,12 @@ public class WizardData {
             if (!requiredEnforced) {
                 return false;
             }
-
-            try {
+                    // Check all pages if on the last page and clicking next. Check current page only if clicking next or
+            try {   // jumping forwards. If jumping back don't perform any validation
 
                 return (pageNumber == totalPages().intValue() && !Optional.ofNullable(jumpNumber).isPresent() ||
-                        pageNumber == field.getAnnotation(RequiredOnPage.class).value()) &&
+                        (Optional.ofNullable(jumpNumber).orElse(pageNumber) >= pageNumber) &&
+                                pageNumber == field.getAnnotation(RequiredOnPage.class).value()) &&
                         Strings.isNullOrEmpty(Optional.ofNullable(field.get(this)).map(Object::toString).orElse(null));
             }
             catch (IllegalAccessException ex) {
