@@ -2,6 +2,7 @@ package data.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -27,6 +28,9 @@ public class WizardData {
     @JsonIgnore
     private Integer pageNumber;
 
+    @JsonIgnore
+    private Integer jumpNumber;
+
     public List<ValidationError> validate() {   // validate() is called by Play Form submission bindFromRequest()
 
         val spelling = new JLanguageTool(new BritishEnglish());
@@ -37,8 +41,7 @@ public class WizardData {
 
             val overrideName = field.getAnnotation(SpellCheck.class).overrideField();
 
-            val overrideEnabled = !Strings.isNullOrEmpty(overrideName) &&
-                    allFields().filter(overrideField -> overrideField.getName().equals(overrideName)).findAny().flatMap(overrideField -> {
+            val overrideEnabled = !Strings.isNullOrEmpty(overrideName) && getField(overrideName).flatMap(overrideField -> {
 
                 overrideField.setAccessible(true);
 
@@ -75,7 +78,7 @@ public class WizardData {
 
             val onlyIfName = field.getAnnotation(RequiredOnPage.class).onlyIfField();
 
-            val requiredEnforced = allFields().filter(onlyIfField -> onlyIfField.getName().equals(onlyIfName)).findAny().flatMap(onlyIfField -> {
+            val requiredEnforced = getField(onlyIfName).flatMap(onlyIfField -> {
 
                         onlyIfField.setAccessible(true);
 
@@ -92,7 +95,9 @@ public class WizardData {
             }
 
             try {
-                return field.getAnnotation(RequiredOnPage.class).value() <= pageNumber &&
+
+                return (pageNumber == totalPages().intValue() && !Optional.ofNullable(jumpNumber).isPresent() ||
+                        pageNumber == field.getAnnotation(RequiredOnPage.class).value()) &&
                         Strings.isNullOrEmpty(Optional.ofNullable(field.get(this)).map(Object::toString).orElse(null));
             }
             catch (IllegalAccessException ex) {
@@ -106,12 +111,21 @@ public class WizardData {
 
     public Integer totalPages() {
 
-        return requiredFields().mapToInt(field -> field.getAnnotation(RequiredOnPage.class).value()).max().orElse(0);
+        return onPageFields().mapToInt(field ->
+                field.isAnnotationPresent(OnPage.class) ?
+                        field.getAnnotation(OnPage.class).value() :
+                        field.getAnnotation(RequiredOnPage.class).value()).
+                max().orElse(0);
     }
 
     private Stream<Field> requiredFields() {
 
         return annotatedFields(RequiredOnPage.class);
+    }
+
+    private Stream<Field> onPageFields() {
+
+        return Stream.concat(annotatedFields(OnPage.class), requiredFields());
     }
 
     private Stream<Field> spellCheckFields() {
@@ -127,5 +141,10 @@ public class WizardData {
     private Stream<Field> allFields() {
 
         return Arrays.stream(this.getClass().getDeclaredFields());
+    }
+
+    public Optional<Field> getField(String name) {
+
+        return allFields().filter(field -> field.getName().equals(name)).findAny();
     }
 }

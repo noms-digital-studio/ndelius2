@@ -2,6 +2,7 @@ package data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import data.annotations.SpellCheck;
 import data.base.WizardData;
@@ -32,6 +33,7 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @JsonProperty("DELIUS_CRN")
     private String crn;
 
+    @OnPage(1)
     @JsonProperty("PNC_ID")
     private String pnc;
 
@@ -47,30 +49,39 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @JsonProperty("LOCAL_JUSTICE_AREA")
     private String localJusticeArea;
 
+    @OnPage(3)
     @JsonProperty("INTERVIEW_INFORMATION_SOURCE")
     private boolean interviewInformationSource;
 
+    @OnPage(3)
     @JsonProperty("SERVICE_RECORDS_INFORMATION_SOURCE")
     private boolean serviceRecordsInformationSource;
 
+    @OnPage(3)
     @JsonProperty("CPS_SUMMARY_INFORMATION_SOURCE")
     private boolean cpsSummaryInformationSource;
 
+    @OnPage(3)
     @JsonProperty("OASYS_ASSESSMENTS_INFORMATION_SOURCE")
     private boolean oasysAssessmentsInformationSource;
 
+    @OnPage(3)
     @JsonProperty("PREVIOUS_CONVICTIONS_INFORMATION_SOURCE")
     private boolean previousConvictionsInformationSource;
 
+    @OnPage(3)
     @JsonProperty("VICTIM_STATEMENT_INFORMATION_SOURCE")
     private boolean victimStatementInformationSource;
 
+    @OnPage(3)
     @JsonProperty("CHILDREN_SERVICES_INFORMATION_SOURCE")
     private boolean childrenServicesInformationSource;
 
+    @OnPage(3)
     @JsonProperty("POLICE_INFORMATION_SOURCE")
     private boolean policeInformationSource;
 
+    @OnPage(3)
     @JsonProperty("OTHER_INFORMATION_SOURCE")
     private boolean otherInformationSource;
 

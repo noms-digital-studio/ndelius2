@@ -1,8 +1,11 @@
 package controllers.base;
 
+import data.annotations.OnPage;
+import data.annotations.RequiredOnPage;
 import data.base.WizardData;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -54,7 +57,19 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         if (boundForm.hasErrors()) {
 
-            return CompletableFuture.supplyAsync(() -> badRequest(renderPage.apply(thisPage)), ec.current());
+            val errorPage = boundForm.errors().keySet().stream().findFirst().
+                    flatMap(field -> boundForm.value().flatMap(wizardData -> wizardData.getField(field))).
+                    map(field -> {
+
+                        field.setAccessible(true);
+
+                        return field.isAnnotationPresent(OnPage.class) ?
+                                field.getAnnotation(OnPage.class).value() :
+                                field.getAnnotation(RequiredOnPage.class).value();
+
+                    }).orElse(thisPage);
+
+            return CompletableFuture.supplyAsync(() -> badRequest(renderPage.apply(errorPage)), ec.current());
 
         } else {
 
@@ -73,7 +88,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     protected Integer nextPage(T wizardData) {
 
-        return wizardData.getPageNumber() + 1;  // Can alter in derived WizardController to skip pages based on wizardData
+        return Optional.ofNullable(wizardData.getJumpNumber()).orElse(wizardData.getPageNumber() + 1);
     }
 
     protected abstract CompletionStage<Result> completedWizard(T wizardData);
