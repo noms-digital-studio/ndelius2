@@ -72,10 +72,11 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         } else {
 
             val wizardData = boundForm.get();
+            val nextPage = nextPage(wizardData);
 
-            if (thisPage < wizardData.totalPages()) {
+            if (nextPage <= wizardData.totalPages()) {
 
-                return CompletableFuture.supplyAsync(() -> ok(renderPage.apply(nextPage(wizardData))), ec.current());
+                return CompletableFuture.supplyAsync(() -> ok(renderPage.apply(nextPage)), ec.current());
 
             } else {
 
