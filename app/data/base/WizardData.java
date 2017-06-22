@@ -75,8 +75,7 @@ public class WizardData {
 
             val onlyIfName = field.getAnnotation(RequiredOnPage.class).onlyIfField();
 
-            val requiredEnforced = !Strings.isNullOrEmpty(onlyIfName) &&
-                    allFields().filter(onlyIfField -> onlyIfField.getName().equals(onlyIfName)).findAny().flatMap(onlyIfField -> {
+            val requiredEnforced = allFields().filter(onlyIfField -> onlyIfField.getName().equals(onlyIfName)).findAny().flatMap(onlyIfField -> {
 
                         onlyIfField.setAccessible(true);
 
