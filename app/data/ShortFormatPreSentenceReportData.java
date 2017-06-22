@@ -74,7 +74,7 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @JsonProperty("OTHER_INFORMATION_SOURCE")
     private boolean otherInformationSource;
 
-    @RequiredOnPage(3)
+    @RequiredOnPage(value = 3, onlyIfField = "otherInformationSource")
     @SpellCheck(overrideField = "ignoreOtherInformationDetailsSpelling")
     @JsonProperty("OTHER_INFORMATION_DETAILS")
     private String otherInformationDetails;
