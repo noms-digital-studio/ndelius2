@@ -29,10 +29,10 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     private String address;
 
     @RequiredOnPage(1)
-    @JsonProperty("CRN")
+    @JsonProperty("DELIUS_CRN")
     private String crn;
 
-    @JsonProperty("PNC")
+    @JsonProperty("PNC_ID")
     private String pnc;
 
     @RequiredOnPage(2)
@@ -48,39 +48,38 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     private String localJusticeArea;
 
     @JsonProperty("INTERVIEW_INFORMATION_SOURCE")
-    private String interviewInformationSource;
+    private boolean interviewInformationSource;
 
     @JsonProperty("SERVICE_RECORDS_INFORMATION_SOURCE")
-    private String serviceRecordsInformationSource;
+    private boolean serviceRecordsInformationSource;
 
     @JsonProperty("CPS_SUMMARY_INFORMATION_SOURCE")
-    private String cpsSummaryInformationSource;
+    private boolean cpsSummaryInformationSource;
 
     @JsonProperty("OASYS_ASSESSMENTS_INFORMATION_SOURCE")
-    private String oasysAssessmentsInformationSource;
+    private boolean oasysAssessmentsInformationSource;
 
     @JsonProperty("PREVIOUS_CONVICTIONS_INFORMATION_SOURCE")
-    private String previousConvictionsInformationSource;
+    private boolean previousConvictionsInformationSource;
 
     @JsonProperty("VICTIM_STATEMENT_INFORMATION_SOURCE")
-    private String victimStatementInformationSource;
+    private boolean victimStatementInformationSource;
 
     @JsonProperty("CHILDREN_SERVICES_INFORMATION_SOURCE")
-    private String childrenServicesInformationSource;
+    private boolean childrenServicesInformationSource;
 
     @JsonProperty("POLICE_INFORMATION_SOURCE")
-    private String policeInformationSource;
+    private boolean policeInformationSource;
 
-    @RequiredOnPage(3)
     @JsonProperty("OTHER_INFORMATION_SOURCE")
-    private String otherInformationSource;
+    private boolean otherInformationSource;
 
     @RequiredOnPage(3)
-    @SpellCheck(overrideField = "ignoreOtherInformationSourceDetailsSpelling")
-    @JsonProperty("OTHER_INFORMATION_SOURCE_DETAILS")
-    private String otherInformationSourceDetails;
+    @SpellCheck(overrideField = "ignoreOtherInformationDetailsSpelling")
+    @JsonProperty("OTHER_INFORMATION_DETAILS")
+    private String otherInformationDetails;
 
     @JsonIgnore
-    private Boolean ignoreOtherInformationSourceDetailsSpelling;
+    private boolean ignoreOtherInformationDetailsSpelling;
 
 }
