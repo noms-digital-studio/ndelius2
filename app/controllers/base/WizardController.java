@@ -63,9 +63,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
                         field.setAccessible(true);
 
-                        return field.isAnnotationPresent(OnPage.class) ?
-                                field.getAnnotation(OnPage.class).value() :
-                                field.getAnnotation(RequiredOnPage.class).value();
+                        return WizardData.fieldPage(field);
 
                     }).orElse(thisPage);
 

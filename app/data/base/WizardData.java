@@ -111,11 +111,19 @@ public class WizardData {
 
     public Integer totalPages() {
 
-        return onPageFields().mapToInt(field ->
-                field.isAnnotationPresent(OnPage.class) ?
-                        field.getAnnotation(OnPage.class).value() :
-                        field.getAnnotation(RequiredOnPage.class).value()).
-                max().orElse(0);
+        return onPageFields().mapToInt(WizardData::fieldPage).max().orElse(0);
+    }
+
+    public static Integer fieldPage(Field field) {
+
+        return field.isAnnotationPresent(OnPage.class) ?
+                field.getAnnotation(OnPage.class).value() :
+                field.getAnnotation(RequiredOnPage.class).value();
+    }
+
+    public Optional<Field> getField(String name) {
+
+        return allFields().filter(field -> field.getName().equals(name)).findAny();
     }
 
     private Stream<Field> requiredFields() {
@@ -141,10 +149,5 @@ public class WizardData {
     private Stream<Field> allFields() {
 
         return Arrays.stream(this.getClass().getDeclaredFields());
-    }
-
-    public Optional<Field> getField(String name) {
-
-        return allFields().filter(field -> field.getName().equals(name)).findAny();
     }
 }
