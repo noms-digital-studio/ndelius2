@@ -1,8 +1,8 @@
 @(elements: helper.FieldElements)
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
-  <div class="multiple-choice">
-    <input type="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse(""))) { checked="checked"} />
+  <div class="multiple-choice" @if(elements.args.get(Symbol("data-target"))) { data-target="@elements.args.get(Symbol("data-target"))" }>
+    <input type="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse(""))) { checked="checked" } />
     @govukLabel(elements)
   </div>
   <div class="clearfix"></div>
@@ -11,9 +11,9 @@
   <div class="form-group@if(elements.hasErrors) { form-group-error}">
     @govukLabel(elements)
     @if(elements.input.body.contains("textarea id=")) {
-      <textarea class="form-control@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">@elements.field.value</textarea>
+      <textarea class="form-control@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name" maxlength="1000">@elements.field.value</textarea>
     } else {
-      <input class="form-control@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.id" name="@elements.field.name" value="@elements.field.value" />
+      <input class="form-control@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" />
     }
   </div>
 }

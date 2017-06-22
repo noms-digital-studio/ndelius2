@@ -36,7 +36,7 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
     @Override
     protected CompletionStage<Result> completedWizard(ShortFormatPreSentenceReportData shortFormatPreSentenceReportData) {
 
-        // shortFormatPreSentenceReportData.setReportDate(new SimpleDateFormat("dd MMMM yyy").format(new Date()));
+        shortFormatPreSentenceReportData.setReportDate(new SimpleDateFormat("dd MMMM yyy").format(new Date()));
 
         Logger.info("Sample Report Data: " + shortFormatPreSentenceReportData);
 

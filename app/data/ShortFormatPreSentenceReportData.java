@@ -82,4 +82,39 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @JsonIgnore
     private boolean ignoreOtherInformationDetailsSpelling;
 
+    @RequiredOnPage(4)
+    @SpellCheck(overrideField = "ignoreMainOffenceSpelling")
+    @JsonProperty("MAIN_OFFENCE")
+    private String mainOffence;
+
+    @JsonIgnore
+    private boolean ignoreMainOffenceSpelling;
+
+    @RequiredOnPage(4)
+    @SpellCheck(overrideField = "ignoreOffenceSummarySpelling")
+    @JsonProperty("OFFENCE_SUMMARY")
+    private String offenceSummary;
+
+    @JsonIgnore
+    private boolean ignoreOffenceSummarySpelling;
+
+    @RequiredOnPage(4)
+    @SpellCheck(overrideField = "ignoreOffenceAnalysisSpelling")
+    @JsonProperty("OFFENCE_ANALYSIS")
+    private String offenceAnalysis;
+
+    @JsonIgnore
+    private boolean ignoreOffenceAnalysisSpelling;
+
+    @RequiredOnPage(4)
+    @SpellCheck(overrideField = "ignoreOffenderAssessmentSpelling")
+    @JsonProperty("OFFENDER_ASSESSMENT")
+    private String offenderAssessment;
+
+    @JsonIgnore
+    private boolean ignoreOffenderAssessmentSpelling;
+
+    @JsonProperty("DD_MMM_YYYY")
+    private String reportDate;
+
 }
