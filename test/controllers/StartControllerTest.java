@@ -12,7 +12,7 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.GET;
 import static play.test.Helpers.route;
 
-public class HomeControllerTest extends WithApplication {
+public class StartControllerTest extends WithApplication {
 
     @Override
     protected Application provideApplication() {
@@ -23,7 +23,7 @@ public class HomeControllerTest extends WithApplication {
     public void testIndex() {
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(GET)
-                .uri("/");
+                .uri("/start");
 
         Result result = route(app, request);
         assertEquals(OK, result.status());
