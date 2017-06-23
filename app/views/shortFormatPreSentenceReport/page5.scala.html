@@ -5,14 +5,14 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Sample Report Generator") {
+@main("Short Format Pre Sentence Report", true) {
 
   <div class="grid-row">
     <div class="column-two-thirds">
 
       <h3 class="heading-medium">Offender Assessment</h3>
 
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
 
         @inputHidden(reportForm("name"))

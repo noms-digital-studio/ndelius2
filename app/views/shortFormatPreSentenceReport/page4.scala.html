@@ -12,7 +12,7 @@
 
       <h3 class="heading-medium">Offence Details</h3>
 
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
 
         @inputHidden(reportForm("name"))
