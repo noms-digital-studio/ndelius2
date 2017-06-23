@@ -23,7 +23,7 @@ public class StartControllerTest extends WithApplication {
     public void testIndex() {
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(GET)
-                .uri("/start");
+                .uri("/startReport");
 
         Result result = route(app, request);
         assertEquals(OK, result.status());
