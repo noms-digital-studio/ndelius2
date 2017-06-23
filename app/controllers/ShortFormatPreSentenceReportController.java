@@ -45,7 +45,7 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
 //                thenCompose(result -> documentStore.uploadNewPdf(result, "shortFormatPreSentenceReport.pdf", "someUser", shortFormatPreSentenceReportData.getCrn(), "author", 12345).
 //                        thenApply(map -> result)).
 
-                thenApply(result -> ok(views.html.shortFormatPreSentenceReport.completed.render()));
+                thenApply(result -> ok(views.html.shortFormatPreSentenceReport.completed.render(String.format("PDF Created - %d bytes", result.length))));
 
 //                thenApply(result -> ok(ArrayUtils.toPrimitive(result)).as("application/pdf"));
     }
