@@ -11,7 +11,7 @@
   <div class="form-group@if(elements.hasErrors) { form-group-error}">
     @govukLabel(elements)
     @if(elements.input.body.contains("textarea id=")) {
-      <textarea class="form-control@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name" maxlength="1000">@elements.field.value</textarea>
+      <textarea class="form-control@if(elements.args.get('class)) {  @elements.args.get('class)}@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name" maxlength="1000">@elements.field.value</textarea>
     } else {
       <input class="form-control@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" />
     }

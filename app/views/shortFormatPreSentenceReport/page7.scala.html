@@ -5,12 +5,12 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Short Format Pre Sentence Report") {
+@main("Sample Report Generator") {
 
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Sources of Information</h3>
+      <h3 class="heading-medium">Risk Assessment</h3>
 
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
         @CSRF.formField
@@ -26,20 +26,17 @@
         @inputHidden(reportForm("dateOfHearing"))
         @inputHidden(reportForm("localJusticeArea"))
 
-        @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
-        @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service Records")
-        @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS Summary")
-        @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys Assessments")
-        @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous Convictions")
-        @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim Statement")
-        @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Children Services Checks")
-        @checkbox(reportForm("policeInformationSource"), '_label -> "Police Information")
-        @checkbox(reportForm("otherInformationSource"), '_label -> "Other", '_help -> "(please specify below)", Symbol("data-target") -> "other-information")
-
-        <div class="panel panel-border-narrow js-hidden" id="other-information">
-            @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information")
-            @checkbox(reportForm("ignoreOtherInformationDetailsSpelling"), '_label -> "Ignore spelling")
-        </div>
+        @inputHidden(reportForm("interviewInformationSource"))
+        @inputHidden(reportForm("serviceRecordsInformationSource"))
+        @inputHidden(reportForm("cpsSummaryInformationSource"))
+        @inputHidden(reportForm("oasysAssessmentsInformationSource"))
+        @inputHidden(reportForm("previousConvictionsInformationSource"))
+        @inputHidden(reportForm("victimStatementInformationSource"))
+        @inputHidden(reportForm("childrenServicesInformationSource"))
+        @inputHidden(reportForm("policeInformationSource"))
+        @inputHidden(reportForm("otherInformationSource"))
+        @inputHidden(reportForm("otherInformationDetails"))
+        @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
         @inputHidden(reportForm("mainOffence"))
         @inputHidden(reportForm("ignoreMainOffenceSpelling"))
@@ -54,11 +51,11 @@
         @inputHidden(reportForm("patternOfOffending"))
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
-        @inputHidden(reportForm("previousSupervisionResponse"))
-        @inputHidden(reportForm("ignorePreviousSupervisionResponseSpelling"))
+        @textarea(reportForm("previousSupervisionResponse"), '_label -> "Response to Previous Supervision", 'class -> "large")
+        @checkbox(reportForm("ignorePreviousSupervisionResponseSpelling"), '_label -> "Ignore spelling")
 
-        @inputHidden(reportForm("likelihoodOfReOffending"))
-        @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
+        @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of Re-offending", 'class -> "large")
+        @checkbox(reportForm("ignoreLikelihoodOfReOffendingSpelling"), '_label -> "Ignore spelling")
 
         @inputHidden(reportForm("riskOfSeriousHarm"))
         @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
@@ -69,12 +66,12 @@
         @inputHidden(reportForm("reportAuthor"))
         @inputHidden(reportForm("office"))
 
-        @pageNumber(3, "Next")
-      }
+        @pageNumber(7, "Next")
+    }
     </div>
     <div class="column-one-third">
 
-      @navigation(3)
+      @navigation(7)
 
     </div>
   </div>

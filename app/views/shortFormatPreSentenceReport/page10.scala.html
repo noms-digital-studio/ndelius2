@@ -5,12 +5,12 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Short Format Pre Sentence Report") {
+@main("Sample Report Generator") {
 
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Sources of Information</h3>
+      <h3 class="heading-medium">Signature</h3>
 
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
         @CSRF.formField
@@ -26,20 +26,17 @@
         @inputHidden(reportForm("dateOfHearing"))
         @inputHidden(reportForm("localJusticeArea"))
 
-        @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
-        @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service Records")
-        @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS Summary")
-        @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys Assessments")
-        @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous Convictions")
-        @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim Statement")
-        @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Children Services Checks")
-        @checkbox(reportForm("policeInformationSource"), '_label -> "Police Information")
-        @checkbox(reportForm("otherInformationSource"), '_label -> "Other", '_help -> "(please specify below)", Symbol("data-target") -> "other-information")
-
-        <div class="panel panel-border-narrow js-hidden" id="other-information">
-            @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information")
-            @checkbox(reportForm("ignoreOtherInformationDetailsSpelling"), '_label -> "Ignore spelling")
-        </div>
+        @inputHidden(reportForm("interviewInformationSource"))
+        @inputHidden(reportForm("serviceRecordsInformationSource"))
+        @inputHidden(reportForm("cpsSummaryInformationSource"))
+        @inputHidden(reportForm("oasysAssessmentsInformationSource"))
+        @inputHidden(reportForm("previousConvictionsInformationSource"))
+        @inputHidden(reportForm("victimStatementInformationSource"))
+        @inputHidden(reportForm("childrenServicesInformationSource"))
+        @inputHidden(reportForm("policeInformationSource"))
+        @inputHidden(reportForm("otherInformationSource"))
+        @inputHidden(reportForm("otherInformationDetails"))
+        @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
         @inputHidden(reportForm("mainOffence"))
         @inputHidden(reportForm("ignoreMainOffenceSpelling"))
@@ -66,15 +63,17 @@
         @inputHidden(reportForm("proposal"))
         @inputHidden(reportForm("ignoreProposalSpelling"))
 
-        @inputHidden(reportForm("reportAuthor"))
-        @inputHidden(reportForm("office"))
+        @inputText(reportForm("reportAuthor"), '_label -> "Report Author")
+        @inputText(reportForm("office"), '_label -> "Office")
 
-        @pageNumber(3, "Next")
+        <p class="body-text"><span class="bold">Date</span><br/>@(new Date().format("dd MMM yyyy"))</p>
+
+        @pageNumber(10, "Generate Report")
       }
     </div>
     <div class="column-one-third">
 
-      @navigation(3)
+      @navigation(10)
 
     </div>
   </div>

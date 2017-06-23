@@ -4,3 +4,14 @@
 .js-hidden {
   display: none !important;
 }
+
+textarea {
+  max-width: 100%;
+
+  &.wide, &.large {
+    width: 100%;
+  }
+  &.large {
+    min-height: 300px;
+  }
+}

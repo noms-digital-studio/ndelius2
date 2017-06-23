@@ -12,7 +12,7 @@
 
       <h3 class="heading-medium">Sentencing Court Details</h3>
 
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "reportForm") {
         @CSRF.formField
 
         @inputHidden(reportForm("name"))
@@ -47,6 +47,24 @@
 
         @inputHidden(reportForm("offenderAssessment"))
         @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
+
+        @inputHidden(reportForm("patternOfOffending"))
+        @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
+
+        @inputHidden(reportForm("previousSupervisionResponse"))
+        @inputHidden(reportForm("ignorePreviousSupervisionResponseSpelling"))
+
+        @inputHidden(reportForm("likelihoodOfReOffending"))
+        @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
+
+        @inputHidden(reportForm("riskOfSeriousHarm"))
+        @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
+
+        @inputHidden(reportForm("proposal"))
+        @inputHidden(reportForm("ignoreProposalSpelling"))
+
+        @inputHidden(reportForm("reportAuthor"))
+        @inputHidden(reportForm("office"))
 
         @pageNumber(2, "Confirm")
       }
