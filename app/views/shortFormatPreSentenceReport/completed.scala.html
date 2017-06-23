@@ -12,15 +12,16 @@
   <script>
     $(function() {
 
-      var pdfBytes = Uint8Array.from(atob('@pdfBase64'), c => c.charCodeAt(0));
+      $('input').click(function() {
+        parent.postMessage('@message', '*');
+      });
+
+      var pdfBytes = Uint8Array.from(atob('@pdfBase64'), function(c) { return c.charCodeAt(0); });
+
       var pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
       var pdfUrl = URL.createObjectURL(pdfBlob);
 
       $('iframe').attr('src', pdfUrl);
-
-      $('input').click(function() {
-        parent.postMessage('@message', '*');
-      });
 
     });
     </script>
