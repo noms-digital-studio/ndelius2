@@ -1,6 +1,5 @@
 package controllers;
 
-import lombok.val;
 import play.mvc.*;
 
 public class IntegrationController extends Controller {

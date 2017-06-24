@@ -4,9 +4,7 @@ import controllers.base.WizardController;
 import data.ShortFormatPreSentenceReportData;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
-import java.util.Date;
 import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
 import org.apache.commons.lang3.ArrayUtils;
@@ -40,13 +38,9 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
         Logger.info("Short Format Pre Sentence Report Data: " + shortFormatPreSentenceReportData);
 
         return pdfGenerator.generate("helloWorld", shortFormatPreSentenceReportData).
-
 //                thenCompose(result -> documentStore.uploadNewPdf(result, "shortFormatPreSentenceReport.pdf", "someUser", shortFormatPreSentenceReportData.getCrn(), "author", 12345).
 //                        thenApply(map -> result)).
-
                 thenApply(result -> ok(views.html.shortFormatPreSentenceReport.completed.render(
                         String.format("PDF Created - %d bytes", result.length), Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(result)))));
-
-//                thenApply(result -> ok(ArrayUtils.toPrimitive(result)).as("application/pdf"));
     }
 }

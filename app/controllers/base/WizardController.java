@@ -1,7 +1,5 @@
 package controllers.base;
 
-import data.annotations.OnPage;
-import data.annotations.RequiredOnPage;
 import data.base.WizardData;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -10,7 +8,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import lombok.val;
 import play.Environment;
 import play.data.Form;
@@ -59,13 +56,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
             val errorPage = boundForm.errors().keySet().stream().findFirst().
                     flatMap(field -> boundForm.value().flatMap(wizardData -> wizardData.getField(field))).
-                    map(field -> {
-
-                        field.setAccessible(true);
-
-                        return WizardData.fieldPage(field);
-
-                    }).orElse(thisPage);
+                    map(WizardData::fieldPage).orElse(thisPage);
 
             return CompletableFuture.supplyAsync(() -> badRequest(renderPage.apply(errorPage)), ec.current());
 
@@ -74,18 +65,13 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             val wizardData = boundForm.get();
             val nextPage = nextPage(wizardData);
 
-            if (nextPage <= wizardData.totalPages()) {
-
-                return CompletableFuture.supplyAsync(() -> ok(renderPage.apply(nextPage)), ec.current());
-
-            } else {
-
-                return completedWizard(wizardData);
-            }
+            return nextPage <= wizardData.totalPages() ?
+                    CompletableFuture.supplyAsync(() -> ok(renderPage.apply(nextPage)), ec.current()) :
+                    completedWizard(wizardData);
         }
     }
 
-    protected Integer nextPage(T wizardData) {
+    protected Integer nextPage(T wizardData) {  // Overridable in derived Controllers jump pages based on content
 
         return Optional.ofNullable(wizardData.getJumpNumber()).orElse(wizardData.getPageNumber() + 1);
     }
