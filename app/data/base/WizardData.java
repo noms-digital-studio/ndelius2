@@ -2,6 +2,8 @@ package data.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import java.io.IOException;
@@ -34,45 +36,28 @@ public class WizardData {
     @JsonIgnore
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private transient JLanguageTool spellChecker = new JLanguageTool(new BritishEnglish());
+    private transient final JLanguageTool spellChecker = new JLanguageTool(new BritishEnglish());
+
+    @JsonIgnore
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private transient final List<Supplier<List<ValidationError>>> validators;
+
+    protected WizardData()
+    {
+        val wizardData = this;
+
+        validators = new ArrayList<Supplier<List<ValidationError>>>() {
+            {
+                add(wizardData::spellingErrors);
+                add(wizardData::mandatoryErrors);
+            }
+        };
+    }
 
     public List<ValidationError> validate() {   // validate() is called by Play Form submission bindFromRequest()
 
-        final Optional<String> optionalString = Optional.empty();
-
-        val validationErrors = spellCheckFields().collect(Collectors.toMap(Field::getName, field -> {
-
-            val overrideName = field.getAnnotation(SpellCheck.class).overrideField();
-            val overrideEnabled = getField(overrideName).flatMap(this::getBooleanValue).orElse(false);
-            val textToCheck = (overrideEnabled ? optionalString : getStringValue(field)).orElse(null);
-
-            return Strings.isNullOrEmpty(textToCheck) ? new ArrayList<String>() : checkSpelling(textToCheck).stream().
-                    map(mistake -> String.format(
-                            "'%s' could be %s",
-                            textToCheck.substring(mistake.getFromPos(), mistake.getToPos()),
-                            suggestions(mistake)
-                    )).
-                    collect(Collectors.toList());
-
-        })).entrySet().stream().filter(entry -> !entry.getValue().isEmpty()).
-                flatMap(entry -> entry.getValue().stream().map(message -> new ValidationError(entry.getKey(), message))).
-                collect(Collectors.toList());
-                                                                    // Default to required is enforced if no onlyIfField
-        validationErrors.addAll(requiredFields().filter(field -> {  // exists, otherwise use onlyIfField current boolean
-
-            val onlyIfName = field.getAnnotation(RequiredOnPage.class).onlyIfField();
-            val requiredEnforced = getField(onlyIfName).flatMap(this::getBooleanValue).orElse(true);
-            val fieldOnThisPage = pageNumber.equals(fieldPage(field));
-            val finishedWizard = pageNumber.equals(totalPages()) && !Optional.ofNullable(jumpNumber).isPresent();
-            val notBackwards = Optional.ofNullable(jumpNumber).orElse(pageNumber) >= pageNumber;
-
-            return requiredEnforced &&                                               // Check all pages if on last page and clicking next
-                    (finishedWizard || (fieldOnThisPage && notBackwards)) &&         // Check current page if clicking next or jumping forwards
-                    Strings.isNullOrEmpty(getStringValue(field).orElse(null)); // If jumping back don't perform any validation
-
-        }).map(field -> new ValidationError(field.getName(), RequiredValidator.message)).collect(Collectors.toList()));
-
-        return validationErrors;
+        return validators.stream().map(Supplier::get).flatMap(List::stream).collect(Collectors.toList());
     }
 
     public Integer totalPages() {
@@ -90,6 +75,46 @@ public class WizardData {
         return field.isAnnotationPresent(OnPage.class) ?
                 field.getAnnotation(OnPage.class).value() :
                 field.getAnnotation(RequiredOnPage.class).value();
+    }
+
+    private List<ValidationError> spellingErrors() {
+
+        final Optional<String> optionalString = Optional.empty();
+
+        return spellCheckFields().collect(Collectors.toMap(Field::getName, field -> {
+
+            val overrideName = field.getAnnotation(SpellCheck.class).overrideField();
+            val overrideEnabled = getField(overrideName).flatMap(this::getBooleanValue).orElse(false);
+            val textToCheck = (overrideEnabled ? optionalString : getStringValue(field)).orElse(null);
+
+            return Strings.isNullOrEmpty(textToCheck) ? new ArrayList<String>() : checkSpelling(textToCheck).stream().
+                    map(mistake -> String.format(
+                            "'%s' could be %s",
+                            textToCheck.substring(mistake.getFromPos(), mistake.getToPos()),
+                            suggestions(mistake)
+                    )).
+                    collect(Collectors.toList());
+
+        })).entrySet().stream().filter(entry -> !entry.getValue().isEmpty()).
+                flatMap(entry -> entry.getValue().stream().map(message -> new ValidationError(entry.getKey(), message))).
+                collect(Collectors.toList());
+    }
+
+    private List<ValidationError> mandatoryErrors() {
+                                                        // Default to required is enforced if no onlyIfField
+        return requiredFields().filter(field -> {       // exists, otherwise use onlyIfField current boolean
+
+            val onlyIfName = field.getAnnotation(RequiredOnPage.class).onlyIfField();
+            val requiredEnforced = getField(onlyIfName).flatMap(this::getBooleanValue).orElse(true);
+            val fieldOnThisPage = pageNumber.equals(fieldPage(field));
+            val finishedWizard = pageNumber.equals(totalPages()) && !Optional.ofNullable(jumpNumber).isPresent();
+            val notBackwards = Optional.ofNullable(jumpNumber).orElse(pageNumber) >= pageNumber;
+
+            return requiredEnforced &&                                               // Check all pages if on last page and clicking next
+                    (finishedWizard || (fieldOnThisPage && notBackwards)) &&         // Check current page if clicking next or jumping forwards
+                    Strings.isNullOrEmpty(getStringValue(field).orElse(null)); // If jumping back don't perform any validation
+
+        }).map(field -> new ValidationError(field.getName(), RequiredValidator.message)).collect(Collectors.toList());
     }
 
     private static String suggestions(RuleMatch mistake) {
