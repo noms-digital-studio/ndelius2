@@ -3,7 +3,6 @@ package data.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import java.io.IOException;
