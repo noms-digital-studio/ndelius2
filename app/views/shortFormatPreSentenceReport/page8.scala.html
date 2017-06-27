@@ -12,6 +12,8 @@
 
       <h3 class="heading-medium">Risk of Serious Harm</h3>
 
+      <p>For the purpose of this assessment "serious harm" is defined as "an event that is life threatening and/or traumatic and from which recovery, whether physical or psychological can be expected to be difficult or impossible".</p>
+
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
 
@@ -57,7 +59,7 @@
         @inputHidden(reportForm("likelihoodOfReOffending"))
         @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
-        @textarea(reportForm("riskOfSeriousHarm"), '_label -> "In Brief", 'class -> "large")
+        @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Risk of Serious Harm", 'class -> "large")
         @checkbox(reportForm("ignoreRiskOfSeriousHarmSpelling"), '_label -> "Ignore spelling")
 
         @inputHidden(reportForm("proposal"))
