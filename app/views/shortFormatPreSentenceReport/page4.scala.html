@@ -38,10 +38,10 @@
         @inputHidden(reportForm("otherInformationDetails"))
         @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
-        @textarea(reportForm("mainOffence"), '_label -> "Main Offence and Dates")
+        @textarea(reportForm("mainOffence"), '_label -> "Main Offence and Dates", 'class -> "wide")
         @checkbox(reportForm("ignoreMainOffenceSpelling"), '_label -> "Ignore spelling")
 
-        @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence")
+        @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", 'class -> "wide")
         @checkbox(reportForm("ignoreOffenceSummarySpelling"), '_label -> "Ignore spelling")
 
         @textarea(reportForm("offenceAnalysis"), '_label -> "Offence Analysis", 'class -> "large")
