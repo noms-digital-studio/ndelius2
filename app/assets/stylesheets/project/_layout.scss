@@ -1,10 +1,3 @@
-.inline {
-  display: inline-block;
-}
-.js-hidden {
-  display: none !important;
-}
-
 textarea {
   max-width: 100%;
 
@@ -14,4 +7,16 @@ textarea {
   &.large {
     min-height: 300px;
   }
+}
+
+input[type="text"] {
+  width: 100%; // Override default
+}
+
+.inline {
+  display: inline-block;
+}
+
+.js-hidden {
+  display: none !important;
 }
