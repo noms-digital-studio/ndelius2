@@ -22,9 +22,9 @@
         @inputHidden(reportForm("crn"))
         @inputHidden(reportForm("pcn"))
 
-        @readOnlyField(reportForm("court"), "Court")
-        @readOnlyField(reportForm("dateOfHearing"), "Date of Hearing")
-        @readOnlyField(reportForm("localJusticeArea"), "Local Justice Area")
+        @inputText(reportForm("court"), '_label -> "Court")
+        @inputText(reportForm("dateOfHearing"), '_label -> "Date of Hearing")
+        @inputText(reportForm("localJusticeArea"), '_label -> "Local Justice Area")
 
         @inputHidden(reportForm("interviewInformationSource"))
         @inputHidden(reportForm("serviceRecordsInformationSource"))
