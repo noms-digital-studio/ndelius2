@@ -4,6 +4,10 @@ $(function() {
   var showHideContent = new GOVUK.ShowHideContent();
   showHideContent.init();
 
+  $('.date-picker').datepicker({
+    dateFormat: 'd MM yy'
+  });
+
   /**
    * Navigation items
    */
