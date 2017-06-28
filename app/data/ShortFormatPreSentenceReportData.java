@@ -186,7 +186,7 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @JsonProperty("OFFICE")
     private String office;
 
-    @JsonProperty("DD_MMM_YYYY")
+    @JsonProperty("REPORT_DATE")
     private String reportDate;
 
 
