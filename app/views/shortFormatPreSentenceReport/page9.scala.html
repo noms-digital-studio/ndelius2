@@ -5,7 +5,7 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Short Format Pre Sentence Report", true) {
+@main("Proposal - Short Format Pre Sentence Report", true) {
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -60,8 +60,16 @@
         @inputHidden(reportForm("riskOfSeriousHarm"))
         @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
 
-        @textarea(reportForm("proposal"), '_label -> "Proposal", 'class -> "large")
-        @checkbox(reportForm("ignoreProposalSpelling"), '_label -> "Ignore spelling")
+        @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_help -> "Including length and any sentence components", 'class -> "large")
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            <p><span class="bold">2,000</span> recommended character limit</p>
+          </div>
+          <div class="column-one-half">
+            <span class="pull-right">@checkbox(reportForm("ignoreProposalSpelling"), '_label -> "Ignore spelling")</span>
+          </div>
+        </div>
 
         @inputHidden(reportForm("reportAuthor"))
         @inputHidden(reportForm("office"))
