@@ -6,7 +6,7 @@ $(function() {
 
   $('.date-picker').datepicker({
     dateFormat: 'd MM yy'
-  });
+  }).parent().addClass('date-wrapper');
 
   /**
    * Navigation items

@@ -5,7 +5,7 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Short Format Pre Sentence Report", true) {
+@main("Risk Assessment - Short Format Pre Sentence Report", true) {
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -51,11 +51,29 @@
         @inputHidden(reportForm("patternOfOffending"))
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
-        @textarea(reportForm("previousSupervisionResponse"), '_label -> "Response to Previous Supervision", 'class -> "large")
-        @checkbox(reportForm("ignorePreviousSupervisionResponseSpelling"), '_label -> "Ignore spelling")
+        @textarea(reportForm("previousSupervisionResponse"), '_label -> "Response to previous supervision", 'class -> "large")
 
-        @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of Re-offending", 'class -> "large")
-        @checkbox(reportForm("ignoreLikelihoodOfReOffendingSpelling"), '_label -> "Ignore spelling")
+        <div class="grid-row">
+          <div class="column-one-half">
+            <p><span class="bold">300</span> recommended character limit</p>
+          </div>
+          <div class="column-one-half">
+            <span class="pull-right">@checkbox(reportForm("ignorePreviousSupervisionResponseSpelling"), '_label -> "Ignore spelling")</span>
+          </div>
+        </div>
+
+        <hr noshade />
+
+        @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of re-offending", '_help -> "Indicate which tools have been used (RM2000,OGRS etc.)", 'class -> "large")
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            &nbsp;
+          </div>
+          <div class="column-one-half">
+            <span class="pull-right">@checkbox(reportForm("ignoreLikelihoodOfReOffendingSpelling"), '_label -> "Ignore spelling")</span>
+          </div>
+        </div>
 
         @inputHidden(reportForm("riskOfSeriousHarm"))
         @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
@@ -67,6 +85,7 @@
         @inputHidden(reportForm("office"))
 
         @pageNumber(7, "Next")
+
     }
     </div>
     <div class="column-one-third">
