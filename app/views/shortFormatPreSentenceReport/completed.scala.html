@@ -5,24 +5,27 @@
 
 @main("Short Format Pre Sentence Report", false) {
 
-  <iframe frameborder="0" width="100%" height="450px"></iframe>
+  <div class="margin-top medium"></div>
 
   <input class="button" type="submit" value="Finished"/>
 
-  <script>
-    $(function() {
+  <div class="iframe-container margin-top medium">
+    <iframe></iframe>
+  </div>
 
-      $('input').click(function() {
+  <script type="text/javascript">
+    $(function () {
+
+      $('input').click(function () {
         parent.postMessage('@message', '*');
       });
 
-      var pdfBytes = Uint8Array.from(atob('@pdfBase64'), function(c) { return c.charCodeAt(0); });
-
-      var pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
-      var pdfUrl = URL.createObjectURL(pdfBlob);
+      var pdfBytes = Uint8Array.from(atob('@pdfBase64'), function (c) { return c.charCodeAt(0); }),
+        pdfBlob = new Blob([pdfBytes], {type: 'application/pdf'}),
+        pdfUrl = URL.createObjectURL(pdfBlob);
 
       $('iframe').attr('src', pdfUrl);
 
     });
-    </script>
+  </script>
 }
