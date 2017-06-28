@@ -5,7 +5,7 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Short Format Pre Sentence Report", true) {
+@main("Sentencing Court Details - Short Format Pre Sentence Report", true) {
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -23,8 +23,8 @@
         @inputHidden(reportForm("pcn"))
 
         @inputText(reportForm("court"), '_label -> "Court")
-        @inputText(reportForm("dateOfHearing"), '_label -> "Date of Hearing", 'class -> "date-picker")
         @inputText(reportForm("localJusticeArea"), '_label -> "Local Justice Area")
+        @inputText(reportForm("dateOfHearing"), '_label -> "Date of Hearing", 'class -> "date-picker")
 
         @inputHidden(reportForm("interviewInformationSource"))
         @inputHidden(reportForm("serviceRecordsInformationSource"))

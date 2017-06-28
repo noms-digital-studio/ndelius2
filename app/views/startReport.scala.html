@@ -2,28 +2,34 @@
 
 @()
 
-@main("Start your report", true) {
+@main("Start your report - Short Format Pre Sentence Report", true) {
 
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h1 class="heading-xlarge">Start your report</h1>
-
-      <p class="lede">Use this service to record:</p>
+      <p class="lede">Use this report to record:</p>
 
       <ul class="list list-bullet">
+        <li>Offender details</li>
         <li>Court appearance details</li>
-        <li>Appearance Outcome details</li>
-        <li>Subsequent court appearance details</li>
+        <li>Sources of information</li>
+        <li>Offence details</li>
+        <li>Offender assessment details</li>
+        <li>Patterens of offending</li>
+        <li>Risk assessment</li>
+        <li>A proposed sentence<br/>
+          (including length and any sentence components)</li>
       </ul>
 
-      <p class="margin-top large">Completion takes around 5 minutes</p>
+      <p class="margin-top large">Completion can take around <span class="bold">30 minutes</span>.</p>
 
-      <a href="/report/shortFormatPreSentenceReport?name=Alan%20Smith&dateOfBirth=06/02/1976&age=41&address=1%20Albert%20Square,%20Manchester,%20Greater%20Manchester.%20M60%202LA&crn=G6534&pcn=98793030&court=Manchester%20and%20Salford%20Magistrates%20Court&dateOfHearing=12%20January%202017&localJusticeArea=Greater%20Manchester" class="button button-start margin-top medium">Start now</a>
+      <a class="button button-start margin-top large" href="/report/shortFormatPreSentenceReport?name=Alan%20Smith&dateOfBirth=06/02/1976&age=41&address=1%20Albert%20Square,%20Manchester,%20Greater%20Manchester.%20M60%202LA&crn=G6534&pcn=98793030&court=Manchester%20and%20Salford%20Magistrates%20Court&dateOfHearing=12%20January%202017&localJusticeArea=Greater%20Manchester">Start now</a>
 
     </div>
     <div class="column-one-third">
-      <p>&nbsp;</p>
+
+      <img class="report-image" src="@routes.Assets.versioned("images/report_sfps.png")" alt="Short Format Pre-Sentencing Report" />
+
     </div>
   </div>
 

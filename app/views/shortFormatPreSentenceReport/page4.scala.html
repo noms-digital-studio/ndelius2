@@ -5,7 +5,7 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Short Format Pre Sentence Report", true) {
+@main("Offence Details - Short Format Pre Sentence Report", true) {
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -38,14 +38,42 @@
         @inputHidden(reportForm("otherInformationDetails"))
         @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
-        @textarea(reportForm("mainOffence"), '_label -> "Main Offence and Dates", 'class -> "wide")
-        @checkbox(reportForm("ignoreMainOffenceSpelling"), '_label -> "Ignore spelling")
+        @textarea(reportForm("mainOffence"), '_label -> "Main offence and dates", 'class -> "wide")
+
+        <div class="grid-row">
+          <div class="column-one-half">
+              &nbsp;
+          </div>
+          <div class="column-one-half">
+            <span class="pull-right">@checkbox(reportForm("ignoreMainOffenceSpelling"), '_label -> "Ignore spelling")</span>
+          </div>
+        </div>
+
+        <hr noshade />
 
         @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", 'class -> "wide")
-        @checkbox(reportForm("ignoreOffenceSummarySpelling"), '_label -> "Ignore spelling")
 
-        @textarea(reportForm("offenceAnalysis"), '_label -> "Offence Analysis", 'class -> "large")
-        @checkbox(reportForm("ignoreOffenceAnalysisSpelling"), '_label -> "Ignore spelling")
+        <div class="grid-row">
+          <div class="column-one-half">
+              &nbsp;
+          </div>
+          <div class="column-one-half">
+            <span class="pull-right">@checkbox(reportForm("ignoreOffenceSummarySpelling"), '_label -> "Ignore spelling")</span>
+          </div>
+        </div>
+
+        <hr noshade />
+
+        @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", 'class -> "large")
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            &nbsp;
+          </div>
+          <div class="column-one-half">
+            <span class="pull-right">@checkbox(reportForm("ignoreOffenceAnalysisSpelling"), '_label -> "Ignore spelling")</span>
+          </div>
+        </div>
 
         @inputHidden(reportForm("offenderAssessment"))
         @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
