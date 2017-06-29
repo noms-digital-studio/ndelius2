@@ -11,10 +11,12 @@
   <div class="form-group@if(elements.hasErrors) { form-group-error}">
     @govukLabel(elements)
     @if(elements.input.body.contains("textarea id=")) {
-      <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">@elements.field.value</textarea>
+      <span>
+        <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" placeholder="Start typing here..." id="@elements.id" name="@elements.field.name" onkeyup="this.setAttribute('value', this.value);">@elements.field.value</textarea>
+      <span>
     } else {
       <span>
-        <input class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" type="text" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" />
+        <input class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" type="text" placeholder="@elements.args.get('placeholder)" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" />
       </span>
     }
   </div>

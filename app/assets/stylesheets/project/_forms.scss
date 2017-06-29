@@ -1,0 +1,23 @@
+textarea , textarea.form-control {
+  max-width: 100%;
+
+  resize: none;
+  border: 0;
+  padding-left: 0;
+  overflow: auto;
+
+  &::placeholder {
+    font-size: 25px;
+  }
+
+  &.wide, &.large {
+    width: 100%;
+  }
+  &.large {
+    // min-height: 300px; // Unnecessary when using autosize
+  }
+}
+
+input[type="text"] {
+  width: 100%; // Override default
+}

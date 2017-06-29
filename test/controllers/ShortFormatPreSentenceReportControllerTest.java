@@ -12,7 +12,6 @@ import org.junit.Test;
 import play.Application;
 import play.filters.csrf.*;
 import play.inject.guice.GuiceApplicationBuilder;
-import play.mvc.Result;
 import play.test.Helpers;
 import play.test.WithApplication;
 
