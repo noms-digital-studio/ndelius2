@@ -39,7 +39,7 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<Map> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String crn, String author, Integer entityId) {
+    public CompletionStage<Map> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String crn, Integer entityId) {
 
         try {
 
@@ -50,7 +50,7 @@ public class AlfrescoStore implements DocumentStore {
             val filePart = new FilePart("filedata", filename, "application/pdf", FileIO.fromPath(uploadFile.toPath()));
             val dataParts = ImmutableMap.of(
                     "CRN", crn,
-                    "author", author,
+                    "author", onBehalfOfUser,
                     "entityType", "OFFENDER",
                     "entityId", entityId.toString(),
                     "docType", "DOCUMENT"
