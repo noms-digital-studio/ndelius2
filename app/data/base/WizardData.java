@@ -88,7 +88,7 @@ public class WizardData {
             val textToCheck = (overrideEnabled ? optionalString : getStringValue(field)).orElse(null);
 
             // Don't spell check if empty or jumping
-            return Strings.isNullOrEmpty(textToCheck) || isJumping ? new ArrayList<String>() : checkSpelling(textToCheck).stream().
+            return isJumping || Strings.isNullOrEmpty(textToCheck) ? new ArrayList<String>() : checkSpelling(textToCheck).stream().
                     map(mistake -> String.format(
                             "'%s' could be %s",
                             textToCheck.substring(mistake.getFromPos(), mistake.getToPos()),
