@@ -11,6 +11,8 @@ $(function () {
     dateFormat: 'dd MM yy'
   }).parent().addClass('date-wrapper');
 
+  autosize(document.querySelectorAll('textarea'));
+
   /**
    * Method to show/hide under/over recommended character limit elements/messages.
    * @param {Boolean} over Text entry over the recommended limit
