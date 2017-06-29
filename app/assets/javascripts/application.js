@@ -8,6 +8,8 @@ $(function() {
     dateFormat: 'd MM yy'
   }).parent().addClass('date-wrapper');
 
+  autosize(document.querySelectorAll('textarea'));
+
   /**
    * Navigation items
    */
