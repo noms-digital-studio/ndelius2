@@ -2,6 +2,7 @@ package data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import data.annotations.SpellCheck;
@@ -193,7 +194,10 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @Override
     public List<ValidationError> validate() {
 
-        reportDate = new SimpleDateFormat("dd MMMM yyy").format(new Date());
+        if (Strings.isNullOrEmpty(reportDate)) { // Fill in for the first read only page, then keep any user changes
+
+            reportDate = new SimpleDateFormat("dd MMMM yyy").format(new Date());
+        }
 
         return super.validate();
     }
