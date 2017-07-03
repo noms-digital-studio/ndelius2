@@ -19,7 +19,8 @@ import play.twirl.api.Content;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
 
-    private final HttpExecutionContext ec;
+    protected final HttpExecutionContext ec;
+
     private final Environment environment;
     private final Form<T> wizardForm;
     private final String baseViewName;
@@ -36,13 +37,18 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         this.baseViewName = baseViewName;
     }
 
-    public Result wizardGet() {
+    public CompletionStage<Result> wizardGet() {
+
+        return initialParams().thenApply(params -> ok(formRenderer(baseViewName + 1).apply(wizardForm.bind(params))));
+    }
+
+    protected CompletionStage<Map<String, String>> initialParams() {
 
         val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
 
         params.put("pageNumber", "0");
 
-        return ok(formRenderer(baseViewName + 1).apply(wizardForm.bind(params)));
+        return CompletableFuture.supplyAsync(() -> params, ec.current());
     }
 
     public CompletionStage<Result> wizardPost() {

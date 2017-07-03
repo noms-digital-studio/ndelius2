@@ -3,6 +3,7 @@ package services;
 import akka.stream.javadsl.FileIO;
 import akka.stream.javadsl.Source;
 import com.google.common.collect.ImmutableMap;
+import helpers.JsonHelper;
 import interfaces.DocumentStore;
 import javax.inject.Inject;
 import java.io.File;
@@ -11,7 +12,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import lombok.val;
@@ -20,7 +20,8 @@ import play.Configuration;
 import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSClient;
-
+import play.libs.ws.WSRequest;
+import play.libs.ws.WSResponse;
 import play.mvc.Http.MultipartFormData.*;
 
 public class AlfrescoStore implements DocumentStore {
@@ -39,7 +40,7 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<Map> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String crn, Integer entityId) {
+    public CompletionStage<Map> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Integer entityId) {
 
         try {
 
@@ -54,6 +55,7 @@ public class AlfrescoStore implements DocumentStore {
                     "entityType", "OFFENDER",
                     "entityId", entityId.toString(),
                     "docType", "DOCUMENT"
+                    //@TODO: Store originalData JSON string as document metadata
             ).entrySet().stream().map(entry -> new DataPart(entry.getKey(), entry.getValue())).collect(Collectors.toList());
 
             val parts = new ArrayList<Part>();
@@ -62,9 +64,7 @@ public class AlfrescoStore implements DocumentStore {
 
             Logger.info("Storing PDF: " + filename);
 
-            return wsClient.url(alfrescoUrl + "noms-spg/uploadnew").
-                    setHeader("X-DocRepository-Remote-User", alfrescoUser).
-                    setHeader("X-DocRepository-Real-Remote-User", onBehalfOfUser).
+            return makeRequest("uploadnew", onBehalfOfUser).
                     post(Source.from(parts)).
                     thenApply(wsResponse -> {
 
@@ -82,7 +82,23 @@ public class AlfrescoStore implements DocumentStore {
         }
     }
 
-    private File createTempFileName(String prefix, String suffix) throws IOException {
+    @Override
+    public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
+
+        return makeRequest("details/" + documentId, onBehalfOfUser).get().
+                thenApply(WSResponse::asJson).
+                thenApply(JsonHelper::jsonToMap).
+                thenApply(result -> result.get("userData")); //@TODO: Retrieve originalData JSON string from Alfresco
+    }
+
+    private WSRequest makeRequest(String operation, String onBehalfOfUser) {
+
+        return wsClient.url(alfrescoUrl + "noms-spg/" + operation).
+                setHeader("X-DocRepository-Remote-User", alfrescoUser).
+                setHeader("X-DocRepository-Real-Remote-User", onBehalfOfUser);
+    }
+
+    private static File createTempFileName(String prefix, String suffix) throws IOException {
 
         val tempTile = File.createTempFile(prefix, suffix);
 
