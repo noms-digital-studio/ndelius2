@@ -623,45 +623,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
   }
 
   @Test
-  public void postSampleReportPage6SomeFieldsMissingReturnsBadRequest() {
-
-    val formData = new HashMap<String, String>() {
-      {
-        put("name", "John Smith");
-        put("dateOfBirth", "06/02/1976");
-        put("age", "41");
-        put("address", "10 High Street");
-        put("crn", "B56789");
-        put("pcn", "98793030");
-        put("court", "Manchester and Salford Magistrates Court");
-        put("dateOfHearing", "01/02/2017");
-        put("localJusticeArea", "Greater Manchester");
-        put("interviewInformationSource", "true");
-        put("serviceRecordsInformationSource", "true");
-        put("cpsSummaryInformationSource", "true");
-        put("oasysAssessmentsInformationSource", "true");
-        put("previousConvictionsInformationSource", "true");
-        put("victimStatementInformationSource", "true");
-        put("childrenServicesInformationSource", "true");
-        put("policeInformationSource", "true");
-        put("otherInformationSource", "true");
-        put("otherInformationDetails", "These notes are spelled correctly");
-        put("ignoreOtherInformationDetailsSpelling", "false");
-        put("mainOffence", "Some offence");
-        put("offenceSummary", "Some offence summary");
-        put("offenceAnalysis", "Some offence analysis");
-        put("offenderAssessment", "Some assessment");
-        put("pageNumber", "6");
-      }
-    };
-    val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-    val result = route(app, addCsrfToken(request));
-
-    assertEquals(BAD_REQUEST, result.status());
-  }
-
-  @Test
   public void postSampleReportPage6AllRequiredFieldsReturnsOK() {
 
     val formData = new HashMap<String, String>() {

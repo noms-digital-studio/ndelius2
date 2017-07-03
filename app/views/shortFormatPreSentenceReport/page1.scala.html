@@ -17,12 +17,14 @@
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
 
-        @readOnlyField(reportForm("name"), "Name")
-        @readOnlyField(reportForm("dateOfBirth"), "Date of Birth")
-        @readOnlyField(reportForm("age"), "Age")
-        @readOnlyField(reportForm("address"), "Address")
-        @readOnlyField(reportForm("crn"), "Delius CRN")
-        @readOnlyField(reportForm("pcn"), "PCN ID")
+        <div class="box grey margin-bottom medium">
+          @readOnlyField(reportForm("name"), "Name")
+          @readOnlyField(reportForm("dateOfBirth"), "Date of Birth")
+          @readOnlyField(reportForm("age"), "Age")
+          @readOnlyField(reportForm("address"), "Address")
+          @readOnlyField(reportForm("crn"), "Delius CRN")
+          @readOnlyField(reportForm("pcn"), "PCN ID")
+        </div>
 
         @inputHidden(reportForm("court"))
         @inputHidden(reportForm("dateOfHearing"))
