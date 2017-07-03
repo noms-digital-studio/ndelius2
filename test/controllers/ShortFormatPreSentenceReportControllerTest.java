@@ -2,11 +2,9 @@ package controllers;
 
 import com.google.common.collect.ImmutableMap;
 import interfaces.PdfGenerator;
-
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-
 import lombok.val;
 import org.junit.Test;
 import play.Application;
