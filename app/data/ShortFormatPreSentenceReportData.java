@@ -135,7 +135,7 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     private boolean ignoreOffenderAssessmentSpelling;
 
 
-    @RequiredOnPage(6)
+    @OnPage(6)
     @SpellCheck(overrideField = "ignorePatternOfOffendingSpelling")
     @JsonProperty("PATTERN_OF_OFFENDING")
     private String patternOfOffending;
@@ -143,8 +143,7 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @JsonIgnore
     private boolean ignorePatternOfOffendingSpelling;
 
-
-    @RequiredOnPage(7)
+    @OnPage(7)
     @SpellCheck(overrideField = "ignorePreviousSupervisionResponseSpelling")
     @JsonProperty("PREVIOUS_SUPERVISION_RESPONSE")
     private String previousSupervisionResponse;

@@ -7,3 +7,13 @@
     margin-top: 30px;
   }
 }
+
+.margin-bottom {
+  margin-bottom: 10px;
+  &.medium {
+    margin-bottom: 20px;
+  }
+  &.large {
+    margin-bottom: 30px;
+  }
+}

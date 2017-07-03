@@ -60,16 +60,19 @@
         @inputHidden(reportForm("riskOfSeriousHarm"))
         @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
 
-        @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_help -> "Including length and any sentence components", 'class -> "large")
+        @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_help -> "Including length and any sentence components", 'class -> "large", Symbol("data-limit") -> "2000", Symbol("data-target") -> "proposal-limit")
 
-        <div class="grid-row">
-          <div class="column-one-half">
-            <p><span class="bold">2,000</span> recommended character limit</p>
-          </div>
-          <div class="column-one-half">
-            <span class="pull-right">@checkbox(reportForm("ignoreProposalSpelling"), '_label -> "Ignore spelling")</span>
-          </div>
-        </div>
+        <table>
+          <tr>
+            <td>
+              <p id="proposal-limit-under"><span class="bold">2,000</span> recommended character limit</p>
+              <p id="proposal-limit-over" class="error-message js-hidden">Recommended character limit reached</p>
+            </td>
+            <td>
+              <span class="pull-right">@checkbox(reportForm("ignoreProposalSpelling"), '_label -> "Ignore spelling")</span>
+            </td>
+          </tr>
+        </table>
 
         @inputHidden(reportForm("reportAuthor"))
         @inputHidden(reportForm("office"))

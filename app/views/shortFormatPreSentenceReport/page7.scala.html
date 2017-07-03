@@ -51,16 +51,19 @@
         @inputHidden(reportForm("patternOfOffending"))
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
-        @textarea(reportForm("previousSupervisionResponse"), '_label -> "Response to previous supervision", 'class -> "large")
+        @textarea(reportForm("previousSupervisionResponse"), '_label -> "Response to previous supervision", '_help -> "If applicable", 'class -> "large", Symbol("data-limit") -> "300", Symbol("data-target") -> "supervision-limit")
 
-        <div class="grid-row">
-          <div class="column-one-half">
-            <p><span class="bold">300</span> recommended character limit</p>
-          </div>
-          <div class="column-one-half">
-            <span class="pull-right">@checkbox(reportForm("ignorePreviousSupervisionResponseSpelling"), '_label -> "Ignore spelling")</span>
-          </div>
-        </div>
+        <table>
+          <tr>
+            <td>
+              <p id="supervision-limit-under"><span class="bold">300</span> recommended character limit</p>
+              <p id="supervision-limit-over" class="error-message js-hidden">Recommended character limit reached</p>
+            </td>
+            <td>
+              <span class="pull-right">@checkbox(reportForm("ignorePreviousSupervisionResponseSpelling"), '_label -> "Ignore spelling")</span>
+            </td>
+          </tr>
+        </table>
 
         <hr noshade />
 

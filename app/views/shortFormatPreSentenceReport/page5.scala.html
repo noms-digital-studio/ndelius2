@@ -45,16 +45,19 @@
         @inputHidden(reportForm("offenceAnalysis"))
         @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
-        @textarea(reportForm("offenderAssessment"), '_label -> "Enter the offender assessment", '_help -> "Covering all relevant areas", 'class -> "large")
+        @textarea(reportForm("offenderAssessment"), '_label -> "Enter the offender assessment", '_help -> "Covering all relevant areas", 'class -> "large", Symbol("data-limit") -> "4000", Symbol("data-target") -> "assessment-limit")
 
-        <div class="grid-row">
-          <div class="column-one-half">
-            <p><span class="bold">5,000</span> recommended character limit</p>
-          </div>
-          <div class="column-one-half">
-            <span class="pull-right">@checkbox(reportForm("ignoreOffenderAssessmentSpelling"), '_label -> "Ignore spelling")</span>
-          </div>
-        </div>
+        <table>
+          <tr>
+            <td>
+              <p id="assessment-limit-under"><span class="bold">4,000</span> recommended character limit</p>
+              <p id="assessment-limit-over" class="error-message js-hidden">Recommended character limit reached</p>
+            </td>
+            <td>
+              <span class="pull-right">@checkbox(reportForm("ignoreOffenderAssessmentSpelling"), '_label -> "Ignore spelling")</span>
+            </td>
+          </tr>
+        </table>
 
         @inputHidden(reportForm("patternOfOffending"))
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))

@@ -2,7 +2,7 @@
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
   <div class="multiple-choice" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>
-    <input type="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse("false"))) { checked="checked" } />
+    <input class="@elements.args.get('class)" type="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse("false"))) { checked="checked" } />
     @govukLabel(elements)
   </div>
   <div class="clearfix"></div>
@@ -12,7 +12,7 @@
     @govukLabel(elements)
     @if(elements.input.body.contains("textarea id=")) {
       <span>
-        <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" placeholder="Start typing here..." id="@elements.id" name="@elements.field.name" onkeyup="this.setAttribute('value', this.value);">@elements.field.value</textarea>
+        <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" placeholder="Start typing here..." id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>@elements.field.value</textarea>
       <span>
     } else {
       <span>
