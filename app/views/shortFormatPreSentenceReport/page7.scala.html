@@ -51,7 +51,7 @@
         @inputHidden(reportForm("patternOfOffending"))
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
-        @textarea(reportForm("previousSupervisionResponse"), '_label -> "Response to previous supervision", '_help -> "If applicable", 'class -> "large", Symbol("data-limit") -> "300", Symbol("data-target") -> "supervision-limit")
+        @textarea(reportForm("previousSupervisionResponse"), '_label -> "Response to previous supervision", '_help -> "If applicable", 'class -> "wide", Symbol("data-limit") -> "300", Symbol("data-target") -> "supervision-limit")
 
         <table>
           <tr>
@@ -67,7 +67,7 @@
 
         <hr noshade />
 
-        @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of re-offending", '_help -> "Indicate which tools have been used (RM2000,OGRS etc.)", 'class -> "large")
+        @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of re-offending", '_help -> "Indicate which tools have been used (RM2000,OGRS etc.)", 'class -> "wide")
 
         <div class="grid-row">
           <div class="column-one-half">

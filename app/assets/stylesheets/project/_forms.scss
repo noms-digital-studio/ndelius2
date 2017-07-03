@@ -10,11 +10,8 @@ textarea , textarea.form-control {
     font-size: 25px;
   }
 
-  &.wide, &.large {
+  &.wide {
     width: 100%;
-  }
-  &.large {
-    // min-height: 300px; // Unnecessary when using autosize
   }
 }
 
