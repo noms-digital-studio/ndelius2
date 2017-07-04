@@ -10,7 +10,7 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Offence Details</h3>
+      <h2 class="heading-large no-margin-top">Offence Details</h2>
 
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
@@ -38,7 +38,7 @@
         @inputHidden(reportForm("otherInformationDetails"))
         @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
-        @textarea(reportForm("mainOffence"), '_label -> "Main offence and dates", 'class -> "wide")
+        @textarea(reportForm("mainOffence"), '_label -> "Main offence and dates", 'class -> "wide", 'required -> "true")
 
         <div class="grid-row">
           <div class="column-one-half">
@@ -51,7 +51,7 @@
 
         <hr noshade />
 
-        @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", 'class -> "wide")
+        @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", 'class -> "wide", 'required -> "true")
 
         <div class="grid-row">
           <div class="column-one-half">
@@ -64,7 +64,7 @@
 
         <hr noshade />
 
-        @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", 'class -> "wide")
+        @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", 'class -> "wide", 'required -> "true")
 
         <div class="grid-row">
           <div class="column-one-half">

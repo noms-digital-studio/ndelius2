@@ -6,6 +6,7 @@
   <span class="form-hint">@info</span>
   }
   @for(error <- elements.errors) {
-  <span class="error-message">@error</span>
+  <span class="error-message" aria-hidden="true">@error</span>
+  <span id="@elements.id-error" role="alert" class="visually-hidden">Please enter @elements.label</span>
   }
 </label>

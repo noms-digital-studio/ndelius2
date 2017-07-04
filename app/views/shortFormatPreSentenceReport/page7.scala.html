@@ -10,7 +10,7 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Risk Assessment</h3>
+      <h2 class="heading-large no-margin-top">Risk Assessment</h2>
 
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
@@ -53,11 +53,11 @@
 
         @textarea(reportForm("previousSupervisionResponse"), '_label -> "Response to previous supervision", '_help -> "If applicable", 'class -> "wide", Symbol("data-limit") -> "300", Symbol("data-target") -> "supervision-limit")
 
-        <table>
+        <table role="presentation">
           <tr>
             <td>
               <p id="supervision-limit-under"><span class="bold">300</span> recommended character limit</p>
-              <p id="supervision-limit-over" class="error-message js-hidden">Recommended character limit reached</p>
+              <p id="supervision-limit-over" class="error-message js-hidden" role="alert">Recommended character limit reached</p>
             </td>
             <td>
               <span class="pull-right">@checkbox(reportForm("ignorePreviousSupervisionResponseSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
@@ -67,7 +67,7 @@
 
         <hr noshade />
 
-        @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of re-offending", '_help -> "Indicate which tools have been used (RM2000,OGRS etc.)", 'class -> "wide")
+        @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of re-offending", '_help -> "Indicate which tools have been used (RM2000,OGRS etc.)", 'class -> "wide", 'required -> "true")
 
         <div class="grid-row">
           <div class="column-one-half">
