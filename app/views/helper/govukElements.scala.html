@@ -12,7 +12,7 @@
     @govukLabel(elements)
     @if(elements.input.body.contains("textarea id=")) {
       <span>
-        <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" placeholder="Start typing here..." id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>@elements.field.value</textarea>
+        <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" placeholder="@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}" id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>@elements.field.value</textarea>
       <span>
     } else {
       <span>

@@ -1,6 +1,7 @@
 textarea , textarea.form-control {
   max-width: 100%;
 
+  margin: 10px 0 0 0;
   resize: none;
   border: 0;
   padding-left: 0;
@@ -17,4 +18,66 @@ textarea , textarea.form-control {
 
 input[type="text"] {
   width: 100%; // Override default
+}
+
+input[type="checkbox"].right {
+  +label {
+    span {
+      padding-top: 4px;
+      padding-right: 40px;
+    }
+
+    &:before {
+      left: auto;
+      right: 0;
+    }
+    &:after {
+      left: auto;
+      right: 8px;
+    }
+  }
+}
+
+input[type="checkbox"].toggle {
+  padding: 0;
+  margin: 0;
+
+  +label {
+    position: relative;
+    padding: 0;
+
+    span {
+      padding-top: 4px;
+      padding-right: 80px;
+    }
+
+    &:before {
+      width: 68px;
+      left: auto;
+      right: 0;
+    }
+
+    &:after {
+      border: 2px solid;
+      border-right: transparent;
+      transform: none;
+      width: 34px;
+      height: 34px;
+      background: $red-50;
+      top: 0;
+      left: auto;
+      right: 36px;
+      @include opacity(1);
+      transition: all 0.25s ease-out;
+    }
+  }
+}
+
+input[type="checkbox"]:checked.toggle + label {
+  &:after {
+    border: 2px solid;
+    border-left: transparent;
+    background: $green-50;
+    right: 0;
+  }
 }
