@@ -18,6 +18,10 @@ textarea , textarea.form-control {
 
 input[type="text"] {
   width: 100%; // Override default
+
+  &.half-width {
+    width: 50%;
+  }
 }
 
 input[type="checkbox"].right {
