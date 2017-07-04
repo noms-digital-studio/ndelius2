@@ -37,21 +37,12 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         this.baseViewName = baseViewName;
     }
 
-    public CompletionStage<Result> wizardGet() {
+    public final CompletionStage<Result> wizardGet() {
 
         return initialParams().thenApply(params -> ok(formRenderer(baseViewName + 1).apply(wizardForm.bind(params))));
     }
 
-    protected CompletionStage<Map<String, String>> initialParams() {
-
-        val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
-
-        params.put("pageNumber", "0");
-
-        return CompletableFuture.supplyAsync(() -> params, ec.current());
-    }
-
-    public CompletionStage<Result> wizardPost() {
+    public final CompletionStage<Result> wizardPost() {
 
         val boundForm = wizardForm.bindFromRequest();
         val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
@@ -76,6 +67,16 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                     completedWizard(wizardData);
         }
     }
+
+    protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params
+
+        val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
+
+        params.put("pageNumber", "0");
+
+        return CompletableFuture.supplyAsync(() -> params, ec.current());
+    }
+
 
     protected Integer nextPage(T wizardData) {  // Overridable in derived Controllers jump pages based on content
 
