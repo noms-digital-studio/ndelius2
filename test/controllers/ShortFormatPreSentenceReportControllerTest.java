@@ -69,7 +69,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         } catch (Exception ex) {
 
-            assertEquals(null, ex);
+            fail(ex.getMessage());
         }
     }
 
