@@ -1,8 +1,12 @@
 package controllers;
 
 import com.google.common.collect.ImmutableMap;
+import helpers.Encryption;
+import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import lombok.val;
@@ -19,7 +23,7 @@ import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 
-public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGenerator {
+public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGenerator, DocumentStore {
 
   @Test
   public void getSampleReportOK() {
@@ -40,6 +44,33 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
     assertTrue(content.contains("Alan Smith"));
     assertFalse(content.contains("xyz987"));
+    }
+
+    @Test
+    public void getSampleReportWithDocumentIdDecyptsAndRetrievesFromStore() {
+
+        try {
+
+            val secretKey = "ThisIsASecretKey";
+            val clearDocumentId = "12345";
+            val clearUserName = "John Smith";
+
+            val documentId = URLEncoder.encode(Encryption.encrypt(clearDocumentId, secretKey), "UTF-8");
+            val onBehalfOfUser = URLEncoder.encode(Encryption.encrypt(clearUserName, secretKey), "UTF-8");
+
+            val request = new RequestBuilder().method(GET).
+                    uri("/report/shortFormatPreSentenceReport?documentId=" + documentId + "&onBehalfOfUser=" + onBehalfOfUser);
+
+            val content = Helpers.contentAsString(route(app, request));
+
+            assertTrue(content.contains(clearDocumentId));          // Decrypted documentId is returned by Mock retrieveOriginalData
+            assertTrue(content.contains(clearUserName));            // Decrypted onBehalfOfUser is returned by Mock retrieveOriginalData
+            assertTrue(content.contains("Retrieved From Store"));   // Returned from Mock retrieveOriginalData
+
+        } catch (Exception ex) {
+
+            fail(ex.getMessage());
+        }
   }
 
   @Test
@@ -1274,13 +1305,27 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     pdfGenerated = true;
 
     return CompletableFuture.supplyAsync(() -> new Byte[0]);    // Mocked PdfGenerator returns empty Byte array
+    }
+
+    @Override
+    public CompletionStage<Map> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Integer entityId) {
+        return null;
+    }
+
+    @Override
+    public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
+
+        return CompletableFuture.supplyAsync(() -> "{ \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"court\": \"Retrieved From Store\" }");
   }
 
   @Override
   protected Application provideApplication() {
 
     return new GuiceApplicationBuilder().
-        overrides(bind(PdfGenerator.class).toInstance(this)). // Mock out PdfGenerator to this Test Class
+                overrides(
+                        bind(PdfGenerator.class).toInstance(this),  // Mock out PdfGenerator to this Test Class
+                        bind(DocumentStore.class).toInstance(this)  // Mock out DocumentStore to this Test Class
+                ).
         build();
   }
 
