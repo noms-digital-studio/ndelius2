@@ -10,7 +10,7 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Signature</h3>
+      <h2 class="heading-large no-margin-top">Signature</h2>
 
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
@@ -63,9 +63,9 @@
         @inputHidden(reportForm("proposal"))
         @inputHidden(reportForm("ignoreProposalSpelling"))
 
-        @inputText(reportForm("reportAuthor"), '_label -> "Report Author")
-        @inputText(reportForm("office"), '_label -> "Office")
-        @inputText(reportForm("reportDate"), '_label -> "Date", 'class -> "date-picker")
+        @inputText(reportForm("reportAuthor"), '_label -> "Report Author", 'required -> "true")
+        @inputText(reportForm("office"), '_label -> "Office", 'required -> "true")
+        @inputText(reportForm("reportDate"), '_label -> "Date", 'class -> "date-picker", 'required -> "true")
 
         @pageNumber(10, "Generate Report")
       }

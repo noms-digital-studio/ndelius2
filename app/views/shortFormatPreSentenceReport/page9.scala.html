@@ -10,7 +10,7 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Proposal</h3>
+      <h2 class="heading-large no-margin-top">Proposal</h2>
 
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
@@ -60,13 +60,13 @@
         @inputHidden(reportForm("riskOfSeriousHarm"))
         @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
 
-        @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_help -> "Including length and any sentence components", 'class -> "wide", Symbol("data-limit") -> "2000", Symbol("data-target") -> "proposal-limit")
+        @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_help -> "Including length and any sentence components", 'class -> "wide", Symbol("data-limit") -> "2000", Symbol("data-target") -> "proposal-limit", 'required -> "true")
 
-        <table>
+        <table role="presentation">
           <tr>
             <td>
               <p id="proposal-limit-under"><span class="bold">2,000</span> recommended character limit</p>
-              <p id="proposal-limit-over" class="error-message js-hidden">Recommended character limit reached</p>
+              <p id="proposal-limit-over" class="error-message js-hidden" role="alert">Recommended character limit reached</p>
             </td>
             <td>
               <span class="pull-right">@checkbox(reportForm("ignoreProposalSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>

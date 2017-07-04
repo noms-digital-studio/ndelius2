@@ -10,7 +10,7 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Pattern of Offending</h3>
+      <h2 class="heading-large no-margin-top">Pattern of Offending</h2>
 
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
@@ -50,11 +50,11 @@
 
         @textarea(reportForm("patternOfOffending"), '_label -> "Provide patterns of offending", '_help -> "If applicable", 'class -> "wide", Symbol("data-limit") -> "500", Symbol("data-target") -> "pattern-limit")
 
-        <table>
+        <table role="presentation">
           <tr>
             <td>
               <p id="pattern-limit-under"><span class="bold">500</span> recommended character limit</p>
-              <p id="pattern-limit-over" class="error-message js-hidden">Recommended character limit reached</p>
+              <p id="pattern-limit-over" class="error-message js-hidden" role="alert">Recommended character limit reached</p>
             </td>
             <td>
               <span class="pull-right">@checkbox(reportForm("ignorePatternOfOffendingSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>

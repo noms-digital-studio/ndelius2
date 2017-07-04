@@ -2,7 +2,7 @@
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
   <div class="multiple-choice" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>
-    <input class="@elements.args.get('class)" type="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse("false"))) { checked="checked" } />
+    <input class="@elements.args.get('class)" type="checkbox" role="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse("false"))) { checked="checked" } aria-checked="@Boolean.parseBoolean(elements.field.value.getOrElse("false"))" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} />
     @govukLabel(elements)
   </div>
   <div class="clearfix"></div>
@@ -12,11 +12,11 @@
     @govukLabel(elements)
     @if(elements.input.body.contains("textarea id=")) {
       <span>
-        <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" placeholder="@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}" id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>@elements.field.value</textarea>
+        <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" role="textbox" placeholder="@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}" id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} } aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"}>@elements.field.value</textarea>
       <span>
     } else {
       <span>
-        <input class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" type="text" placeholder="@elements.args.get('placeholder)" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" />
+        <input class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" type="text" role="textbox" placeholder="@elements.args.get('placeholder)" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} />
       </span>
     }
   </div>

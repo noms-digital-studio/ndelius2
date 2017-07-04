@@ -10,7 +10,7 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Sentencing Court Details</h3>
+      <h2 class="heading-large no-margin-top">Sentencing Court Details</h2>
 
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
         @CSRF.formField
@@ -22,9 +22,9 @@
         @inputHidden(reportForm("crn"))
         @inputHidden(reportForm("pcn"))
 
-        @inputText(reportForm("court"), '_label -> "Court")
-        @inputText(reportForm("localJusticeArea"), '_label -> "Local Justice Area")
-        @inputText(reportForm("dateOfHearing"), '_label -> "Date of Hearing", 'class -> "date-picker")
+        @inputText(reportForm("court"), '_label -> "Court", 'required -> "true")
+        @inputText(reportForm("localJusticeArea"), '_label -> "Local Justice Area", 'required -> "true")
+        @inputText(reportForm("dateOfHearing"), '_label -> "Date of Hearing", 'class -> "date-picker", 'required -> "true")
 
         @inputHidden(reportForm("interviewInformationSource"))
         @inputHidden(reportForm("serviceRecordsInformationSource"))

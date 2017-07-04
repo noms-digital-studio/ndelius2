@@ -10,7 +10,7 @@
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h3 class="heading-medium">Risk of Serious Harm</h3>
+      <h2 class="heading-large no-margin-top">Risk of Serious Harm</h2>
 
       <p>For the purpose of this assessment "serious harm" is defined as "an event that is life threatening and/or traumatic and from which recovery, whether physical or psychological can be expected to be difficult or impossible".</p>
 
@@ -59,13 +59,13 @@
         @inputHidden(reportForm("likelihoodOfReOffending"))
         @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
-        @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Detail the risk of serious harm", '_help -> "Indicate tools used, what is the risk, at what level and who to. Also describe what will increase or decrease the risk.", 'class -> "wide", Symbol("data-limit") -> "1000", Symbol("data-target") -> "risk-limit")
+        @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Detail the risk of serious harm", '_help -> "Indicate tools used, what is the risk, at what level and who to. Also describe what will increase or decrease the risk.", 'class -> "wide", Symbol("data-limit") -> "1000", Symbol("data-target") -> "risk-limit", 'required -> "true")
 
-        <table>
+        <table role="presentation">
           <tr>
             <td>
               <p id="risk-limit-under"><span class="bold">1,000</span> recommended character limit</p>
-              <p id="risk-limit-over" class="error-message js-hidden">Recommended character limit reached</p>
+              <p id="risk-limit-over" class="error-message js-hidden" role="alert">Recommended character limit reached</p>
             </td>
             <td>
               <span class="pull-right">@checkbox(reportForm("ignoreRiskOfSeriousHarmSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
