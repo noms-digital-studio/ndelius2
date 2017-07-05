@@ -14,7 +14,7 @@
 
       <p>Please check and confirm that these details are correct.</p>
 
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'novalidate -> "") {
         @CSRF.formField
 
         <div class="box grey margin-bottom medium">

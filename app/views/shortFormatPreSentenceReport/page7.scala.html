@@ -12,7 +12,7 @@
 
       <h2 class="heading-large no-margin-top">Risk Assessment</h2>
 
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost()) {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'novalidate -> "") {
         @CSRF.formField
 
         @inputHidden(reportForm("name"))
