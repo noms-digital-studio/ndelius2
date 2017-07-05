@@ -23,13 +23,13 @@
           @readOnlyField(reportForm("age"), "Age")
           @readOnlyField(reportForm("address"), "Address")
           @readOnlyField(reportForm("crn"), "Delius CRN")
-          @if(reportForm("pcn").value) {
-            @readOnlyField(reportForm("pcn"), "PCN ID")
+          @if(reportForm("pnc").value) {
+            @readOnlyField(reportForm("pnc"), "PNC ID")
           }
         </div>
 
-        @if(!reportForm("pcn").value) {
-          @inputText(reportForm("pcn"), '_label -> "PCN ID", 'class -> "half-width")
+        @if(!reportForm("pnc").value) {
+          @inputText(reportForm("pnc"), '_label -> "PNC ID", 'class -> "half-width")
         }
 
         @inputHidden(reportForm("court"))

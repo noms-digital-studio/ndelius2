@@ -72,7 +72,7 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
                         Json.stringify(Json.toJson(data)),
                         "someUser", data.getCrn(),
                         12345
-                ).thenApply(map -> result)).
+                ).thenApply(map -> result)). //@TODO: Check map, and if failure result, pass null result
 */
                 thenApply(result -> ok(views.html.shortFormatPreSentenceReport.completed.render(
                         String.format("PDF Created - %d bytes", result.length), Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(result)))));

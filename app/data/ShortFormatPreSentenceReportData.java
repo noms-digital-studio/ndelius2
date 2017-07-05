@@ -19,40 +19,40 @@ import play.data.validation.ValidationError;
 public class ShortFormatPreSentenceReportData extends WizardData {
 
     @RequiredOnPage(1)
-    @JsonProperty("NAME")
+    @JsonProperty("_NAME_")
     private String name;
 
     @RequiredOnPage(1)
-    @JsonProperty("DATE_OF_BIRTH")
+    @JsonProperty("_DATE_OF_BIRTH_")
     private String dateOfBirth;
 
     @RequiredOnPage(1)
-    @JsonProperty("AGE")
+    @JsonProperty("_AGE_")
     private Integer age;
 
     @RequiredOnPage(1)
-    @JsonProperty("ADDRESS")
+    @JsonProperty("_ADDRESS_")
     private String address;
 
     @RequiredOnPage(1)
-    @JsonProperty("DELIUS_CRN")
+    @JsonProperty("_DELIUS_CRN_")
     private String crn;
 
     @OnPage(1)
-    @JsonProperty("PNC_ID")
+    @JsonProperty("_PNC_ID_")
     private String pnc;
 
 
     @RequiredOnPage(2)
-    @JsonProperty("COURT")
+    @JsonProperty("_COURT_")
     private String court;
 
     @RequiredOnPage(2)
-    @JsonProperty("DATE_OF_HEARING")
+    @JsonProperty("_DATE_OF_HEARING_")
     private String dateOfHearing;
 
     @RequiredOnPage(2)
-    @JsonProperty("LOCAL_JUSTICE_AREA")
+    @JsonProperty("_LOCAL_JUSTICE_AREA_")
     private String localJusticeArea;
 
 
