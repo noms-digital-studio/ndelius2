@@ -78,23 +78,19 @@ public class WizardData {
 
     private List<ValidationError> spellingErrors() {
 
-        final Optional<String> optionalString = Optional.empty();
-
         return spellCheckFields().collect(Collectors.toMap(Field::getName, field -> {
 
-            val isJumping = Optional.ofNullable(jumpNumber).isPresent();
             val overrideName = field.getAnnotation(SpellCheck.class).overrideField();
             val overrideEnabled = getField(overrideName).flatMap(this::getBooleanValue).orElse(false);
-            val textToCheck = (overrideEnabled ? optionalString : getStringValue(field)).orElse(null);
+            val textToCheck = getStringValue(field).filter(text -> !(overrideEnabled || isJumping()) && !Strings.isNullOrEmpty(text));
 
-            // Don't spell check if empty or jumping
-            return isJumping || Strings.isNullOrEmpty(textToCheck) ? new ArrayList<String>() : checkSpelling(textToCheck).stream().
+            return textToCheck.map(text -> checkSpelling(text).stream().
                     map(mistake -> String.format(
                             "'%s' could be %s",
-                            textToCheck.substring(mistake.getFromPos(), mistake.getToPos()),
+                            text.substring(mistake.getFromPos(), mistake.getToPos()),
                             suggestions(mistake)
                     )).
-                    collect(Collectors.toList());
+                    collect(Collectors.toList())).orElse(new ArrayList<>());
 
         })).entrySet().stream().filter(entry -> !entry.getValue().isEmpty()).
                 flatMap(entry -> entry.getValue().stream().map(message -> new ValidationError(entry.getKey(), message))).
@@ -105,14 +101,13 @@ public class WizardData {
                                                         // Default to required is enforced if no onlyIfField
         return requiredFields().filter(field -> {       // exists, otherwise use onlyIfField current boolean
 
-            val notJumping = !Optional.ofNullable(jumpNumber).isPresent();
             val onlyIfName = field.getAnnotation(RequiredOnPage.class).onlyIfField();
             val requiredEnforced = getField(onlyIfName).flatMap(this::getBooleanValue).orElse(true);
             val fieldOnThisPage = pageNumber.equals(fieldPage(field));
-            val finishedWizard = pageNumber.equals(totalPages()) && notJumping;
+            val finishedWizard = pageNumber.equals(totalPages());
 
             return requiredEnforced &&                                                // Check all pages if on last page and clicking next
-                    (finishedWizard || (fieldOnThisPage && notJumping)) &&            // Check current page if clicking next and not jumping
+                    ((fieldOnThisPage || finishedWizard) && !isJumping()) &&          // Check current page if clicking next and not jumping
                     Strings.isNullOrEmpty(getStringValue(field).orElse(null));  // If jumping don't perform any validation
 
         }).map(field -> new ValidationError(field.getName(), RequiredValidator.message)).collect(Collectors.toList());
@@ -122,6 +117,11 @@ public class WizardData {
 
         return String.join(" or ", mistake.getSuggestedReplacements().stream().
                 map(replacement -> String.format("'%s'", replacement)).collect(Collectors.toList()));
+    }
+
+    private boolean isJumping() {
+
+        return Optional.ofNullable(jumpNumber).isPresent();
     }
 
     private Optional<String> getStringValue(Field field) {
