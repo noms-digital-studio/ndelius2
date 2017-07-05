@@ -51,6 +51,11 @@ $(function () {
   autosize(document.querySelectorAll('textarea'));
 
   /**
+   *
+   */
+  GOVUK.stickAtTopWhenScrolling.init();
+
+  /**
    * Navigation items
    */
   $('.nav-item').click(function(e) {
