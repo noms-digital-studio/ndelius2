@@ -1,8 +1,9 @@
 @(implicit current: Int)
 
-<div class="nav-header"></div>
+<nav class="js-stick-at-top-when-scrolling">
 
-<nav>
+  <div class="nav-header"></div>
+
   <a href="/startReport" class="nav-home" title="Start your report">Start your report</a><br/>
   @navigationEntry(1, "Offender Details")
   @navigationEntry(2, "Sentencing Court Details")
@@ -14,4 +15,5 @@
   @navigationEntry(8, "Risk of Serious Harm")
   @navigationEntry(9, "Proposal")
   @navigationEntry(10, "Signature")
+
 </nav>
