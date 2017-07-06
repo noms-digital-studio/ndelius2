@@ -9,10 +9,7 @@ import data.annotations.RequiredOnPage;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import data.annotations.SpellCheck;
@@ -22,6 +19,9 @@ import org.languagetool.language.BritishEnglish;
 import org.languagetool.rules.RuleMatch;
 import play.data.validation.Constraints.*;
 import play.data.validation.ValidationError;
+
+import static helpers.FluentHelper.value;
+import static helpers.FluentHelper.not;
 
 @Data
 public class WizardData {
@@ -74,19 +74,20 @@ public class WizardData {
 
             val overrideName = field.getAnnotation(SpellCheck.class).overrideField();
             val overrideEnabled = getField(overrideName).flatMap(this::getBooleanValue).orElse(false);
-            val textToCheck = getStringValue(field).filter(text -> !(overrideEnabled || isJumping()) && !Strings.isNullOrEmpty(text));
 
-            return textToCheck.map(text -> checkSpelling(text).stream().
-                    map(mistake -> String.format(
-                            "'%s' could be %s",
-                            text.substring(mistake.getFromPos(), mistake.getToPos()),
-                            suggestions(mistake)
-                    )).
-                    collect(Collectors.toList())).orElse(new ArrayList<>());
+            return getStringValue(field).
+                    filter(not(value(overrideEnabled || isJumping()))).
+                    filter(not(Strings::isNullOrEmpty)).
+                    map(text -> checkSpelling(text).
+                            map(mistake -> String.format(
+                                    "'%s' could be %s",
+                                    text.substring(mistake.getFromPos(), mistake.getToPos()),
+                                    suggestions(mistake)
+                            ))).
+                    orElse(Stream.empty());
 
         })).entrySet().stream().
-                filter(entry -> !entry.getValue().isEmpty()).
-                flatMap(entry -> entry.getValue().stream().map(message -> new ValidationError(entry.getKey(), message)));
+                flatMap(entry -> entry.getValue().map(message -> new ValidationError(entry.getKey(), message)));
     }
 
     private Stream<ValidationError> mandatoryErrors() {
@@ -133,13 +134,13 @@ public class WizardData {
         return getStringValue(field).map(Boolean::parseBoolean);
     }
 
-    private List<RuleMatch> checkSpelling(String text) {
+    private Stream<RuleMatch> checkSpelling(String text) {
 
         try {
-            return spellChecker.check(text);
+            return spellChecker.check(text).stream();
         }
         catch (IOException ex) {
-            return new ArrayList<>();
+            return Stream.empty();
         }
     }
 
