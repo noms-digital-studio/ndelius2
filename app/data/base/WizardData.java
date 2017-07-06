@@ -3,6 +3,7 @@ package data.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import java.io.IOException;
@@ -37,26 +38,9 @@ public class WizardData {
     @Setter(AccessLevel.NONE)
     private transient final JLanguageTool spellChecker = new JLanguageTool(new BritishEnglish());
 
-    @JsonIgnore
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private transient final List<Supplier<Stream<ValidationError>>> validators;
-
-    protected WizardData()
-    {
-        val wizardData = this;
-
-        validators = new ArrayList<Supplier<Stream<ValidationError>>>() {
-            {
-                add(wizardData::spellingErrors);
-                add(wizardData::mandatoryErrors);
-            }
-        };
-    }
-
     public List<ValidationError> validate() {   // validate() is called by Play Form submission bindFromRequest()
 
-        return validators.stream().flatMap(Supplier::get).collect(Collectors.toList());
+        return validators().stream().flatMap(Supplier::get).collect(Collectors.toList());
     }
 
     public Integer totalPages() {
@@ -74,6 +58,14 @@ public class WizardData {
         return field.isAnnotationPresent(OnPage.class) ?
                 field.getAnnotation(OnPage.class).value() :
                 field.getAnnotation(RequiredOnPage.class).value();
+    }
+
+    protected List<Supplier<Stream<ValidationError>>> validators() {    // Overridable in derived Data classes
+
+        return ImmutableList.of(
+                this::spellingErrors,
+                this::mandatoryErrors
+        );
     }
 
     private Stream<ValidationError> spellingErrors() {
