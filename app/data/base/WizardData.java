@@ -40,13 +40,13 @@ public class WizardData {
     @JsonIgnore
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private transient final List<Supplier<List<ValidationError>>> validators;
+    private transient final List<Supplier<Stream<ValidationError>>> validators;
 
     protected WizardData()
     {
         val wizardData = this;
 
-        validators = new ArrayList<Supplier<List<ValidationError>>>() {
+        validators = new ArrayList<Supplier<Stream<ValidationError>>>() {
             {
                 add(wizardData::spellingErrors);
                 add(wizardData::mandatoryErrors);
@@ -56,7 +56,7 @@ public class WizardData {
 
     public List<ValidationError> validate() {   // validate() is called by Play Form submission bindFromRequest()
 
-        return validators.stream().map(Supplier::get).flatMap(List::stream).collect(Collectors.toList());
+        return validators.stream().flatMap(Supplier::get).collect(Collectors.toList());
     }
 
     public Integer totalPages() {
@@ -76,7 +76,7 @@ public class WizardData {
                 field.getAnnotation(RequiredOnPage.class).value();
     }
 
-    private List<ValidationError> spellingErrors() {
+    private Stream<ValidationError> spellingErrors() {
 
         return spellCheckFields().collect(Collectors.toMap(Field::getName, field -> {
 
@@ -92,12 +92,12 @@ public class WizardData {
                     )).
                     collect(Collectors.toList())).orElse(new ArrayList<>());
 
-        })).entrySet().stream().filter(entry -> !entry.getValue().isEmpty()).
-                flatMap(entry -> entry.getValue().stream().map(message -> new ValidationError(entry.getKey(), message))).
-                collect(Collectors.toList());
+        })).entrySet().stream().
+                filter(entry -> !entry.getValue().isEmpty()).
+                flatMap(entry -> entry.getValue().stream().map(message -> new ValidationError(entry.getKey(), message)));
     }
 
-    private List<ValidationError> mandatoryErrors() {
+    private Stream<ValidationError> mandatoryErrors() {
                                                         // Default to required is enforced if no onlyIfField
         return requiredFields().filter(field -> {       // exists, otherwise use onlyIfField current boolean
 
@@ -110,7 +110,7 @@ public class WizardData {
                     ((fieldOnThisPage || finishedWizard) && !isJumping()) &&          // Check current page if clicking next and not jumping
                     Strings.isNullOrEmpty(getStringValue(field).orElse(null));  // If jumping don't perform any validation
 
-        }).map(field -> new ValidationError(field.getName(), RequiredValidator.message)).collect(Collectors.toList());
+        }).map(field -> new ValidationError(field.getName(), RequiredValidator.message));
     }
 
     private static String suggestions(RuleMatch mistake) {
