@@ -17,6 +17,8 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Content;
 
+import static helpers.FluentHelper.content;
+
 public abstract class WizardController<T extends WizardData> extends Controller {
 
     protected final HttpExecutionContext ec;
@@ -39,7 +41,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> wizardGet() {
 
-        return initialParams().thenApply(params -> ok(formRenderer(baseViewName + 1).apply(wizardForm.bind(params))));
+        return initialParams().thenApply(params -> ok(formRenderer(viewPageName(1)).apply(wizardForm.bind(params))));
     }
 
     public final CompletionStage<Result> wizardPost() {
@@ -47,7 +49,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         val boundForm = wizardForm.bindFromRequest();
         val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
 
-        Function<Integer, Content> renderPage = pageNumber -> formRenderer(baseViewName + pageNumber).apply(boundForm);
+        final Function<Integer, Content> renderPage = pageNumber -> formRenderer(viewPageName(pageNumber)).apply(boundForm);
 
         if (boundForm.hasErrors()) {
 
@@ -77,13 +79,22 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         return CompletableFuture.supplyAsync(() -> params, ec.current());
     }
 
-
     protected Integer nextPage(T wizardData) {  // Overridable in derived Controllers jump pages based on content
 
         return Optional.ofNullable(wizardData.getJumpNumber()).orElse(wizardData.getPageNumber() + 1);
     }
 
     protected abstract CompletionStage<Result> completedWizard(T wizardData);
+
+    protected final Result wizardFailed(T wizardData) {
+
+        return badRequest(formRenderer(viewPageName(wizardData.totalPages())).apply(wizardForm.fill(wizardData)));
+    }
+
+    private String viewPageName(int pageNumber) {
+
+        return baseViewName + pageNumber;
+    }
 
     private Function<Form<T>, Content> formRenderer(String viewName) {
 
@@ -95,12 +106,12 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                     return (Content) render.invoke(null, form);
                 }
                 catch (IllegalAccessException | InvocationTargetException ex) {
-                    return null;
+                    return content(ex);
                 }
             };
         }
         catch (ClassNotFoundException | NoSuchMethodException ex) {
-            return form -> null;
+            return form -> content(ex);
         }
     }
 }

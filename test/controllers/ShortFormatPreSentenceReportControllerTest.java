@@ -1308,8 +1308,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Override
-    public CompletionStage<Map> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Integer entityId) {
-        return null;
+    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Integer entityId) {
+
+        return CompletableFuture.supplyAsync(ImmutableMap::of);
     }
 
     @Override

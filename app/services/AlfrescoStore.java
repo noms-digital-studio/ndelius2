@@ -24,6 +24,8 @@ import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
 import play.mvc.Http.MultipartFormData.*;
 
+import static helpers.JsonHelper.jsonToMap;
+
 public class AlfrescoStore implements DocumentStore {
 
     private final String alfrescoUrl;
@@ -40,7 +42,7 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<Map> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Integer entityId) {
+    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Integer entityId) {
 
         try {
 
@@ -68,7 +70,7 @@ public class AlfrescoStore implements DocumentStore {
                     post(Source.from(parts)).
                     thenApply(wsResponse -> {
 
-                        val result = Json.fromJson(wsResponse.asJson(), Map.class);
+                        val result = jsonToMap(wsResponse.asJson());
 
                         Logger.info("Stored PDF: " + result);
                         return result;
@@ -78,7 +80,7 @@ public class AlfrescoStore implements DocumentStore {
 
             Logger.error("Upload error", ex);
 
-            return CompletableFuture.supplyAsync(() -> null);
+            return CompletableFuture.supplyAsync(ImmutableMap::of);
         }
     }
 

@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.base.Strings;
 import controllers.base.WizardController;
 import data.ShortFormatPreSentenceReportData;
 import helpers.Encryption;
@@ -19,8 +20,12 @@ import play.Configuration;
 import play.Environment;
 import play.Logger;
 import play.data.FormFactory;
+import play.libs.Json;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Result;
+
+import static helpers.FluentHelper.not;
+import static helpers.FluentHelper.value;
 
 public class ShortFormatPreSentenceReportController extends WizardController<ShortFormatPreSentenceReportData>
 {
@@ -65,16 +70,26 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
         Logger.info("Short Format Pre Sentence Report Data: " + data);
 
         return pdfGenerator.generate("helloWorld", data).
+                thenApply(Optional::of).
 /*
                 thenCompose(result -> documentStore.uploadNewPdf(
                         result,
                         "shortFormatPreSentenceReport.pdf",
                         Json.stringify(Json.toJson(data)),
-                        "someUser", data.getCrn(),
+                        "someUser",
+                        data.getCrn(),
                         12345
-                ).thenApply(map -> result)). //@TODO: Check map, and if failure result, pass null result
+
+                ).thenApply(stored -> Optional.ofNullable(stored.get("ID")).
+                        filter(not(Strings::isNullOrEmpty)).map(value(result)))).
 */
-                thenApply(result -> ok(views.html.shortFormatPreSentenceReport.completed.render(
-                        String.format("PDF Created - %d bytes", result.length), Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(result)))));
+                thenApply(result -> result.map(bytes -> ok(
+
+                        views.html.shortFormatPreSentenceReport.completed.render(
+                                String.format("PDF Created - %d bytes", bytes.length),
+                                Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(bytes))
+                        )))
+
+                .orElse(wizardFailed(data)));
     }
 }
