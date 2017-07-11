@@ -12,7 +12,6 @@ import java.util.concurrent.CompletionStage;
 import lombok.val;
 import org.junit.Test;
 import play.Application;
-import play.filters.csrf.*;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.Helpers;
 import play.test.WithApplication;
@@ -22,6 +21,7 @@ import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
+import static play.api.test.CSRFTokenHelper.addCSRFToken;
 
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGenerator, DocumentStore {
 
@@ -47,7 +47,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void getSampleReportWithDocumentIdDecyptsAndRetrievesFromStore() {
+    public void getSampleReportWithDocumentIdDecryptsAndRetrievesFromStore() {
 
         try {
 
@@ -82,7 +82,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         );
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -103,7 +103,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -125,7 +125,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -149,7 +149,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -174,7 +174,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -200,7 +200,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -227,7 +227,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -261,7 +261,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -298,7 +298,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -338,7 +338,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -375,7 +375,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -413,7 +413,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -451,7 +451,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -490,7 +490,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -527,7 +527,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -565,7 +565,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -605,7 +605,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -646,7 +646,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -686,7 +686,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -727,7 +727,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -770,7 +770,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -810,7 +810,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -851,7 +851,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -894,7 +894,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -938,7 +938,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -980,7 +980,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -1023,7 +1023,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -1067,7 +1067,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -1113,7 +1113,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -1156,7 +1156,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -1200,7 +1200,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
     }
@@ -1244,7 +1244,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
     }
@@ -1290,7 +1290,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
         pdfGenerated = false;
 
-        val result = route(app, addCsrfToken(request));
+        val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
 //        assertEquals("application/pdf", result.contentType().orElse(""));
@@ -1328,17 +1328,5 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                         bind(DocumentStore.class).toInstance(this)  // Mock out DocumentStore to this Test Class
                 ).
                 build();
-    }
-
-    private RequestBuilder addCsrfToken(RequestBuilder requestBuilder) {
-        final CSRFFilter csrfFilter = app.injector().instanceOf(CSRFFilter.class);
-        final CSRFConfig csrfConfig = app.injector().instanceOf(CSRFConfigProvider.class).get();
-        final String token = csrfFilter.tokenProvider().generateToken();
-
-        requestBuilder.tag(CSRF.Token$.MODULE$.NameRequestTag(), csrfConfig.tokenName());
-        requestBuilder.tag(CSRF.Token$.MODULE$.RequestTag(), token);
-        requestBuilder.header(csrfConfig.headerName(), token);
-
-        return requestBuilder;
     }
 }

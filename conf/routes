@@ -7,6 +7,8 @@ GET     /                                       controllers.IntegrationControlle
 GET     /initiate                               controllers.IntegrationController.initiate
 POST    /completed                              controllers.IntegrationController.completed
 
+GET     /nationalSearch                         controllers.NationalSearchController.index
+
 GET     /startReport                            controllers.StartController.startReport
 
 GET     /report/shortFormatPreSentenceReport    controllers.ShortFormatPreSentenceReportController.wizardGet
@@ -14,3 +16,4 @@ POST    /report/shortFormatPreSentenceReport    controllers.ShortFormatPreSenten
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
+->      /webjars                                webjars.Routes

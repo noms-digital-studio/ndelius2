@@ -24,7 +24,8 @@ import static helpers.FluentHelper.value;
 import static helpers.FluentHelper.not;
 
 @Data
-public class WizardData {
+@Validate
+public class WizardData implements Validatable<List<ValidationError>> {
 
     @Required
     @JsonIgnore
@@ -38,6 +39,7 @@ public class WizardData {
     @Setter(AccessLevel.NONE)
     private transient final JLanguageTool spellChecker = new JLanguageTool(new BritishEnglish());
 
+    @Override
     public List<ValidationError> validate() {   // validate() is called by Play Form submission bindFromRequest()
 
         return validators().stream().flatMap(Supplier::get).collect(Collectors.toList());

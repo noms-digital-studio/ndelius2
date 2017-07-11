@@ -4,13 +4,16 @@ organization := "uk.gov.justice.digital"
 
 version := "0.1"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb)
 
-scalaVersion := "2.11.11"
+scalaVersion := "2.12.2"
 
 libraryDependencies ++= Seq(
+  guice,
   filters,
   javaWs.exclude("commons-logging", "commons-logging"),
+  "org.webjars" %% "webjars-play" % "2.6.1",
+  "org.webjars" % "react" % "15.6.1",
   ("org.languagetool" % "language-en" % "3.7").exclude("commons-logging", "commons-logging"),
   "org.projectlombok" % "lombok" % "1.16.16" % "provided"
 )

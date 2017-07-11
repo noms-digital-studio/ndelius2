@@ -12,6 +12,7 @@ import lombok.val;
 import play.Environment;
 import play.data.Form;
 import play.data.FormFactory;
+import play.data.validation.ValidationError;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -41,7 +42,12 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> wizardGet() {
 
-        return initialParams().thenApply(params -> ok(formRenderer(viewPageName(1)).apply(wizardForm.bind(params))));
+        return initialParams().thenApply(params -> {
+
+            params.putIfAbsent("pageNumber", "0");
+
+            return ok(formRenderer(viewPageName(1)).apply(wizardForm.bind(params)));
+        });
     }
 
     public final CompletionStage<Result> wizardPost() {
@@ -53,7 +59,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         if (boundForm.hasErrors()) {
 
-            val errorPage = boundForm.errors().keySet().stream().findFirst().
+            val errorPage = boundForm.allErrors().stream().map(ValidationError::key).findFirst().
                     flatMap(field -> boundForm.value().flatMap(wizardData -> wizardData.getField(field))).
                     map(WizardData::fieldPage).orElse(thisPage);
 
@@ -73,8 +79,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params
 
         val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
-
-        params.put("pageNumber", "0");
 
         return CompletableFuture.supplyAsync(() -> params, ec.current());
     }

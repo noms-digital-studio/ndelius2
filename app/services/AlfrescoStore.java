@@ -3,6 +3,7 @@ package services;
 import akka.stream.javadsl.FileIO;
 import akka.stream.javadsl.Source;
 import com.google.common.collect.ImmutableMap;
+import com.typesafe.config.Config;
 import helpers.JsonHelper;
 import interfaces.DocumentStore;
 import javax.inject.Inject;
@@ -16,9 +17,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
-import play.Configuration;
 import play.Logger;
-import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
@@ -33,7 +32,7 @@ public class AlfrescoStore implements DocumentStore {
     private final WSClient wsClient;
 
     @Inject
-    public AlfrescoStore(Configuration configuration, WSClient wsClient) {
+    public AlfrescoStore(Config configuration, WSClient wsClient) {
 
         alfrescoUrl = configuration.getString("store.alfresco.url");
         alfrescoUser = configuration.getString("store.alfresco.user");
@@ -96,8 +95,8 @@ public class AlfrescoStore implements DocumentStore {
     private WSRequest makeRequest(String operation, String onBehalfOfUser) {
 
         return wsClient.url(alfrescoUrl + "noms-spg/" + operation).
-                setHeader("X-DocRepository-Remote-User", alfrescoUser).
-                setHeader("X-DocRepository-Real-Remote-User", onBehalfOfUser);
+                addHeader("X-DocRepository-Remote-User", alfrescoUser).
+                addHeader("X-DocRepository-Real-Remote-User", onBehalfOfUser);
     }
 
     private static File createTempFileName(String prefix, String suffix) throws IOException {

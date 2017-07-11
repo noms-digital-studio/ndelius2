@@ -1,6 +1,7 @@
 package controllers;
 
 import com.google.common.base.Strings;
+import com.typesafe.config.Config;
 import controllers.base.WizardController;
 import data.ShortFormatPreSentenceReportData;
 import helpers.Encryption;
@@ -16,7 +17,6 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
-import play.Configuration;
 import play.Environment;
 import play.Logger;
 import play.data.FormFactory;
@@ -39,7 +39,7 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
                                                   FormFactory formFactory,
                                                   PdfGenerator pdfGenerator,
                                                   DocumentStore documentStore,
-                                                  Configuration configuration) {
+                                                  Config configuration) {
 
         super(ec, environment, formFactory, ShortFormatPreSentenceReportData.class, "views.html.shortFormatPreSentenceReport.page");
 

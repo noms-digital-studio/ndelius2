@@ -1,0 +1,14 @@
+@import org.webjars.play.WebJarsUtil
+@this(webJarsUtil: WebJarsUtil)
+
+@()
+
+<!DOCTYPE html>
+<html>
+<head>
+  <script type='text/javascript' src='@webJarsUtil.url("react.js").get'></script>
+</head>
+<body>
+<div id="content">CONTENT</div>
+</body>
+</html>
