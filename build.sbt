@@ -25,7 +25,7 @@ mainClass in assembly := Some("play.core.server.ProdServerStart")
 fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value)
 
 assemblyMergeStrategy in assembly := {
-  case netty if netty.endsWith("io.netty.versions.properties") => MergeStrategy.first
+  case playWs if playWs.contains("play/api/libs/ws/package") || playWs.endsWith("reference-overrides.conf") => MergeStrategy.last
   case other => (assemblyMergeStrategy in assembly).value(other)
 }
 
