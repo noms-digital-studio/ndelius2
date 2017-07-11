@@ -6,7 +6,6 @@ import interfaces.PdfGenerator;
 import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
 import lombok.val;
-import play.Configuration;
 import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSClient;
