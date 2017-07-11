@@ -6,6 +6,8 @@ version := "0.1"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb)
 
+ReactJsKeys.harmony := true
+
 scalaVersion := "2.12.2"
 
 libraryDependencies ++= Seq(
@@ -13,7 +15,7 @@ libraryDependencies ++= Seq(
   filters,
   javaWs.exclude("commons-logging", "commons-logging"),
   "org.webjars" %% "webjars-play" % "2.6.1",
-  "org.webjars" % "react" % "15.6.1",
+  "org.webjars.bower" % "react" % "15.6.1",
   ("org.languagetool" % "language-en" % "3.7").exclude("commons-logging", "commons-logging"),
   "org.projectlombok" % "lombok" % "1.16.16" % "provided"
 )
