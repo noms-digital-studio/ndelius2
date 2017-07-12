@@ -1,66 +1,61 @@
 
-class Square extends React.Component {
-  render() {
-    return (
-      <button className="square">
-        {/* TODO */}
-      </button>
-    );
-  }
+class ResultsGrid extends React.Component {
+
+    render() {
+        return (
+            <ul>
+                {this.props.value.map(result => (
+                    <li>
+                        <span>{result.mistake}</span>
+                        <ul>
+                            {result.suggestions.map(suggestion => (
+                                <li>{suggestion}</li>
+                            ))}
+                        </ul>
+                    </li>
+                ))}
+            </ul>
+        );
+    }
 }
 
-class Board extends React.Component {
-  renderSquare(i) {
-    return <Square />;
-  }
+class OffenderSearch extends React.Component {
 
-  render() {
-    const status = 'Next player: X';
+    constructor() {
+        super();
 
-    return (
-      <div>
-        <div className="status">{status}</div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
-    );
-  }
+        this.state = {
+            name: "",
+            data: []
+        };
+    }
+
+    render() {
+
+        const performSearch = () => { // debounce?
+
+            $.getJSON('/spellcheck/' + this.state.name, data => {
+                this.setState({
+                    data: data
+                });
+            });
+        };
+
+        const searchChange = ev => {
+
+            this.setState({ name: ev.target.value }, performSearch);
+        };
+
+        return (
+            <div>
+                <input value={this.state.name} onChange={searchChange} placeholder="Enter name here" />
+                <ResultsGrid value={this.state.data} />
+            </div>
+        );
+    }
 }
-
-class Game extends React.Component {
-  render() {
-    return (
-      <div className="game">
-        <div className="game-board">
-          <Board />
-        </div>
-        <div className="game-info">
-          <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
-        </div>
-      </div>
-    );
-  }
-}
-
-// ========================================
-
-var testFunc = (x) => x;
 
 ReactDOM.render(
-  <Game />,
-  document.getElementById('content')
+    <OffenderSearch />,
+    document.getElementById('content')
 );
