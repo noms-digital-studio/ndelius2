@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import java.io.IOException;
@@ -53,6 +54,11 @@ public class WizardData implements Validatable<List<ValidationError>> {
     public Optional<Field> getField(String name) {
 
         return allFields().filter(field -> field.getName().equals(name)).findAny();
+    }
+
+    public Stream<Field> encryptedFields() {
+
+        return annotatedFields(Encrypted.class);
     }
 
     public static Integer fieldPage(Field field) {

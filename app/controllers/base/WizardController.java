@@ -1,7 +1,12 @@
 package controllers.base;
 
+import com.typesafe.config.Config;
 import data.base.WizardData;
+import helpers.Encryption;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -11,33 +16,49 @@ import java.util.stream.Collectors;
 import lombok.val;
 import play.Environment;
 import play.data.Form;
-import play.data.FormFactory;
 import play.data.validation.ValidationError;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Content;
+import play.twirl.api.Txt;
+import scala.Function1;
+import scala.compat.java8.functionConverterImpls.FromJavaFunction;
 
 import static helpers.FluentHelper.content;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
 
-    protected final HttpExecutionContext ec;
-
     private final Environment environment;
     private final Form<T> wizardForm;
     private final String baseViewName;
+    private final Function1<String, String> viewEncrypter;
+    private final List<String> encryptedFields;
+
+    protected final Function<String, String> encrypter;
+    protected final Function<String, String> decrypter;
+    protected final HttpExecutionContext ec;
 
     protected WizardController(HttpExecutionContext ec,
+                               Config configuration,
                                Environment environment,
-                               FormFactory formFactory,
+                               EncryptedFormFactory formFactory,
                                Class<T> wizardType,
                                String baseViewName) {
 
         this.ec = ec;
         this.environment = environment;
-        this.wizardForm = formFactory.form(wizardType);
         this.baseViewName = baseViewName;
+
+        wizardForm = formFactory.form(wizardType, this::decryptParams);
+        encryptedFields = newWizardData().encryptedFields().map(Field::getName).collect(Collectors.toList());
+
+        val paramsSecretKey = configuration.getString("params.secret.key");
+
+        encrypter = plainText -> Encryption.encrypt(plainText, paramsSecretKey);
+        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
+
+        viewEncrypter = new FromJavaFunction(encrypter); // Use Scala functions in the view.scala.html markup
     }
 
     public final CompletionStage<Result> wizardGet() {
@@ -80,7 +101,12 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
 
-        return CompletableFuture.supplyAsync(() -> params, ec.current());
+        return CompletableFuture.supplyAsync(() -> decryptParams(params), ec.current());
+    }
+
+    protected Map<String, String> modifyParams(Map<String, String> params) {
+
+        return params;
     }
 
     protected Integer nextPage(T wizardData) {  // Overridable in derived Controllers jump pages based on content
@@ -100,22 +126,59 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         return baseViewName + pageNumber;
     }
 
+    private Map<String, String> decryptParams(Map<String, String> params) {
+
+        modifyParams(params).keySet().stream().filter(encryptedFields::contains).forEach(field ->
+                params.put(field, decrypter.apply(params.get(field)))
+        );
+
+        return params;
+    }
+
     private Function<Form<T>, Content> formRenderer(String viewName) {
 
-        try {
-            val render = environment.classLoader().loadClass(viewName).getDeclaredMethod("render", Form.class);
+        val render = getRenderMethod(viewName, Form.class);
+        val renderWithEncrypter = getRenderMethod(viewName, Form.class, Function1.class);
 
-            return form -> {
-                try {
-                    return (Content) render.invoke(null, form);
-                }
-                catch (IllegalAccessException | InvocationTargetException ex) {
-                    return content(ex);
-                }
-            };
+        return form -> {
+
+            val content = render.map(method -> invokeContentMethod(method, form));
+            val contentWithEncryption = renderWithEncrypter.map(method -> invokeContentMethod(method, form, viewEncrypter));
+
+            return contentWithEncryption.orElseGet(() -> content.orElse(Txt.apply("Form Renderer Error")));
+        };
+    }
+
+    private Optional<Method> getRenderMethod(String viewName, Class<?>... parameterTypes) {
+
+        try {
+            return Optional.of(environment.classLoader().loadClass(viewName).getDeclaredMethod("render", parameterTypes));
         }
         catch (ClassNotFoundException | NoSuchMethodException ex) {
-            return form -> content(ex);
+
+            return Optional.empty();
+        }
+    }
+
+    private Content invokeContentMethod(Method method, Object... args) {
+
+        try {
+            return (Content) method.invoke(null, args);
+        }
+        catch (IllegalAccessException | InvocationTargetException ex) {
+
+            return content(ex);
+        }
+    }
+
+    private T newWizardData() {
+
+        try {
+            return wizardForm.getBackedType().newInstance();
+
+        } catch (InstantiationException | IllegalAccessException ex) {
+
+            return null;
         }
     }
 }

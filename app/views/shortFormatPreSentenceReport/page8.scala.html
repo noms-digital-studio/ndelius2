@@ -1,7 +1,7 @@
 @import data._
 @import helper._
 
-@(reportForm: Form[ShortFormatPreSentenceReportData])
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
@@ -17,16 +17,20 @@
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'novalidate -> "") {
         @CSRF.formField
 
-        @inputHidden(reportForm("name"))
-        @inputHidden(reportForm("dateOfBirth"))
-        @inputHidden(reportForm("age"))
-        @inputHidden(reportForm("address"))
-        @inputHidden(reportForm("crn"))
-        @inputHidden(reportForm("pnc"))
+        @inputHidden(reportForm("onBehalfOfUser"), encrypter)
 
-        @inputHidden(reportForm("court"))
-        @inputHidden(reportForm("dateOfHearing"))
-        @inputHidden(reportForm("localJusticeArea"))
+        @inputHidden(reportForm("name"), encrypter)
+        @inputHidden(reportForm("dateOfBirth"), encrypter)
+        @inputHidden(reportForm("age"), encrypter)
+        @inputHidden(reportForm("address"), encrypter)
+        @inputHidden(reportForm("crn"), encrypter)
+        @inputHidden(reportForm("pnc"), encrypter)
+
+        @inputHidden(reportForm("pncSupplied"))
+
+        @inputHidden(reportForm("court"), encrypter)
+        @inputHidden(reportForm("dateOfHearing"), encrypter)
+        @inputHidden(reportForm("localJusticeArea"), encrypter)
 
         @inputHidden(reportForm("interviewInformationSource"))
         @inputHidden(reportForm("serviceRecordsInformationSource"))

@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
+
 import lombok.val;
 import org.junit.Test;
 import play.Application;
@@ -38,11 +40,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void getSampleReportConsumesDtoQueryStrings() {
 
-        val request = new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=Alan%20Smith&foobar=xyz987");
+        val request = new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D&foobar=xyz987");
 
         val content = Helpers.contentAsString(route(app, request));
 
-        assertTrue(content.contains("Alan Smith"));
+        assertTrue(content.contains("Smith, John"));
         assertFalse(content.contains("xyz987"));
     }
 
@@ -90,14 +92,17 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage1AllFieldsReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
                 put("pageNumber", "1");
             }
         };
@@ -111,15 +116,18 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage2SomeFieldsMissingReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
                 put("pageNumber", "2");
             }
         };
@@ -133,17 +141,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage2AllRequiredFieldsReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("pageNumber", "2");
             }
         };
@@ -157,17 +168,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage3SomeFieldsMissingReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("otherInformationSource", "true");
                 put("pageNumber", "3");
             }
@@ -182,17 +196,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage3WithSpellingMistakeReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "This texxt has speeling mistakes");
                 put("pageNumber", "3");
@@ -208,17 +225,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage3WithSpellingMistakeAndOverrideReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "This texxt has speeling mistakes");
                 put("ignoreOtherInformationDetailsSpelling", "true");
@@ -235,17 +255,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage3AllRequiredFieldsReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -269,17 +292,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage4WithSpellingMistakeReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -306,17 +332,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage4WithSpellingMistakeAndOverrideReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -346,17 +375,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage4SomeFieldsMissingReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -383,17 +415,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage4AllRequiredFieldsReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -421,17 +456,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage5WithSpellingMistakeReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -459,17 +497,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage5WithSpellingMistakeAndOverrideReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -498,17 +539,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage5SomeFieldsMissingReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -535,17 +579,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage5AllRequiredFieldsReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -573,17 +620,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage6WithSpellingMistakeReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -613,17 +663,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage6WithSpellingMistakeAndOverrideReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -654,17 +707,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage6AllRequiredFieldsReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -694,17 +750,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage7WithSpellingMistakeReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -735,17 +794,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage7WithSpellingMistakeAndOverrideReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -778,17 +840,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage7SomeFieldsMissingReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -818,17 +883,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage7AllRequiredFieldsReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -859,17 +927,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage8WithSpellingMistakeReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -902,17 +973,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage8WithSpellingMistakeAndOverrideReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -946,17 +1020,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage8SomeFieldsMissingReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -988,17 +1065,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage8AllRequiredFieldsReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -1031,17 +1111,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage9WithSpellingMistakeReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -1075,17 +1158,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage9WithSpellingMistakeAndOverrideReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -1121,17 +1207,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage9SomeFieldsMissingReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -1164,17 +1253,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage9AllRequiredFieldsReturnsOK() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -1208,17 +1300,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage10SomeFieldsMissingReturnsBadRequest() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -1252,17 +1347,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage10AllRequiredFieldsReturnsOKAndPdfGenerated() {
 
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
         val formData = new HashMap<String, String>() {
             {
-                put("name", "John Smith");
-                put("dateOfBirth", "06/02/1976");
-                put("age", "41");
-                put("address", "10 High Street");
-                put("crn", "B56789");
-                put("pnc", "98793030");
-                put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", "01/02/2017");
-                put("localJusticeArea", "Greater Manchester");
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -1316,7 +1414,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Override
     public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
 
-        return CompletableFuture.supplyAsync(() -> "{ \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"court\": \"Retrieved From Store\" }");
+        return CompletableFuture.supplyAsync(() -> "{ \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"pnc\": \"Retrieved From Store\" }");
     }
 
     @Override

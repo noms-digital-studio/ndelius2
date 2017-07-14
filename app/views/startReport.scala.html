@@ -1,6 +1,6 @@
 @import helper._
 
-@(reportData: Map[String, String])
+@(parameters: String)
 
 @main("Start your report - Short Format Pre Sentence Report", true) {
 
@@ -23,7 +23,7 @@
 
       <p class="margin-top large">Completion can take around <span class="bold">30 minutes</span>.</p>
 
-      <a class="button button-start margin-top large" href="/report/shortFormatPreSentenceReport?@reportData.map {case (key, value)=>@key=@value.mkString}.mkString("&")">Start now</a>
+      <a class="button button-start margin-top large" href="/report/shortFormatPreSentenceReport?@parameters">Start now</a>
 
     </div>
     <div class="column-one-third">

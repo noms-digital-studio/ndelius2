@@ -1,4 +1,4 @@
-@(formField: Field, label: String)
+@(formField: Field, label: String, encrypter: String => String = identity)
 
 <p class="body-text"><span class="bold">@label</span><br/>@formField.value</p>
-<input type="hidden" name="@formField.name" id="@formField.id" value="@formField.value" />
+<input type="hidden" name="@formField.name" id="@formField.id" value="@encrypter(formField.value.getOrElse(""))" />

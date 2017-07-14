@@ -1,7 +1,7 @@
 @import data._
 @import helper._
 
-@(reportForm: Form[ShortFormatPreSentenceReportData])
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
@@ -17,24 +17,28 @@
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'novalidate -> "") {
         @CSRF.formField
 
+        @inputHidden(reportForm("onBehalfOfUser"), encrypter)
+
         <div class="box grey margin-bottom medium">
-          @readOnlyField(reportForm("name"), "Name")
-          @readOnlyField(reportForm("dateOfBirth"), "Date of Birth")
-          @readOnlyField(reportForm("age"), "Age")
-          @readOnlyField(reportForm("address"), "Address")
-          @readOnlyField(reportForm("crn"), "Delius CRN")
-          @if(reportForm("pnc").getValue.isPresent) {
-            @readOnlyField(reportForm("pnc"), "PNC ID")
+          @readOnlyField(reportForm("name"), "Name", encrypter)
+          @readOnlyField(reportForm("dateOfBirth"), "Date of Birth", encrypter)
+          @readOnlyField(reportForm("age"), "Age", encrypter)
+          @readOnlyField(reportForm("address"), "Address", encrypter)
+          @readOnlyField(reportForm("crn"), "Delius CRN", encrypter)
+          @if(Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
+            @readOnlyField(reportForm("pnc"), "PNC ID", encrypter)
           }
         </div>
 
-        @if(!reportForm("pnc").getValue.isPresent) {
+        @if(!Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
           @inputText(reportForm("pnc"), '_label -> "PNC ID", 'class -> "half-width")
         }
 
-        @inputHidden(reportForm("court"))
-        @inputHidden(reportForm("dateOfHearing"))
-        @inputHidden(reportForm("localJusticeArea"))
+        @inputHidden(reportForm("pncSupplied"))
+
+        @inputHidden(reportForm("court"), encrypter)
+        @inputHidden(reportForm("dateOfHearing"), encrypter)
+        @inputHidden(reportForm("localJusticeArea"), encrypter)
 
         @inputHidden(reportForm("interviewInformationSource"))
         @inputHidden(reportForm("serviceRecordsInformationSource"))
