@@ -30,25 +30,25 @@ class OffenderSearch extends React.Component {
         };
     }
 
-    render() {
+    componentWillMount() {
 
-        const performSearch = () => { // debounce?
+        this.performSearch = _.debounce(() => {
 
             $.getJSON('/spellcheck/' + this.state.name, data => {
                 this.setState({
                     data: data
                 });
             });
-        };
+        }, this.props.delay);
+    }
 
-        const searchChange = ev => {
+    render() {
 
-            this.setState({ name: ev.target.value }, performSearch);
-        };
+        var searchChange = ev => this.setState({ name: ev.target.value }, this.performSearch);
 
         return (
             <div>
-                <input value={this.state.name} onChange={searchChange} placeholder="Enter name here" />
+                <input value={this.state.name} onChange={searchChange} placeholder="Enter text here" />
                 <ResultsGrid value={this.state.data} />
             </div>
         );
@@ -56,6 +56,6 @@ class OffenderSearch extends React.Component {
 }
 
 ReactDOM.render(
-    <OffenderSearch />,
+    <OffenderSearch delay={500} />,
     document.getElementById('content')
 );
