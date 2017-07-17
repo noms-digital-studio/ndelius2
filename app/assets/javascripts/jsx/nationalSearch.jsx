@@ -4,7 +4,7 @@ class ResultsGrid extends React.Component {
     render() {
         return (
             <ul>
-                {this.props.value.map(result => (
+                {this.props.results.map(result => (
                     <li>
                         <span>{result.mistake}</span>
                         <ul>
@@ -26,7 +26,7 @@ class OffenderSearch extends React.Component {
 
         this.state = {
             name: "",
-            data: []
+            results: []
         };
     }
 
@@ -36,7 +36,7 @@ class OffenderSearch extends React.Component {
 
             $.getJSON('/spellcheck/' + this.state.name, data => {
                 this.setState({
-                    data: data
+                    results: data
                 });
             });
         }, this.props.delay);
@@ -49,7 +49,7 @@ class OffenderSearch extends React.Component {
         return (
             <div>
                 <input value={this.state.name} onChange={searchChange} placeholder="Enter text here" />
-                <ResultsGrid value={this.state.data} />
+                <ResultsGrid {...this.state} />
             </div>
         );
     }
