@@ -14,13 +14,18 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.val;
 import play.mvc.*;
+import views.html.startReport;
 
 public class StartController extends Controller {
 
-    protected final Function<String, String> encrypter;
+    private final startReport template;
+    private final Function<String, String> encrypter;
 
     @Inject
-    public StartController(Config configuration) {
+    public StartController(startReport template,
+                           Config configuration) {
+
+        this.template = template;
 
         val paramsSecretKey = configuration.getString("params.secret.key");
 
@@ -57,6 +62,6 @@ public class StartController extends Controller {
 
         val parameters = String.join("&", encryptedData.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList()));
 
-        return ok(views.html.startReport.render(parameters));
+        return ok(template.render(parameters));
     }
 }

@@ -18,6 +18,7 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
+import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.Logger;
 import play.libs.Json;
@@ -34,13 +35,14 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
 
     @Inject
     public ShortFormatPreSentenceReportController(HttpExecutionContext ec,
+                                                  WebJarsUtil webJarsUtil,
                                                   Config configuration,
                                                   Environment environment,
                                                   EncryptedFormFactory formFactory,
                                                   PdfGenerator pdfGenerator,
                                                   DocumentStore documentStore) {
 
-        super(ec, configuration, environment, formFactory, ShortFormatPreSentenceReportData.class, "views.html.shortFormatPreSentenceReport.page");
+        super(ec, webJarsUtil, configuration, environment, formFactory, ShortFormatPreSentenceReportData.class, "views.html.shortFormatPreSentenceReport.page");
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
@@ -108,13 +110,10 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
 
                         views.html.shortFormatPreSentenceReport.completed.render(
                                 String.format("PDF Created - %d bytes", bytes.length),
-                                Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(bytes))
+                                Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(bytes)),
+                                webJarsUtil
                         )))
 
                 .orElse(wizardFailed(data)));
     }
 }
-
-/*
-http://localhost:9000/report/shortFormatPreSentenceReport?onBehalfOfUser=ouS6MlPXBB0R6lAp3t5uZA%3D%3D&name=gtjJnZqaMO0utfbFhOtQOg%3D%3D&dateOfBirth=x1Njugo52D97wixq%2Fk%2FpgA%3D%3D&age=%2BM%2FvXWKzWEZKX7VE5ihDgg%3D%3D&address=e7JX8FwPB7%2F7r%2BNQfmDKxsWZqdZ78ZJOUQ4fO2xumbo%3D&crn=oyq7a%2F78loz%2F0QXfn0ptSw%3D%3D&pnc=&court=fwTcl3Wuu3STmQzqQiNWpC7eJS%2FpTQGIhCHphicPwdk%3D&dateOfHearing=TZ%2B037Fr0ehfncrg9%2B8QqA%3D%3D&localJusticeArea=9EI25qMuUKi7F%2BLKz27Xxw%3D%3D
-*/

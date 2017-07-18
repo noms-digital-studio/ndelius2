@@ -1,7 +1,8 @@
 @import data._
 @import helper._
+@import org.webjars.play.WebJarsUtil
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit webJarsUtil: WebJarsUtil)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 

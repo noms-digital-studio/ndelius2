@@ -1,8 +1,8 @@
 @import helper._
+@import org.webjars.play.WebJarsUtil
 
-@(message: String, pdfBase64: String)
+@(message: String, pdfBase64: String)(implicit webJarsUtil: WebJarsUtil)
 
-<!-- TODO: This should be removed when the iframe is no longer required -->
 <style type="text/css">
     body, html {
         height: 100%;
@@ -26,7 +26,6 @@
 
     <input class="button" type="submit" value="Finished"/>
 
-        <!-- TODO: This will not be required when integrated with nDelius -->
     <div class="iframe-container margin-top medium">
         <iframe></iframe>
     </div>

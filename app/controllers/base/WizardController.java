@@ -14,6 +14,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.val;
+import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.data.Form;
 import play.data.validation.ValidationError;
@@ -35,11 +36,13 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     private final Function1<String, String> viewEncrypter;
     private final List<String> encryptedFields;
 
+    protected final WebJarsUtil webJarsUtil;
     protected final Function<String, String> encrypter;
     protected final Function<String, String> decrypter;
     protected final HttpExecutionContext ec;
 
     protected WizardController(HttpExecutionContext ec,
+                               WebJarsUtil webJarsUtil,
                                Config configuration,
                                Environment environment,
                                EncryptedFormFactory formFactory,
@@ -47,6 +50,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                                String baseViewName) {
 
         this.ec = ec;
+        this.webJarsUtil = webJarsUtil;
         this.environment = environment;
         this.baseViewName = baseViewName;
 
@@ -137,15 +141,13 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     private Function<Form<T>, Content> formRenderer(String viewName) {
 
-        val render = getRenderMethod(viewName, Form.class);
-        val renderWithEncrypter = getRenderMethod(viewName, Form.class, Function1.class);
+        val render = getRenderMethod(viewName, Form.class, Function1.class, WebJarsUtil.class);
 
         return form -> {
 
-            val content = render.map(method -> invokeContentMethod(method, form));
-            val contentWithEncryption = renderWithEncrypter.map(method -> invokeContentMethod(method, form, viewEncrypter));
+            val content = render.map(method -> invokeContentMethod(method, form, viewEncrypter, webJarsUtil));
 
-            return contentWithEncryption.orElseGet(() -> content.orElse(Txt.apply("Form Renderer Error")));
+            return content.orElse(Txt.apply("Form Renderer Error"));
         };
     }
 
