@@ -1,18 +1,27 @@
 
+class ResultsRow extends React.Component {
+
+    render() {
+        return (
+            <li>
+                <span>{this.props.mistake}</span>
+                <ul>
+                    {this.props.suggestions.map(suggestion => (
+                        <li>{suggestion}</li>
+                    ))}
+                </ul>
+            </li>
+        );
+    }
+}
+
 class ResultsGrid extends React.Component {
 
     render() {
         return (
             <ul>
                 {this.props.results.map(result => (
-                    <li>
-                        <span>{result.mistake}</span>
-                        <ul>
-                            {result.suggestions.map(suggestion => (
-                                <li>{suggestion}</li>
-                            ))}
-                        </ul>
-                    </li>
+                    <ResultsRow {...result} />
                 ))}
             </ul>
         );
