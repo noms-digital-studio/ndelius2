@@ -97,6 +97,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -121,6 +122,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -146,6 +148,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -173,6 +176,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -201,6 +205,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -230,6 +235,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -260,6 +266,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -297,6 +304,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -337,6 +345,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -380,6 +389,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -420,6 +430,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -461,6 +472,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -502,6 +514,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -544,6 +557,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -584,6 +598,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -625,6 +640,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -668,6 +684,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -712,6 +729,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -755,6 +773,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -799,6 +818,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -845,6 +865,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -888,6 +909,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -932,6 +954,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -978,6 +1001,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1025,6 +1049,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1070,6 +1095,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1116,6 +1142,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1163,6 +1190,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1212,6 +1240,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1258,6 +1287,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1305,6 +1335,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1352,6 +1383,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val formData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1406,7 +1438,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Override
-    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Integer entityId) {
+    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Long entityId) {
 
         return CompletableFuture.supplyAsync(ImmutableMap::of);
     }

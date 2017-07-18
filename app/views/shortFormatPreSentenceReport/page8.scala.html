@@ -19,6 +19,7 @@
         @CSRF.formField
 
         @inputHidden(reportForm("onBehalfOfUser"), encrypter)
+        @inputHidden(reportForm("entityId"), encrypter)
 
         @inputHidden(reportForm("name"), encrypter)
         @inputHidden(reportForm("dateOfBirth"), encrypter)

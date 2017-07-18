@@ -101,7 +101,7 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
                         Json.stringify(Json.toJson(data)),
                         data.getOnBehalfOfUser(),
                         data.getCrn(),
-                        12345
+                        data.getEntityId()
 
                 ).thenApply(stored -> Optional.ofNullable(stored.get("ID")).
                         filter(not(Strings::isNullOrEmpty)).map(value(result)))).

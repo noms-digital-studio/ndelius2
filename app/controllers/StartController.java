@@ -37,6 +37,7 @@ public class StartController extends Controller {
         val reportData = new HashMap<String, String>() {
             {
                 put("onBehalfOfUser", "johnsmith");
+                put("entityId", "12345");
                 put("name", "Alan Smith");
                 put("dateOfBirth", "06/02/1976");
                 put("age", "41");

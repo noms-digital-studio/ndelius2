@@ -19,6 +19,7 @@
         @CSRF.formField
 
         @inputHidden(reportForm("onBehalfOfUser"), encrypter)
+        @inputHidden(reportForm("entityId"), encrypter)
 
         <div class="box grey margin-bottom medium">
           @readOnlyField(reportForm("name"), "Name", encrypter)

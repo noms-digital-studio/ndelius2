@@ -41,7 +41,7 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Integer entityId) {
+    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Long entityId) {
 
         try {
 

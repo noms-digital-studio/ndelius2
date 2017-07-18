@@ -24,6 +24,11 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @JsonIgnore
     private String onBehalfOfUser;
 
+    @Encrypted
+    @RequiredOnPage(1)
+    @JsonIgnore
+    private Long entityId;
+
 
     @Encrypted
     @RequiredOnPage(1)
