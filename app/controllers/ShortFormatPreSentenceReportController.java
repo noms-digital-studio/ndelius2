@@ -99,7 +99,7 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
                         result,
                         "shortFormatPreSentenceReport.pdf",
                         Json.stringify(Json.toJson(data)),
-                        data.getOnBehalfOfUser()),
+                        data.getOnBehalfOfUser(),
                         data.getCrn(),
                         12345
 
