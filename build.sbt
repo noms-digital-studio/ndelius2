@@ -15,7 +15,7 @@ libraryDependencies ++= Seq(
   filters,
   javaWs.exclude("commons-logging", "commons-logging"),
   "org.webjars" %% "webjars-play" % "2.6.1",
-  "org.webjars.bower" % "react" % "15.6.1",
+  "org.webjars.bower" % "react" % "0.14.9", // https://facebook.github.io/react/blog/2016/01/12/discontinuing-ie8-support.html
   "org.webjars" % "underscorejs" % "1.8.3",
   ("org.languagetool" % "language-en" % "3.7").exclude("commons-logging", "commons-logging"),
   "org.projectlombok" % "lombok" % "1.16.16" % "provided"
