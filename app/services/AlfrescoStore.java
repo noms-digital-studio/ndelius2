@@ -53,7 +53,7 @@ public class AlfrescoStore implements DocumentStore {
             val dataParts = ImmutableMap.of(
                     "CRN", crn,
                     "author", onBehalfOfUser,
-                    "entityType", "OFFENDER",
+                    "entityType", "COURTREPORT",
                     "entityId", entityId.toString(),
                     "docType", "DOCUMENT"
                     //@TODO: Store originalData JSON string as document metadata
