@@ -1,49 +1,51 @@
-@import data._
 @import helper._
 
 @(message: String, pdfBase64: String)
 
 <!-- TODO: This should be removed when the iframe is no longer required -->
 <style type="text/css">
-  body, html {
-    height: 100%;
-  }
+    body, html {
+        height: 100%;
+    }
 </style>
 
 @main("Report complete - Short Format Pre Sentence Report", false) {
 
-  <div class="margin-top medium"></div>
+    <div class="margin-top medium"></div>
 
-  <div class="govuk-box-highlight">
+    <div class="govuk-box-highlight">
 
-    <h2 class="heading-xlarge">Report complete</h2>
+        <h2 class="heading-xlarge">Report complete</h2>
 
-    <p class="font-large">Your report has been created<br/>and uploaded successfully</p>
+        <p class="font-large">Your report has been created<br/>and uploaded successfully</p>
 
-  </div>
+    </div>
 
-  <p><a href="#" title="What did you think of this service?">What did you think of this service?</a> (takes 30 seconds)</p>
+    <p><a href="#" title="What did you think of this service?">What did you think of this service?</a>
+        (takes 30 seconds)</p>
 
-  <input class="button" type="submit" value="Finished"/>
+    <input class="button" type="submit" value="Finished"/>
 
-  <!-- TODO: This will not be required when integrated with nDelius -->
-  <div class="iframe-container margin-top medium">
-    <iframe></iframe>
-  </div>
+        <!-- TODO: This will not be required when integrated with nDelius -->
+    <div class="iframe-container margin-top medium">
+        <iframe></iframe>
+    </div>
 
-  <script type="text/javascript">
-    $(function () {
+    <script type="text/javascript">
+        $(function () {
 
-      $('input').click(function () {
-        parent.postMessage('@message', '*');
-      });
+            $('input').click(function () {
+                parent.postMessage('@message', '*');
+            });
 
-      var pdfBytes = Uint8Array.from(atob('@pdfBase64'), function (c) { return c.charCodeAt(0); }),
-        pdfBlob = new Blob([pdfBytes], {type: 'application/pdf'}),
-        pdfUrl = URL.createObjectURL(pdfBlob);
+            if(window.Uint8Array) { // Won't work in IE8/IE9, will work in all other browsers. Don't display PDF result in IE8/IE9
 
-      $('iframe').attr('src', pdfUrl);
+                var pdfBytes = Uint8Array.from(atob('@pdfBase64'), function (c) { return c.charCodeAt(0); });
+                var pdfBlob = new Blob([pdfBytes], {type: 'application/pdf'});
+                var pdfUrl = URL.createObjectURL(pdfBlob);
 
-    });
-  </script>
+                $('iframe').attr('src', pdfUrl);
+            }
+        });
+    </script>
 }
