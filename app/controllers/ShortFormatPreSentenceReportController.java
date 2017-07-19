@@ -1,6 +1,7 @@
 package controllers;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.WizardController;
@@ -14,10 +15,10 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import javax.inject.Inject;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.cglib.beans.BeanMap;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.Logger;
@@ -53,10 +54,16 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
 
         return super.initialParams().thenCompose(params -> {
 
-            val originalData = Optional.ofNullable(params.get("documentId")). // Retrieve JSON as Map<String, String>
-                    map(decrypter).
+            val originalData = Optional.ofNullable(params.get("documentId")).
                     map(documentId -> documentStore.retrieveOriginalData(documentId, params.get("onBehalfOfUser"))).
-                    map(originalJson -> originalJson.thenApply(JsonHelper::jsonToMap)); //@TODO: Re-encrypt
+                    map(originalJson -> originalJson.thenApply(json -> JsonHelper.jsonToMap(Json.parse(json).get("values")))).
+                    map(originalInfo -> originalInfo.thenApply(info -> {
+
+                        info.put("onBehalfOfUser", params.get("onBehalfOfUser"));
+                        info.put("documentId", params.get("documentId"));
+
+                        return info;
+                    }));
 
             return originalData.orElse(CompletableFuture.supplyAsync(() -> {
 
@@ -95,16 +102,10 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
         return pdfGenerator.generate("helloWorld", data).
                 thenApply(Optional::of).
 /*
-                thenCompose(result -> documentStore.uploadNewPdf(
-                        result,
-                        "shortFormatPreSentenceReport.pdf",
-                        Json.stringify(Json.toJson(data)),
-                        data.getOnBehalfOfUser(),
-                        data.getCrn(),
-                        data.getEntityId()
+                thenCompose(result -> storeReport(data, result).thenApply(stored ->
 
-                ).thenApply(stored -> Optional.ofNullable(stored.get("ID")).
-                        filter(not(Strings::isNullOrEmpty)).map(value(result)))).
+                    Optional.ofNullable(stored.get("ID")).filter(not(Strings::isNullOrEmpty)).map(value(result)))
+                ).
 */
                 thenApply(result -> result.map(bytes -> ok(
 
@@ -115,5 +116,33 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
                         )))
 
                 .orElse(wizardFailed(data)));
+    }
+
+    private CompletionStage<Map<String, String>> storeReport(ShortFormatPreSentenceReportData data, Byte[] document) {
+
+        val filename = "shortFormatPreSentenceReport.pdf";
+        val metaData = Json.stringify(Json.toJson(ImmutableMap.of(
+                "templateName", "shortFormatPreSentenceReport",
+                "values",BeanMap.create(data)
+        )));
+
+        if (Strings.isNullOrEmpty(data.getDocumentId())) {
+
+            return documentStore.uploadNewPdf(
+                    document,
+                    filename,
+                    data.getOnBehalfOfUser(),
+                    metaData,
+                    data.getCrn(),
+                    data.getEntityId());
+        } else {
+
+            return documentStore.updateExistingPdf(
+                    document,
+                    filename,
+                    data.getOnBehalfOfUser(),
+                    metaData,
+                    data.getDocumentId());
+        }
     }
 }

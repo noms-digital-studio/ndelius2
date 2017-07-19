@@ -1418,12 +1418,64 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             }
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
+
         pdfGenerated = false;
 
         val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
-//        assertEquals("application/pdf", result.contentType().orElse(""));
+        assertTrue(pdfGenerated);
+    }
+
+    @Test
+    public void postUpdatedReportPage10AllRequiredFieldsReturnsOKAndPdfGenerated() {
+
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+
+        val formData = new HashMap<String, String>() {
+            {
+                put("onBehalfOfUser", encrypter.apply("johnsmith"));
+                put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("23456"));
+                put("name", encrypter.apply("John Smith"));
+                put("dateOfBirth", encrypter.apply("06/02/1976"));
+                put("age", encrypter.apply("41"));
+                put("address", encrypter.apply("10 High Street"));
+                put("crn", encrypter.apply("B56789"));
+                put("pnc", encrypter.apply("98793030"));
+                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+                put("dateOfHearing", encrypter.apply("01/02/2017"));
+                put("localJusticeArea", encrypter.apply("Greater Manchester"));
+                put("interviewInformationSource", "true");
+                put("serviceRecordsInformationSource", "true");
+                put("cpsSummaryInformationSource", "true");
+                put("oasysAssessmentsInformationSource", "true");
+                put("previousConvictionsInformationSource", "true");
+                put("victimStatementInformationSource", "true");
+                put("childrenServicesInformationSource", "true");
+                put("policeInformationSource", "true");
+                put("otherInformationSource", "true");
+                put("otherInformationDetails", "These notes are spelled correctly");
+                put("mainOffence", "Some offence");
+                put("offenceSummary", "Some offence summary");
+                put("offenceAnalysis", "Some offence analysis");
+                put("offenderAssessment", "Some assessment");
+                put("patternOfOffending", "Some assessment");
+                put("previousSupervisionResponse", "Some assessment");
+                put("likelihoodOfReOffending", "Some assessment");
+                put("riskOfSeriousHarm", "An example of a risk assessment");
+                put("proposal", "An example of a proposal");
+                put("reportAuthor", "Robert Jenkins");
+                put("office", "Manchester and Salford Magistrates Court");
+                put("pageNumber", "10");
+            }
+        };
+        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
+        pdfGenerated = false;
+
+        val result = route(app, addCSRFToken(request));
+
+        assertEquals(OK, result.status());
         assertTrue(pdfGenerated);
     }
 
@@ -1437,16 +1489,30 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         return CompletableFuture.supplyAsync(() -> new Byte[0]);    // Mocked PdfGenerator returns empty Byte array
     }
 
-    @Override
-    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String originalData, String onBehalfOfUser, String crn, Long entityId) {
+    private boolean pdfUploaded;
 
-        return CompletableFuture.supplyAsync(ImmutableMap::of);
+    @Override
+    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId) {
+
+        pdfUploaded = true;
+
+        return CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123"));
     }
 
     @Override
     public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
 
-        return CompletableFuture.supplyAsync(() -> "{ \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"pnc\": \"Retrieved From Store\" }");
+        return CompletableFuture.supplyAsync(() -> "{ \"templateName\": \"fooBar\", \"values\": { \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"pnc\": \"Retrieved From Store\" } }");
+    }
+
+    private boolean pdfUpdated;
+
+    @Override
+    public CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId) {
+
+        pdfUpdated = true;
+
+        return CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "456"));
     }
 
     @Override
