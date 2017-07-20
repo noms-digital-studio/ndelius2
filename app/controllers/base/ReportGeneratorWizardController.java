@@ -66,6 +66,12 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 thenApply(result -> result.map(bytes -> ok(renderCompletedView(bytes))).orElse(wizardFailed(data)));
     }
 
+    @Override
+    protected final String baseViewName() {
+
+        return "views.html." + templateName() + ".page";
+    }
+
     protected abstract String templateName();
 
     protected abstract Content renderCompletedView(Byte[] bytes);

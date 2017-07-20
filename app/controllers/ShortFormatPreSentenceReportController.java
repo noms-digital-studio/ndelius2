@@ -34,12 +34,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     }
 
     @Override
-    protected String baseViewName() {
-
-        return "views.html.shortFormatPreSentenceReport.page";
-    }
-
-    @Override
     protected String templateName() {
 
         return "shortFormatPreSentenceReport";
