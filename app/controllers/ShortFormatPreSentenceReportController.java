@@ -9,7 +9,6 @@ import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import java.util.Base64;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 import javax.inject.Inject;
@@ -50,20 +49,18 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     }
 
     @Override
-    protected Map<String, String> modifyParams(Map<String, String> params) {
-
-        Consumer<String> encryptParam = key -> Optional.ofNullable(params.get(key)).map(value -> params.put(key, encrypter.apply(value)));
+    protected Map<String, String> modifyParams(Map<String, String> params, Consumer<String> paramEncrypter) {
 
         if ("1".equals(params.get("pageNumber")) && "false".equals(params.get("pncSupplied"))) {
 
-            encryptParam.accept("pnc");
+            paramEncrypter.accept("pnc");
         }
 
         if ("2".equals(params.get("pageNumber"))) {
 
-            encryptParam.accept("court");
-            encryptParam.accept("dateOfHearing");
-            encryptParam.accept("localJusticeArea");
+            paramEncrypter.accept("court");
+            paramEncrypter.accept("dateOfHearing");
+            paramEncrypter.accept("localJusticeArea");
         }
 
         return params;

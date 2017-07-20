@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.val;
@@ -105,7 +106,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         return CompletableFuture.supplyAsync(() -> decryptParams(params), ec.current());
     }
 
-    protected Map<String, String> modifyParams(Map<String, String> params) {
+    protected Map<String, String> modifyParams(Map<String, String> params, Consumer<String> paramEncrypter) {
 
         return params;
     }
@@ -131,7 +132,9 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     private Map<String, String> decryptParams(Map<String, String> params) {
 
-        modifyParams(params).keySet().stream().filter(encryptedFields::contains).forEach(field ->
+        Consumer<String> paramEncrypter = key -> Optional.ofNullable(params.get(key)).map(value -> params.put(key, encrypter.apply(value)));
+
+        modifyParams(params, paramEncrypter).keySet().stream().filter(encryptedFields::contains).forEach(field ->
                 params.put(field, decrypter.apply(params.get(field)))
         );
 
