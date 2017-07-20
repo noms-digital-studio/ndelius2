@@ -18,6 +18,8 @@ libraryDependencies ++= Seq(
   "org.webjars" % "es5-shim" % "4.5.9",
   "org.webjars.bower" % "react" % "0.14.9", // https://facebook.github.io/react/blog/2016/01/12/discontinuing-ie8-support.html
   "org.webjars" % "underscorejs" % "1.8.3",
+  "org.webjars" % "jquery" % "1.12.4",
+  "org.webjars" % "jquery-ui" % "1.12.1",
   ("org.languagetool" % "language-en" % "3.7").exclude("commons-logging", "commons-logging"),
   "org.projectlombok" % "lombok" % "1.16.16" % "provided"
 )
