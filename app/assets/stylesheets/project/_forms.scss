@@ -7,6 +7,11 @@ textarea , textarea.form-control {
   padding-left: 0;
   overflow: auto;
 
+  @include ie(8) {
+    height: 8em;
+    border: 2px solid !important;
+  }
+
   &::placeholder {
     font-size: 25px;
   }
@@ -21,6 +26,13 @@ input[type="text"] {
 
   &.half-width {
     width: 50%;
+  }
+}
+
+input[type="checkbox"] {
+  @include ie(8) {
+    filter: none !important;
+    opacity: 1 !important;
   }
 }
 
