@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import data.annotations.SpellCheck;
 import lombok.*;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.languagetool.JLanguageTool;
 import org.languagetool.language.BritishEnglish;
 import org.languagetool.rules.RuleMatch;
@@ -154,7 +155,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
 
     private Stream<Field> allFields() {
 
-        return Arrays.stream(this.getClass().getDeclaredFields());
+        return FieldUtils.getAllFieldsList(this.getClass()).stream();
     }
 
     private Stream<Field> annotatedFields(Class<? extends Annotation> annotationClass) {

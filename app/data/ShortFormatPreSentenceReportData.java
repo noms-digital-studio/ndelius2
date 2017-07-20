@@ -7,7 +7,7 @@ import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import data.annotations.SpellCheck;
-import data.base.WizardData;
+import data.base.ReportGeneratorWizardData;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,22 +17,7 @@ import play.data.validation.ValidationError;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class ShortFormatPreSentenceReportData extends WizardData {
-
-    @Encrypted
-    @RequiredOnPage(1)
-    @JsonIgnore
-    private String onBehalfOfUser;
-
-    @Encrypted
-    @RequiredOnPage(1)
-    @JsonIgnore
-    private Long entityId;
-
-    @Encrypted
-    @JsonIgnore
-    private String documentId;
-
+public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData {
 
     @Encrypted
     @RequiredOnPage(1)
@@ -53,11 +38,6 @@ public class ShortFormatPreSentenceReportData extends WizardData {
     @RequiredOnPage(1)
     @JsonProperty("_ADDRESS_")
     private String address;
-
-    @Encrypted
-    @RequiredOnPage(1)
-    @JsonProperty("_DELIUS_CRN_")
-    private String crn;
 
     @Encrypted
     @OnPage(1)

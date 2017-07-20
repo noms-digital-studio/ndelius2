@@ -32,7 +32,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     private final Environment environment;
     private final Form<T> wizardForm;
-    private final String baseViewName;
     private final Function1<String, String> viewEncrypter;
     private final List<String> encryptedFields;
 
@@ -46,13 +45,11 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                                Config configuration,
                                Environment environment,
                                EncryptedFormFactory formFactory,
-                               Class<T> wizardType,
-                               String baseViewName) {
+                               Class<T> wizardType) {
 
         this.ec = ec;
         this.webJarsUtil = webJarsUtil;
         this.environment = environment;
-        this.baseViewName = baseViewName;
 
         wizardForm = formFactory.form(wizardType, this::decryptParams);
         encryptedFields = newWizardData().encryptedFields().map(Field::getName).collect(Collectors.toList());
@@ -118,6 +115,8 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         return Optional.ofNullable(wizardData.getJumpNumber()).orElse(wizardData.getPageNumber() + 1);
     }
 
+    protected abstract String baseViewName();
+
     protected abstract CompletionStage<Result> completedWizard(T wizardData);
 
     protected final Result wizardFailed(T wizardData) {
@@ -127,7 +126,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     private String viewPageName(int pageNumber) {
 
-        return baseViewName + pageNumber;
+        return baseViewName() + pageNumber;
     }
 
     private Map<String, String> decryptParams(Map<String, String> params) {
@@ -139,7 +138,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         return params;
     }
 
-    private Function<Form<T>, Content> formRenderer(String viewName) {
+    protected Function<Form<T>, Content> formRenderer(String viewName) {
 
         val render = getRenderMethod(viewName, Form.class, Function1.class, WebJarsUtil.class);
 

@@ -1,39 +1,26 @@
 package controllers;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
-import controllers.base.WizardController;
+import controllers.base.ReportGeneratorWizardController;
 import data.ShortFormatPreSentenceReportData;
-import helpers.JsonHelper;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 import javax.inject.Inject;
-import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
-import org.springframework.cglib.beans.BeanMap;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
-import play.Logger;
-import play.libs.Json;
 import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Result;
+import play.twirl.api.Content;
 
-import static helpers.FluentHelper.not;
-import static helpers.FluentHelper.value;
-
-public class ShortFormatPreSentenceReportController extends WizardController<ShortFormatPreSentenceReportData>
+public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData>
 {
-    private final PdfGenerator pdfGenerator;
-    private final DocumentStore documentStore;
-
     @Inject
     public ShortFormatPreSentenceReportController(HttpExecutionContext ec,
                                                   WebJarsUtil webJarsUtil,
@@ -43,34 +30,28 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
                                                   PdfGenerator pdfGenerator,
                                                   DocumentStore documentStore) {
 
-        super(ec, webJarsUtil, configuration, environment, formFactory, ShortFormatPreSentenceReportData.class, "views.html.shortFormatPreSentenceReport.page");
+        super(ec, webJarsUtil, configuration, environment, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
+    }
 
-        this.pdfGenerator = pdfGenerator;
-        this.documentStore = documentStore;
+    @Override
+    protected String baseViewName() {
+
+        return "views.html.shortFormatPreSentenceReport.page";
+    }
+
+    @Override
+    protected String templateName() {
+
+        return "shortFormatPreSentenceReport";
     }
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
 
-        return super.initialParams().thenCompose(params -> {
+        return super.initialParams().thenApply(params -> {
 
-            val originalData = Optional.ofNullable(params.get("documentId")).
-                    map(documentId -> documentStore.retrieveOriginalData(documentId, params.get("onBehalfOfUser"))).
-                    map(originalJson -> originalJson.thenApply(json -> JsonHelper.jsonToMap(Json.parse(json).get("values")))).
-                    map(originalInfo -> originalInfo.thenApply(info -> {
-
-                        info.put("onBehalfOfUser", params.get("onBehalfOfUser"));
-                        info.put("documentId", params.get("documentId"));
-
-                        return info;
-                    }));
-
-            return originalData.orElse(CompletableFuture.supplyAsync(() -> {
-
-                params.put("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
-                return params;
-
-            }, ec.current()));
+            params.put("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
+            return params;
         });
     }
 
@@ -95,54 +76,12 @@ public class ShortFormatPreSentenceReportController extends WizardController<Sho
     }
 
     @Override
-    protected CompletionStage<Result> completedWizard(ShortFormatPreSentenceReportData data) {
+    protected Content renderCompletedView(Byte[] bytes) {
 
-        Logger.info("Short Format Pre Sentence Report Data: " + data);
-
-        return pdfGenerator.generate("helloWorld", data).
-                thenApply(Optional::of).
-/*
-                thenCompose(result -> storeReport(data, result).thenApply(stored ->
-
-                    Optional.ofNullable(stored.get("ID")).filter(not(Strings::isNullOrEmpty)).map(value(result)))
-                ).
-*/
-                thenApply(result -> result.map(bytes -> ok(
-
-                        views.html.shortFormatPreSentenceReport.completed.render(
-                                String.format("PDF Created - %d bytes", bytes.length),
-                                Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(bytes)),
-                                webJarsUtil
-                        )))
-
-                .orElse(wizardFailed(data)));
-    }
-
-    private CompletionStage<Map<String, String>> storeReport(ShortFormatPreSentenceReportData data, Byte[] document) {
-
-        val filename = "shortFormatPreSentenceReport.pdf";
-        val metaData = Json.stringify(Json.toJson(ImmutableMap.of(
-                "templateName", "shortFormatPreSentenceReport",
-                "values",BeanMap.create(data)
-        )));
-
-        if (Strings.isNullOrEmpty(data.getDocumentId())) {
-
-            return documentStore.uploadNewPdf(
-                    document,
-                    filename,
-                    data.getOnBehalfOfUser(),
-                    metaData,
-                    data.getCrn(),
-                    data.getEntityId());
-        } else {
-
-            return documentStore.updateExistingPdf(
-                    document,
-                    filename,
-                    data.getOnBehalfOfUser(),
-                    metaData,
-                    data.getDocumentId());
-        }
+        return views.html.shortFormatPreSentenceReport.completed.render(
+                String.format("PDF Created - %d bytes", bytes.length),
+                Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(bytes)),
+                webJarsUtil
+        );
     }
 }
