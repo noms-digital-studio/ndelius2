@@ -25,6 +25,10 @@
   max-width: 275px;
   padding-left: 48px;
 
+  @include ie(8) {
+    padding-left: 4px !important;
+  }
+
   @include media(mobile) {
     max-width: 100%;
   }

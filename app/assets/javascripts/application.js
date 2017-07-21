@@ -12,11 +12,6 @@
         // Stick at top when scrolling
         GOVUK.stickAtTopWhenScrolling.init();
 
-        // Autosize all Textarea elements (does not support IE8).
-        if (!$('html').is('.lte-ie8')) {
-            autosize(document.querySelectorAll('textarea'));
-        }
-
         /**
          * Method to show/hide under/over recommended character limit elements/messages.
          * @param {Boolean} over Text entry over the recommended limit
@@ -65,12 +60,16 @@
             }
         });
 
-        /**
-         * Date picker
-         */
-        $('.date-picker').datepicker({
-            dateFormat: 'dd MM yy'
-        }).parent().addClass('date-wrapper');
+        // Progressive enhancement
+        if (!$('html').is('.lte-ie8')) {
+            // Autosize all Textarea elements (does not support IE8).
+            autosize(document.querySelectorAll('textarea'));
+
+            // Date picker
+            $('.date-picker').datepicker({
+                dateFormat: 'dd/mm/yy'
+            }).parent().addClass('date-wrapper');
+        }
 
     });
 

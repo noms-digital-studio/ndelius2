@@ -31,7 +31,7 @@
 
         @inputText(reportForm("court"), '_label -> "Court", 'required -> "true")
         @inputText(reportForm("localJusticeArea"), '_label -> "Local Justice Area", 'required -> "true")
-        @inputText(reportForm("dateOfHearing"), '_label -> "Date of Hearing", 'class -> "date-picker", 'required -> "true")
+        @inputText(reportForm("dateOfHearing"), '_label -> "Date of Hearing", '_help -> "DD/MM/YYYY", 'class -> "date-picker", 'required -> "true")
 
         @inputHidden(reportForm("interviewInformationSource"))
         @inputHidden(reportForm("serviceRecordsInformationSource"))

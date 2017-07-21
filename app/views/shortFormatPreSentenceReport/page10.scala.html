@@ -72,7 +72,7 @@
 
         @inputText(reportForm("reportAuthor"), '_label -> "Report Author", 'required -> "true")
         @inputText(reportForm("office"), '_label -> "Office", 'required -> "true")
-        @inputText(reportForm("reportDate"), '_label -> "Date", 'class -> "date-picker", 'required -> "true")
+        @inputText(reportForm("reportDate"), '_label -> "Date", '_help -> "DD/MM/YYYY", 'class -> "date-picker", 'required -> "true")
 
         @pageNumber(10, "Generate Report")
       }

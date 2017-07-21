@@ -12,7 +12,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <!--[if IE 8]><link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.versioned("stylesheets/govuk-elements-styles-ie8.css")" /><![endif]-->
-        <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/govuk-elements-styles.css")' />
+        <!--[if gt IE 8]><!--><link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/govuk-elements-styles.css")' /><!--<![endif]-->
         <!--[if IE 8]><link rel="stylesheet" type="text/css" media="all" href="@routes.Assets.versioned("stylesheets/fonts-ie8.css")" /><![endif]-->
         <link rel="shortcut icon" type="image/x-icon" href='@routes.Assets.versioned("images/favicon.ico")' />
 
@@ -23,7 +23,7 @@
         <script type='text/javascript' src='@webJarsUtil.url("es5-shim", "es5-shim.js").get'></script>
         <script type='text/javascript' src='@webJarsUtil.url("es5-shim", "es5-sham.js").get'></script>
         <script type='text/javascript' src='@webJarsUtil.url("jquery", "jquery.js").get'></script>
-        <script type='text/javascript' src='@webJarsUtil.url("jquery-ui", "jquery-ui.js").get'></script>
+        <!--[if gt IE 8]><!--><script type='text/javascript' src='@webJarsUtil.url("jquery-ui", "jquery-ui.js").get'></script><!--<![endif]-->
 
         <main id="content">
 

@@ -45,7 +45,7 @@ public class StartController extends Controller {
                 put("crn", "B56789");
                 put("pnc", "98793030");
                 put("court", "Manchester and Salford Magistrates Court");
-                put("dateOfHearing", new SimpleDateFormat("dd MMMM yyy").format(new Date()));
+                put("dateOfHearing", new SimpleDateFormat("dd/MM/yyy").format(new Date()));
                 put("localJusticeArea", "Greater Manchester");
             }
         };
