@@ -13,6 +13,10 @@
 
       <h2 class="heading-large no-margin-top">Signature</h2>
 
+      @if(flash.containsKey("reportGeneratorFailed")) {
+        <p>@flash.get("reportGeneratorFailed")</p>
+      }
+
       @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'novalidate -> "") {
         @CSRF.formField
 

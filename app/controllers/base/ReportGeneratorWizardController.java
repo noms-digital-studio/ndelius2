@@ -58,8 +58,11 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     protected final CompletionStage<Result> completedWizard(T data) {
 
         Function<Byte[], CompletionStage<Optional<Byte[]>>> resultIfStored = result ->
-                storeReport(data, result).thenApply(stored ->
-                        Optional.ofNullable(stored.get("ID")).filter(not(Strings::isNullOrEmpty)).map(value(result)));
+                storeReport(data, result).thenApply(stored -> {
+
+                    Logger.info("Store result: " + stored);
+                    return Optional.ofNullable(stored.get("ID")).filter(not(Strings::isNullOrEmpty)).map(value(result));
+                });
 
         return pdfGenerator.generate(templateName(), data).
                 thenCompose(resultIfStored). // thenApplyAsync(Optional::of).
@@ -70,10 +73,12 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 }).
                 thenApplyAsync(result -> result.map(bytes -> ok(renderCompletedView(bytes))).orElseGet(() -> {
 
+                    flash("reportGeneratorFailed", "Report Generation Failed!");
+
                     Logger.warn("Report generator wizard failed");
                     return wizardFailed(data);
 
-                }), ec.current());
+                }), ec.current()); // Have to provide execution context for HTTP Context to be available when rendering views
     }
 
     @Override
