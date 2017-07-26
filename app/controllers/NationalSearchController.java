@@ -25,7 +25,7 @@ public class NationalSearchController extends Controller {
         return ok(template.render());
     }
 
-    public Result spellcheck() {
+    public Result postSpellcheck() {
 
         return spellcheck(request().body().asText());
     }
