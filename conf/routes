@@ -8,6 +8,7 @@ GET     /initiate                               controllers.IntegrationControlle
 POST    /completed                              controllers.IntegrationController.completed
 
 GET     /nationalSearch                         controllers.NationalSearchController.index
+POST    /spellcheck                             controllers.NationalSearchController.spellcheck
 GET     /spellcheck/:text                       controllers.NationalSearchController.spellcheck(text)
 
 GET     /startReport                            controllers.StartController.startReport

@@ -25,6 +25,11 @@ public class NationalSearchController extends Controller {
         return ok(template.render());
     }
 
+    public Result spellcheck() {
+
+        return spellcheck(request().body().asText());
+    }
+
     public Result spellcheck(String text) {
 
         val spellChecker = new JLanguageTool(new BritishEnglish());
