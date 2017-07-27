@@ -54,9 +54,13 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     @Override
     protected Integer nextPage(T wizardData) {
 
-        generateAndStoreReport(wizardData); // Continues in parallel as a non-blocking future result
+        generateAndStoreReport(wizardData).exceptionally(error -> { // Continues in parallel as a non-blocking future result
 
-        return super.nextPage(wizardData);
+            Logger.error("Generation or Storage error", error);
+            return ImmutableMap.of();
+        });
+
+        return super.nextPage(wizardData);  // Return next page without waiting for draft save to complete
     }
 
     @Override
