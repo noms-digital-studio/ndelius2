@@ -53,3 +53,9 @@ input[type="checkbox"].right {
     }
   }
 }
+
+.button {
+  &.secondary {
+    @include button($grey-3);
+  }
+}

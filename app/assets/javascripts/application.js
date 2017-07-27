@@ -60,7 +60,15 @@
             }
         });
 
-        // Progressive enhancement
+        /**
+         * Save and exit
+         */
+        $('#exitButton').click(function() {
+            $('#jumpNumber').val(0);
+            $('form').submit();
+        });
+
+        // Progressive enhancement for browsers > IE8
         if (!$('html').is('.lte-ie8')) {
             // Autosize all Textarea elements (does not support IE8).
             autosize(document.querySelectorAll('textarea'));
