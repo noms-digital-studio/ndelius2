@@ -48,23 +48,31 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
 
-        return super.initialParams().thenCompose(params ->
+        return super.initialParams().thenCompose(params -> originalData(params).orElseGet(() -> addPageAndDocumentId(params)));
+    }
 
-                originalData(params).orElse(CompletableFuture.supplyAsync(() -> params, ec.current()))
-        );
+    @Override
+    protected Integer nextPage(T wizardData) {
+
+        generateAndStoreReport(wizardData); // Continues in parallel as a non-blocking future result
+
+        return super.nextPage(wizardData);
+    }
+
+    @Override
+    protected final CompletionStage<Result> cancelledWizard(T data) {
+
+        return CompletableFuture.supplyAsync(() -> ok(renderCancelledView()), ec.current());
     }
 
     @Override
     protected final CompletionStage<Result> completedWizard(T data) {
 
         Function<Byte[], CompletionStage<Optional<Byte[]>>> resultIfStored = result ->
-                storeReport(data, result).thenApply(stored -> {
+                storeReport(data, result).thenApply(stored ->
+                        Optional.ofNullable(stored.get("ID")).filter(not(Strings::isNullOrEmpty)).map(value(result)));
 
-                    Logger.info("Store result: " + stored);
-                    return Optional.ofNullable(stored.get("ID")).filter(not(Strings::isNullOrEmpty)).map(value(result));
-                });
-
-        return pdfGenerator.generate(templateName(), data).
+        return generateReport(data).
                 thenCompose(resultIfStored). // thenApplyAsync(Optional::of).
                 exceptionally(error -> {
 
@@ -91,6 +99,25 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     protected abstract Content renderCompletedView(Byte[] bytes);
 
+    protected abstract Content renderCancelledView();
+
+    private CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> params) {
+
+        params.put("pageNumber", "1");
+
+        return generateAndStoreReport(wizardForm.bind(params).value().orElseGet(this::newWizardData)).
+                exceptionally(error -> {
+
+                    Logger.error("Generation or Storage error", error);
+                    return ImmutableMap.of();
+                }).
+                thenApply(stored -> {
+
+                    params.put("documentId", stored.get("ID"));
+                    return params;
+                });
+    }
+
     private Optional<CompletionStage<Map<String, String>>> originalData(Map<String, String> params) {
 
         return Optional.ofNullable(params.get("documentId")).
@@ -105,6 +132,13 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 }));
     }
 
+    private CompletionStage<Byte[]> generateReport(T data) {
+
+        data.setWatermark(data.getPageNumber() < data.totalPages() ? "DRAFT" : "");
+
+        return pdfGenerator.generate(templateName(), data);
+    }
+
     private CompletionStage<Map<String, String>> storeReport(T data, Byte[] document) {
 
         val filename = templateName() + ".pdf";
@@ -113,9 +147,11 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 "values", BeanMap.create(data)
         )));
 
+        CompletionStage<Map<String, String>> result = null;
+
         if (Strings.isNullOrEmpty(data.getDocumentId())) {
 
-            return documentStore.uploadNewPdf(
+            result =  documentStore.uploadNewPdf(
                     document,
                     filename,
                     data.getOnBehalfOfUser(),
@@ -124,12 +160,23 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                     data.getEntityId());
         } else {
 
-            return documentStore.updateExistingPdf(
+            result = documentStore.updateExistingPdf(
                     document,
                     filename,
                     data.getOnBehalfOfUser(),
                     metaData,
                     data.getDocumentId());
         }
+
+        return result.thenApply(stored -> {
+
+            Logger.info("Store result: " + stored);
+            return stored;
+        });
+    }
+
+    private CompletionStage<Map<String, String>> generateAndStoreReport(T data) {
+
+        return generateReport(data).thenCompose(result -> storeReport(data, result));
     }
 }

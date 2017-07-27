@@ -1,0 +1,13 @@
+@import helper._
+@import org.webjars.play.WebJarsUtil
+
+@(message: String)(implicit webJarsUtil: WebJarsUtil)
+
+@main("", false) {
+
+    <script type="text/javascript">
+            $(function () {
+                parent.postMessage('@message', '*');
+            });
+    </script>
+}

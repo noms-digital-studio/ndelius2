@@ -32,10 +32,10 @@ import static helpers.FluentHelper.content;
 public abstract class WizardController<T extends WizardData> extends Controller {
 
     private final Environment environment;
-    private final Form<T> wizardForm;
     private final Function1<String, String> viewEncrypter;
     private final List<String> encryptedFields;
 
+    protected final Form<T> wizardForm;
     protected final WebJarsUtil webJarsUtil;
     protected final Function<String, String> encrypter;
     protected final Function<String, String> decrypter;
@@ -65,12 +65,11 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> wizardGet() {
 
-        return initialParams().thenApply(params -> {
+        return initialParams().thenApplyAsync(params ->
 
-            params.putIfAbsent("pageNumber", "0");
+            ok(formRenderer(viewPageName(Integer.parseInt(params.get("pageNumber")))).apply(wizardForm.bind(params))),
 
-            return ok(formRenderer(viewPageName(1)).apply(wizardForm.bind(params)));
-        });
+        ec.current());
     }
 
     public final CompletionStage<Result> wizardPost() {
@@ -94,7 +93,9 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             val nextPage = nextPage(wizardData);
 
             return nextPage <= wizardData.totalPages() ?
-                    CompletableFuture.supplyAsync(() -> ok(renderPage.apply(nextPage)), ec.current()) :
+                    nextPage > 0 ?
+                            CompletableFuture.supplyAsync(() -> ok(renderPage.apply(nextPage)), ec.current()) :
+                            cancelledWizard(wizardData) :
                     completedWizard(wizardData);
         }
     }
@@ -119,6 +120,8 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected abstract String baseViewName();
 
     protected abstract CompletionStage<Result> completedWizard(T wizardData);
+
+    protected abstract CompletionStage<Result> cancelledWizard(T wizardData);
 
     protected final Result wizardFailed(T wizardData) {
 
@@ -153,6 +156,17 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         };
     }
 
+    protected T newWizardData() {
+
+        try {
+            return wizardForm.getBackedType().newInstance();
+
+        } catch (InstantiationException | IllegalAccessException ex) {
+
+            return null;
+        }
+    }
+
     private Optional<Method> getRenderMethod(String viewName, Class<?>... parameterTypes) {
 
         try {
@@ -172,17 +186,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         catch (IllegalAccessException | InvocationTargetException ex) {
 
             return content(ex);
-        }
-    }
-
-    private T newWizardData() {
-
-        try {
-            return wizardForm.getBackedType().newInstance();
-
-        } catch (InstantiationException | IllegalAccessException ex) {
-
-            return null;
         }
     }
 }

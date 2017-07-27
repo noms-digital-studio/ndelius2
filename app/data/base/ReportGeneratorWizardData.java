@@ -29,4 +29,7 @@ public class ReportGeneratorWizardData extends WizardData {
     @RequiredOnPage(1)
     @JsonProperty("_DELIUS_CRN_")
     private String crn;
+
+    @JsonProperty("_WATERMARK_")
+    private String watermark;
 }

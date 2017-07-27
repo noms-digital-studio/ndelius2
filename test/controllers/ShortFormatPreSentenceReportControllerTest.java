@@ -1502,7 +1502,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Override
     public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
 
-        return CompletableFuture.supplyAsync(() -> "{ \"templateName\": \"fooBar\", \"values\": { \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"pnc\": \"Retrieved From Store\" } }");
+        return CompletableFuture.supplyAsync(() -> "{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"pnc\": \"Retrieved From Store\" } }");
     }
 
     private boolean pdfUpdated;

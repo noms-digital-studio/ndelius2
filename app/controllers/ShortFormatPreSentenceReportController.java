@@ -66,6 +66,11 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         return params;
     }
 
+    protected Content renderCancelledView() {
+
+        return views.html.shortFormatPreSentenceReport.cancelled.render("Draft stored", webJarsUtil);
+    }
+
     @Override
     protected Content renderCompletedView(Byte[] bytes) {
 
