@@ -128,6 +128,34 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         return badRequest(formRenderer(viewPageName(wizardData.totalPages())).apply(wizardForm.fill(wizardData)));
     }
 
+    protected void renderingData(T wizardData) {
+
+    }
+
+    protected Function<Form<T>, Content> formRenderer(String viewName) {
+
+        val render = getRenderMethod(viewName, Form.class, Function1.class, WebJarsUtil.class);
+
+        return form -> {
+
+            renderingData(form.value().orElseGet(this::newWizardData));
+
+            return render.map(method -> invokeContentMethod(method, form, viewEncrypter, webJarsUtil)).
+                    orElse(Txt.apply("Form Renderer Error"));
+        };
+    }
+
+    protected T newWizardData() {
+
+        try {
+            return wizardForm.getBackedType().newInstance();
+
+        } catch (InstantiationException | IllegalAccessException ex) {
+
+            return null;
+        }
+    }
+
     private String viewPageName(int pageNumber) {
 
         return baseViewName() + pageNumber;
@@ -142,29 +170,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         );
 
         return params;
-    }
-
-    protected Function<Form<T>, Content> formRenderer(String viewName) {
-
-        val render = getRenderMethod(viewName, Form.class, Function1.class, WebJarsUtil.class);
-
-        return form -> {
-
-            val content = render.map(method -> invokeContentMethod(method, form, viewEncrypter, webJarsUtil));
-
-            return content.orElse(Txt.apply("Form Renderer Error"));
-        };
-    }
-
-    protected T newWizardData() {
-
-        try {
-            return wizardForm.getBackedType().newInstance();
-
-        } catch (InstantiationException | IllegalAccessException ex) {
-
-            return null;
-        }
     }
 
     private Optional<Method> getRenderMethod(String viewName, Class<?>... parameterTypes) {

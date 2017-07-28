@@ -2,6 +2,7 @@ package services;
 
 import akka.stream.javadsl.FileIO;
 import akka.stream.javadsl.Source;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.JsonHelper;
@@ -60,6 +61,14 @@ public class AlfrescoStore implements DocumentStore {
                 thenApply(WSResponse::asJson).
                 thenApply(JsonHelper::jsonToMap).
                 thenApply(result -> result.get("userData")); //@TODO: Retrieve originalData JSON string from Alfresco
+    }
+
+    @Override
+    public CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId) {
+
+        return makeRequest("reserve/" + documentId, onBehalfOfUser).
+                post(Source.from(ImmutableList.of())).
+                thenApply(WSResponse::getStatus);
     }
 
     @Override

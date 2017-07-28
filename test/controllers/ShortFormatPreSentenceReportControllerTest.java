@@ -1505,6 +1505,12 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         return CompletableFuture.supplyAsync(() -> "{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"pnc\": \"Retrieved From Store\" } }");
     }
 
+    @Override
+    public CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId) {
+
+        return CompletableFuture.supplyAsync(() -> 200);
+    }
+
     private boolean pdfUpdated;
 
     @Override

@@ -99,6 +99,21 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         return "views.html." + templateName() + ".page";
     }
 
+    @Override
+    protected void renderingData(T wizardData) {
+
+        documentStore.lockDocument(wizardData.getOnBehalfOfUser(), wizardData.getDocumentId()).exceptionally(error -> {
+
+            Logger.error("Lock Document error", error);
+            return 500;
+
+        }).thenApply(status -> {
+
+            Logger.info("Lock Document: " +  wizardData.getDocumentId() + " for User: " + wizardData.getOnBehalfOfUser() + " - Result:  " + status);
+            return status;
+        });
+    }
+
     protected abstract String templateName();
 
     protected abstract Content renderCompletedView(Byte[] bytes);
