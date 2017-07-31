@@ -44,14 +44,19 @@ public class AlfrescoStore implements DocumentStore {
     @Override
     public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId) {
 
-        return postFileUpload(filename, document, onBehalfOfUser, "uploadnew", ImmutableMap.of(
-                "CRN", crn,
-                "author", onBehalfOfUser,
-                "entityType", "COURTREPORT",
-                "entityId", entityId.toString(),
-                "docType", "DOCUMENT"
-                // "userData", originalData @TODO: Store originalData JSON string as document metadata
-        ));
+        val parameters = new HashMap<String, String>() {
+            {
+                put("CRN", crn);
+                put("author", onBehalfOfUser);
+                put("entityType", "COURTREPORT");
+                put("entityId", entityId.toString());
+                put("docType", "DOCUMENT");
+                put("userData", originalData);
+                put("forceBroadcast", "true");
+            }
+        };
+
+        return postFileUpload(filename, document, onBehalfOfUser, "uploadnew", parameters);
     }
 
     @Override
@@ -60,7 +65,7 @@ public class AlfrescoStore implements DocumentStore {
         return makeRequest("details/" + documentId, onBehalfOfUser).get().
                 thenApply(WSResponse::asJson).
                 thenApply(JsonHelper::jsonToMap).
-                thenApply(result -> result.get("userData")); //@TODO: Retrieve originalData JSON string from Alfresco
+                thenApply(result -> result.get("userData"));
     }
 
     @Override
@@ -75,14 +80,12 @@ public class AlfrescoStore implements DocumentStore {
     public CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId) {
 
         val updateDocument = postFileUpload(filename, document, onBehalfOfUser, "uploadandrelease/" + documentId, ImmutableMap.of(
-                "DOC_ID", documentId,
                 "author", onBehalfOfUser
         ));
 
         val updateMetaData = makeRequest("updatemetadata/" + documentId, onBehalfOfUser).
                 post(Source.from(new ArrayList<>(mapToParts(ImmutableMap.of(
-                        "DOC_ID", documentId
-                        // "userData", updatedData @TODO: Store updatedData JSON string as document metadata
+                        "userData", updatedData
                 ))))).
                 thenApply(WSResponse::asJson).
                 thenApply(JsonHelper::jsonToMap);
