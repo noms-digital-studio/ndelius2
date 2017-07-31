@@ -170,7 +170,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         if (Strings.isNullOrEmpty(data.getDocumentId())) {
 
-            result =  documentStore.uploadNewPdf(
+            result = documentStore.uploadNewPdf(
                     document,
                     filename,
                     data.getOnBehalfOfUser(),
