@@ -13,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import lombok.val;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.cglib.beans.BeanMap;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
@@ -29,6 +30,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     private final PdfGenerator pdfGenerator;
     private final DocumentStore documentStore;
+    private final boolean standaloneOperation;
 
     protected ReportGeneratorWizardController(HttpExecutionContext ec,
                                               WebJarsUtil webJarsUtil,
@@ -43,6 +45,8 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
+
+        standaloneOperation = configuration.getBoolean("standalone.operation");
     }
 
     @Override
@@ -66,7 +70,9 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     @Override
     protected final CompletionStage<Result> cancelledWizard(T data) {
 
-        return CompletableFuture.supplyAsync(() -> ok(renderCancelledView()), ec.current());
+        return standaloneOperation ?
+                generateReport(data).thenApply(result -> ok(ArrayUtils.toPrimitive(result)).as("application/pdf")) :
+                CompletableFuture.supplyAsync(() -> ok(renderCancelledView()), ec.current());
     }
 
     @Override
@@ -76,8 +82,12 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 storeReport(data, result).thenApply(stored ->
                         Optional.ofNullable(stored.get("ID")).filter(not(Strings::isNullOrEmpty)).map(value(result)));
 
-        return generateReport(data).
-                thenCompose(resultIfStored). // thenApplyAsync(Optional::of).
+        Function<CompletionStage<Byte[]>, CompletionStage<Optional<Byte[]>>> optionalResult = result ->
+                standaloneOperation ?
+                        result.thenApplyAsync(Optional::of) :
+                        result.thenCompose(resultIfStored);
+
+        return optionalResult.apply(generateReport(data)).
                 exceptionally(error -> {
 
                     Logger.error("Generation or Storage error", error);
