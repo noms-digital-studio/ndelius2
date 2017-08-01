@@ -79,38 +79,38 @@ public class AlfrescoStore implements DocumentStore {
     @Override
     public CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId) {
 
-        val result = new HashMap<String, String>();
+        val multiResult = new HashMap<String, String>();
 
-        return makeRequest("updatemetadata/" + documentId, onBehalfOfUser).
-                post(Source.from(new ArrayList<>(mapToParts(ImmutableMap.of("userData", updatedData))))).
-                thenApply(WSResponse::asJson).
-                thenApply(JsonHelper::jsonToMap).
-                exceptionally(error -> {
-
-                    Logger.error("Update Meta Data error", error);
-                    return ImmutableMap.of();
-                }).
-                thenCompose(meta -> {
-
-                    result.putAll(meta);
-
-                    return postFileUpload(
-                            filename,
-                            document,
-                            onBehalfOfUser,
-                            "uploadandrelease/" + documentId,
-                            ImmutableMap.of("author", onBehalfOfUser));
-                }).
+        return postFileUpload(
+                filename,
+                document,
+                onBehalfOfUser,
+                "uploadandrelease/" + documentId,
+                ImmutableMap.of("author", onBehalfOfUser)).
                 exceptionally(error -> {
 
                     Logger.error("Upload and Release error", error);
                     return ImmutableMap.of();
                 }).
-                thenApply(doc -> {
+                thenCompose(singleResult -> {
 
-                    result.putAll(doc);
+                    multiResult.putAll(singleResult);
 
-                    return result;
+                    return makeRequest("updatemetadata/" + documentId, onBehalfOfUser).
+                            post(Source.from(new ArrayList<>(mapToParts(ImmutableMap.of("userData", updatedData))))).
+                            thenApply(WSResponse::asJson).
+                            thenApply(JsonHelper::jsonToMap);
+                }).
+                exceptionally(error -> {
+
+                    Logger.error("Update Meta Data error", error);
+                    return ImmutableMap.of();
+                }).
+                thenApply(singleResult -> {
+
+                    multiResult.putAll(singleResult);
+
+                    return multiResult;
                 });
     }
 
