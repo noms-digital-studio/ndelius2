@@ -112,6 +112,8 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     @Override
     protected void renderingData(T wizardData) {
 
+//@TODO: NEEDS TO BE AFTER nextPage/generateAndStoreReport finishes, not before, or will cause updatemetadata to fail
+/*
         documentStore.lockDocument(wizardData.getOnBehalfOfUser(), wizardData.getDocumentId()).exceptionally(error -> {
 
             Logger.error("Lock Document error", error);
@@ -122,6 +124,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
             Logger.info("Lock Document: " +  wizardData.getDocumentId() + " for User: " + wizardData.getOnBehalfOfUser() + " - Result:  " + status);
             return status;
         });
+*/
     }
 
     protected abstract String templateName();
