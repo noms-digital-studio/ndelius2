@@ -43,7 +43,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
         return super.initialParams().thenApply(params -> {
 
-            params.put("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
+            params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
             return params;
         });
     }
@@ -56,7 +56,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             paramEncrypter.accept("pnc");
         }
 
-        if ("2".equals(params.get("pageNumber"))) {
+        if ("3".equals(params.get("pageNumber"))) {
 
             paramEncrypter.accept("court");
             paramEncrypter.accept("dateOfHearing");

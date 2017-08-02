@@ -6,9 +6,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Offender Assessment: Issues - Short Format Pre Sentence Report") {
+@main("Signature - Short Format Pre Sentence Report") {
 
-    <h1 class="heading-xlarge">Offender Assessment - Issues</h1>
+    <h1 class="heading-xlarge">Signature</h1>
 
     <div class="grid-row">
         <div class="column-two-thirds">
@@ -52,13 +52,13 @@
             @inputHidden(reportForm("offenceAnalysis"))
             @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
-            @checkbox(reportForm("issueAccommodation"), '_label -> "Accommodation")
-            @checkbox(reportForm("issueEmployment"), '_label -> "Employment")
-            @checkbox(reportForm("issueFinance"), '_label -> "Finance")
-            @checkbox(reportForm("issueDrugs"), '_label -> "Drugs")
-            @checkbox(reportForm("issueAlcohol"), '_label -> "Alcohol")
-            @checkbox(reportForm("issueHealth"), '_label -> "Physical & mental health relationships")
-            @checkbox(reportForm("issueBehaviour"), '_label -> "Thinking & behaviour")
+            @inputHidden(reportForm("issueAccommodation"))
+            @inputHidden(reportForm("issueEmployment"))
+            @inputHidden(reportForm("issueFinance"))
+            @inputHidden(reportForm("issueDrugs"))
+            @inputHidden(reportForm("issueAlcohol"))
+            @inputHidden(reportForm("issueHealth"))
+            @inputHidden(reportForm("issueBehaviour"))
 
             @inputHidden(reportForm("offenderAssessment"))
             @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
@@ -78,19 +78,17 @@
             @inputHidden(reportForm("proposal"))
             @inputHidden(reportForm("ignoreProposalSpelling"))
 
-            @inputHidden(reportForm("reportAuthor"))
-            @inputHidden(reportForm("office"))
-            @inputHidden(reportForm("reportDate"))
+            @inputText(reportForm("reportAuthor"), '_label -> "Report Author", 'required -> "true")
+            @inputText(reportForm("office"), '_label -> "Office", 'required -> "true")
+            @inputText(reportForm("reportDate"), '_label -> "Date", '_help -> "DD/MM/YYYY", 'class -> "date-picker", 'required -> "true")
 
-            <div class="margin-top large"></div>
-
-            @pageNumber(6, "Next")
+            @pageNumber(12, "Generate Report")
         }
 
         </div>
         <div class="column-one-third">
 
-            @navigation(6)
+        @navigation(12)
 
         </div>
     </div>

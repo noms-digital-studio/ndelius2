@@ -1,6 +1,6 @@
 @import org.webjars.play.WebJarsUtil
 
-@(title: String, logo: Boolean)(content: Html)(implicit webJarsUtil: WebJarsUtil)
+@(title: String)(content: Html)(implicit webJarsUtil: WebJarsUtil)
 
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
@@ -30,8 +30,6 @@
             <div class="phase-banner">
               <p><strong class="phase-tag">ALPHA</strong><span>This is a new service – your <a href="#" title="feedback">feedback</a> will help us to improve it.</span></p>
             </div>
-
-            <h1 class="heading-xlarge">Short Format Pre-Sentence Report</h1>
 
             @content
 

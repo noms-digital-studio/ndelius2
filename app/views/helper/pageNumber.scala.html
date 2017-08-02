@@ -1,10 +1,6 @@
-@(pageNumber: Int, nextText: String, finalPage: Boolean = false)
+@(pageNumber: Int, nextText: String)
 
 <input type="hidden" id="jumpNumber" name="jumpNumber" />
 <input type="hidden" name="pageNumber" value="@pageNumber"/>
 
-@if(!finalPage) {
-    <button id="exitButton" type="button" class="button secondary">Save &amp; Exit</button>
-}
-
-<input class="button" type="submit" value="@nextText"/>
+<input class="button@if(pageNumber == 1) { button-start}" id="nextButton" type="submit" value="@nextText"/>

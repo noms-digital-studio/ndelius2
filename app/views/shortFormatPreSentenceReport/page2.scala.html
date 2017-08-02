@@ -6,32 +6,42 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Sentencing Court Details - Short Format Pre Sentence Report", true) {
+@main("Offender Details - Short Format Pre Sentence Report") {
+
+  <h1 class="heading-xlarge">Offender Details</h1>
 
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h2 class="heading-large no-margin-top">Sentencing Court Details</h2>
+      <p>Please check and confirm that these details are correct.</p>
 
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'novalidate -> "") {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "ndForm", 'novalidate -> "") {
         @CSRF.formField
 
         @inputHidden(reportForm("onBehalfOfUser"), encrypter)
         @inputHidden(reportForm("entityId"), encrypter)
         @inputHidden(reportForm("documentId"), encrypter)
 
-        @inputHidden(reportForm("name"), encrypter)
-        @inputHidden(reportForm("dateOfBirth"), encrypter)
-        @inputHidden(reportForm("age"), encrypter)
-        @inputHidden(reportForm("address"), encrypter)
-        @inputHidden(reportForm("crn"), encrypter)
-        @inputHidden(reportForm("pnc"), encrypter)
+        <div class="box grey margin-bottom medium">
+          @readOnlyField(reportForm("name"), "Name", encrypter)
+          @readOnlyField(reportForm("dateOfBirth"), "Date of Birth", encrypter)
+          @readOnlyField(reportForm("age"), "Age", encrypter)
+          @readOnlyField(reportForm("address"), "Address", encrypter)
+          @readOnlyField(reportForm("crn"), "Delius CRN", encrypter)
+          @if(Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
+            @readOnlyField(reportForm("pnc"), "PNC ID", encrypter)
+          }
+        </div>
+
+        @if(!Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
+          @inputText(reportForm("pnc"), '_label -> "PNC ID", 'class -> "half-width")
+        }
 
         @inputHidden(reportForm("pncSupplied"))
 
-        @inputText(reportForm("court"), '_label -> "Court", 'required -> "true")
-        @inputText(reportForm("localJusticeArea"), '_label -> "Local Justice Area", 'required -> "true")
-        @inputText(reportForm("dateOfHearing"), '_label -> "Date of Hearing", '_help -> "DD/MM/YYYY", 'class -> "date-picker", 'required -> "true")
+        @inputHidden(reportForm("court"), encrypter)
+        @inputHidden(reportForm("dateOfHearing"), encrypter)
+        @inputHidden(reportForm("localJusticeArea"), encrypter)
 
         @inputHidden(reportForm("interviewInformationSource"))
         @inputHidden(reportForm("serviceRecordsInformationSource"))
@@ -52,6 +62,14 @@
         @inputHidden(reportForm("offenceAnalysis"))
         @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
+        @inputHidden(reportForm("issueAccommodation"))
+        @inputHidden(reportForm("issueEmployment"))
+        @inputHidden(reportForm("issueFinance"))
+        @inputHidden(reportForm("issueDrugs"))
+        @inputHidden(reportForm("issueAlcohol"))
+        @inputHidden(reportForm("issueHealth"))
+        @inputHidden(reportForm("issueBehaviour"))
+
         @inputHidden(reportForm("offenderAssessment"))
         @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
 
@@ -59,8 +77,8 @@
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
         @inputHidden(reportForm("previousSupervisionResponse"))
-        @inputHidden(reportForm("ignorePreviousSupervisionResponseSpelling"))
-
+        @inputHidden(reportForm("additionalPreviousSupervision"))
+        @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
         @inputHidden(reportForm("likelihoodOfReOffending"))
         @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 

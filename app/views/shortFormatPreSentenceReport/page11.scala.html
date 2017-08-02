@@ -6,9 +6,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Risk Assessment - Short Format Pre Sentence Report") {
+@main("Proposal - Short Format Pre Sentence Report") {
 
-  <h1 class="heading-xlarge">Risk Assessment</h1>
+  <h1 class="heading-xlarge">Proposal</h1>
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -66,70 +66,40 @@
         @inputHidden(reportForm("patternOfOffending"))
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
-        <div class="form-group">
-          <fieldset>
-              <legend>
-                  <p class="form-label-bold">Response to previous supervision</p>
-              </legend>
-
-              @inputRadioGroup(
-                  reportForm("previousSupervisionResponse"),
-                  options(
-                      "Good" -> "Good",
-                      "Satisfactory" -> "Satisfactory",
-                      "Poor" -> "Poor",
-                      "N/A" -> "N/A"
-                  )
-              )
-          </fieldset>
-        </div>
-
-        <hr noshade />
-
-        @textarea(reportForm("additionalPreviousSupervision"), '_label -> "Add additional details on previous supervision", '_help -> "If applicable", 'class -> "wide", Symbol("data-limit") -> "300", Symbol("data-target") -> "supervision-limit")
-
-        <table role="presentation">
-          <tr>
-            <td>
-              <p id="supervision-limit-under" role="note"><span class="bold">300</span> recommended character limit</p>
-              <p id="supervision-limit-over" role="alert" class="error-message js-hidden">Recommended character limit reached</p>
-            </td>
-            <td>
-              <span class="pull-right">@checkbox(reportForm("ignoreAdditionalPreviousSupervisionSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
-            </td>
-          </tr>
-        </table>
-
-        <hr noshade />
-
-        @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of re-offending", '_help -> "Indicate which tools have been used (RM2000,OGRS etc.)", 'class -> "wide", 'required -> "true")
-
-        <div class="grid-row">
-          <div class="column-one-half">
-            &nbsp;
-          </div>
-          <div class="column-one-half">
-            <span class="pull-right">@checkbox(reportForm("ignoreLikelihoodOfReOffendingSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
-          </div>
-        </div>
+        @inputHidden(reportForm("previousSupervisionResponse"))
+        @inputHidden(reportForm("additionalPreviousSupervision"))
+        @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
+        @inputHidden(reportForm("likelihoodOfReOffending"))
+        @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
         @inputHidden(reportForm("riskOfSeriousHarm"))
         @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
 
-        @inputHidden(reportForm("proposal"))
-        @inputHidden(reportForm("ignoreProposalSpelling"))
+        @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_help -> "Including length and any sentence components", 'class -> "wide", Symbol("data-limit") -> "2000", Symbol("data-target") -> "proposal-limit", 'required -> "true")
+
+        <table role="presentation">
+          <tr>
+            <td>
+              <p id="proposal-limit-under" role="note"><span class="bold">2,000</span> recommended character limit</p>
+              <p id="proposal-limit-over" role="alert" class="error-message js-hidden">Recommended character limit reached</p>
+            </td>
+            <td>
+              <span class="pull-right">@checkbox(reportForm("ignoreProposalSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
+            </td>
+          </tr>
+        </table>
 
         @inputHidden(reportForm("reportAuthor"))
         @inputHidden(reportForm("office"))
         @inputHidden(reportForm("reportDate"))
 
-        @pageNumber(9, "Next")
+        @pageNumber(11, "Next")
       }
 
     </div>
     <div class="column-one-third">
 
-      @navigation(9)
+      @navigation(11)
 
     </div>
   </div>

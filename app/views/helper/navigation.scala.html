@@ -1,19 +1,30 @@
 @(implicit current: Int)
 
+@entries = @{Seq(
+    "Start your report",
+    "Offender Details",
+    "Sentencing Court Details",
+    "Sources of Information",
+    "Offence Details",
+    "Offender Assessment - Issues",
+    "Offender Assessment",
+    "Pattern of Offending",
+    "Risk Assessment",
+    "Risk of Serious Harm",
+    "Proposal",
+    "Signature"
+)}
+
 <nav class="js-stick-at-top-when-scrolling">
+    <div class="nav-header"></div>
 
-  <div class="nav-header"></div>
+    @for((entry, index) <- entries.zipWithIndex) {
+        @navigationEntry(index + 1, entry)
+    }
 
-  <a href="/startReport" class="nav-home" title="Start your report">Start your report</a><br/>
-  @navigationEntry(1, "Offender Details")
-  @navigationEntry(2, "Sentencing Court Details")
-  @navigationEntry(3, "Sources of Information")
-  @navigationEntry(4, "Offence Details")
-  @navigationEntry(5, "Offender Assessment")
-  @navigationEntry(6, "Pattern of Offending")
-  @navigationEntry(7, "Risk Assessment")
-  @navigationEntry(8, "Risk of Serious Harm")
-  @navigationEntry(9, "Proposal")
-  @navigationEntry(10, "Signature")
-
+    @if(current < entries.length) {
+        <div class="nav-header margin-top large"></div>
+        <p class="font-xsmall">You can save your progress as a draft report and come back to it later</p>
+        <a href="#" id="exitLink" class="nav-item">Save &amp; Exit</a>
+    }
 </nav>

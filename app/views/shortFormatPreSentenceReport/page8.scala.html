@@ -6,7 +6,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Risk of Serious Harm - Short Format Pre Sentence Report", true) {
+@main("Pattern of Offending - Short Format Pre Sentence Report") {
+
+  <h1 class="heading-xlarge">Pattern of Offending</h1>
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -54,38 +56,46 @@
         @inputHidden(reportForm("offenceAnalysis"))
         @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
+        @inputHidden(reportForm("issueAccommodation"))
+        @inputHidden(reportForm("issueEmployment"))
+        @inputHidden(reportForm("issueFinance"))
+        @inputHidden(reportForm("issueDrugs"))
+        @inputHidden(reportForm("issueAlcohol"))
+        @inputHidden(reportForm("issueHealth"))
+        @inputHidden(reportForm("issueBehaviour"))
+
         @inputHidden(reportForm("offenderAssessment"))
         @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
 
-        @inputHidden(reportForm("patternOfOffending"))
-        @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
-
-        @inputHidden(reportForm("previousSupervisionResponse"))
-        @inputHidden(reportForm("ignorePreviousSupervisionResponseSpelling"))
-
-        @inputHidden(reportForm("likelihoodOfReOffending"))
-        @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
-
-        @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Detail the risk of serious harm", '_help -> "Indicate tools used, what is the risk, at what level and who to. Also describe what will increase or decrease the risk.", 'class -> "wide", Symbol("data-limit") -> "1000", Symbol("data-target") -> "risk-limit", 'required -> "true")
+        @textarea(reportForm("patternOfOffending"), '_label -> "Provide patterns of offending", '_help -> "If applicable", 'class -> "wide", Symbol("data-limit") -> "500", Symbol("data-target") -> "pattern-limit")
 
         <table role="presentation">
           <tr>
             <td>
-              <p id="risk-limit-under"><span class="bold">1,000</span> recommended character limit</p>
-              <p id="risk-limit-over" class="error-message js-hidden" role="alert">Recommended character limit reached</p>
+              <p id="pattern-limit-under" role="note"><span class="bold">500</span> recommended character limit</p>
+              <p id="pattern-limit-over" role="alert" class="error-message js-hidden">Recommended character limit reached</p>
             </td>
             <td>
-              <span class="pull-right">@checkbox(reportForm("ignoreRiskOfSeriousHarmSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
+              <span class="pull-right">@checkbox(reportForm("ignorePatternOfOffendingSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
             </td>
           </tr>
         </table>
 
-        @inputHidden(reportForm("proposal"))
-        @inputHidden(reportForm("ignoreProposalSpelling"))
+          @inputHidden(reportForm("previousSupervisionResponse"))
+          @inputHidden(reportForm("additionalPreviousSupervision"))
+          @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
+          @inputHidden(reportForm("likelihoodOfReOffending"))
+          @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
-        @inputHidden(reportForm("reportAuthor"))
-        @inputHidden(reportForm("office"))
-        @inputHidden(reportForm("reportDate"))
+          @inputHidden(reportForm("riskOfSeriousHarm"))
+          @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
+
+          @inputHidden(reportForm("proposal"))
+          @inputHidden(reportForm("ignoreProposalSpelling"))
+
+          @inputHidden(reportForm("reportAuthor"))
+          @inputHidden(reportForm("office"))
+          @inputHidden(reportForm("reportDate"))
 
         @pageNumber(8, "Next")
       }

@@ -844,7 +844,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("offenderAssessment", "Some assessment");
                 put("patternOfOffending", "Some pattern of offending");
                 put("previousSupervisionResponse", "Some previous supervision response speld wrng");
-                put("ignorePreviousSupervisionResponseSpelling", "true");
                 put("likelihoodOfReOffending", "Some likelihood of re-offending speld wrng");
                 put("ignoreLikelihoodOfReOffendingSpelling", "true");
                 put("pageNumber", "7");

@@ -6,7 +6,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Offence Details - Short Format Pre Sentence Report", true) {
+@main("Sources of Information - Short Format Pre Sentence Report") {
+
+  <h1 class="heading-xlarge">Sources of Information</h1>
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -33,54 +35,35 @@
         @inputHidden(reportForm("dateOfHearing"), encrypter)
         @inputHidden(reportForm("localJusticeArea"), encrypter)
 
-        @inputHidden(reportForm("interviewInformationSource"))
-        @inputHidden(reportForm("serviceRecordsInformationSource"))
-        @inputHidden(reportForm("cpsSummaryInformationSource"))
-        @inputHidden(reportForm("oasysAssessmentsInformationSource"))
-        @inputHidden(reportForm("previousConvictionsInformationSource"))
-        @inputHidden(reportForm("victimStatementInformationSource"))
-        @inputHidden(reportForm("childrenServicesInformationSource"))
-        @inputHidden(reportForm("policeInformationSource"))
-        @inputHidden(reportForm("otherInformationSource"))
-        @inputHidden(reportForm("otherInformationDetails"))
-        @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
+        @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
+        @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service Records")
+        @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS Summary")
+        @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys Assessments")
+        @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous Convictions")
+        @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim Statement")
+        @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Children Services Checks")
+        @checkbox(reportForm("policeInformationSource"), '_label -> "Police Information")
+        @checkbox(reportForm("otherInformationSource"), '_label -> "Other", '_help -> "(please specify below)", Symbol("data-target") -> "other-information")
 
-        @textarea(reportForm("mainOffence"), '_label -> "Main offence and dates", 'class -> "wide", 'required -> "true")
-
-        <div class="grid-row">
-          <div class="column-one-half">
-              &nbsp;
-          </div>
-          <div class="column-one-half">
-            <span class="pull-right">@checkbox(reportForm("ignoreMainOffenceSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
-          </div>
+        <div class="panel panel-border-narrow js-hidden" id="other-information">
+          @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information", 'class -> "wide")
+          <span class="pull-right">@checkbox(reportForm("ignoreOtherInformationDetailsSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
         </div>
 
-        <hr noshade />
+        @inputHidden(reportForm("mainOffence"))
+        @inputHidden(reportForm("ignoreMainOffenceSpelling"))
+        @inputHidden(reportForm("offenceSummary"))
+        @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
+        @inputHidden(reportForm("offenceAnalysis"))
+        @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
-        @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", 'class -> "wide", 'required -> "true")
-
-        <div class="grid-row">
-          <div class="column-one-half">
-              &nbsp;
-          </div>
-          <div class="column-one-half">
-            <span class="pull-right">@checkbox(reportForm("ignoreOffenceSummarySpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
-          </div>
-        </div>
-
-        <hr noshade />
-
-        @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", 'class -> "wide", 'required -> "true")
-
-        <div class="grid-row">
-          <div class="column-one-half">
-            &nbsp;
-          </div>
-          <div class="column-one-half">
-            <span class="pull-right">@checkbox(reportForm("ignoreOffenceAnalysisSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
-          </div>
-        </div>
+        @inputHidden(reportForm("issueAccommodation"))
+        @inputHidden(reportForm("issueEmployment"))
+        @inputHidden(reportForm("issueFinance"))
+        @inputHidden(reportForm("issueDrugs"))
+        @inputHidden(reportForm("issueAlcohol"))
+        @inputHidden(reportForm("issueHealth"))
+        @inputHidden(reportForm("issueBehaviour"))
 
         @inputHidden(reportForm("offenderAssessment"))
         @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
@@ -89,8 +72,8 @@
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
         @inputHidden(reportForm("previousSupervisionResponse"))
-        @inputHidden(reportForm("ignorePreviousSupervisionResponseSpelling"))
-
+        @inputHidden(reportForm("additionalPreviousSupervision"))
+        @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
         @inputHidden(reportForm("likelihoodOfReOffending"))
         @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
@@ -103,6 +86,8 @@
         @inputHidden(reportForm("reportAuthor"))
         @inputHidden(reportForm("office"))
         @inputHidden(reportForm("reportDate"))
+
+        <div class="margin-top large"></div>
 
         @pageNumber(4, "Next")
       }

@@ -61,9 +61,20 @@
         });
 
         /**
+         * Ensure jumpNumber is cleared if next after clicking browser back button
+         */
+        $('#nextButton').click(function() {
+
+            $('#jumpNumber').val("");
+        });
+
+        /**
          * Save and exit
          */
-        $('#exitButton').click(function() {
+        $('#exitLink').click(function(e) {
+
+            e.preventDefault();
+
             $('#jumpNumber').val(0);
             $('form').submit();
         });

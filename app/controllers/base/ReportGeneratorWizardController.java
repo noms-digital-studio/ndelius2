@@ -84,7 +84,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         Function<CompletionStage<Byte[]>, CompletionStage<Optional<Byte[]>>> optionalResult = result ->
                 standaloneOperation ?
-                        result.thenApplyAsync(Optional::of) :
+                        result.thenApply(Optional::of) :
                         result.thenCompose(resultIfStored);
 
         return optionalResult.apply(generateReport(data)).
@@ -107,24 +107,6 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     protected final String baseViewName() {
 
         return "views.html." + templateName() + ".page";
-    }
-
-    @Override
-    protected void renderingData(T wizardData) {
-
-//@TODO: NEEDS TO BE AFTER nextPage/generateAndStoreReport finishes, not before, or will cause updatemetadata to fail
-/*
-        documentStore.lockDocument(wizardData.getOnBehalfOfUser(), wizardData.getDocumentId()).exceptionally(error -> {
-
-            Logger.error("Lock Document error", error);
-            return 500;
-
-        }).thenApply(status -> {
-
-            Logger.info("Lock Document: " +  wizardData.getDocumentId() + " for User: " + wizardData.getOnBehalfOfUser() + " - Result:  " + status);
-            return status;
-        });
-*/
     }
 
     protected abstract String templateName();
@@ -209,6 +191,9 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     private CompletionStage<Map<String, String>> generateAndStoreReport(T data) {
 
-        return generateReport(data).thenCompose(result -> storeReport(data, result));
+        return generateReport(data).thenCompose(result ->
+                standaloneOperation ?
+                        CompletableFuture.supplyAsync(ImmutableMap::of) :
+                        storeReport(data, result));
     }
 }

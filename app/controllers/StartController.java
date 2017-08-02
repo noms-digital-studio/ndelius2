@@ -2,7 +2,6 @@ package controllers;
 
 import com.typesafe.config.Config;
 import helpers.Encryption;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -14,18 +13,13 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.val;
 import play.mvc.*;
-import views.html.startReport;
 
 public class StartController extends Controller {
 
-    private final startReport template;
     private final Function<String, String> encrypter;
 
     @Inject
-    public StartController(startReport template,
-                           Config configuration) {
-
-        this.template = template;
+    public StartController(Config configuration) {
 
         val paramsSecretKey = configuration.getString("params.secret.key");
 
@@ -63,6 +57,6 @@ public class StartController extends Controller {
 
         val parameters = String.join("&", encryptedData.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList()));
 
-        return ok(template.render(parameters));
+        return redirect("/report/shortFormatPreSentenceReport?" + parameters);
     }
 }

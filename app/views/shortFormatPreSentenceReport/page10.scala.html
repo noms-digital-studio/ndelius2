@@ -6,18 +6,16 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Signature - Short Format Pre Sentence Report", true) {
+@main("Risk of Serious Harm - Short Format Pre Sentence Report") {
+
+  <h1 class="heading-xlarge">Risk of Serious Harm</h1>
 
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h2 class="heading-large no-margin-top">Signature</h2>
+      <p>For the purpose of this assessment "serious harm" is defined as "an event that is life threatening and/or traumatic and from which recovery, whether physical or psychological can be expected to be difficult or impossible".</p>
 
-      @if(flash.containsKey("reportGeneratorFailed")) {
-        <p>@flash.get("reportGeneratorFailed")</p>
-      }
-
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'novalidate -> "") {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "ndForm", 'novalidate -> "") {
         @CSRF.formField
 
         @inputHidden(reportForm("onBehalfOfUser"), encrypter)
@@ -56,6 +54,14 @@
         @inputHidden(reportForm("offenceAnalysis"))
         @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
+        @inputHidden(reportForm("issueAccommodation"))
+        @inputHidden(reportForm("issueEmployment"))
+        @inputHidden(reportForm("issueFinance"))
+        @inputHidden(reportForm("issueDrugs"))
+        @inputHidden(reportForm("issueAlcohol"))
+        @inputHidden(reportForm("issueHealth"))
+        @inputHidden(reportForm("issueBehaviour"))
+
         @inputHidden(reportForm("offenderAssessment"))
         @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
 
@@ -63,22 +69,33 @@
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
         @inputHidden(reportForm("previousSupervisionResponse"))
-        @inputHidden(reportForm("ignorePreviousSupervisionResponseSpelling"))
-
+        @inputHidden(reportForm("additionalPreviousSupervision"))
+        @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
         @inputHidden(reportForm("likelihoodOfReOffending"))
         @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
-        @inputHidden(reportForm("riskOfSeriousHarm"))
-        @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
+        @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Detail the risk of serious harm", '_help -> "Indicate tools used, what is the risk, at what level and who to. Also describe what will increase or decrease the risk.", 'class -> "wide", Symbol("data-limit") -> "1000", Symbol("data-target") -> "risk-limit", 'required -> "true")
+
+        <table role="presentation">
+          <tr>
+            <td>
+              <p id="risk-limit-under" role="note"><span class="bold">1,000</span> recommended character limit</p>
+              <p id="risk-limit-over" role="alert" class="error-message js-hidden">Recommended character limit reached</p>
+            </td>
+            <td>
+              <span class="pull-right">@checkbox(reportForm("ignoreRiskOfSeriousHarmSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
+            </td>
+          </tr>
+        </table>
 
         @inputHidden(reportForm("proposal"))
         @inputHidden(reportForm("ignoreProposalSpelling"))
 
-        @inputText(reportForm("reportAuthor"), '_label -> "Report Author", 'required -> "true")
-        @inputText(reportForm("office"), '_label -> "Office", 'required -> "true")
-        @inputText(reportForm("reportDate"), '_label -> "Date", '_help -> "DD/MM/YYYY", 'class -> "date-picker", 'required -> "true")
+        @inputHidden(reportForm("reportAuthor"))
+        @inputHidden(reportForm("office"))
+        @inputHidden(reportForm("reportDate"))
 
-        @pageNumber(10, "Generate Report", true)
+        @pageNumber(10, "Next")
       }
 
     </div>

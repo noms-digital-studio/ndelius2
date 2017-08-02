@@ -6,7 +6,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Risk Assessment - Short Format Pre Sentence Report", true) {
+@main("Offender Assessment - Short Format Pre Sentence Report") {
+
+  <h1 class="heading-xlarge">Offender Assessment</h1>
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -52,38 +54,36 @@
         @inputHidden(reportForm("offenceAnalysis"))
         @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
-        @inputHidden(reportForm("offenderAssessment"))
-        @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
+        @inputHidden(reportForm("issueAccommodation"))
+        @inputHidden(reportForm("issueEmployment"))
+        @inputHidden(reportForm("issueFinance"))
+        @inputHidden(reportForm("issueDrugs"))
+        @inputHidden(reportForm("issueAlcohol"))
+        @inputHidden(reportForm("issueHealth"))
+        @inputHidden(reportForm("issueBehaviour"))
 
-        @inputHidden(reportForm("patternOfOffending"))
-        @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
-
-        @textarea(reportForm("previousSupervisionResponse"), '_label -> "Response to previous supervision", '_help -> "If applicable", 'class -> "wide", Symbol("data-limit") -> "300", Symbol("data-target") -> "supervision-limit")
+        @textarea(reportForm("offenderAssessment"), '_label -> "Enter the offender assessment", '_help -> "Covering all relevant areas", 'class -> "wide", Symbol("data-limit") -> "4000", Symbol("data-target") -> "assessment-limit", 'required -> "true")
 
         <table role="presentation">
           <tr>
             <td>
-              <p id="supervision-limit-under"><span class="bold">300</span> recommended character limit</p>
-              <p id="supervision-limit-over" class="error-message js-hidden" role="alert">Recommended character limit reached</p>
+              <p id="assessment-limit-under" role="note"><span class="bold">4,000</span> recommended character limit</p>
+              <p id="assessment-limit-over" role="alert" class="error-message js-hidden">Recommended character limit reached</p>
             </td>
             <td>
-              <span class="pull-right">@checkbox(reportForm("ignorePreviousSupervisionResponseSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
+              <span class="pull-right">@checkbox(reportForm("ignoreOffenderAssessmentSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
             </td>
           </tr>
         </table>
 
-        <hr noshade />
+        @inputHidden(reportForm("patternOfOffending"))
+        @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
-        @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of re-offending", '_help -> "Indicate which tools have been used (RM2000,OGRS etc.)", 'class -> "wide", 'required -> "true")
-
-        <div class="grid-row">
-          <div class="column-one-half">
-            &nbsp;
-          </div>
-          <div class="column-one-half">
-            <span class="pull-right">@checkbox(reportForm("ignoreLikelihoodOfReOffendingSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
-          </div>
-        </div>
+        @inputHidden(reportForm("previousSupervisionResponse"))
+        @inputHidden(reportForm("additionalPreviousSupervision"))
+        @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
+        @inputHidden(reportForm("likelihoodOfReOffending"))
+        @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
         @inputHidden(reportForm("riskOfSeriousHarm"))
         @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))

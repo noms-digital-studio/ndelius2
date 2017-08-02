@@ -6,14 +6,14 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Offender Assessment - Short Format Pre Sentence Report", true) {
+@main("Offence Details - Short Format Pre Sentence Report") {
+
+  <h1 class="heading-xlarge">Offence Details</h1>
 
   <div class="grid-row">
     <div class="column-two-thirds">
 
-      <h2 class="heading-large no-margin-top">Offender Assessment</h2>
-
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'novalidate -> "") {
+      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "ndForm", 'novalidate -> "") {
         @CSRF.formField
 
         @inputHidden(reportForm("onBehalfOfUser"), encrypter)
@@ -45,33 +45,60 @@
         @inputHidden(reportForm("otherInformationDetails"))
         @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
-        @inputHidden(reportForm("mainOffence"))
-        @inputHidden(reportForm("ignoreMainOffenceSpelling"))
-        @inputHidden(reportForm("offenceSummary"))
-        @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
-        @inputHidden(reportForm("offenceAnalysis"))
-        @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
+        @textarea(reportForm("mainOffence"), '_label -> "Main offence and dates", 'class -> "wide", 'required -> "true")
 
-        @textarea(reportForm("offenderAssessment"), '_label -> "Enter the offender assessment", '_help -> "Covering all relevant areas", 'class -> "wide", Symbol("data-limit") -> "4000", Symbol("data-target") -> "assessment-limit", 'required -> "true")
+        <div class="grid-row">
+          <div class="column-one-half">
+              &nbsp;
+          </div>
+          <div class="column-one-half">
+            <span class="pull-right">@checkbox(reportForm("ignoreMainOffenceSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
+          </div>
+        </div>
 
-        <table role="presentation">
-          <tr>
-            <td>
-              <p id="assessment-limit-under"><span class="bold">4,000</span> recommended character limit</p>
-              <p id="assessment-limit-over" class="error-message js-hidden" role="alert">Recommended character limit reached</p>
-            </td>
-            <td>
-              <span class="pull-right">@checkbox(reportForm("ignoreOffenderAssessmentSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
-            </td>
-          </tr>
-        </table>
+        <hr noshade />
+
+        @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", 'class -> "wide", 'required -> "true")
+
+        <div class="grid-row">
+          <div class="column-one-half">
+              &nbsp;
+          </div>
+          <div class="column-one-half">
+            <span class="pull-right">@checkbox(reportForm("ignoreOffenceSummarySpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
+          </div>
+        </div>
+
+        <hr noshade />
+
+        @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", 'class -> "wide", 'required -> "true")
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            &nbsp;
+          </div>
+          <div class="column-one-half">
+            <span class="pull-right">@checkbox(reportForm("ignoreOffenceAnalysisSpelling"), '_label -> "Ignore spelling", 'class -> "right")</span>
+          </div>
+        </div>
+
+        @inputHidden(reportForm("issueAccommodation"))
+        @inputHidden(reportForm("issueEmployment"))
+        @inputHidden(reportForm("issueFinance"))
+        @inputHidden(reportForm("issueDrugs"))
+        @inputHidden(reportForm("issueAlcohol"))
+        @inputHidden(reportForm("issueHealth"))
+        @inputHidden(reportForm("issueBehaviour"))
+
+        @inputHidden(reportForm("offenderAssessment"))
+        @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
 
         @inputHidden(reportForm("patternOfOffending"))
         @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
         @inputHidden(reportForm("previousSupervisionResponse"))
-        @inputHidden(reportForm("ignorePreviousSupervisionResponseSpelling"))
-
+        @inputHidden(reportForm("additionalPreviousSupervision"))
+        @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
         @inputHidden(reportForm("likelihoodOfReOffending"))
         @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
