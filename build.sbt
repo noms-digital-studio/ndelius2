@@ -33,4 +33,4 @@ assemblyMergeStrategy in assembly := {
   case other => (assemblyMergeStrategy in assembly).value(other)
 }
 
-assemblyJarName in assembly := "ndelius2.jar"
+assemblyJarName in assembly := "ndelius2-" + version.value + ".jar"
