@@ -54,7 +54,7 @@
             e.preventDefault();
 
             var target = $(this).data('target');
-            if (!$(this).hasClass('active')) {
+            if (target && !$(this).hasClass('active')) {
                 $('#jumpNumber').val(target);
                 $('form').submit();
             }
