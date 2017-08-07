@@ -51,7 +51,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     @Override
     protected Map<String, String> modifyParams(Map<String, String> params, Consumer<String> paramEncrypter) {
 
-        if ("1".equals(params.get("pageNumber")) && "false".equals(params.get("pncSupplied"))) {
+        if ("2".equals(params.get("pageNumber")) && "false".equals(params.get("pncSupplied"))) {
 
             paramEncrypter.accept("pnc");
         }
