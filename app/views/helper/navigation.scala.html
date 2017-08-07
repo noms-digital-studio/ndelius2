@@ -18,13 +18,16 @@
 <nav class="js-stick-at-top-when-scrolling">
     <div class="nav-header"></div>
 
+    <h3 class="heading-medium no-margin-top">Report sections</h3>
+
     @for((entry, index) <- entries.zipWithIndex) {
         @navigationEntry(index + 1, entry)
     }
 
     @if(current < entries.length) {
-        <div class="nav-header margin-top large"></div>
+        <hr noshade />
+        <h3 class="heading-medium no-margin-top">Save your report</h3>
         <p class="font-xsmall">You can save your progress as a draft report and come back to it later</p>
-        <a href="#" id="exitLink" class="nav-item">Save &amp; Exit</a>
+        <a href="#" id="exitLink" class="nav-item">Save draft</a>
     }
 </nav>
