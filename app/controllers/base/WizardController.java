@@ -4,18 +4,18 @@ import com.google.common.base.Strings;
 import com.typesafe.config.Config;
 import data.base.WizardData;
 import helpers.Encryption;
+import interfaces.AnalyticsStore;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.val;
+import org.joda.time.DateTime;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.Logger;
@@ -34,6 +34,7 @@ import static helpers.FluentHelper.content;
 public abstract class WizardController<T extends WizardData> extends Controller {
 
     private final Environment environment;
+    private final AnalyticsStore analyticsStore;
     private final Function1<String, String> viewEncrypter;
     private final List<String> encryptedFields;
 
@@ -47,12 +48,14 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                                WebJarsUtil webJarsUtil,
                                Config configuration,
                                Environment environment,
+                               AnalyticsStore analyticsStore,
                                EncryptedFormFactory formFactory,
                                Class<T> wizardType) {
 
         this.ec = ec;
         this.webJarsUtil = webJarsUtil;
         this.environment = environment;
+        this.analyticsStore = analyticsStore;
 
         wizardForm = formFactory.form(wizardType, this::decryptParams);
         encryptedFields = newWizardData().encryptedFields().map(Field::getName).collect(Collectors.toList());
@@ -78,14 +81,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         val boundForm = wizardForm.bindFromRequest();
         val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
-        val feeback = boundForm.value().map(WizardData::getFeedback).orElse("");
-
-        final Function<Integer, Content> renderPage = pageNumber -> formRenderer(viewPageName(pageNumber)).apply(boundForm);
-
-        if (!Strings.isNullOrEmpty(feeback)) {
-
-            Logger.info("Feedback: " + feeback);
-        }
 
         if (boundForm.hasErrors()) {
 
@@ -93,16 +88,25 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                     flatMap(field -> boundForm.value().flatMap(wizardData -> wizardData.getField(field))).
                     map(WizardData::fieldPage).orElse(thisPage);
 
-            return CompletableFuture.supplyAsync(() -> badRequest(renderPage.apply(errorPage)), ec.current());
+            val errorData = new HashMap<String, String>(boundForm.rawData());
+            errorData.put("pageNumber", errorPage.toString());
+
+            return CompletableFuture.supplyAsync(() -> badRequest(renderPage(errorPage, wizardForm.bind(errorData))), ec.current());
 
         } else {
 
             val wizardData = boundForm.get();
             val nextPage = nextPage(wizardData);
 
+            wizardData.setPageNumber(nextPage);
+
+            if (nextPage < 1 || nextPage >  wizardData.totalPages()) {
+                renderingData(wizardData);
+            }
+
             return nextPage <= wizardData.totalPages() ?
                     nextPage > 0 ?
-                            CompletableFuture.supplyAsync(() -> ok(renderPage.apply(nextPage)), ec.current()) :
+                            CompletableFuture.supplyAsync(() -> ok(renderPage(nextPage, wizardForm.fill(wizardData))), ec.current()) :
                             cancelledWizard(wizardData) :
                     completedWizard(wizardData);
         }
@@ -144,6 +148,28 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     protected void renderingData(T wizardData) {
 
+        if (Strings.isNullOrEmpty(session("id"))) {
+            session("id", UUID.randomUUID().toString());
+        }
+
+        val feedback = wizardData.getFeedback();
+        val eventData = new HashMap<String, Object>()
+        {
+            {
+                put("sessionId", session("id"));
+                put("pageNumber", wizardData.getPageNumber());
+                put("dateTime", DateTime.now());
+                put("feedback", feedback);
+            }
+        };
+
+        Logger.info("Session: " + eventData.get("sessionId") + " - Page: " + eventData.get("pageNumber") + " - " + eventData.get("dateTime"));
+
+        if (!Strings.isNullOrEmpty(feedback)) {
+            Logger.info("Feedback: " + feedback);
+        }
+
+        analyticsStore.recordEvent(eventData);
     }
 
     protected Function<Form<T>, Content> formRenderer(String viewName) {
@@ -173,6 +199,11 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     private String viewPageName(int pageNumber) {
 
         return baseViewName() + pageNumber;
+    }
+
+    private Content renderPage(int pageNumber, Form<T> formContent) {
+
+        return formRenderer(viewPageName(pageNumber)).apply(formContent);
     }
 
     private Map<String, String> decryptParams(Map<String, String> params) {

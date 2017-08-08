@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.common.collect.ImmutableMap;
 import helpers.Encryption;
+import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import java.net.URLEncoder;
@@ -24,7 +25,7 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 
-public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGenerator, DocumentStore {
+public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGenerator, DocumentStore, AnalyticsStore {
 
     @Test
     public void getSampleReportOK() {
@@ -1739,12 +1740,19 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Override
+    public void recordEvent(Map<String, Object> data) {
+
+        // Does nothing in test
+    }
+
+    @Override
     protected Application provideApplication() {
 
         return new GuiceApplicationBuilder().
                 overrides(
                         bind(PdfGenerator.class).toInstance(this),  // Mock out PdfGenerator to this Test Class
-                        bind(DocumentStore.class).toInstance(this)  // Mock out DocumentStore to this Test Class
+                        bind(DocumentStore.class).toInstance(this), // Mock out DocumentStore to this Test Class
+                        bind(AnalyticsStore.class).toInstance(this)
                 ).
                 build();
     }

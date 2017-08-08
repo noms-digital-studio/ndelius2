@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import data.base.ReportGeneratorWizardData;
 import helpers.JsonHelper;
+import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import java.util.Map;
@@ -36,12 +37,13 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                                               WebJarsUtil webJarsUtil,
                                               Config configuration,
                                               Environment environment,
+                                              AnalyticsStore analyticsStore,
                                               EncryptedFormFactory formFactory,
                                               Class<T> wizardType,
                                               PdfGenerator pdfGenerator,
                                               DocumentStore documentStore) {
 
-        super(ec, webJarsUtil, configuration, environment, formFactory, wizardType);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType);
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;

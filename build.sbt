@@ -20,6 +20,7 @@ libraryDependencies ++= Seq(
   "org.webjars" % "underscorejs" % "1.8.3",
   "org.webjars" % "jquery" % "1.12.4",
   "org.webjars" % "jquery-ui" % "1.12.1",
+  "org.mongodb" % "mongodb-driver-rx" % "1.4.0",
   ("org.languagetool" % "language-en" % "3.7").exclude("commons-logging", "commons-logging"),
   "org.projectlombok" % "lombok" % "1.16.16" % "provided"
 )

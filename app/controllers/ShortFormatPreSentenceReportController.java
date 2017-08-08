@@ -5,6 +5,7 @@ import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ShortFormatPreSentenceReportData;
+import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import java.util.Base64;
@@ -25,11 +26,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   WebJarsUtil webJarsUtil,
                                                   Config configuration,
                                                   Environment environment,
+                                                  AnalyticsStore analyticsStore,
                                                   EncryptedFormFactory formFactory,
                                                   PdfGenerator pdfGenerator,
                                                   DocumentStore documentStore) {
 
-        super(ec, webJarsUtil, configuration, environment, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
     }
 
     @Override
