@@ -7,6 +7,7 @@ import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -1743,6 +1744,12 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     public void recordEvent(Map<String, Object> data) {
 
         // Does nothing in test
+    }
+
+    @Override
+    public CompletableFuture<List<Map<String, String>>> recentEvents(int limit) {
+
+        return null;
     }
 
     @Override
