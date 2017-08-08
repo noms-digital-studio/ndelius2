@@ -111,7 +111,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     public final CompletionStage<Result> feedbackPost() {
 
         return CompletableFuture.supplyAsync(() ->
-                ok(formRenderer(baseViewName() + "Feedback").apply(wizardForm.bindFromRequest())));
+                ok(formRenderer(baseViewName() + "Feedback").apply(wizardForm.bindFromRequest())), ec.current());
     }
 
     protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params

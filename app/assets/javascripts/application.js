@@ -61,20 +61,25 @@
         });
 
         /**
+         * Feedback link - change form action and submit
+         */
+        $('.feedback-link').click(function (e) {
+            e.preventDefault();
+            $('form').attr('action', '/report/shortFormatPreSentenceReport/feedback').submit();
+        });
+
+        /**
          * Ensure jumpNumber is cleared if next after clicking browser back button
          */
-        $('#nextButton').click(function() {
-
-            $('#jumpNumber').val("");
+        $('#nextButton').click(function () {
+            $('#jumpNumber').val('');
         });
 
         /**
          * Save and exit
          */
-        $('#exitLink').click(function(e) {
-
+        $('#exitLink').click(function (e) {
             e.preventDefault();
-
             $('#jumpNumber').val(0);
             $('form').submit();
         });
