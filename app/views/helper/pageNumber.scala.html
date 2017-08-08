@@ -1,6 +1,6 @@
 @(pageNumber: Int, nextText: String)
 
 <input type="hidden" id="jumpNumber" name="jumpNumber" />
-<input type="hidden" name="pageNumber" value="@pageNumber"/>
+<input type="hidden" id="pageNumber" name="pageNumber" value="@pageNumber"/>
 
 <input class="button@if(pageNumber == 1) { button-start}" id="nextButton" type="submit" value="@nextText"/>

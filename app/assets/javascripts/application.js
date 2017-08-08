@@ -69,6 +69,15 @@
         });
 
         /**
+         * Submit feedback
+         */
+        $('#feedbackButton').click(function (e) {
+            e.preventDefault();
+            $('#jumpNumber').val($('#pageNumber').val());
+            $('form').submit();
+        });
+
+        /**
          * Ensure jumpNumber is cleared if next after clicking browser back button
          */
         $('#nextButton').click(function () {
