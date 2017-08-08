@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -158,7 +159,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             {
                 put("sessionId", session("id"));
                 put("pageNumber", wizardData.getPageNumber());
-                put("dateTime", DateTime.now());
+                put("dateTime", DateTime.now().toDate());
                 put("feedback", feedback);
             }
         };
@@ -210,9 +211,16 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         Consumer<String> paramEncrypter = key -> Optional.ofNullable(params.get(key)).map(value -> params.put(key, encrypter.apply(value)));
 
-        modifyParams(params, paramEncrypter).keySet().stream().filter(encryptedFields::contains).forEach(field ->
+        val pageNumber = Optional.ofNullable(params.get("pageNumber")).orElse("");
+        val jumpNumber = Optional.ofNullable(params.get("jumpNumber")).orElse("");
+
+        final BiFunction<Map<String, String>, Consumer<String>, Map<String, String>> modifier =         // Don't modify if submission was from the feedback
+                pageNumber.equals(jumpNumber) ? (ignored1, ignored2) -> params : this::modifyParams;    // form - only time jump an page are the same
+
+        modifier.apply(params, paramEncrypter).keySet().stream().filter(encryptedFields::contains).forEach(field ->
                 params.put(field, decrypter.apply(params.get(field)))
         );
+
 
         return params;
     }

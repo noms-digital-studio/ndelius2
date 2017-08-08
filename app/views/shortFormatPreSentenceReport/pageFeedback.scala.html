@@ -88,11 +88,12 @@
                 @inputHidden(reportForm("office"))
                 @inputHidden(reportForm("reportDate"))
 
-                @inputHidden(reportForm("jumpNumber"))
+                <input type="hidden" id="jumpNumber" name="jumpNumber" value="@reportForm("pageNumber").getValue.orElse("")"/>
                 @inputHidden(reportForm("pageNumber"))
+
                 @textarea(reportForm("feedback"), '_label -> "Submit your feedback", 'class -> "wide")
 
-                <input class="button" id="feedbackButton" type="submit" value="Submit"/>
+                <input class="button" type="submit" value="Submit"/>
             }
 
         </div>

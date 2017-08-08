@@ -65,16 +65,9 @@
          */
         $('.feedback-link').click(function (e) {
             e.preventDefault();
-            $('form').attr('action', '/report/shortFormatPreSentenceReport/feedback').submit();
-        });
 
-        /**
-         * Submit feedback
-         */
-        $('#feedbackButton').click(function (e) {
-            e.preventDefault();
-            $('#jumpNumber').val($('#pageNumber').val());
-            $('form').submit();
+            var form = $('form');
+            form.attr('action', form.attr('action') + '/feedback').submit();
         });
 
         /**

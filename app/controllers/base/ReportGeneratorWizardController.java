@@ -80,11 +80,11 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     @Override
     protected final CompletionStage<Result> completedWizard(T data) {
 
-        Function<Byte[], CompletionStage<Optional<Byte[]>>> resultIfStored = result ->
+        final Function<Byte[], CompletionStage<Optional<Byte[]>>> resultIfStored = result ->
                 storeReport(data, result).thenApply(stored ->
                         Optional.ofNullable(stored.get("ID")).filter(not(Strings::isNullOrEmpty)).map(value(result)));
 
-        Function<CompletionStage<Byte[]>, CompletionStage<Optional<Byte[]>>> optionalResult = result ->
+        final Function<CompletionStage<Byte[]>, CompletionStage<Optional<Byte[]>>> optionalResult = result ->
                 standaloneOperation ?
                         result.thenApply(Optional::of) :
                         result.thenCompose(resultIfStored);

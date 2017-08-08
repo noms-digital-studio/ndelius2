@@ -7,6 +7,10 @@ GET     /                                       controllers.IntegrationControlle
 GET     /initiate                               controllers.IntegrationController.initiate
 POST    /completed                              controllers.IntegrationController.completed
 
+GET     /healthcheck                            controllers.UtilityController.healthcheck
+
+GET     /analytics/recent/:limit                controllers.AnalyticsController.recentEvents(limit: Integer)
+
 GET     /nationalSearch                         controllers.NationalSearchController.index
 POST    /spellcheck                             controllers.NationalSearchController.postSpellcheck
 GET     /spellcheck/:text                       controllers.NationalSearchController.spellcheck(text)
