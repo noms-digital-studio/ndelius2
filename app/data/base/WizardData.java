@@ -37,6 +37,9 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private Integer jumpNumber;
 
     @JsonIgnore
+    private String feedback;
+
+    @JsonIgnore
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private transient final JLanguageTool spellChecker = new JLanguageTool(new BritishEnglish());

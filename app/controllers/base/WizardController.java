@@ -1,5 +1,6 @@
 package controllers.base;
 
+import com.google.common.base.Strings;
 import com.typesafe.config.Config;
 import data.base.WizardData;
 import helpers.Encryption;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import lombok.val;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
+import play.Logger;
 import play.data.Form;
 import play.data.validation.ValidationError;
 import play.libs.concurrent.HttpExecutionContext;
@@ -76,8 +78,14 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         val boundForm = wizardForm.bindFromRequest();
         val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
+        val feeback = boundForm.value().map(WizardData::getFeedback).orElse("");
 
         final Function<Integer, Content> renderPage = pageNumber -> formRenderer(viewPageName(pageNumber)).apply(boundForm);
+
+        if (!Strings.isNullOrEmpty(feeback)) {
+
+            Logger.info("Feedback: " + feeback);
+        }
 
         if (boundForm.hasErrors()) {
 
@@ -98,6 +106,12 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                             cancelledWizard(wizardData) :
                     completedWizard(wizardData);
         }
+    }
+
+    public final CompletionStage<Result> feedbackPost() {
+
+        return CompletableFuture.supplyAsync(() ->
+                ok(formRenderer(baseViewName() + "Feedback").apply(wizardForm.bindFromRequest())));
     }
 
     protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params
