@@ -2,7 +2,7 @@ name := "ndelius2"
 
 organization := "uk.gov.justice.digital"
 
-version := "0.1.23"
+version := "0.1.24"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb)
 

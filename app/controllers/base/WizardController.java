@@ -99,10 +99,10 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             val wizardData = boundForm.get();
             val nextPage = nextPage(wizardData);
 
-            wizardData.setPageNumber(nextPage);
-
-            if (nextPage < 1 || nextPage >  wizardData.totalPages()) {
+            if (nextPage < 1 || nextPage > wizardData.totalPages()) {
                 renderingData(wizardData);
+            } else {
+                wizardData.setPageNumber(nextPage); // Only store real page values as is persisted to Alfresco for re-edit
             }
 
             return nextPage <= wizardData.totalPages() ?
