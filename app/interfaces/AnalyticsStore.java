@@ -9,5 +9,5 @@ public interface AnalyticsStore {
 
     void recordEvent(Map<String, Object> data);
 
-    CompletableFuture<List<Map<String, String>>> recentEvents(int limit);
+    CompletableFuture<List<Map<String, Object>>> recentEvents(int limit);
 }

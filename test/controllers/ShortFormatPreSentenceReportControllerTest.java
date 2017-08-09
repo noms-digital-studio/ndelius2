@@ -1747,7 +1747,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Override
-    public CompletableFuture<List<Map<String, String>>> recentEvents(int limit) {
+    public CompletableFuture<List<Map<String, Object>>> recentEvents(int limit) {
 
         return null;
     }
