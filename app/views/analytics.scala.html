@@ -4,18 +4,45 @@
 @()
 
 <!DOCTYPE html>
-<html>
+<!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
     <head>
+
+        <title> Analytics - Short Format Pre-Sentence Report </title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!--[if IE 8]><link rel="stylesheet" type="text/css" media="screen" href="@routes.Assets.versioned("stylesheets/govuk-elements-styles-ie8.css")" /><![endif]-->
+        <!--[if gt IE 8]><!--><link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/govuk-elements-styles.css")' /><!--<![endif]-->
+        <!--[if IE 8]><link rel="stylesheet" type="text/css" media="all" href="@routes.Assets.versioned("stylesheets/fonts-ie8.css")" /><![endif]-->
+        <link rel="shortcut icon" type="image/x-icon" href='@routes.Assets.versioned("images/favicon.ico")' />
+
     </head>
     <body>
-        <div id="content"></div>
 
+        <!--[if lt IE 9]><script type="text/javascript" src="@routes.Assets.versioned("javascripts/govuk/ie.js")"></script><![endif]-->
         <script type='text/javascript' src='@webJarsUtil.url("es5-shim", "es5-shim.js").get'></script>
         <script type='text/javascript' src='@webJarsUtil.url("es5-shim", "es5-sham.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("jquery", "jquery.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("chartjs", "Chart.js").get'></script>
+
+        <main id="content">
+
+            <div class="phase-banner">
+                <p><strong class="phase-tag">ALPHA</strong><span>This is a new service – your <a href="javascript:void(0);" class="feedback-link" title="feedback">feedback</a> will help us to improve it.</span></p>
+            </div>
+
+            <h1 class="heading-xlarge no-margin-bottom">Analytics</h1>
+
+            <div id="react"></div>
+
+            <div class="margin-top medium">&nbsp;</div>
+
+        </main>
+
         <script type='text/javascript' src='@webJarsUtil.url("react", "react.js").get'></script>
         <script type='text/javascript' src='@webJarsUtil.url("react", "react-dom.js").get'></script>
         <script type='text/javascript' src='@webJarsUtil.url("underscorejs", "underscore.js").get'></script>
-        <script type='text/javascript' src='@webJarsUtil.url("jquery", "jquery.js").get'></script>
         <script type='text/javascript' src='@routes.Assets.versioned("javascripts/jsx/analytics.js")'></script>
 
     </body>

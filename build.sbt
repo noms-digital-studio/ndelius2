@@ -21,6 +21,7 @@ libraryDependencies ++= Seq(
   "org.webjars" %% "webjars-play" % "2.6.1",
   "org.webjars" % "es5-shim" % "4.5.9",
   "org.webjars.bower" % "react" % "0.14.9", // https://facebook.github.io/react/blog/2016/01/12/discontinuing-ie8-support.html
+  "org.webjars.bower" % "chartjs" % "2.6.0",
   "org.webjars" % "underscorejs" % "1.8.3",
   "org.webjars" % "jquery" % "1.12.4",
   "org.webjars" % "jquery-ui" % "1.12.1",
