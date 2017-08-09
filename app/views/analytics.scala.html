@@ -1,0 +1,22 @@
+@import org.webjars.play.WebJarsUtil
+@this(webJarsUtil: WebJarsUtil)
+
+@()
+
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <div id="content"></div>
+
+        <script type='text/javascript' src='@webJarsUtil.url("es5-shim", "es5-shim.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("es5-shim", "es5-sham.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("react", "react.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("react", "react-dom.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("underscorejs", "underscore.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("jquery", "jquery.js").get'></script>
+        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/jsx/analytics.js")'></script>
+
+    </body>
+</html>
