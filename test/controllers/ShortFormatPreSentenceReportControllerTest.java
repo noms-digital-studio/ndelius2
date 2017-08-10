@@ -1753,6 +1753,12 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Override
+    public CompletableFuture<Map<Integer, Integer>> pageVisits() {
+
+        return null;
+    }
+
+    @Override
     protected Application provideApplication() {
 
         return new GuiceApplicationBuilder().
