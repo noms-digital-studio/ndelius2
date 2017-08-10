@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
+import helpers.JsonHelper;
 import play.libs.Json;
 import java.io.File;
 import java.net.InetAddress;
@@ -41,7 +42,7 @@ public class UtilityController extends Controller {
             localHost = "unknown";
         }
 
-        return ok(Json.toJson(ImmutableMap.of(
+        return JsonHelper.okJson(ImmutableMap.of(
                 "status", "OK",
                 "version", version,
                 "runtime", ImmutableMap.of(
@@ -52,6 +53,6 @@ public class UtilityController extends Controller {
                 ),
                 "fileSystems", roots,
                 "localHost", localHost
-        )));
+        ));
     }
 }

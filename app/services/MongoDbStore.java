@@ -1,5 +1,6 @@
 package services;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import com.mongodb.rx.client.MongoCollection;
@@ -42,7 +43,7 @@ public class MongoDbStore implements AnalyticsStore {
     @Override
     public CompletableFuture<List<Map<String, Object>>> recentEvents(int limit) {
 
-        val future = new CompletableFuture<List<Map<String, Object>>>();
+        val result = new CompletableFuture<List<Map<String, Object>>>();
 
         events.find().
                 projection(new Document(ImmutableMap.of(
@@ -61,10 +62,45 @@ public class MongoDbStore implements AnalyticsStore {
                     return value.getClass().equals(Date.class) ? new DateTime(value).toString() : value;
 
                 }))).
-                doOnError(future::completeExceptionally).
                 toList().
-                forEach(future::complete);
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
 
-        return future;
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Map<Integer, Integer>> pageVisits() {
+
+        val result = new CompletableFuture<Map<Integer, Integer>>();
+
+        val group = ImmutableList.of(
+                new Document(ImmutableMap.of(
+                        "$group", new Document(ImmutableMap.of(
+                                "_id", "$pageNumber",
+                                "total", new Document(ImmutableMap.of(
+                                        "$sum", 1
+                                ))
+                        ))
+
+                )),
+                new Document(ImmutableMap.of(
+                        "$sort", new Document(ImmutableMap.of(
+                                "_id", 1
+                        ))
+
+                ))
+        );
+
+        events.aggregate(group).
+                toObservable().
+                toList().
+                map(documents -> documents.stream().collect(
+                        Collectors.toMap(doc -> doc.getInteger("_id"), doc -> doc.getInteger("total")))
+                ).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
     }
 }

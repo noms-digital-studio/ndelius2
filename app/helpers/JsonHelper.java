@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.Map;
 import lombok.val;
 import play.libs.Json;
+import play.mvc.Result;
+
+import static play.mvc.Results.ok;
 
 public interface JsonHelper {
 
@@ -26,5 +29,10 @@ public interface JsonHelper {
 
             return null;
         }
+    }
+
+    static <T> Result okJson(T data) {
+
+        return ok(Json.toJson(data));
     }
 }

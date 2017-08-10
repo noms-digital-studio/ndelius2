@@ -2,7 +2,7 @@ class ResultCount extends React.Component {
 
     render() {
         return (
-            <p className="margin-top medium">Showing data from {this.props.results.length} events.</p>
+            <p className="margin-top medium">Showing data from {this.props.total} events.</p>
         );
     }
 }
@@ -11,39 +11,44 @@ class AnalyticsPanel extends React.Component {
 
     constructor() {
         super();
+
         this.state = {
-            results: []
+            labels: [],
+            data: []
         };
     }
 
-    componentWillMount() {
+    render() {
 
-        $.getJSON('/analytics/recent/10', data => {
-            this.setState({
-                results: data.map(item => {
-                    console.info(item);
-                    item.dateTime = new Date(item.dateTime);
-                    return item;
-                })
-            });
-        });
+        return (
+            <div>
+                <ResultCount total={ _.reduce(this.state.data, (x, y) => x + y, 0) }/>
+                <canvas id="barChart"/>
+            </div>
+        );
     }
 
     componentDidMount() {
 
-        // @TODO: Populate this chart with data
-        var ctx = document.getElementById('barChart').getContext('2d'),
-            barChart,
-            chartLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'],
-            chartData = [1, 1, 7, 2, 5, 6, 2, 2];
+        $.getJSON('/analytics/pageVisits', data => {
+            this.setState({
+                labels: _.keys(data),
+                data: _.values(data)
+            });
+        });
+    }
 
-        barChart = new Chart(ctx, {
+    componentDidUpdate() {
+
+        var ctx = document.getElementById('barChart').getContext('2d');
+
+        new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: chartLabels,
+                labels: this.state.labels,
                 datasets: [{
                     label: 'Page Visits',
-                    data: chartData,
+                    data: this.state.data,
                     borderWidth: 1
                 }]
             },
@@ -57,16 +62,6 @@ class AnalyticsPanel extends React.Component {
                 }
             }
         });
-    }
-
-    render() {
-
-        return (
-            <div>
-                <ResultCount {...this.state}/>
-                <canvas id="barChart"/>
-            </div>
-        );
     }
 }
 

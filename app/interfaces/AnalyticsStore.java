@@ -10,4 +10,6 @@ public interface AnalyticsStore {
     void recordEvent(Map<String, Object> data);
 
     CompletableFuture<List<Map<String, Object>>> recentEvents(int limit);
+
+    CompletableFuture<Map<Integer, Integer>> pageVisits();
 }

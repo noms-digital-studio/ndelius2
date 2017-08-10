@@ -10,6 +10,7 @@ POST    /completed                              controllers.IntegrationControlle
 GET     /healthcheck                            controllers.UtilityController.healthcheck
 
 GET     /analytics                              controllers.AnalyticsController.index
+GET     /analytics/pageVisits                   controllers.AnalyticsController.pageVisits
 GET     /analytics/recent/:limit                controllers.AnalyticsController.recentEvents(limit: Integer)
 
 GET     /nationalSearch                         controllers.NationalSearchController.index

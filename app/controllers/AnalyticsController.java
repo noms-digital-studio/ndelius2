@@ -1,7 +1,7 @@
 package controllers;
 
+import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
-import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import javax.inject.Inject;
@@ -27,6 +27,11 @@ public class AnalyticsController extends Controller {
 
     public CompletionStage<Result> recentEvents(int limit) {
 
-        return analyticsStore.recentEvents(limit).thenApply(documents -> ok(Json.toJson(documents)));
+        return analyticsStore.recentEvents(limit).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> pageVisits() {
+
+        return analyticsStore.pageVisits().thenApply(JsonHelper::okJson);
     }
 }
