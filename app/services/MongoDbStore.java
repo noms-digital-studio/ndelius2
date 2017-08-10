@@ -82,13 +82,11 @@ public class MongoDbStore implements AnalyticsStore {
                                         "$sum", 1
                                 ))
                         ))
-
                 )),
                 new Document(ImmutableMap.of(
                         "$sort", new Document(ImmutableMap.of(
                                 "_id", 1
                         ))
-
                 ))
         );
 

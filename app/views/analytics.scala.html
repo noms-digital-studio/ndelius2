@@ -23,10 +23,15 @@
         <!--[if lt IE 9]><script type="text/javascript" src="@routes.Assets.versioned("javascripts/govuk/ie.js")"></script><![endif]-->
         <script type='text/javascript' src='@webJarsUtil.url("es5-shim", "es5-shim.js").get'></script>
         <script type='text/javascript' src='@webJarsUtil.url("es5-shim", "es5-sham.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("react", "react.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("react", "react-dom.js").get'></script>
+        <script type='text/javascript' src='@webJarsUtil.url("underscorejs", "underscore.js").get'></script>
         <script type='text/javascript' src='@webJarsUtil.url("jquery", "jquery.js").get'></script>
+        <!--[if IE 8]><script type='text/javascript' src='@webJarsUtil.url("excanvas", "excanvas.js").get'></script><![endif]-->
         <script type='text/javascript' src='@webJarsUtil.url("chartjs", "Chart.js").get'></script>
+        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/jsx/analytics.js")'></script>
 
-        <main id="content">
+        <div id="content">
 
             <div class="phase-banner">
                 <p><strong class="phase-tag">ALPHA</strong><span>This is a new service – your <a href="javascript:void(0);" class="feedback-link" title="feedback">feedback</a> will help us to improve it.</span></p>
@@ -38,12 +43,7 @@
 
             <div class="margin-top medium">&nbsp;</div>
 
-        </main>
-
-        <script type='text/javascript' src='@webJarsUtil.url("react", "react.js").get'></script>
-        <script type='text/javascript' src='@webJarsUtil.url("react", "react-dom.js").get'></script>
-        <script type='text/javascript' src='@webJarsUtil.url("underscorejs", "underscore.js").get'></script>
-        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/jsx/analytics.js")'></script>
+        </div>
 
     </body>
 </html>
