@@ -1,16 +1,26 @@
 package controllers;
 
 import com.google.common.collect.ImmutableMap;
+import com.typesafe.config.Config;
 import play.libs.Json;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import javax.inject.Inject;
 import lombok.val;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 public class UtilityController extends Controller {
+
+    private final String version;
+
+    @Inject
+    public UtilityController(Config configuration) {
+
+        version = configuration.getString("app.version");
+    }
 
     public Result healthcheck() {
 
@@ -33,6 +43,7 @@ public class UtilityController extends Controller {
 
         return ok(Json.toJson(ImmutableMap.of(
                 "status", "OK",
+                "version", version,
                 "runtime", ImmutableMap.of(
                         "processors", runtime.availableProcessors(),
                         "freeMemory", runtime.freeMemory(),
