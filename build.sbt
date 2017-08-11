@@ -34,9 +34,8 @@ libraryDependencies ++= Seq(
   "org.webjars" % "underscorejs" % "1.8.3",
   "org.webjars" % "jquery" % "1.12.4",
   "org.webjars" % "jquery-ui" % "1.12.1",
-  "org.mongodb" % "mongodb-driver-rx" % "1.4.0",
+  "com.amazonaws" % "aws-java-sdk-dynamodb" % "1.11.174",
   ("org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "6.0.1").exclude("commons-logging", "commons-logging"),
-
   "org.projectlombok" % "lombok" % "1.16.16" % "provided",
   "org.assertj" % "assertj-core" % "3.8.0" % "test",
   "org.mockito" % "mockito-all" % "1.10.19" % "test",
