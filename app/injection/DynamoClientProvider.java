@@ -1,24 +1,23 @@
 package injection;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.typesafe.config.Config;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class DynamoClientProvider implements Provider<DynamoDB> {
 
-    private final String dynamoDbUrl;
+    private final AmazonDynamoDB amazon;
 
     @Inject
-    public DynamoClientProvider(Config configuration) {
+    public DynamoClientProvider(AmazonDynamoDB amazon) {
 
-        dynamoDbUrl = configuration.getString("analytics.dynamo.connection");
+        this.amazon = amazon;
     }
 
     @Override
     public DynamoDB get() {
 
-        return new DynamoDB(AmazonDynamoDBClientBuilder.defaultClient()); // dynamoDbUrl
+        return new DynamoDB(amazon);
     }
 }

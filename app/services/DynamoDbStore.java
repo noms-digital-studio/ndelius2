@@ -1,95 +1,118 @@
 package services;
 
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.Table;
-import com.typesafe.config.Config;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.model.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import helpers.IterableScan;
 import interfaces.AnalyticsStore;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import lombok.val;
+import org.joda.time.DateTime;
+import play.Logger;
 
 public class DynamoDbStore implements AnalyticsStore {
 
-    private final Table events;
+    private final AmazonDynamoDB amazon;
+    private final DynamoDB dynamoClient;
 
     @Inject
-    public DynamoDbStore(Config configuration,
+    public DynamoDbStore(AmazonDynamoDB amazon,
                          DynamoDB dynamoClient) {
 
-        val tableName = configuration.getString("analytics.dynamo.table");
+        this.amazon = amazon;
+        this.dynamoClient = dynamoClient;
+    }
 
-        events = dynamoClient.getTable(tableName);
+    private Table getPageTable(String pageNumber) {
+
+        TableDescription description;
+        Table table = dynamoClient.getTable("page" + pageNumber);
+
+        try {
+
+            description = table.describe();
+        }
+        catch (ResourceNotFoundException ex) {
+
+            description = null;
+        }
+
+        if (description == null) {
+
+            Logger.info("Creating DynamoDB table: " + table.getTableName());
+
+            val request = new CreateTableRequest(table.getTableName(), ImmutableList.of(
+                    new KeySchemaElement("dateTime", "HASH"),
+                    new KeySchemaElement("sessionId", "RANGE")
+            )).withAttributeDefinitions(
+                    new AttributeDefinition("dateTime", ScalarAttributeType.S),
+                    new AttributeDefinition("sessionId", ScalarAttributeType.S)
+            ).withProvisionedThroughput(new ProvisionedThroughput(5L, 5L));
+
+            table = dynamoClient.createTable(request);
+
+            try {
+
+                table.waitForActive();
+            }
+            catch (InterruptedException ex) {
+
+                table = null;
+            }
+        }
+
+        return table;
     }
 
     @Override
     public void recordEvent(Map<String, Object> data) {
 
-        events.putItem(new Item().withMap("event", data));
+        final BiFunction<String, Function<Object, Object>, KeyAttribute> keyAttribute = (key, transform) ->
+                new KeyAttribute(key, transform.apply(data.get(key)));
+
+        val eventItem = new Item().
+                withPrimaryKey(new PrimaryKey(
+                                keyAttribute.apply("dateTime", dateTime -> new DateTime(dateTime).toString()),
+                                keyAttribute.apply("sessionId", Function.identity())
+                        )
+                ).
+                with("feedback", data.get("feedback"));
+
+        CompletableFuture.supplyAsync(() -> getPageTable(data.get("pageNumber").toString()).putItem(eventItem));
     }
 
     @Override
     public CompletableFuture<List<Map<String, Object>>> recentEvents(int limit) {
 
-        val result = new CompletableFuture<List<Map<String, Object>>>();
-/*
-        events.find().
-                projection(new Document(ImmutableMap.of(
-                        "_id", 0,
-                        "dateTime", 1,
-                        "pageNumber", 1,
-                        "sessionId", 1
-                ))).
-                sort(new Document("$natural", -1)).
-                limit(limit).
-                toObservable().
-                map(document -> document.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> {
-
-                    val value = entry.getValue();
-
-                    return value.getClass().equals(Date.class) ? new DateTime(value).toString() : value;
-
-                }))).
-                toList().
-                doOnError(result::completeExceptionally).
-                subscribe(result::complete);
-*/
-        return result;
+        return CompletableFuture.supplyAsync(() -> ImmutableList.of(ImmutableMap.of())); //@TODO: Not easy in DynamoDB
     }
 
     @Override
     public CompletableFuture<Map<Integer, Integer>> pageVisits() {
 
-        val result = new CompletableFuture<Map<Integer, Integer>>();
-/*
-        val group = ImmutableList.of(
-                new Document(ImmutableMap.of(
-                        "$group", new Document(ImmutableMap.of(
-                                "_id", "$pageNumber",
-                                "total", new Document(ImmutableMap.of(
-                                        "$sum", 1
-                                ))
-                        ))
-                )),
-                new Document(ImmutableMap.of(
-                        "$sort", new Document(ImmutableMap.of(
-                                "_id", 1
-                        ))
-                ))
-        );
+        return CompletableFuture.supplyAsync(() ->
 
-        events.aggregate(group).
-                toObservable().
-                toList().
-                map(documents -> documents.stream().collect(
-                        Collectors.toMap(doc -> doc.getInteger("_id"), doc -> doc.getInteger("total")))
-                ).
-                doOnError(result::completeExceptionally).
-                subscribe(result::complete);
-*/
-        return result;
+                StreamSupport.stream(dynamoClient.listTables().pages().spliterator(), false).
+                        map(Page::getLowLevelResult).
+                        map(ListTablesResult::getTableNames).
+                        flatMap(List::stream).
+                        filter(table -> table.startsWith("page")).
+                        collect(Collectors.toMap(table -> Integer.valueOf(table.replace("page", "")), table ->
+
+                                StreamSupport.stream(
+                                        new IterableScan(amazon, new ScanRequest(table)).spliterator(),
+                                        false
+                                ).mapToInt(ScanResult::getCount).sum()
+                        ))
+        );
     }
 }
