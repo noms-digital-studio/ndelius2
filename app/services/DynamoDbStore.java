@@ -96,7 +96,11 @@ public class DynamoDbStore implements AnalyticsStore {
         return pageVisits().thenApplyAsync(pages -> {
 
             val events = pages.keySet().stream().
-                    map(page -> index.query(new QuerySpec().withHashKey("pageNumber", page).withMaxResultSize(limit))).
+                    map(page -> index.query(
+                            new QuerySpec().withHashKey("pageNumber", page).
+                                    withScanIndexForward(false).
+                                    withMaxResultSize(limit))
+                    ).
                     map(DynamoDbStore::queryResult).
                     flatMap(List::stream).
                     sorted(Comparator.comparing(item -> item.get("dateTime").toString())).
