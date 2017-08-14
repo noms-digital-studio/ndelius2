@@ -10,6 +10,8 @@ public interface AnalyticsStore {
 
     CompletableFuture<List<Map<String, Object>>> recentEvents(int limit);
 
+    CompletableFuture<List<Map<String, Object>>> sessionEvents(String sessionId);
+
     CompletableFuture<Map<Integer, Integer>> pageVisits();
 
     CompletableFuture<Boolean> isUp();

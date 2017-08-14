@@ -2,16 +2,17 @@ package services;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
+import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.IterableScan;
 import interfaces.AnalyticsStore;
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -32,10 +33,100 @@ public class DynamoDbStore implements AnalyticsStore {
         this.dynamoClient = dynamoClient;
     }
 
-    private Table getPageTable(String pageNumber) {
+    @Override
+    public void recordEvent(Map<String, Object> data) {
+
+        final Function<String, KeyAttribute> keyAttribute = key -> {
+
+            val value = data.get(key);
+
+            return new KeyAttribute(key, value instanceof Date ? new DateTime(value).toString() : value);
+        };
+
+        val eventItem = new Item().
+                withPrimaryKey(new PrimaryKey(
+                                keyAttribute.apply("sessionId"),
+                                keyAttribute.apply("dateTime")
+                        )
+                ).
+                withKeyComponents(keyAttribute.apply("pageNumber")).
+                withKeyComponents(keyAttribute.apply("feedback"));
+
+        val pageItem = new UpdateItemSpec().
+                withPrimaryKey(keyAttribute.apply("pageNumber")).
+                withUpdateExpression("ADD #attr :value").
+                withNameMap(ImmutableMap.of("#attr", "totalVisits")).
+                withValueMap(new ValueMap().withInt(":value", 1));
+
+
+        CompletableFuture.supplyAsync(() -> {
+
+            getEventsTable().putItem(eventItem);
+            return getPagesTable().updateItem(pageItem);
+
+        }).exceptionally(ex -> {
+
+            Logger.error("DynamoDB error", ex);
+            return null;
+        });
+    }
+
+    private static List<Map<String, Object>> queryResult(ItemCollection<QueryOutcome> query) {
+
+        return StreamSupport.stream(query.pages().spliterator(), false).
+                map(Page::getLowLevelResult).
+                map(QueryOutcome::getItems).
+                flatMap(List::stream).
+                map(Item::asMap).
+                collect(Collectors.toList());
+    }
+
+    public CompletableFuture<List<Map<String, Object>>> sessionEvents(String sessionId) {
+
+        val query = getEventsTable().query(new QuerySpec().withHashKey("sessionId", sessionId));
+
+        return CompletableFuture.supplyAsync(() -> queryResult(query));
+    }
+
+    @Override
+    public CompletableFuture<List<Map<String, Object>>> recentEvents(int limit) {
+
+        val index = getEventsTable().getIndex("pages");
+
+        return pageVisits().thenApplyAsync(pages -> {
+
+            val events = pages.keySet().stream().
+                    map(page -> index.query(new QuerySpec().withHashKey("pageNumber", page).withMaxResultSize(limit))).
+                    map(DynamoDbStore::queryResult).
+                    flatMap(List::stream).
+                    sorted(Comparator.comparing(item -> item.get("dateTime").toString())).
+                    collect(Collectors.toList());
+
+            Collections.reverse(events);
+
+            return events.stream().limit(limit).collect(Collectors.toList());
+        });
+    }
+
+    @Override
+    public CompletableFuture<Map<Integer, Integer>> pageVisits() {
+
+        return CompletableFuture.supplyAsync(() ->
+
+                StreamSupport.stream(new IterableScan(amazon, new ScanRequest("pages")).spliterator(),false).
+                        map(ScanResult::getItems).
+                        flatMap(List::stream).
+                        collect(Collectors.toMap(
+                                item -> numberAttribute(item, "pageNumber"),
+                                item -> numberAttribute(item, "totalVisits")
+                        ))
+        );
+    }
+
+    private Table getTable(String name, Function<CreateTableRequest, CreateTableRequest> request) {
 
         TableDescription description;
-        Table table = dynamoClient.getTable("page" + pageNumber);
+        Table table = dynamoClient.getTable(name);
 
         try {
 
@@ -50,15 +141,7 @@ public class DynamoDbStore implements AnalyticsStore {
 
             Logger.info("Creating DynamoDB table: " + table.getTableName());
 
-            val request = new CreateTableRequest(table.getTableName(), ImmutableList.of(
-                    new KeySchemaElement("dateTime", "HASH"),
-                    new KeySchemaElement("sessionId", "RANGE")
-            )).withAttributeDefinitions(
-                    new AttributeDefinition("dateTime", ScalarAttributeType.S),
-                    new AttributeDefinition("sessionId", ScalarAttributeType.S)
-            ).withProvisionedThroughput(new ProvisionedThroughput(5L, 5L));
-
-            table = dynamoClient.createTable(request);
+            table = dynamoClient.createTable(request.apply(new CreateTableRequest().withTableName(table.getTableName())));
 
             try {
 
@@ -66,6 +149,7 @@ public class DynamoDbStore implements AnalyticsStore {
             }
             catch (InterruptedException ex) {
 
+                Logger.error("DynamoDB error", ex);
                 table = null;
             }
         }
@@ -73,46 +157,48 @@ public class DynamoDbStore implements AnalyticsStore {
         return table;
     }
 
-    @Override
-    public void recordEvent(Map<String, Object> data) {
+    private Table getEventsTable() {
 
-        final BiFunction<String, Function<Object, Object>, KeyAttribute> keyAttribute = (key, transform) ->
-                new KeyAttribute(key, transform.apply(data.get(key)));
+        return getTable("events", request ->
 
-        val eventItem = new Item().
-                withPrimaryKey(new PrimaryKey(
-                                keyAttribute.apply("dateTime", dateTime -> new DateTime(dateTime).toString()),
-                                keyAttribute.apply("sessionId", Function.identity())
+                request.withKeySchema(ImmutableList.of(
+                        new KeySchemaElement("sessionId", "HASH"),
+                        new KeySchemaElement("dateTime", "RANGE")
+                )).withAttributeDefinitions(
+                        new AttributeDefinition("sessionId", ScalarAttributeType.S),
+                        new AttributeDefinition("dateTime", ScalarAttributeType.S),
+                        new AttributeDefinition("pageNumber", ScalarAttributeType.N)
+                ).withProvisionedThroughput(
+                        new ProvisionedThroughput(5L, 5L)
+                ).withGlobalSecondaryIndexes(
+                        new GlobalSecondaryIndex().withIndexName("pages").withKeySchema(
+                                new KeySchemaElement("pageNumber", "HASH"),
+                                new KeySchemaElement("dateTime", "RANGE")
+                        ).withProjection(
+                                new Projection().withProjectionType(ProjectionType.ALL)
+                        ) .withProvisionedThroughput(
+                                new ProvisionedThroughput(5L, 5L)
                         )
-                ).
-                with("feedback", data.get("feedback"));
-
-        CompletableFuture.supplyAsync(() -> getPageTable(data.get("pageNumber").toString()).putItem(eventItem));
-    }
-
-    @Override
-    public CompletableFuture<List<Map<String, Object>>> recentEvents(int limit) {
-
-        return CompletableFuture.supplyAsync(() -> ImmutableList.of(ImmutableMap.of())); //@TODO: Not easy in DynamoDB
-    }
-
-    @Override
-    public CompletableFuture<Map<Integer, Integer>> pageVisits() {
-
-        return CompletableFuture.supplyAsync(() ->
-
-                StreamSupport.stream(dynamoClient.listTables().pages().spliterator(), false).
-                        map(Page::getLowLevelResult).
-                        map(ListTablesResult::getTableNames).
-                        flatMap(List::stream).
-                        filter(table -> table.startsWith("page")).
-                        collect(Collectors.toMap(table -> Integer.valueOf(table.replace("page", "")), table ->
-
-                                StreamSupport.stream(
-                                        new IterableScan(amazon, new ScanRequest(table)).spliterator(),
-                                        false
-                                ).mapToInt(ScanResult::getCount).sum()
-                        ))
+                )
         );
+    }
+
+    private Table getPagesTable() {
+
+        return getTable("pages", request ->
+
+                request.withKeySchema(
+                        new KeySchemaElement("pageNumber", "HASH")
+                ).withAttributeDefinitions(
+                        new AttributeDefinition("pageNumber", ScalarAttributeType.N)
+                ).withProvisionedThroughput(
+                        new ProvisionedThroughput(5L, 5L)
+                )
+        );
+    }
+
+    private static Integer numberAttribute(Map<String, AttributeValue> item, String name) {
+
+        return Integer.valueOf(item.get(name).getN());
     }
 }

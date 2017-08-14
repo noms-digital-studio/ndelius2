@@ -30,6 +30,11 @@ public class AnalyticsController extends Controller {
         return analyticsStore.recentEvents(limit).thenApply(JsonHelper::okJson);
     }
 
+    public CompletionStage<Result> sessionEvents(String id) {
+
+        return analyticsStore.sessionEvents(id).thenApply(JsonHelper::okJson);
+    }
+
     public CompletionStage<Result> pageVisits() {
 
         return analyticsStore.pageVisits().thenApply(JsonHelper::okJson);
