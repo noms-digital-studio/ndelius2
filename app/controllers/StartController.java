@@ -57,6 +57,6 @@ public class StartController extends Controller {
 
         val parameters = String.join("&", encryptedData.entrySet().stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList()));
 
-        return redirect("/report/shortFormatPreSentenceReport?" + parameters);
+        return redirect("report/shortFormatPreSentenceReport?" + parameters);
     }
 }
