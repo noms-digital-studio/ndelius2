@@ -48,17 +48,19 @@ public class UtilityController extends Controller {
 
         return JsonHelper.okJson(new HashMap<String, Object>()
         {
-            { put("status", "OK"); }
-            { put("dateTime", DateTime.now().toString()); }
-            { put("version", version); }
-            { put("runtime", ImmutableMap.of(
-                    "processors", runtime.availableProcessors(),
-                    "freeMemory", runtime.freeMemory(),
-                    "totalMemory", runtime.totalMemory(),
-                    "maxMemory", runtime.maxMemory()
-            )); }
-            { put("fileSystems", roots); }
-            { put("localHost", finalLocalHost); }
+            {
+                put("status", "OK");
+                put("dateTime", DateTime.now().toString());
+                put("version", version);
+                put("runtime", ImmutableMap.of(
+                        "processors", runtime.availableProcessors(),
+                        "freeMemory", runtime.freeMemory(),
+                        "totalMemory", runtime.totalMemory(),
+                        "maxMemory", runtime.maxMemory()
+                ));
+                put("fileSystems", roots);
+                put("localHost", finalLocalHost);
+            }
         });
     }
 }
