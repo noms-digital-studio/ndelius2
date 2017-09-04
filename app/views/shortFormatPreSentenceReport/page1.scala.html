@@ -1,5 +1,6 @@
 @import data._
 @import helper._
+@import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit webJarsUtil: WebJarsUtil)
@@ -31,7 +32,7 @@
 
             <p class="margin-top large">Completion can take around <span class="bold">30 minutes</span>.</p>
 
-            @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'id -> "ndForm", 'novalidate -> "") {
+            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
                 @CSRF.formField
 
                 @inputHidden(reportForm("onBehalfOfUser"), encrypter)
@@ -106,7 +107,7 @@
         </div>
         <div class="column-one-third">
 
-            <img class="report-image" src="@routes.Assets.versioned("images/report_sfps.png")" alt="Short Format Pre-Sentencing Report" />
+            <img class="report-image" src="@relative(routes.Assets.versioned("images/report_sfps.png"))" alt="Short Format Pre-Sentencing Report" />
 
         </div>
     </div>

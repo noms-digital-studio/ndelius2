@@ -1,5 +1,6 @@
 @import data._
 @import helper._
+@import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit webJarsUtil: WebJarsUtil)
@@ -17,7 +18,7 @@
 
       <p>For the purpose of this assessment "serious harm" is defined as "an event that is life threatening and/or traumatic and from which recovery, whether physical or psychological can be expected to be difficult or impossible".</p>
 
-      @helper.form(action = routes.ShortFormatPreSentenceReportController.wizardPost(), 'novalidate -> "") {
+      @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
         @CSRF.formField
 
         @inputHidden(reportForm("onBehalfOfUser"), encrypter)

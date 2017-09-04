@@ -3,10 +3,6 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                                       controllers.IntegrationController.index
-GET     /initiate                               controllers.IntegrationController.initiate
-POST    /completed                              controllers.IntegrationController.completed
-
 GET     /healthcheck                            controllers.UtilityController.healthcheck
 
 GET     /analytics                              controllers.AnalyticsController.index
@@ -16,8 +12,6 @@ GET     /analytics/recent/:limit                controllers.AnalyticsController.
 GET     /nationalSearch                         controllers.NationalSearchController.index
 POST    /spellcheck                             controllers.NationalSearchController.postSpellcheck
 GET     /spellcheck/:text                       controllers.NationalSearchController.spellcheck(text)
-
-GET     /startReport                            controllers.StartController.startReport
 
 GET     /report/shortFormatPreSentenceReport    controllers.ShortFormatPreSentenceReportController.wizardGet
 POST    /report/shortFormatPreSentenceReport    controllers.ShortFormatPreSentenceReportController.wizardPost

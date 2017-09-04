@@ -43,7 +43,7 @@ class OffenderSearch extends React.Component {
 
         this.performSearch = _.debounce(() => {
 
-            $.getJSON('/spellcheck/' + this.state.name, data => {
+            $.getJSON('spellcheck/' + this.state.name, data => {
                 this.setState({
                     results: data
                 });

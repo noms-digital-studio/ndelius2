@@ -1,4 +1,5 @@
 @import org.webjars.play.WebJarsUtil
+@import helpers.CallHelper.relative
 
 @(message: String)(implicit webJarsUtil: WebJarsUtil)
 
@@ -7,7 +8,7 @@
     <head>
     </head>
     <body>
-        <script type='text/javascript' src='@webJarsUtil.url("jquery", "jquery.js").get'></script>
+        <script type='text/javascript' src='@relative(webJarsUtil.url("jquery", "jquery.js").get)'></script>
         <main id="content">
             <script type="text/javascript">
                     $(function () {

@@ -30,7 +30,7 @@ class AnalyticsPanel extends React.Component {
 
     componentDidMount() {
 
-        $.getJSON('/analytics/pageVisits', data => {
+        $.getJSON('analytics/pageVisits', data => {
             this.setState({
                 labels: _.keys(data),
                 data: _.values(data)
