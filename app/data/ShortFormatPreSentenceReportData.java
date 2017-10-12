@@ -6,7 +6,6 @@ import com.google.common.base.Strings;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
-import data.annotations.SpellCheck;
 import data.base.ReportGeneratorWizardData;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -110,39 +109,23 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     private boolean otherInformationSource;
 
     @RequiredOnPage(value = 4, onlyIfField = "otherInformationSource")
-    @SpellCheck(overrideField = "ignoreOtherInformationDetailsSpelling")
     @JsonProperty("OTHER_INFORMATION_DETAILS")
     private String otherInformationDetails;
-
-    @JsonIgnore
-    private boolean ignoreOtherInformationDetailsSpelling;
 
 
     // Page 5
 
     @RequiredOnPage(5)
-    @SpellCheck(overrideField = "ignoreMainOffenceSpelling")
     @JsonProperty("MAIN_OFFENCE")
     private String mainOffence;
 
-    @JsonIgnore
-    private boolean ignoreMainOffenceSpelling;
-
     @RequiredOnPage(5)
-    @SpellCheck(overrideField = "ignoreOffenceSummarySpelling")
     @JsonProperty("OFFENCE_SUMMARY")
     private String offenceSummary;
 
-    @JsonIgnore
-    private boolean ignoreOffenceSummarySpelling;
-
     @RequiredOnPage(5)
-    @SpellCheck(overrideField = "ignoreOffenceAnalysisSpelling")
     @JsonProperty("OFFENCE_ANALYSIS")
     private String offenceAnalysis;
-
-    @JsonIgnore
-    private boolean ignoreOffenceAnalysisSpelling;
 
 
     // Page 6
@@ -179,68 +162,44 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     // Page 7
 
     @RequiredOnPage(7)
-    @SpellCheck(overrideField = "ignoreOffenderAssessmentSpelling")
     @JsonProperty("OFFENDER_ASSESSMENT")
     private String offenderAssessment;
-
-    @JsonIgnore
-    private boolean ignoreOffenderAssessmentSpelling;
 
 
     // Page 8
 
     @RequiredOnPage(8)
-    @SpellCheck(overrideField = "ignorePatternOfOffendingSpelling")
     @JsonProperty("PATTERN_OF_OFFENDING")
     private String patternOfOffending;
-
-    @JsonIgnore
-    private boolean ignorePatternOfOffendingSpelling;
 
 
     // Page 9
 
     @RequiredOnPage(9)
     @JsonProperty("PREVIOUS_SUPERVISION_RESPONSE")
-    private String previousSupervisionResponse;         // Radio button enum, so no spelling check needed
+    private String previousSupervisionResponse;
 
     @OnPage(9)
-    @SpellCheck(overrideField = "ignoreAdditionalPreviousSupervisionSpelling")
     @JsonProperty("ADDITIONAL_PREVIOUS_SUPERVISION")
     private String additionalPreviousSupervision;
 
-    @JsonIgnore
-    private boolean ignoreAdditionalPreviousSupervisionSpelling;
-
     @RequiredOnPage(9)
-    @SpellCheck(overrideField = "ignoreLikelihoodOfReOffendingSpelling")
     @JsonProperty("LIKELIHOOD_OF_RE_OFFENDING")
     private String likelihoodOfReOffending;
-
-    @JsonIgnore
-    private boolean ignoreLikelihoodOfReOffendingSpelling;
 
 
     // Page 10
 
     @RequiredOnPage(10)
-    @SpellCheck(overrideField = "ignoreRiskOfSeriousHarmSpelling")
     @JsonProperty("RISK_OF_SERIOUS_HARM")
     private String riskOfSeriousHarm;
-
-    @JsonIgnore
-    private boolean ignoreRiskOfSeriousHarmSpelling;
 
 
     // Page 11
 
     @RequiredOnPage(11)
-    @SpellCheck(overrideField = "ignoreProposalSpelling")
     @JsonProperty("PROPOSAL")
     private String proposal;
-
-    @JsonIgnore
-    private boolean ignoreProposalSpelling;
 
 
     // Page 12

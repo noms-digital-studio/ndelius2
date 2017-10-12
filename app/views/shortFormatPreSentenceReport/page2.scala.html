@@ -9,106 +9,104 @@
 
 @main("Offender Details - Short Format Pre Sentence Report") {
 
-  <h1 class="heading-xlarge">Offender Details</h1>
+    <h1 class="heading-xlarge">Offender Details</h1>
 
-  <div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="grid-row">
+        <div class="column-two-thirds">
 
-      <p>Please check and confirm that these details are correct.</p>
+        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+            @CSRF.formField
 
-      @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-        @CSRF.formField
+            @inputHidden(reportForm("onBehalfOfUser"), encrypter)
+            @inputHidden(reportForm("entityId"), encrypter)
+            @inputHidden(reportForm("documentId"), encrypter)
 
-        @inputHidden(reportForm("onBehalfOfUser"), encrypter)
-        @inputHidden(reportForm("entityId"), encrypter)
-        @inputHidden(reportForm("documentId"), encrypter)
+            <div class="box grey margin-bottom medium">
+                @readOnlyField(reportForm("name"), "Name", encrypter)
+                @readOnlyField(reportForm("dateOfBirth"), "Date of Birth", encrypter)
+                @readOnlyField(reportForm("age"), "Age", encrypter)
+                @if(Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
+                  @readOnlyField(reportForm("address"), "Address", encrypter)
+                }
+                @readOnlyField(reportForm("crn"), "Delius CRN", encrypter)
+                @if(Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
+                    @readOnlyField(reportForm("pnc"), "PNC ID", encrypter)
+                }
+            </div>
 
-        <div class="box grey margin-bottom medium">
-          @readOnlyField(reportForm("name"), "Name", encrypter)
-          @readOnlyField(reportForm("dateOfBirth"), "Date of Birth", encrypter)
-          @readOnlyField(reportForm("age"), "Age", encrypter)
-          @if(Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
-            @readOnlyField(reportForm("address"), "Address", encrypter)
-          }
-          @readOnlyField(reportForm("crn"), "Delius CRN", encrypter)
-          @if(Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
-            @readOnlyField(reportForm("pnc"), "PNC ID", encrypter)
-          }
+            @if(!Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
+              @inputText(reportForm("address"), '_label -> "Address")
+            }
+
+            @if(!Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
+                @inputText(reportForm("pnc"), '_label -> "PNC ID", 'class -> "half-width")
+            }
+
+            @inputHidden(reportForm("pncSupplied"))
+            @inputHidden(reportForm("addressSupplied"))
+
+            @inputHidden(reportForm("court"), encrypter)
+            @inputHidden(reportForm("dateOfHearing"), encrypter)
+            @inputHidden(reportForm("localJusticeArea"), encrypter)
+
+            @inputHidden(reportForm("interviewInformationSource"))
+            @inputHidden(reportForm("serviceRecordsInformationSource"))
+            @inputHidden(reportForm("cpsSummaryInformationSource"))
+            @inputHidden(reportForm("oasysAssessmentsInformationSource"))
+            @inputHidden(reportForm("previousConvictionsInformationSource"))
+            @inputHidden(reportForm("victimStatementInformationSource"))
+            @inputHidden(reportForm("childrenServicesInformationSource"))
+            @inputHidden(reportForm("policeInformationSource"))
+            @inputHidden(reportForm("otherInformationSource"))
+            @inputHidden(reportForm("otherInformationDetails"))
+            @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
+
+            @inputHidden(reportForm("mainOffence"))
+            @inputHidden(reportForm("ignoreMainOffenceSpelling"))
+            @inputHidden(reportForm("offenceSummary"))
+            @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
+            @inputHidden(reportForm("offenceAnalysis"))
+            @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
+
+            @inputHidden(reportForm("issueAccommodation"))
+            @inputHidden(reportForm("issueEmployment"))
+            @inputHidden(reportForm("issueFinance"))
+            @inputHidden(reportForm("issueDrugs"))
+            @inputHidden(reportForm("issueAlcohol"))
+            @inputHidden(reportForm("issueHealth"))
+            @inputHidden(reportForm("issueBehaviour"))
+
+            @inputHidden(reportForm("offenderAssessment"))
+            @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
+
+            @inputHidden(reportForm("patternOfOffending"))
+            @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
+
+            @inputHidden(reportForm("previousSupervisionResponse"))
+            @inputHidden(reportForm("additionalPreviousSupervision"))
+            @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
+            @inputHidden(reportForm("likelihoodOfReOffending"))
+            @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
+
+            @inputHidden(reportForm("riskOfSeriousHarm"))
+            @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
+
+            @inputHidden(reportForm("proposal"))
+            @inputHidden(reportForm("ignoreProposalSpelling"))
+
+            @inputHidden(reportForm("reportAuthor"))
+            @inputHidden(reportForm("office"))
+            @inputHidden(reportForm("reportDate"))
+
+            @pageNumber(2, "Confirm")
+        }
+
         </div>
+        <div class="column-one-third">
 
-        @if(!Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
-          @inputText(reportForm("address"), '_label -> "Address")
-        }
+        @navigation(2)
 
-        @if(!Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
-          @inputText(reportForm("pnc"), '_label -> "PNC ID", 'class -> "half-width")
-        }
-
-        @inputHidden(reportForm("pncSupplied"))
-        @inputHidden(reportForm("addressSupplied"))
-
-        @inputHidden(reportForm("court"), encrypter)
-        @inputHidden(reportForm("dateOfHearing"), encrypter)
-        @inputHidden(reportForm("localJusticeArea"), encrypter)
-
-        @inputHidden(reportForm("interviewInformationSource"))
-        @inputHidden(reportForm("serviceRecordsInformationSource"))
-        @inputHidden(reportForm("cpsSummaryInformationSource"))
-        @inputHidden(reportForm("oasysAssessmentsInformationSource"))
-        @inputHidden(reportForm("previousConvictionsInformationSource"))
-        @inputHidden(reportForm("victimStatementInformationSource"))
-        @inputHidden(reportForm("childrenServicesInformationSource"))
-        @inputHidden(reportForm("policeInformationSource"))
-        @inputHidden(reportForm("otherInformationSource"))
-        @inputHidden(reportForm("otherInformationDetails"))
-        @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
-
-        @inputHidden(reportForm("mainOffence"))
-        @inputHidden(reportForm("ignoreMainOffenceSpelling"))
-        @inputHidden(reportForm("offenceSummary"))
-        @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
-        @inputHidden(reportForm("offenceAnalysis"))
-        @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
-
-        @inputHidden(reportForm("issueAccommodation"))
-        @inputHidden(reportForm("issueEmployment"))
-        @inputHidden(reportForm("issueFinance"))
-        @inputHidden(reportForm("issueDrugs"))
-        @inputHidden(reportForm("issueAlcohol"))
-        @inputHidden(reportForm("issueHealth"))
-        @inputHidden(reportForm("issueBehaviour"))
-
-        @inputHidden(reportForm("offenderAssessment"))
-        @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
-
-        @inputHidden(reportForm("patternOfOffending"))
-        @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
-
-        @inputHidden(reportForm("previousSupervisionResponse"))
-        @inputHidden(reportForm("additionalPreviousSupervision"))
-        @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
-        @inputHidden(reportForm("likelihoodOfReOffending"))
-        @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
-
-        @inputHidden(reportForm("riskOfSeriousHarm"))
-        @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
-
-        @inputHidden(reportForm("proposal"))
-        @inputHidden(reportForm("ignoreProposalSpelling"))
-
-        @inputHidden(reportForm("reportAuthor"))
-        @inputHidden(reportForm("office"))
-        @inputHidden(reportForm("reportDate"))
-
-        @pageNumber(2, "Confirm")
-      }
-
+        </div>
     </div>
-    <div class="column-one-third">
-
-      @navigation(2)
-
-    </div>
-  </div>
 
 }
