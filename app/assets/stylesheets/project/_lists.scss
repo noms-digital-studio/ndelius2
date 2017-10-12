@@ -1,0 +1,14 @@
+ul.dashed {
+
+  list-style-type: none;
+
+  li {
+    padding-left: 10px;
+
+    &:before {
+      content: "-";
+      position: relative;
+      left: -10px;
+    }
+  }
+}

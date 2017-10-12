@@ -1,4 +1,4 @@
-textarea , textarea.form-control {
+textarea.form-control {
   max-width: 100%;
 
   margin: 10px 0 0 0;
@@ -19,13 +19,34 @@ textarea , textarea.form-control {
   &.wide {
     width: 100%;
   }
+
+  &.classic {
+    border: 2px solid $text-colour;
+    min-height: 150px;
+  }
+
+  &.form-control-error {
+    // border: 4px solid $error-colour;
+  }
 }
 
-input[type="text"] {
+input[type="text"], input[type="number"] {
   width: 100%; // Override default
 
   &.half-width {
     width: 50%;
+  }
+
+  &.quarter-width {
+    width: 25%;
+  }
+
+  &.two-digit {
+    width: 50px;
+  }
+
+  &.no-border {
+    border: none;
   }
 }
 

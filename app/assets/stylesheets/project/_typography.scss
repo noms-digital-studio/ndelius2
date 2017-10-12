@@ -1,0 +1,17 @@
+.font-xxsmall {
+  @include core-14();
+}
+
+.bold-xxsmall {
+  @include bold-14();
+}
+
+.saved-tag {
+  @include phase-tag();
+  background-color: $govuk-blue;
+  margin: 0;
+}
+
+.error-invalid {
+  color: $error-colour;
+}

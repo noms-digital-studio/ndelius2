@@ -12,6 +12,11 @@
     <h1 class="heading-xlarge">Proposal</h1>
 
     <div class="grid-row">
+        <div class="column-one-third">
+
+        @navigation(11)
+
+        </div>
         <div class="column-two-thirds">
 
         @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
@@ -85,11 +90,6 @@
 
             @pageNumber(11, "Next")
         }
-
-        </div>
-        <div class="column-one-third">
-
-        @navigation(11)
 
         </div>
     </div>

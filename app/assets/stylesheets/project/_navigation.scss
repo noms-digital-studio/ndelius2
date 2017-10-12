@@ -18,9 +18,10 @@ nav.content-fixed {
 
 .nav-item {
   font-size: 16px;
-  line-height: 1.25;
+  line-height: 24px;
+
   &.active {
-    color: inherit;
+    font-weight: bold;
     pointer-events: none;
     text-decoration: none;
     cursor: default;
@@ -30,5 +31,8 @@ nav.content-fixed {
   }
   &.standard {
     font-size: inherit;
+  }
+  &.font-medium {
+    @include core-24;
   }
 }

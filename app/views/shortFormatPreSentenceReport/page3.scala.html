@@ -12,6 +12,11 @@
     <h1 class="heading-xlarge">Sentencing Court Details</h1>
 
     <div class="grid-row">
+        <div class="column-one-third">
+
+        @navigation(3)
+
+        </div>
         <div class="column-two-thirds">
 
         @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
@@ -86,11 +91,6 @@
 
             @pageNumber(3, "Next")
         }
-
-        </div>
-        <div class="column-one-third">
-
-        @navigation(3)
 
         </div>
     </div>
