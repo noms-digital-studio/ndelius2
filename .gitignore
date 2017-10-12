@@ -2,4 +2,5 @@
 target/
 logs/
 application.log
+app.log.directory_IS_UNDEFINEDapp.log.name_IS_UNDEFINED
 
