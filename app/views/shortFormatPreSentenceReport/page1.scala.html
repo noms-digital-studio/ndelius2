@@ -9,107 +9,92 @@
 
 @main("Start your report - Short Format Pre Sentence Report") {
 
-    <h1 class="heading-xlarge">Short Format Pre-Sentence Report</h1>
+    <h1 class="heading-xlarge">Short Format Pre-sentence Report</h1>
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
+    <h2 class="lede">Never lose your work again</h2>
 
-            <h2 class="lede">Use this report to record:</h2>
+    <p class="bold-small">This service saves your report as you write</p>
 
-            <ul class="list list-bullet margin-top medium">
-                <li><a href="#" class="nav-item standard" data-target="2">Offender details</a></li>
-                <li><a href="#" class="nav-item standard" data-target="3">Court appearance details</a></li>
-                <li><a href="#" class="nav-item standard" data-target="4">Sources of information</a></li>
-                <li><a href="#" class="nav-item standard" data-target="5">Offence details</a></li>
-                <li><a href="#" class="nav-item standard" data-target="6">Offender assessment - Issues</a></li>
-                <li><a href="#" class="nav-item standard" data-target="7">Offender assessment details</a></li>
-                <li><a href="#" class="nav-item standard" data-target="8">Patterns of offending</a></li>
-                <li><a href="#" class="nav-item standard" data-target="9">Risk assessment</a></li>
-                <li><a href="#" class="nav-item standard" data-target="10">Risk of serious harm</a></li>
-                <li><a href="#" class="nav-item standard" data-target="11">A proposed sentence</a><br/>
-                    (including length and any sentence components)</li>
-            </ul>
+    <p>You can:</p>
 
-            <p class="margin-top large">Completion can take around <span class="bold">30 minutes</span>.</p>
+    <ul class="list-bullet margin-top medium">
+        <li>save drafts or completed reports</li>
+        <li>update the offender's name, address and other details</li>
+        <li>access guidance to help you fill in the report</li>
+    </ul>
 
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-                @CSRF.formField
+    <div class="margin-top large">&nbsp;</div>
 
-                @inputHidden(reportForm("onBehalfOfUser"), encrypter)
-                @inputHidden(reportForm("entityId"), encrypter)
-                @inputHidden(reportForm("documentId"), encrypter)
+    @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+        @CSRF.formField
 
-                @inputHidden(reportForm("name"), encrypter)
-                @inputHidden(reportForm("dateOfBirth"), encrypter)
-                @inputHidden(reportForm("age"), encrypter)
-                @inputHidden(reportForm("address"), encrypter)
-                @inputHidden(reportForm("crn"), encrypter)
-                @inputHidden(reportForm("pnc"), encrypter)
+        @inputHidden(reportForm("onBehalfOfUser"), encrypter)
+        @inputHidden(reportForm("entityId"), encrypter)
+        @inputHidden(reportForm("documentId"), encrypter)
 
-                @inputHidden(reportForm("pncSupplied"))
+        @inputHidden(reportForm("name"), encrypter)
+        @inputHidden(reportForm("dateOfBirth"), encrypter)
+        @inputHidden(reportForm("age"), encrypter)
+        @inputHidden(reportForm("address"), encrypter)
+        @inputHidden(reportForm("crn"), encrypter)
+        @inputHidden(reportForm("pnc"), encrypter)
 
-                @inputHidden(reportForm("court"), encrypter)
-                @inputHidden(reportForm("dateOfHearing"), encrypter)
-                @inputHidden(reportForm("localJusticeArea"), encrypter)
+        @inputHidden(reportForm("pncSupplied"))
+        @inputHidden(reportForm("addressSupplied"))
 
-                @inputHidden(reportForm("interviewInformationSource"))
-                @inputHidden(reportForm("serviceRecordsInformationSource"))
-                @inputHidden(reportForm("cpsSummaryInformationSource"))
-                @inputHidden(reportForm("oasysAssessmentsInformationSource"))
-                @inputHidden(reportForm("previousConvictionsInformationSource"))
-                @inputHidden(reportForm("victimStatementInformationSource"))
-                @inputHidden(reportForm("childrenServicesInformationSource"))
-                @inputHidden(reportForm("policeInformationSource"))
-                @inputHidden(reportForm("otherInformationSource"))
-                @inputHidden(reportForm("otherInformationDetails"))
-                @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
+        @inputHidden(reportForm("court"), encrypter)
+        @inputHidden(reportForm("dateOfHearing"), encrypter)
+        @inputHidden(reportForm("localJusticeArea"), encrypter)
 
-                @inputHidden(reportForm("mainOffence"))
-                @inputHidden(reportForm("ignoreMainOffenceSpelling"))
-                @inputHidden(reportForm("offenceSummary"))
-                @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
-                @inputHidden(reportForm("offenceAnalysis"))
-                @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
+        @inputHidden(reportForm("interviewInformationSource"))
+        @inputHidden(reportForm("serviceRecordsInformationSource"))
+        @inputHidden(reportForm("cpsSummaryInformationSource"))
+        @inputHidden(reportForm("oasysAssessmentsInformationSource"))
+        @inputHidden(reportForm("previousConvictionsInformationSource"))
+        @inputHidden(reportForm("victimStatementInformationSource"))
+        @inputHidden(reportForm("childrenServicesInformationSource"))
+        @inputHidden(reportForm("policeInformationSource"))
+        @inputHidden(reportForm("otherInformationSource"))
+        @inputHidden(reportForm("otherInformationDetails"))
+        @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
-                @inputHidden(reportForm("issueAccommodation"))
-                @inputHidden(reportForm("issueEmployment"))
-                @inputHidden(reportForm("issueFinance"))
-                @inputHidden(reportForm("issueDrugs"))
-                @inputHidden(reportForm("issueAlcohol"))
-                @inputHidden(reportForm("issueHealth"))
-                @inputHidden(reportForm("issueBehaviour"))
+        @inputHidden(reportForm("mainOffence"))
+        @inputHidden(reportForm("ignoreMainOffenceSpelling"))
+        @inputHidden(reportForm("offenceSummary"))
+        @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
+        @inputHidden(reportForm("offenceAnalysis"))
+        @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
-                @inputHidden(reportForm("offenderAssessment"))
-                @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
+        @inputHidden(reportForm("issueAccommodation"))
+        @inputHidden(reportForm("issueEmployment"))
+        @inputHidden(reportForm("issueFinance"))
+        @inputHidden(reportForm("issueDrugs"))
+        @inputHidden(reportForm("issueAlcohol"))
+        @inputHidden(reportForm("issueHealth"))
+        @inputHidden(reportForm("issueBehaviour"))
 
-                @inputHidden(reportForm("patternOfOffending"))
-                @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
+        @inputHidden(reportForm("offenderAssessment"))
+        @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
 
-                @inputHidden(reportForm("previousSupervisionResponse"))
-                @inputHidden(reportForm("additionalPreviousSupervision"))
-                @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
-                @inputHidden(reportForm("likelihoodOfReOffending"))
-                @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
+        @inputHidden(reportForm("patternOfOffending"))
+        @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
-                @inputHidden(reportForm("riskOfSeriousHarm"))
-                @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
+        @inputHidden(reportForm("previousSupervisionResponse"))
+        @inputHidden(reportForm("additionalPreviousSupervision"))
+        @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
+        @inputHidden(reportForm("likelihoodOfReOffending"))
+        @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
-                @inputHidden(reportForm("proposal"))
-                @inputHidden(reportForm("ignoreProposalSpelling"))
+        @inputHidden(reportForm("riskOfSeriousHarm"))
+        @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
 
-                @inputHidden(reportForm("reportAuthor"))
-                @inputHidden(reportForm("office"))
-                @inputHidden(reportForm("reportDate"))
+        @inputHidden(reportForm("proposal"))
+        @inputHidden(reportForm("ignoreProposalSpelling"))
 
-                @pageNumber(1, "Start now")
-            }
+        @inputHidden(reportForm("reportAuthor"))
+        @inputHidden(reportForm("office"))
+        @inputHidden(reportForm("reportDate"))
 
-        </div>
-        <div class="column-one-third">
-
-            <img class="report-image" src="@relative(routes.Assets.versioned("images/report_sfps.png"))" alt="Short Format Pre-Sentencing Report" />
-
-        </div>
-    </div>
-
+        @pageNumber(1, "Start now")
+    }
 }

@@ -46,6 +46,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         return super.initialParams().thenApply(params -> {
 
             params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
+            params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
             return params;
         });
     }
@@ -53,9 +54,17 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     @Override
     protected Map<String, String> modifyParams(Map<String, String> params, Consumer<String> paramEncrypter) {
 
-        if ("2".equals(params.get("pageNumber")) && "false".equals(params.get("pncSupplied"))) {
+        if ("2".equals(params.get("pageNumber"))) {
 
-            paramEncrypter.accept("pnc");
+            if ("false".equals(params.get("pncSupplied"))) {
+
+                paramEncrypter.accept("pnc");
+            }
+
+            if ("false".equals(params.get("addressSupplied"))) {
+
+                paramEncrypter.accept("address");
+            }
         }
 
         if ("3".equals(params.get("pageNumber"))) {
