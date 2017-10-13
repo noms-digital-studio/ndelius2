@@ -7,9 +7,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Offender Details - Short Format Pre Sentence Report") {
+@main("Offender details - Short Format Pre Sentence Report") {
 
-    <h1 class="heading-xlarge">Offender Details</h1>
+    <h1 class="heading-xlarge">Offender details</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -26,8 +26,8 @@
             @inputHidden(reportForm("entityId"), encrypter)
             @inputHidden(reportForm("documentId"), encrypter)
 
-            @readOnlyField(reportForm("name"), "Name", encrypter)
-            @readOnlyField(reportForm("dateOfBirth"), "Date of Birth", encrypter)
+            @readOnlyField(reportForm("name"), "Full name", encrypter)
+            @readOnlyField(reportForm("dateOfBirth"), "Date of birth", encrypter)
             @readOnlyField(reportForm("age"), "Age", encrypter)
             @readOnlyField(reportForm("crn"), "Delius CRN", encrypter)
             @if(Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
@@ -41,7 +41,7 @@
               @inputText(reportForm("address"), '_label -> "Address")
             }
             @if(!Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
-                @inputText(reportForm("pnc"), '_label -> "PNC ID", 'class -> "half-width")
+                @inputText(reportForm("pnc"), '_label -> "PNC ID (if available)", 'class -> "half-width")
             }
 
             @inputHidden(reportForm("pncSupplied"))

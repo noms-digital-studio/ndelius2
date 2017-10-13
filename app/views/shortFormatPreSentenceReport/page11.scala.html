@@ -7,9 +7,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Proposal - Short Format Pre Sentence Report") {
+@main("Conclusion - Short Format Pre Sentence Report") {
 
-    <h1 class="heading-xlarge">Proposal</h1>
+    <h1 class="heading-xlarge">Conclusion</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -82,7 +82,7 @@
             @inputHidden(reportForm("riskOfSeriousHarm"))
             @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
 
-            @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_help -> "Including length and any sentence components", 'class -> "wide", Symbol("data-limit") -> "2000", Symbol("data-target") -> "proposal-limit", 'required -> "true")
+            @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", 'class -> "wide", Symbol("data-limit") -> "2000", Symbol("data-target") -> "proposal-limit", 'required -> "true")
 
             @inputHidden(reportForm("reportAuthor"))
             @inputHidden(reportForm("office"))

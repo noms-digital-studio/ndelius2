@@ -7,7 +7,7 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Offender Assessment - Short Format Pre Sentence Report") {
+@main("Offender assessment - Short Format Pre Sentence Report") {
 
     <h1 class="heading-xlarge">Offender Assessment</h1>
 
@@ -19,81 +19,78 @@
         </div>
         <div class="column-two-thirds">
 
-            <h2 class="heading-large no-margin-top">Risk Assessment</h2>
+        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
+            @CSRF.formField
 
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
-                @CSRF.formField
+            @inputHidden(reportForm("onBehalfOfUser"), encrypter)
+            @inputHidden(reportForm("entityId"), encrypter)
+            @inputHidden(reportForm("documentId"), encrypter)
 
-                @inputHidden(reportForm("onBehalfOfUser"), encrypter)
-                @inputHidden(reportForm("entityId"), encrypter)
-                @inputHidden(reportForm("documentId"), encrypter)
+            @inputHidden(reportForm("name"), encrypter)
+            @inputHidden(reportForm("dateOfBirth"), encrypter)
+            @inputHidden(reportForm("age"), encrypter)
+            @inputHidden(reportForm("address"), encrypter)
+            @inputHidden(reportForm("crn"), encrypter)
+            @inputHidden(reportForm("pnc"), encrypter)
 
-                @inputHidden(reportForm("name"), encrypter)
-                @inputHidden(reportForm("dateOfBirth"), encrypter)
-                @inputHidden(reportForm("age"), encrypter)
-                @inputHidden(reportForm("address"), encrypter)
-                @inputHidden(reportForm("crn"), encrypter)
-                @inputHidden(reportForm("pnc"), encrypter)
+            @inputHidden(reportForm("pncSupplied"))
+            @inputHidden(reportForm("addressSupplied"))
 
-                @inputHidden(reportForm("pncSupplied"))
-                @inputHidden(reportForm("addressSupplied"))
+            @inputHidden(reportForm("court"), encrypter)
+            @inputHidden(reportForm("dateOfHearing"), encrypter)
+            @inputHidden(reportForm("localJusticeArea"), encrypter)
 
-                @inputHidden(reportForm("court"), encrypter)
-                @inputHidden(reportForm("dateOfHearing"), encrypter)
-                @inputHidden(reportForm("localJusticeArea"), encrypter)
+            @inputHidden(reportForm("interviewInformationSource"))
+            @inputHidden(reportForm("serviceRecordsInformationSource"))
+            @inputHidden(reportForm("cpsSummaryInformationSource"))
+            @inputHidden(reportForm("oasysAssessmentsInformationSource"))
+            @inputHidden(reportForm("previousConvictionsInformationSource"))
+            @inputHidden(reportForm("victimStatementInformationSource"))
+            @inputHidden(reportForm("childrenServicesInformationSource"))
+            @inputHidden(reportForm("policeInformationSource"))
+            @inputHidden(reportForm("otherInformationSource"))
+            @inputHidden(reportForm("otherInformationDetails"))
+            @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
-                @inputHidden(reportForm("interviewInformationSource"))
-                @inputHidden(reportForm("serviceRecordsInformationSource"))
-                @inputHidden(reportForm("cpsSummaryInformationSource"))
-                @inputHidden(reportForm("oasysAssessmentsInformationSource"))
-                @inputHidden(reportForm("previousConvictionsInformationSource"))
-                @inputHidden(reportForm("victimStatementInformationSource"))
-                @inputHidden(reportForm("childrenServicesInformationSource"))
-                @inputHidden(reportForm("policeInformationSource"))
-                @inputHidden(reportForm("otherInformationSource"))
-                @inputHidden(reportForm("otherInformationDetails"))
-                @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
+            @inputHidden(reportForm("mainOffence"))
+            @inputHidden(reportForm("ignoreMainOffenceSpelling"))
+            @inputHidden(reportForm("offenceSummary"))
+            @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
+            @inputHidden(reportForm("offenceAnalysis"))
+            @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
-                @inputHidden(reportForm("mainOffence"))
-                @inputHidden(reportForm("ignoreMainOffenceSpelling"))
-                @inputHidden(reportForm("offenceSummary"))
-                @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
-                @inputHidden(reportForm("offenceAnalysis"))
-                @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
+            @inputHidden(reportForm("issueAccommodation"))
+            @inputHidden(reportForm("issueEmployment"))
+            @inputHidden(reportForm("issueFinance"))
+            @inputHidden(reportForm("issueDrugs"))
+            @inputHidden(reportForm("issueAlcohol"))
+            @inputHidden(reportForm("issueHealth"))
+            @inputHidden(reportForm("issueBehaviour"))
 
-                @inputHidden(reportForm("issueAccommodation"))
-                @inputHidden(reportForm("issueEmployment"))
-                @inputHidden(reportForm("issueFinance"))
-                @inputHidden(reportForm("issueDrugs"))
-                @inputHidden(reportForm("issueAlcohol"))
-                @inputHidden(reportForm("issueHealth"))
-                @inputHidden(reportForm("issueBehaviour"))
+            @textarea(reportForm("offenderAssessment"), '_label -> "Enter the offender assessment", '_help -> "Covering all relevant areas", 'class -> "wide", Symbol("data-limit") -> "4000", Symbol("data-target") -> "assessment-limit", 'required -> "true")
 
-                @textarea(reportForm("offenderAssessment"), '_label -> "Enter the offender assessment", '_help -> "Covering all relevant areas", 'class -> "wide", Symbol("data-limit") -> "4000", Symbol("data-target") -> "assessment-limit", 'required -> "true")
+            @inputHidden(reportForm("patternOfOffending"))
+            @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
-                @inputHidden(reportForm("patternOfOffending"))
-                @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
+            @inputHidden(reportForm("previousSupervisionResponse"))
+            @inputHidden(reportForm("additionalPreviousSupervision"))
+            @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
+            @inputHidden(reportForm("likelihoodOfReOffending"))
+            @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
-                @inputHidden(reportForm("previousSupervisionResponse"))
-                @inputHidden(reportForm("additionalPreviousSupervision"))
-                @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
-                @inputHidden(reportForm("likelihoodOfReOffending"))
-                @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
+            @inputHidden(reportForm("riskOfSeriousHarm"))
+            @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
 
-                @inputHidden(reportForm("riskOfSeriousHarm"))
-                @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
+            @inputHidden(reportForm("proposal"))
+            @inputHidden(reportForm("ignoreProposalSpelling"))
 
-                @inputHidden(reportForm("proposal"))
-                @inputHidden(reportForm("ignoreProposalSpelling"))
+            @inputHidden(reportForm("reportAuthor"))
+            @inputHidden(reportForm("office"))
+            @inputHidden(reportForm("reportDate"))
 
-                @inputHidden(reportForm("reportAuthor"))
-                @inputHidden(reportForm("office"))
-                @inputHidden(reportForm("reportDate"))
-
-                @pageNumber(7, "Next")
-            }
+            @pageNumber(7, "Next")
+        }
 
         </div>
     </div>
-
 }
