@@ -99,12 +99,14 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
                 put("address", encrypter.apply("10 High Street"));
                 put("crn", encrypter.apply("B56789"));
                 put("pnc", encrypter.apply("98793030"));
+
                 put("pageNumber", "2");
             }
         };
@@ -124,13 +126,16 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
                 put("address", encrypter.apply("10 High Street"));
                 put("crn", encrypter.apply("B56789"));
                 put("pnc", encrypter.apply("98793030"));
+
                 put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
+
                 put("pageNumber", "3");
             }
         };
@@ -150,15 +155,18 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
                 put("address", encrypter.apply("10 High Street"));
                 put("crn", encrypter.apply("B56789"));
                 put("pnc", encrypter.apply("98793030"));
+
                 put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encrypter.apply("01/02/2017"));
                 put("localJusticeArea", encrypter.apply("Greater Manchester"));
+
                 put("pageNumber", "3");
             }
         };
@@ -178,16 +186,19 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
                 put("address", encrypter.apply("10 High Street"));
                 put("crn", encrypter.apply("B56789"));
                 put("pnc", encrypter.apply("98793030"));
+
                 put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encrypter.apply("01/02/2017"));
                 put("localJusticeArea", encrypter.apply("Greater Manchester"));
                 put("otherInformationSource", "true");
+
                 put("pageNumber", "4");
             }
         };
@@ -196,67 +207,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage4WithSpellingMistakeReturnsBadRequest() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "This texxt has speeling mistakes");
-                put("pageNumber", "4");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(BAD_REQUEST, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage4WithSpellingMistakeAndOverrideReturnsOK() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "This texxt has speeling mistakes");
-                put("ignoreOtherInformationDetailsSpelling", "true");
-                put("pageNumber", "4");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
     }
 
     @Test
@@ -268,6 +218,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -277,6 +228,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encrypter.apply("01/02/2017"));
                 put("localJusticeArea", encrypter.apply("Greater Manchester"));
+
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
                 put("cpsSummaryInformationSource", "true");
@@ -285,94 +237,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
+
                 put("pageNumber", "4");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage5WithSpellingMistakeReturnsBadRequest() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence spelld wrng");
-                put("offenceSummary", "Some offence summary spelld wrng");
-                put("offenceAnalysis", "Some offence analysis spelld wrng");
-                put("pageNumber", "5");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(BAD_REQUEST, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage5WithSpellingMistakeAndOverrideReturnsOK() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence spelld wrng");
-                put("ignoreMainOffenceSpelling", "true");
-                put("offenceSummary", "Some offence summary spelld wrng");
-                put("ignoreOffenceSummarySpelling", "true");
-                put("offenceAnalysis", "Some offence analysis spelld wrng");
-                put("ignoreOffenceAnalysisSpelling", "true");
-                put("pageNumber", "5");
             }
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
@@ -391,6 +260,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -408,11 +278,13 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
+
                 put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
+                put("otherOffences", "Some other offences");
+
                 put("pageNumber", "5");
             }
         };
@@ -432,6 +304,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -449,12 +322,14 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
+
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
+
                 put("pageNumber", "5");
             }
         };
@@ -466,7 +341,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void postSampleReportPage6AllFieldsReturnsOK() {
+    public void postSampleReportPage6SomeFieldsMissingReturnsBadRequest() {
 
         Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
 
@@ -474,6 +349,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -491,69 +367,16 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
+
                 put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
+
                 put("pageNumber", "6");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage7WithSpellingMistakeReturnsBadRequest() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment speld wrng");
-                put("pageNumber", "7");
             }
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
@@ -564,7 +387,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void postSampleReportPage7WithSpellingMistakeAndOverrideReturnsOK() {
+    public void postSampleReportPage6AllFieldsReturnsOK() {
 
         Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
 
@@ -572,6 +395,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -589,21 +413,17 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
+
                 put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment speld wrng");
-                put("ignoreOffenderAssessmentSpelling", "true");
-                put("pageNumber", "7");
+                put("patternOfOffending", "Some pattern of offending");
+
+                put("pageNumber", "6");
             }
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
@@ -622,6 +442,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -639,18 +460,24 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
+                put("patternOfOffending", "Some pattern of offending");
+
                 put("issueAccommodation", "true");
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
+                put("issueRelationships", "true");
+                put("issueSubstanceAbuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
+                put("issueOther", "true");
+
                 put("pageNumber", "7");
             }
         };
@@ -670,6 +497,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -687,19 +515,25 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
+                put("patternOfOffending", "Some pattern of offending");
+
                 put("issueAccommodation", "true");
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
+                put("issueRelationships", "true");
+                put("issueSubstanceAbuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
+                put("issueOther", "true");
                 put("offenderAssessment", "Some assessment");
+
                 put("pageNumber", "7");
             }
         };
@@ -711,7 +545,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void postSampleReportPage8WithSpellingMistakeReturnsBadRequest() {
+    public void postSampleReportPage8SomeFieldsMissingReturnsBadRequest() {
 
         Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
 
@@ -719,6 +553,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -736,21 +571,28 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
+                put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
+                put("issueRelationships", "true");
+                put("issueSubstanceAbuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
+                put("issueOther", "true");
                 put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending speld wrng");
+
+                put("riskOfSeriousHarm", "Some risk of serious harm");
+                put("previousSupervisionResponse", "Good");
+                put("additionalPreviousSupervision", "Some previous supervision response");
+
                 put("pageNumber", "8");
             }
         };
@@ -759,58 +601,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val result = route(app, addCSRFToken(request));
 
         assertEquals(BAD_REQUEST, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage8WithSpellingMistakeAndOverrideReturnsOK() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending speld wrng");
-                put("ignorePatternOfOffendingSpelling", "true");
-                put("pageNumber", "8");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
     }
 
     @Test
@@ -822,6 +612,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -839,130 +630,30 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
+                put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
+                put("issueRelationships", "true");
+                put("issueSubstanceAbuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
+                put("issueOther", "true");
                 put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
+
+                put("likelihoodOfReOffending", "Some likelihood of reoffending");
+                put("riskOfSeriousHarm", "Some risk of serious harm");
+                put("previousSupervisionResponse", "Good");
+                put("additionalPreviousSupervision", "Some previous supervision response");
+
                 put("pageNumber", "8");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage9WithSpellingMistakeReturnsBadRequest() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some previous supervision response speld wrng");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending speld wrng");
-                put("pageNumber", "9");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(BAD_REQUEST, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage9WithSpellingMistakeAndOverrideReturnsOK() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some previous supervision response speld wrng");
-                put("ignoreAdditionalPreviousSupervisionSpelling", "true");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending speld wrng");
-                put("ignoreLikelihoodOfReOffendingSpelling", "true");
-                put("pageNumber", "9");
             }
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
@@ -981,6 +672,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -998,22 +690,28 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
+                put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
+                put("issueRelationships", "true");
+                put("issueSubstanceAbuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
+                put("issueOther", "true");
                 put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
+                put("likelihoodOfReOffending", "Some likelihood of reoffending");
+                put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
                 put("additionalPreviousSupervision", "Some previous supervision response");
+
                 put("pageNumber", "9");
             }
         };
@@ -1033,6 +731,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1050,135 +749,31 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
+                put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
+                put("issueRelationships", "true");
+                put("issueSubstanceAbuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
+                put("issueOther", "true");
                 put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
+                put("likelihoodOfReOffending", "Some likelihood of reoffending");
+                put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
+                put("additionalPreviousSupervision", "Some previous supervision response");
+
+                put("proposal", "Some proposal");
+
                 put("pageNumber", "9");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage10WithSpellingMistakeReturnsBadRequest() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment speld wrng");
-                put("pageNumber", "10");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(BAD_REQUEST, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage10WithSpellingMistakeAndOverrideReturnsOK() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment speld wrng");
-                put("ignoreRiskOfSeriousHarmSpelling", "true");
-                put("pageNumber", "10");
             }
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
@@ -1197,6 +792,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1214,24 +810,33 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
+                put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
+                put("issueRelationships", "true");
+                put("issueSubstanceAbuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
+                put("issueOther", "true");
                 put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
+                put("likelihoodOfReOffending", "Some likelihood of reoffending");
+                put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
+                put("additionalPreviousSupervision", "Some previous supervision response");
+                put("proposal", "Some proposal");
+
+                put("office", "Sheffield probation office");
+                put("officePhone", "0114 114 114");
+                put("counterSignature", "Some other person");
+
                 put("pageNumber", "10");
             }
         };
@@ -1251,6 +856,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             {
                 put("onBehalfOfUser", encrypter.apply("johnsmith"));
                 put("entityId", encrypter.apply("12345"));
+                put("documentId", encrypter.apply("67890"));
                 put("name", encrypter.apply("John Smith"));
                 put("dateOfBirth", encrypter.apply("06/02/1976"));
                 put("age", encrypter.apply("41"));
@@ -1268,25 +874,35 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("victimStatementInformationSource", "true");
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
+                put("sentencingGuidelinesSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
                 put("mainOffence", "Some offence");
+                put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
                 put("offenceAnalysis", "Some offence analysis");
+                put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
+                put("issueRelationships", "true");
+                put("issueSubstanceAbuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
+                put("issueOther", "true");
                 put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
+                put("likelihoodOfReOffending", "Some likelihood of reoffending");
+                put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment");
+                put("additionalPreviousSupervision", "Some previous supervision response");
+                put("proposal", "Some proposal");
+
+                put("reportAuthor", "Arthur Author");
+                put("office", "Sheffield probation office");
+                put("officePhone", "0114 114 114");
+                put("counterSignature", "Some other person");
+                put("reportDate", "21/06/2017");
+
                 put("pageNumber", "10");
             }
         };
@@ -1295,407 +911,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val result = route(app, addCSRFToken(request));
 
         assertEquals(OK, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage11WithSpellingMistakeReturnsBadRequest() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment");
-                put("proposal", "An example of a proposalspeld wring");
-                put("pageNumber", "11");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(BAD_REQUEST, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage11WithSpellingMistakeAndOverrideReturnsOK() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment");
-                put("ignoreRiskOfSeriousHarmSpelling", "true");
-                put("proposal", "An example of a proposal speld wring");
-                put("ignoreProposalSpelling", "true");
-                put("pageNumber", "11");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage11SomeFieldsMissingReturnsBadRequest() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment");
-                put("pageNumber", "11");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(BAD_REQUEST, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage11AllRequiredFieldsReturnsOK() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("ignoreOtherInformationDetailsSpelling", "false");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some pattern of offending");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment");
-                put("proposal", "An example of a proposal");
-                put("pageNumber", "11");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage12SomeFieldsMissingReturnsBadRequest() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some assessment");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment");
-                put("proposal", "An example of a proposal");
-                put("reportAuthor", "Robert Jenkins");
-                put("pageNumber", "12");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(BAD_REQUEST, result.status());
-    }
-
-    @Test
-    public void postSampleReportPage12AllRequiredFieldsReturnsOKAndPdfGenerated() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some assessment");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment");
-                put("proposal", "An example of a proposal");
-                put("reportAuthor", "Robert Jenkins");
-                put("office", "Manchester and Salford Magistrates Court");
-                put("pageNumber", "12");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-
-        pdfGenerated = false;
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
-        assertTrue(pdfGenerated);
-    }
-
-    @Test
-    public void postUpdatedReportPage12AllRequiredFieldsReturnsOKAndPdfGenerated() {
-
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
-
-        val formData = new HashMap<String, String>() {
-            {
-                put("onBehalfOfUser", encrypter.apply("johnsmith"));
-                put("entityId", encrypter.apply("12345"));
-                put("documentId", encrypter.apply("23456"));
-                put("name", encrypter.apply("John Smith"));
-                put("dateOfBirth", encrypter.apply("06/02/1976"));
-                put("age", encrypter.apply("41"));
-                put("address", encrypter.apply("10 High Street"));
-                put("crn", encrypter.apply("B56789"));
-                put("pnc", encrypter.apply("98793030"));
-                put("court", encrypter.apply("Manchester and Salford Magistrates Court"));
-                put("dateOfHearing", encrypter.apply("01/02/2017"));
-                put("localJusticeArea", encrypter.apply("Greater Manchester"));
-                put("interviewInformationSource", "true");
-                put("serviceRecordsInformationSource", "true");
-                put("cpsSummaryInformationSource", "true");
-                put("oasysAssessmentsInformationSource", "true");
-                put("previousConvictionsInformationSource", "true");
-                put("victimStatementInformationSource", "true");
-                put("childrenServicesInformationSource", "true");
-                put("policeInformationSource", "true");
-                put("otherInformationSource", "true");
-                put("otherInformationDetails", "These notes are spelled correctly");
-                put("mainOffence", "Some offence");
-                put("offenceSummary", "Some offence summary");
-                put("offenceAnalysis", "Some offence analysis");
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueDrugs", "true");
-                put("issueAlcohol", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("offenderAssessment", "Some assessment");
-                put("patternOfOffending", "Some assessment");
-                put("previousSupervisionResponse", "Good");
-                put("additionalPreviousSupervision", "Some additional previous supervision response");
-                put("likelihoodOfReOffending", "Some likelihood of re-offending");
-                put("riskOfSeriousHarm", "An example of a risk assessment");
-                put("proposal", "An example of a proposal");
-                put("reportAuthor", "Robert Jenkins");
-                put("office", "Manchester and Salford Magistrates Court");
-                put("pageNumber", "12");
-            }
-        };
-        val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
-        pdfGenerated = false;
-
-        val result = route(app, addCSRFToken(request));
-
-        assertEquals(OK, result.status());
-        assertTrue(pdfGenerated);
     }
 
     private boolean pdfGenerated;
