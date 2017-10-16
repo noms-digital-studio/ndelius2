@@ -374,7 +374,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("otherOffences", "Some other offences");
                 put("offenceSummary", "Some offence summary");
 
-                put("offenceAnalysis", "Some offence analysis");
+                put("patternOfOffending", "Some pattern of offending");
 
                 put("pageNumber", "6");
             }
