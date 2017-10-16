@@ -7,23 +7,16 @@ import com.google.common.collect.ImmutableList;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import data.annotations.SpellCheck;
 import lombok.*;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.languagetool.JLanguageTool;
-import org.languagetool.language.BritishEnglish;
 import org.languagetool.rules.RuleMatch;
 import play.data.validation.Constraints.*;
 import play.data.validation.ValidationError;
-
-import static helpers.FluentHelper.value;
-import static helpers.FluentHelper.not;
 
 @Data
 @Validate
@@ -38,11 +31,6 @@ public class WizardData implements Validatable<List<ValidationError>> {
 
     @JsonIgnore
     private String feedback;
-
-    @JsonIgnore
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private transient final JLanguageTool spellChecker = new JLanguageTool(new BritishEnglish());
 
     @Override
     public List<ValidationError> validate() {   // validate() is called by Play Form submission bindFromRequest()
@@ -75,31 +63,8 @@ public class WizardData implements Validatable<List<ValidationError>> {
     protected List<Supplier<Stream<ValidationError>>> validators() {    // Overridable in derived Data classes
 
         return ImmutableList.of(
-                this::spellingErrors,
                 this::mandatoryErrors
         );
-    }
-
-    private Stream<ValidationError> spellingErrors() {
-
-        return spellCheckFields().collect(Collectors.toMap(Field::getName, field -> {
-
-            val overrideName = field.getAnnotation(SpellCheck.class).overrideField();
-            val overrideEnabled = getField(overrideName).flatMap(this::getBooleanValue).orElse(false);
-
-            return getStringValue(field).
-                    filter(not(value(overrideEnabled || isJumping()))).
-                    filter(not(Strings::isNullOrEmpty)).
-                    map(text -> checkSpelling(text).
-                            map(mistake -> String.format(
-                                    "'%s' could be %s",
-                                    text.substring(mistake.getFromPos(), mistake.getToPos()),
-                                    suggestions(mistake)
-                            ))).
-                    orElse(Stream.empty());
-
-        })).entrySet().stream().
-                flatMap(entry -> entry.getValue().map(message -> new ValidationError(entry.getKey(), message)));
     }
 
     private Stream<ValidationError> mandatoryErrors() {
@@ -146,16 +111,6 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return getStringValue(field).map(Boolean::parseBoolean);
     }
 
-    private Stream<RuleMatch> checkSpelling(String text) {
-
-        try {
-            return spellChecker.check(text).stream();
-        }
-        catch (IOException ex) {
-            return Stream.empty();
-        }
-    }
-
     private Stream<Field> allFields() {
 
         return FieldUtils.getAllFieldsList(this.getClass()).stream();
@@ -174,10 +129,5 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private Stream<Field> onPageFields() {
 
         return Stream.concat(annotatedFields(OnPage.class), requiredFields());
-    }
-
-    private Stream<Field> spellCheckFields() {
-
-        return annotatedFields(SpellCheck.class);
     }
 }
