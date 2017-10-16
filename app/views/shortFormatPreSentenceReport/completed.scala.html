@@ -11,18 +11,17 @@
 
 @main("Report saved - Short Format Pre Sentence Report") {
 
-    <div class="margin-top medium"></div>
+    <div class="govuk-box-highlight margin-top medium">
 
-    <div class="govuk-box-highlight">
+        <h1 class="heading-xlarge">Report saved</h1>
 
-        <h2 class="heading-xlarge">Report saved</h2>
-
-        <p class="font-large">Your report has been saved<br/>and uploaded successfully to Delius</p>
+        <p class="font-large">Your report has been saved<br>and uploaded successfully to Delius</p>
 
     </div>
 
-    <p><a href="#" title="What did you think of this service?">What did you think of this service?</a>
-        (takes 30 seconds)</p>
+    <p class="margin-top">&nbsp;</p>
+
+    <p class="margin-top large"><a href="javascript:void(0);" class="feedback-link">What did you think of this service?</a> (takes 30 seconds)</p>
 
     <input class="button" type="submit" value="Finished"/>
 
@@ -39,9 +38,9 @@
 
             if(window.Uint8Array) { // Won't work in IE8/IE9, will work in all other browsers. Don't display PDF result in IE8/IE9
 
-                var pdfBytes = Uint8Array.from(atob('@pdfBase64'), function (c) { return c.charCodeAt(0); });
-                var pdfBlob = new Blob([pdfBytes], {type: 'application/pdf'});
-                var pdfUrl = URL.createObjectURL(pdfBlob);
+                var pdfBytes = Uint8Array.from(atob('@pdfBase64'), function (c) { return c.charCodeAt(0); }),
+                    pdfBlob = new Blob([pdfBytes], {type: 'application/pdf'}),
+                    pdfUrl = URL.createObjectURL(pdfBlob);
 
                 $('iframe').attr('src', pdfUrl);
             }
