@@ -50,14 +50,10 @@
             @inputHidden(reportForm("policeInformationSource"))
             @inputHidden(reportForm("otherInformationSource"))
             @inputHidden(reportForm("otherInformationDetails"))
-            @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
             @inputHidden(reportForm("mainOffence"))
-            @inputHidden(reportForm("ignoreMainOffenceSpelling"))
             @inputHidden(reportForm("offenceSummary"))
-            @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
             @inputHidden(reportForm("offenceAnalysis"))
-            @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
             @inputHidden(reportForm("issueAccommodation"))
             @inputHidden(reportForm("issueEmployment"))
@@ -68,21 +64,16 @@
             @inputHidden(reportForm("issueBehaviour"))
 
             @inputHidden(reportForm("offenderAssessment"))
-            @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
 
             @inputHidden(reportForm("patternOfOffending"))
-            @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
             @inputHidden(reportForm("previousSupervisionResponse"))
             @inputHidden(reportForm("additionalPreviousSupervision"))
-            @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
             @inputHidden(reportForm("likelihoodOfReOffending"))
-            @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
             @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Detail the risk of serious harm", '_help -> "Indicate tools used, what is the risk, at what level and who to. Also describe what will increase or decrease the risk.", 'class -> "wide", Symbol("data-limit") -> "1000", Symbol("data-target") -> "risk-limit", 'required -> "true")
 
             @inputHidden(reportForm("proposal"))
-            @inputHidden(reportForm("ignoreProposalSpelling"))
 
             @inputHidden(reportForm("reportAuthor"))
             @inputHidden(reportForm("office"))

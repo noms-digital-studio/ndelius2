@@ -50,14 +50,10 @@
             @inputHidden(reportForm("policeInformationSource"))
             @inputHidden(reportForm("otherInformationSource"))
             @inputHidden(reportForm("otherInformationDetails"))
-            @inputHidden(reportForm("ignoreOtherInformationDetailsSpelling"))
 
             @inputHidden(reportForm("mainOffence"))
-            @inputHidden(reportForm("ignoreMainOffenceSpelling"))
             @inputHidden(reportForm("offenceSummary"))
-            @inputHidden(reportForm("ignoreOffenceSummarySpelling"))
             @inputHidden(reportForm("offenceAnalysis"))
-            @inputHidden(reportForm("ignoreOffenceAnalysisSpelling"))
 
             @inputHidden(reportForm("issueAccommodation"))
             @inputHidden(reportForm("issueEmployment"))
@@ -68,19 +64,14 @@
             @inputHidden(reportForm("issueBehaviour"))
 
             @inputHidden(reportForm("offenderAssessment"))
-            @inputHidden(reportForm("ignoreOffenderAssessmentSpelling"))
 
             @inputHidden(reportForm("patternOfOffending"))
-            @inputHidden(reportForm("ignorePatternOfOffendingSpelling"))
 
             @inputHidden(reportForm("previousSupervisionResponse"))
             @inputHidden(reportForm("additionalPreviousSupervision"))
-            @inputHidden(reportForm("ignoreAdditionalPreviousSupervisionSpelling"))
             @inputHidden(reportForm("likelihoodOfReOffending"))
-            @inputHidden(reportForm("ignoreLikelihoodOfReOffendingSpelling"))
 
             @inputHidden(reportForm("riskOfSeriousHarm"))
-            @inputHidden(reportForm("ignoreRiskOfSeriousHarmSpelling"))
 
             @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", 'class -> "wide", Symbol("data-limit") -> "2000", Symbol("data-target") -> "proposal-limit", 'required -> "true")
 
