@@ -60,6 +60,10 @@
 
             <hr />
 
+            @textarea(reportForm("otherOffences"), '_label -> "Other offences and dates (if applicable)", 'class -> "wide")
+
+            <hr />
+
             @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", '_hint -> summaryHint, 'class -> "wide", 'required -> "true", '_error -> "You must enter a brief summary of the offence")
 
             @inputHidden(reportForm("offenceAnalysis"))
