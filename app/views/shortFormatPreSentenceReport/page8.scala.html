@@ -7,9 +7,23 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Pattern of Offending - Short Format Pre Sentence Report") {
+@likelihoodHint = {
+    <p>This is about the offender’s capacity to change.</p>
+    <p>Indicate which tools have been used (RM2000,OGRS etc.)</p>
+}
 
-    <h1 class="heading-xlarge">Pattern of offending</h1>
+@seriousHarmHint = {
+    <p>This is about harm, not reoffending.</p>
+    <p class="margin-top">Outline if you have made a referral to other agencies or attempted contact and not received a satisfactory response.</p>
+    <p class="margin-top">Any information from other agencies for the court must not place any identifiable groups at risk.</p>
+    <p class="margin-top">Consider the impact on the overall assessment, including the impact on safer sentencing principles.</p>
+    <p class="margin-top">You must clearly state how this information adds value to the assessment.</p>
+    <p class="margin-top">Any information you have from other agencies should state how they will assist in monitoring and managing risk, including partnership working.</p>
+}
+
+@main("Risk assessment - Short Format Pre Sentence Report") {
+
+    <h1 class="heading-xlarge">Risk assessment</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -19,7 +33,7 @@
         </div>
         <div class="column-two-thirds">
 
-        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
+        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
             @CSRF.formField
 
             @inputHidden(reportForm("onBehalfOfUser"), encrypter)
@@ -53,7 +67,9 @@
 
             @inputHidden(reportForm("mainOffence"))
             @inputHidden(reportForm("offenceSummary"))
+
             @inputHidden(reportForm("offenceAnalysis"))
+            @inputHidden(reportForm("patternOfOffending"))
 
             @inputHidden(reportForm("issueAccommodation"))
             @inputHidden(reportForm("issueEmployment"))
@@ -65,13 +81,36 @@
 
             @inputHidden(reportForm("offenderAssessment"))
 
-            @textarea(reportForm("patternOfOffending"), '_label -> "Patterns of offending behaviour (if applicable)", '_help -> "Detail any gaps in offending and relapse, look for triggers that initiate the behaviours", 'class -> "wide", Symbol("data-limit") -> "500", Symbol("data-target") -> "pattern-limit")
+            @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of reoffending", '_hint -> likelihoodHint, 'class -> "wide", 'required -> "true", '_error -> "Tell us their likelihood of re-offending")
 
-            @inputHidden(reportForm("previousSupervisionResponse"))
-            @inputHidden(reportForm("additionalPreviousSupervision"))
-            @inputHidden(reportForm("likelihoodOfReOffending"))
+            <hr />
 
-            @inputHidden(reportForm("riskOfSeriousHarm"))
+            @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Risk of serious harm", '_hint -> seriousHarmHint, 'class -> "wide", Symbol("data-limit") -> "1000", 'required -> "true", '_error -> "Tell us the risk of serious harm")
+
+            <hr />
+
+            <div class="form-group margin-bottom">
+                <fieldset>
+                    <legend class="margin-bottom medium">
+                        <span class="form-label-bold">Response to previous supervision</span>
+                        <span class="form-hint">Include their compliance with any Youth Offending Supervision Orders</span>
+                    </legend>
+
+                    @inputRadioGroup(
+                        reportForm("previousSupervisionResponse"),
+                        options(
+                            "Good" -> "Good",
+                            "Satisfactory" -> "Satisfactory",
+                            "Poor" -> "Poor",
+                            "Not applicable" -> "N/A"
+                        )
+                    )
+                </fieldset>
+            </div>
+
+            <hr />
+
+            @textarea(reportForm("additionalPreviousSupervision"), '_label -> "Add additional details on supervision (if applicable)", 'class -> "wide", Symbol("data-limit") -> "1000")
 
             @inputHidden(reportForm("proposal"))
 

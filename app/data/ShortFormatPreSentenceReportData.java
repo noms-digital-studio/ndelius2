@@ -123,43 +123,47 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("OFFENCE_SUMMARY")
     private String offenceSummary;
 
-    @RequiredOnPage(5)
-    @JsonProperty("OFFENCE_ANALYSIS")
-    private String offenceAnalysis;
-
 
     // Page 6
 
-    @OnPage(6)
-    @JsonProperty("ISSUE_ACCOMMODATION")
-    private boolean issueAccommodation;
+    @RequiredOnPage(6)
+    @JsonProperty("OFFENCE_ANALYSIS")
+    private String offenceAnalysis;
 
-    @OnPage(6)
-    @JsonProperty("ISSUE_EMPLOYMENT")
-    private boolean issueEmployment;
-
-    @OnPage(6)
-    @JsonProperty("ISSUE_FINANCE")
-    private boolean issueFinance;
-
-    @OnPage(6)
-    @JsonProperty("ISSUE_DRUGS")
-    private boolean issueDrugs;
-
-    @OnPage(6)
-    @JsonProperty("ISSUE_ALCOHOL")
-    private boolean issueAlcohol;
-
-    @OnPage(6)
-    @JsonProperty("ISSUE_HEALTH")
-    private boolean issueHealth;
-
-    @OnPage(6)
-    @JsonProperty("ISSUE_BEHAVIOUR")
-    private boolean issueBehaviour;
+    @RequiredOnPage(6)
+    @JsonProperty("PATTERN_OF_OFFENDING")
+    private String patternOfOffending;
 
 
     // Page 7
+
+    @OnPage(7)
+    @JsonProperty("ISSUE_ACCOMMODATION")
+    private boolean issueAccommodation;
+
+    @OnPage(7)
+    @JsonProperty("ISSUE_EMPLOYMENT")
+    private boolean issueEmployment;
+
+    @OnPage(7)
+    @JsonProperty("ISSUE_FINANCE")
+    private boolean issueFinance;
+
+    @OnPage(7)
+    @JsonProperty("ISSUE_DRUGS")
+    private boolean issueDrugs;
+
+    @OnPage(7)
+    @JsonProperty("ISSUE_ALCOHOL")
+    private boolean issueAlcohol;
+
+    @OnPage(7)
+    @JsonProperty("ISSUE_HEALTH")
+    private boolean issueHealth;
+
+    @OnPage(7)
+    @JsonProperty("ISSUE_BEHAVIOUR")
+    private boolean issueBehaviour;
 
     @RequiredOnPage(7)
     @JsonProperty("OFFENDER_ASSESSMENT")
@@ -169,49 +173,39 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     // Page 8
 
     @RequiredOnPage(8)
-    @JsonProperty("PATTERN_OF_OFFENDING")
-    private String patternOfOffending;
+    @JsonProperty("RISK_OF_SERIOUS_HARM")
+    private String riskOfSeriousHarm;
 
+    @RequiredOnPage(8)
+    @JsonProperty("LIKELIHOOD_OF_RE_OFFENDING")
+    private String likelihoodOfReOffending;
+
+    @RequiredOnPage(8)
+    @JsonProperty("PREVIOUS_SUPERVISION_RESPONSE")
+    private String previousSupervisionResponse;
+
+    @OnPage(8)
+    @JsonProperty("ADDITIONAL_PREVIOUS_SUPERVISION")
+    private String additionalPreviousSupervision;
 
     // Page 9
 
     @RequiredOnPage(9)
-    @JsonProperty("PREVIOUS_SUPERVISION_RESPONSE")
-    private String previousSupervisionResponse;
-
-    @OnPage(9)
-    @JsonProperty("ADDITIONAL_PREVIOUS_SUPERVISION")
-    private String additionalPreviousSupervision;
-
-    @RequiredOnPage(9)
-    @JsonProperty("LIKELIHOOD_OF_RE_OFFENDING")
-    private String likelihoodOfReOffending;
+    @JsonProperty("PROPOSAL")
+    private String proposal;
 
 
     // Page 10
 
     @RequiredOnPage(10)
-    @JsonProperty("RISK_OF_SERIOUS_HARM")
-    private String riskOfSeriousHarm;
-
-
-    // Page 11
-
-    @RequiredOnPage(11)
-    @JsonProperty("PROPOSAL")
-    private String proposal;
-
-
-    // Page 12
-
-    @RequiredOnPage(12)
     @JsonProperty("REPORT_AUTHOR")
     private String reportAuthor;
 
-    @RequiredOnPage(12)
+    @RequiredOnPage(10)
     @JsonProperty("OFFICE")
     private String office;
 
+    @OnPage(10)
     @JsonProperty("REPORT_DATE")
     private String reportDate;
 

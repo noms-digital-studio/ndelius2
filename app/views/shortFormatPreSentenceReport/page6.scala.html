@@ -7,9 +7,23 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Offender assessment - Short Format Pre Sentence Report") {
+@analysisHint = {
+    <p>Your analysis needs to go beyond the facts provided by the CPS.</p>
+    <p class="margin-top">Consider the offender’s account and attitude and make links to any previous offending
+        behaviour and reports by the probation service.</p>
+    <p class="margin-top">Do they accept responsibility? Are they in denial? If they are, be clear where lack of
+        remorse differs from any inability to show remorse. Is the offender aware of the impact on the victim?</p>
+    <p class="margin-top">Outline the emotional or cognitive factors that underpin the crime. Were there sexual
+        motivations, financial gains or addictions? What level of premeditation or planning was involved? Are there
+        any patterns suggesting likelihood of similar offending?</p>
+    <p class="margin-top">Is there any evidence of discrimination in their attitude or behaviour? Is the offender’s
+        maturity an issue in this offence - are they easily led or influenced by a peer group?</p>
+    <p class="margin-top">Make suggestions about possible rehabilitative interventions.</p>
+}
 
-    <h1 class="heading-xlarge">Offender assessment</h1>
+@main("Offence analysis - Short Format Pre Sentence Report") {
+
+    <h1 class="heading-xlarge">Offence analysis</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -19,83 +33,72 @@
         </div>
         <div class="column-two-thirds">
 
-            <h2 class="lede no-margin-top margin-bottom medium">Select the underlying issues that are relevant as motivators or drivers for the main offence</h2>
+        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+            @CSRF.formField
 
-            <div class="notice">
-                <i class="icon icon-important">
-                    <span class="visually-hidden">Warning</span>
-                </i>
-                <strong class="bold-small">
-                    By not selecting an issue you are indicating it is not relevant
-                </strong>
-            </div>
+            @inputHidden(reportForm("onBehalfOfUser"), encrypter)
+            @inputHidden(reportForm("entityId"), encrypter)
+            @inputHidden(reportForm("documentId"), encrypter)
 
-            <p>&nbsp;</p>
+            @inputHidden(reportForm("name"), encrypter)
+            @inputHidden(reportForm("dateOfBirth"), encrypter)
+            @inputHidden(reportForm("age"), encrypter)
+            @inputHidden(reportForm("address"), encrypter)
+            @inputHidden(reportForm("crn"), encrypter)
+            @inputHidden(reportForm("pnc"), encrypter)
 
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-                @CSRF.formField
+            @inputHidden(reportForm("pncSupplied"))
+            @inputHidden(reportForm("addressSupplied"))
 
-                @inputHidden(reportForm("onBehalfOfUser"), encrypter)
-                @inputHidden(reportForm("entityId"), encrypter)
-                @inputHidden(reportForm("documentId"), encrypter)
+            @inputHidden(reportForm("court"), encrypter)
+            @inputHidden(reportForm("dateOfHearing"), encrypter)
+            @inputHidden(reportForm("localJusticeArea"), encrypter)
 
-                @inputHidden(reportForm("name"), encrypter)
-                @inputHidden(reportForm("dateOfBirth"), encrypter)
-                @inputHidden(reportForm("age"), encrypter)
-                @inputHidden(reportForm("address"), encrypter)
-                @inputHidden(reportForm("crn"), encrypter)
-                @inputHidden(reportForm("pnc"), encrypter)
+            @inputHidden(reportForm("interviewInformationSource"))
+            @inputHidden(reportForm("serviceRecordsInformationSource"))
+            @inputHidden(reportForm("cpsSummaryInformationSource"))
+            @inputHidden(reportForm("oasysAssessmentsInformationSource"))
+            @inputHidden(reportForm("previousConvictionsInformationSource"))
+            @inputHidden(reportForm("victimStatementInformationSource"))
+            @inputHidden(reportForm("childrenServicesInformationSource"))
+            @inputHidden(reportForm("policeInformationSource"))
+            @inputHidden(reportForm("otherInformationSource"))
+            @inputHidden(reportForm("otherInformationDetails"))
 
-                @inputHidden(reportForm("pncSupplied"))
-                @inputHidden(reportForm("addressSupplied"))
+            @inputHidden(reportForm("mainOffence"))
+            @inputHidden(reportForm("offenceSummary"))
 
-                @inputHidden(reportForm("court"), encrypter)
-                @inputHidden(reportForm("dateOfHearing"), encrypter)
-                @inputHidden(reportForm("localJusticeArea"), encrypter)
+            @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", '_hint -> analysisHint, 'class -> "wide", 'required -> "true", '_error -> "You must enter your analysis of the offence", Symbol("data-limit") -> "4000")
 
-                @inputHidden(reportForm("interviewInformationSource"))
-                @inputHidden(reportForm("serviceRecordsInformationSource"))
-                @inputHidden(reportForm("cpsSummaryInformationSource"))
-                @inputHidden(reportForm("oasysAssessmentsInformationSource"))
-                @inputHidden(reportForm("previousConvictionsInformationSource"))
-                @inputHidden(reportForm("victimStatementInformationSource"))
-                @inputHidden(reportForm("childrenServicesInformationSource"))
-                @inputHidden(reportForm("policeInformationSource"))
-                @inputHidden(reportForm("otherInformationSource"))
-                @inputHidden(reportForm("otherInformationDetails"))
+            <hr />
 
-                @inputHidden(reportForm("mainOffence"))
-                @inputHidden(reportForm("offenceSummary"))
-                @inputHidden(reportForm("offenceAnalysis"))
+            @textarea(reportForm("patternOfOffending"), '_label -> "Patterns of offending behaviour (if applicable)", '_help -> "Detail any gaps in offending and relapse, look for triggers that initiate the behaviours", 'class -> "wide", Symbol("data-limit") -> "1000")
 
-                @checkbox(reportForm("issueAccommodation"), '_label -> "Accommodation")
-                @checkbox(reportForm("issueEmployment"), '_label -> "Employment")
-                @checkbox(reportForm("issueFinance"), '_label -> "Finance")
-                @checkbox(reportForm("issueDrugs"), '_label -> "Drugs")
-                @checkbox(reportForm("issueAlcohol"), '_label -> "Alcohol")
-                @checkbox(reportForm("issueHealth"), '_label -> "Physical & mental health relationships")
-                @checkbox(reportForm("issueBehaviour"), '_label -> "Thinking & behaviour")
+            @inputHidden(reportForm("issueAccommodation"))
+            @inputHidden(reportForm("issueEmployment"))
+            @inputHidden(reportForm("issueFinance"))
+            @inputHidden(reportForm("issueDrugs"))
+            @inputHidden(reportForm("issueAlcohol"))
+            @inputHidden(reportForm("issueHealth"))
+            @inputHidden(reportForm("issueBehaviour"))
 
-                @inputHidden(reportForm("offenderAssessment"))
+            @inputHidden(reportForm("offenderAssessment"))
 
-                @inputHidden(reportForm("patternOfOffending"))
+            @inputHidden(reportForm("likelihoodOfReOffending"))
+            @inputHidden(reportForm("riskOfSeriousHarm"))
+            @inputHidden(reportForm("previousSupervisionResponse"))
+            @inputHidden(reportForm("additionalPreviousSupervision"))
 
-                @inputHidden(reportForm("previousSupervisionResponse"))
-                @inputHidden(reportForm("additionalPreviousSupervision"))
-                @inputHidden(reportForm("likelihoodOfReOffending"))
+            @inputHidden(reportForm("proposal"))
 
-                @inputHidden(reportForm("riskOfSeriousHarm"))
+            @inputHidden(reportForm("reportAuthor"))
+            @inputHidden(reportForm("office"))
+            @inputHidden(reportForm("reportDate"))
 
-                @inputHidden(reportForm("proposal"))
+            <div class="margin-top large"></div>
 
-                @inputHidden(reportForm("reportAuthor"))
-                @inputHidden(reportForm("office"))
-                @inputHidden(reportForm("reportDate"))
-
-                <div class="margin-top large"></div>
-
-                @pageNumber(6, "Next")
-            }
+            @pageNumber(6, "Next")
+        }
 
         </div>
     </div>

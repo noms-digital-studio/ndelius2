@@ -3,7 +3,16 @@
 @for(info <- elements.infos) {
     <span class="form-hint">@info</span>
 }
+
+@elements.args.get('_hint).map { hint =>
+    <a href="javascript:void(0)" class="expand-content" data-target="hint_@elements.id">What to include</a>
+    <div id="hint_@elements.id" class="js-hidden">
+        <div class="panel panel-border-narrow">@hint</div>
+        <div>&nbsp;</div>
+    </div>
+}
+
 @for(error <- elements.errors) {
-    <span class="error-message" aria-hidden="true">@error</span>
+    <span class="error-message" aria-hidden="true">@elements.args.getOrElse('_error, error)</span>
     <span id="@elements.id-error" role="alert" class="visually-hidden">Please enter @elements.label</span>
 }

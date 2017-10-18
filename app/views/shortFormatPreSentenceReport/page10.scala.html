@@ -7,9 +7,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Risk of serious harm - Short Format Pre Sentence Report") {
+@main("Sign and date your report - Short Format Pre Sentence Report") {
 
-    <h1 class="heading-xlarge">Risk of serious harm</h1>
+    <h1 class="heading-xlarge">Sign and date your report</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -53,7 +53,9 @@
 
             @inputHidden(reportForm("mainOffence"))
             @inputHidden(reportForm("offenceSummary"))
+
             @inputHidden(reportForm("offenceAnalysis"))
+            @inputHidden(reportForm("patternOfOffending"))
 
             @inputHidden(reportForm("issueAccommodation"))
             @inputHidden(reportForm("issueEmployment"))
@@ -65,21 +67,19 @@
 
             @inputHidden(reportForm("offenderAssessment"))
 
-            @inputHidden(reportForm("patternOfOffending"))
-
             @inputHidden(reportForm("previousSupervisionResponse"))
             @inputHidden(reportForm("additionalPreviousSupervision"))
             @inputHidden(reportForm("likelihoodOfReOffending"))
 
-            @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Detail the risk of serious harm", '_help -> "Indicate tools used, what is the risk, at what level and who to. Also describe what will increase or decrease the risk.", 'class -> "wide", Symbol("data-limit") -> "1000", Symbol("data-target") -> "risk-limit", 'required -> "true")
+            @inputHidden(reportForm("riskOfSeriousHarm"))
 
             @inputHidden(reportForm("proposal"))
 
-            @inputHidden(reportForm("reportAuthor"))
-            @inputHidden(reportForm("office"))
-            @inputHidden(reportForm("reportDate"))
+            @inputText(reportForm("reportAuthor"), '_label -> "Report author", 'required -> "true")
+            @inputText(reportForm("office"), '_label -> "Office", 'required -> "true")
+            @inputText(reportForm("reportDate"), '_label -> "Completion date", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
 
-            @pageNumber(10, "Next")
+            @pageNumber(10, "Submit and view your report")
         }
 
         </div>

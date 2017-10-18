@@ -13,18 +13,21 @@
         GOVUK.stickAtTopWhenScrolling.init();
 
         /**
-         * Method to show/hide under/over recommended character limit elements/messages.
-         * @param {Boolean} over Text entry over the recommended limit
-         * @param {HTMLElement} targetUnder Under limit element
-         * @param {HTMLElement} targetOver Over limit element
+         *
+         * @param parent
+         * @param child
          */
-        function toggleCountMessage(over, targetUnder, targetOver) {
-            if (over) {
-                targetUnder.addClass('js-hidden');
-                targetOver.removeClass('js-hidden');
+        function showHint(parent, child) {
+            child.hasClass('js-hidden') ? child.removeClass('js-hidden') : child.addClass('js-hidden');
+
+            if(child.hasClass('js-hidden')) {
+                parent.removeClass('active');
+                parent.attr('aria-expanded', 'false');
+                child.attr('aria-hidden', 'true');
             } else {
-                targetUnder.removeClass('js-hidden');
-                targetOver.addClass('js-hidden');
+                parent.addClass('active');
+                parent.attr('aria-expanded', 'true');
+                child.attr('aria-hidden', 'false');
             }
         }
 
@@ -35,14 +38,14 @@
             var textArea = $(this),
                 limit = textArea.data('limit'),
                 current = textArea.val().length,
-                targetUnder,
-                targetOver;
+                messageHolder = $('#' + textArea.attr('id') + '-countHolder'),
+                messageTarget = $('#' + textArea.attr('id') + '-count');
 
-            if (limit && textArea.data('target')) {
-                targetUnder = $('#' + textArea.data('target') + '-under');
-                targetOver = $('#' + textArea.data('target') + '-over');
-
-                toggleCountMessage(current > limit, targetUnder, targetOver);
+            if (limit && current > 0) {
+                messageHolder.removeClass('js-hidden');
+                messageTarget.text(limit + " recommended characters, you have used " + current);
+            } else {
+                messageHolder.addClass('js-hidden');
             }
         });
 
@@ -84,6 +87,18 @@
             e.preventDefault();
             $('#jumpNumber').val(0);
             $('form').submit();
+        });
+
+        /**
+         *
+         */
+        $('a.expand-content').each(function (i, elem) {
+            var parent = $(this),
+                child = $('#' + elem.getAttribute('data-target'));
+            parent.attr('aria-controls', elem.getAttribute('data-target'));
+            parent.click(function() {
+                showHint(parent, child)
+            });
         });
 
         // Progressive enhancement for browsers > IE8

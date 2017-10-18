@@ -7,9 +7,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Risk assessment - Short Format Pre Sentence Report") {
+@main("Conclusion - Short Format Pre Sentence Report") {
 
-    <h1 class="heading-xlarge">Risk assessment</h1>
+    <h1 class="heading-xlarge">Conclusion</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -53,7 +53,9 @@
 
             @inputHidden(reportForm("mainOffence"))
             @inputHidden(reportForm("offenceSummary"))
+
             @inputHidden(reportForm("offenceAnalysis"))
+            @inputHidden(reportForm("patternOfOffending"))
 
             @inputHidden(reportForm("issueAccommodation"))
             @inputHidden(reportForm("issueEmployment"))
@@ -65,38 +67,13 @@
 
             @inputHidden(reportForm("offenderAssessment"))
 
-            @inputHidden(reportForm("patternOfOffending"))
-
-            <div class="form-group">
-                <fieldset>
-                    <legend class="margin-bottom medium">
-                        <span class="form-label-bold">Response to previous supervision</span>
-                        <span class="form-hint">Include their compliance with any Youth Offending Supervision Orders</span>
-                    </legend>
-
-                    @inputRadioGroup(
-                        reportForm("previousSupervisionResponse"),
-                        options(
-                            "Good" -> "Good",
-                            "Satisfactory" -> "Satisfactory",
-                            "Poor" -> "Poor",
-                            "N/A" -> "N/A"
-                        )
-                    )
-                </fieldset>
-            </div>
-
-            <hr noshade />
-
-            @textarea(reportForm("additionalPreviousSupervision"), '_label -> "Add additional details on previous supervision", '_help -> "If applicable", 'class -> "wide", Symbol("data-limit") -> "300", Symbol("data-target") -> "supervision-limit")
-
-            <hr noshade />
-
-            @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of reoffending", 'class -> "wide", 'required -> "true")
+            @inputHidden(reportForm("previousSupervisionResponse"))
+            @inputHidden(reportForm("additionalPreviousSupervision"))
+            @inputHidden(reportForm("likelihoodOfReOffending"))
 
             @inputHidden(reportForm("riskOfSeriousHarm"))
 
-            @inputHidden(reportForm("proposal"))
+            @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", 'class -> "wide", Symbol("data-limit") -> "2000", Symbol("data-target") -> "proposal-limit", 'required -> "true")
 
             @inputHidden(reportForm("reportAuthor"))
             @inputHidden(reportForm("office"))

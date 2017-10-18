@@ -7,6 +7,11 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@summaryHint = {
+    <p>Describe the offence or the incident. In this summary, judges and magistrates need to know where your
+        information is coming from. Be clear when it’s from CPS, probation or from the offender.</p>
+}
+
 @main("Offence details - Short Format Pre Sentence Report") {
 
     <h1 class="heading-xlarge">Offence details</h1>
@@ -51,15 +56,14 @@
             @inputHidden(reportForm("otherInformationSource"))
             @inputHidden(reportForm("otherInformationDetails"))
 
-            @textarea(reportForm("mainOffence"), '_label -> "Main offence and dates", 'class -> "wide", 'required -> "true")
+            @textarea(reportForm("mainOffence"), '_label -> "Main offence and dates", 'class -> "wide", 'required -> "true", '_error -> "Enter the main offence and dates")
 
-            <hr noshade />
+            <hr />
 
-            @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", 'class -> "wide", 'required -> "true")
+            @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", '_hint -> summaryHint, 'class -> "wide", 'required -> "true", '_error -> "You must enter a brief summary of the offence")
 
-            <hr noshade />
-
-            @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", 'class -> "wide", 'required -> "true")
+            @inputHidden(reportForm("offenceAnalysis"))
+            @inputHidden(reportForm("patternOfOffending"))
 
             @inputHidden(reportForm("issueAccommodation"))
             @inputHidden(reportForm("issueEmployment"))
@@ -71,13 +75,10 @@
 
             @inputHidden(reportForm("offenderAssessment"))
 
-            @inputHidden(reportForm("patternOfOffending"))
-
+            @inputHidden(reportForm("likelihoodOfReOffending"))
+            @inputHidden(reportForm("riskOfSeriousHarm"))
             @inputHidden(reportForm("previousSupervisionResponse"))
             @inputHidden(reportForm("additionalPreviousSupervision"))
-            @inputHidden(reportForm("likelihoodOfReOffending"))
-
-            @inputHidden(reportForm("riskOfSeriousHarm"))
 
             @inputHidden(reportForm("proposal"))
 
