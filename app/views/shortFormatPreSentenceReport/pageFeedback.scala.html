@@ -12,7 +12,11 @@
     <h1 class="heading-xlarge">Feedback</h1>
 
     <div class="grid-row">
-        <div class="column-one-third">&nbsp;</div>
+        <div class="column-one-third">
+
+        @navigation(0)
+
+        </div>
         <div class="column-two-thirds">
 
             <p class="lede">Short Format Pre-Sentence Report</p>
@@ -85,7 +89,7 @@
 
                 @textarea(reportForm("feedback"), '_label -> "Submit your feedback", 'class -> "wide")
 
-                <input class="button" type="submit" value="Submit"/>
+                <input class="button button-start" type="submit" value="Submit your feedback"/>
             }
 
         </div>
