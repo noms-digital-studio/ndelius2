@@ -55,7 +55,7 @@
                     @checkbox(reportForm("otherInformationSource"), '_label -> "Other (please specify below)", Symbol("data-target") -> "other-information")
 
                     <div class="panel panel-border-narrow js-hidden" id="other-information">
-                    @textarea(reportForm("otherInformationDetails"), '_label -> "Other source(s) of information", 'class -> "wide")
+                    @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information", 'class -> "wide", '_error -> "Enter the other information source details")
                     </div>
 
                     @inputHidden(reportForm("mainOffence"))
