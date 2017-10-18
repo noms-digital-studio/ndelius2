@@ -66,6 +66,7 @@
             @inputHidden(reportForm("otherInformationDetails"))
 
             @inputHidden(reportForm("mainOffence"))
+            @inputHidden(reportForm("otherOffences"))
             @inputHidden(reportForm("offenceSummary"))
 
             @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", '_hint -> analysisHint, 'class -> "wide", 'required -> "true", '_error -> "You must enter your analysis of the offence", Symbol("data-limit") -> "4000")
