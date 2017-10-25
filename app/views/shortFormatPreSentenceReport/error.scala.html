@@ -1,0 +1,31 @@
+@import helper._
+@import org.webjars.play.WebJarsUtil
+
+@(message: String, error: String)(implicit webJarsUtil: WebJarsUtil)
+
+<style type="text/css">
+        body, html {
+            height: 100%;
+        }
+</style>
+
+@main("Error - Short Format Pre Sentence Report", false) {
+
+    <div class="govuk-box-highlight margin-top medium">
+        <h1 class="heading-xlarge">Report Error</h1>
+    </div>
+
+    <input class="button" type="submit" value="Finished"/>
+
+    <script type="text/javascript">
+        $(function () {
+            $('input').click(function () {
+                parent.postMessage('@message', '*');
+            });
+        });
+    </script>
+
+    <p>&nbsp;</p>
+
+    <pre><code>@error</code></pre>
+}

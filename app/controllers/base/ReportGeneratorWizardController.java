@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import data.base.ReportGeneratorWizardData;
 import helpers.JsonHelper;
+import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
@@ -62,7 +63,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         generateAndStoreReport(wizardData).exceptionally(error -> { // Continues in parallel as a non-blocking future result
 
-            Logger.error("Generation or Storage error", error);
+            Logger.error("Next Page: Generation or Storage error - " + wizardData.toString(), error);
             return ImmutableMap.of();
         });
 
@@ -92,12 +93,10 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         return optionalResult.apply(generateReport(data)).
                 exceptionally(error -> {
 
-                    Logger.error("Generation or Storage error", error);
+                    Logger.error("Completed Wizard: Generation or Storage error - " + data.toString(), error);
                     return Optional.empty();
                 }).
                 thenApplyAsync(result -> result.map(bytes -> ok(renderCompletedView(bytes))).orElseGet(() -> {
-
-                    flash("reportGeneratorFailed", "Report Generation Failed!");
 
                     Logger.warn("Report generator wizard failed");
                     return wizardFailed(data);
@@ -124,12 +123,14 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         return generateAndStoreReport(wizardForm.bind(params).value().orElseGet(this::newWizardData)).
                 exceptionally(error -> {
 
-                    Logger.error("Generation or Storage error", error);
-                    return ImmutableMap.of();
+                    Logger.error("Initial Params: Generation or Storage error - " + params.toString(), error);
+                    return ImmutableMap.of("errorMessage", ThrowableHelper.toMessageCauseStack(error));
                 }).
                 thenApply(stored -> {
 
                     params.put("documentId", stored.get("ID"));
+                    params.put("errorMessage", stored.get("errorMessage"));
+
                     return params;
                 });
     }

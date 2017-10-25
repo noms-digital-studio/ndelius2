@@ -71,11 +71,15 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> wizardGet() {
 
-        return initialParams().thenApplyAsync(params ->
+        return initialParams().thenApplyAsync(params -> {
 
-            ok(formRenderer(viewPageName(Integer.parseInt(params.get("pageNumber")))).apply(wizardForm.bind(params))),
+            val errorMessage = params.get("errorMessage");
 
-        ec.current());
+            return Strings.isNullOrEmpty(errorMessage) ?
+                    ok(formRenderer(viewPageName(Integer.parseInt(params.get("pageNumber")))).apply(wizardForm.bind(params))) :
+                    badRequest(renderErrorMessage(errorMessage));
+
+        }, ec.current());
     }
 
     public final CompletionStage<Result> wizardPost() {
@@ -181,9 +185,23 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
             renderingData(form.value().orElseGet(this::newWizardData));
 
-            return render.map(method -> invokeContentMethod(method, form, viewEncrypter, webJarsUtil)).
-                    orElse(Txt.apply("Form Renderer Error"));
+            return render.map(method -> invokeContentMethod(method, form, viewEncrypter, webJarsUtil)).orElseGet(() -> {
+
+                val errorMessage = new StringBuilder();
+
+                errorMessage.append("Form Renderer Error\n");
+                errorMessage.append(viewName);
+                errorMessage.append("\n");
+                errorMessage.append(form.rawData());
+
+                return renderErrorMessage(errorMessage.toString());
+            });
         };
+    }
+
+    protected Content renderErrorMessage(String errorMessage) {
+
+        return Txt.apply(errorMessage);
     }
 
     protected T newWizardData() {

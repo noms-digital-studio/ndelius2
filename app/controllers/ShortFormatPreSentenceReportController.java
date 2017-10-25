@@ -77,6 +77,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         return params;
     }
 
+    @Override
     protected Content renderCancelledView() {
 
         return views.html.shortFormatPreSentenceReport.cancelled.render("Draft stored", webJarsUtil);
@@ -90,5 +91,11 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                 Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(bytes)),
                 webJarsUtil
         );
+    }
+
+    @Override
+    protected Content renderErrorMessage(String errorMessage) {
+
+        return views.html.shortFormatPreSentenceReport.error.render("Report error", errorMessage, webJarsUtil);
     }
 }
