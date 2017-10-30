@@ -11,6 +11,7 @@ GET     /analytics/recent/:limit                controllers.AnalyticsController.
 
 GET     /nationalSearch                         controllers.NationalSearchController.index
 POST    /spellcheck                             controllers.NationalSearchController.postSpellcheck
+GET     /socket                                 controllers.NationalSearchController.socket
 GET     /spellcheck/:text                       controllers.NationalSearchController.spellcheck(text)
 
 GET     /report/shortFormatPreSentenceReport    controllers.ShortFormatPreSentenceReportController.wizardGet
