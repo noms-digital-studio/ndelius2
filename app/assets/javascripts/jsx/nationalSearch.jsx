@@ -37,15 +37,29 @@ class OffenderSearch extends React.Component {
             name: "",
             results: []
         };
-
-        this.webSocket = new WebSocket("ws://" + location.host + "/socket");
     }
 
     componentWillMount() {
 
-        this.performSearch = _.debounce(() => this.webSocket.send(JSON.stringify({ search: this.state.name })), this.props.delay);
+        this.performSearch = _.debounce(() => {
 
-        this.webSocket.onmessage = event => this.setState({ results: JSON.parse(event.data) });
+            var webSocket = null;
+            var sendRequest = () => webSocket.send(JSON.stringify({ search: this.state.name }));
+            var clearSocket = () => webSocket = null;
+
+            if (webSocket) {
+                sendRequest();
+            } else {
+
+                webSocket = new WebSocket("ws://" + location.host + "/socket");
+
+                webSocket.onopen = sendRequest;
+                webSocket.onclose = clearSocket;
+
+                webSocket.onmessage = event => this.setState({ results: JSON.parse(event.data) });
+            }
+
+        }, this.props.delay);
     }
 
     render() {
