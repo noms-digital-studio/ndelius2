@@ -22,6 +22,7 @@ libraryDependencies ++= Seq(
   "org.webjars" % "es5-shim" % "4.5.9",
   "org.webjars.bower" % "react" % "0.14.9", // https://facebook.github.io/react/blog/2016/01/12/discontinuing-ie8-support.html
   "org.webjars.bower" % "chartjs" % "2.6.0",
+  "org.webjars.bower" % "reconnectingWebsocket" % "1.0.0",
   "org.webjars" % "excanvas" % "3",         // Canvas support for IE8
   "org.webjars" % "underscorejs" % "1.8.3",
   "org.webjars" % "jquery" % "1.12.4",
