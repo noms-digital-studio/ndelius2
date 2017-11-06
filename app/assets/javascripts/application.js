@@ -90,6 +90,35 @@
         });
 
         /**
+         * Auto-save every 15 seconds
+         */
+        function autoSave() {
+
+            var form = $('form');
+
+            if (form.length) {
+                var data = form.serializeArray();
+                var page = _.find(data, function(entry) { return entry.name === 'pageNumber' }).value;
+
+                data =_.map(data, function(entry) {
+
+                    if (entry.name === 'jumpNumber') {
+                        entry.value = page;
+                    }
+                    return entry;
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr('action'),
+                    data: data,
+                    complete: function() { setTimeout(autoSave, 15000); }
+                });
+            }
+        }
+        autoSave();
+
+        /**
          *
          */
         $('a.expand-content').each(function (i, elem) {
