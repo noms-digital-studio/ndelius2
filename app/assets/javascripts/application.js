@@ -97,13 +97,10 @@
             var form = $('form');
 
             if (form.length) {
-                var data = form.serializeArray();
-                var page = _.find(data, function(entry) { return entry.name === 'pageNumber' }).value;
-
-                data =_.map(data, function(entry) {
+                var data =_.map(form.serializeArray(), function(entry) {
 
                     if (entry.name === 'jumpNumber') {
-                        entry.value = page;
+                        entry.value = 0;
                     }
                     return entry;
                 });
