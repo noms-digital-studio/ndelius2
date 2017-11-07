@@ -132,6 +132,18 @@
             // Autosize all Textarea elements (does not support IE8).
             autosize(document.querySelectorAll('textarea'));
 
+            // Autocomplete
+            var autoComplete = document.querySelector('.auto-complete');
+            if (autoComplete) {
+                console.info(autoComplete.id);
+                accessibleAutocomplete.enhanceSelectElement({
+                    selectElement: autoComplete,
+                    name: autoComplete.id,
+                    defaultValue: '',
+                    required: true
+                });
+            }
+
             // Date picker
             $('.date-picker').datepicker({
                 dateFormat: 'dd/mm/yy'

@@ -38,7 +38,9 @@
             @inputHidden(reportForm("addressSupplied"))
 
             @inputText(reportForm("court"), '_label -> "Court", 'required -> "true", '_error -> "Enter the name of the sentencing court")
-            @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area", 'required -> "true", '_error -> "Enter the local justice area of the sentencing court")
+
+            @select(reportForm("localJusticeArea"), options(), '_label -> "Local justice area", '_default -> "Please select")
+
             @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true", '_error -> "Enter the date of the hearing")
 
             @inputHidden(reportForm("interviewInformationSource"))
