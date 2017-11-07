@@ -159,10 +159,10 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     private CompletionStage<Map<String, String>> storeReport(T data, Byte[] document) {
 
         val filename = templateName() + ".pdf";
-        val metaData = Json.stringify(Json.toJson(ImmutableMap.of(
+        val metaData = JsonHelper.stringify(ImmutableMap.of(
                 "templateName", templateName(),
                 "values", BeanMap.create(data)
-        )));
+        ));
 
         CompletionStage<Map<String, String>> result = null;
 

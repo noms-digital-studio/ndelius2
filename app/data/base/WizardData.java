@@ -2,14 +2,15 @@ package data.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.*;
@@ -35,7 +36,17 @@ public class WizardData implements Validatable<List<ValidationError>> {
     @Override
     public List<ValidationError> validate() {   // validate() is called by Play Form submission bindFromRequest()
 
-        return validators().stream().flatMap(Supplier::get).collect(Collectors.toList());
+        return validateWithOptions(ImmutableMap.of());
+    }
+
+    public List<ValidationError> validateAll() {
+
+        return validateWithOptions(ImmutableMap.of("checkAll", true));
+    }
+
+    private List<ValidationError> validateWithOptions(Map<String, Object> options) {
+
+        return validators().stream().flatMap(validator -> validator.apply(options)).collect(Collectors.toList());
     }
 
     public Integer totalPages() {
@@ -60,14 +71,16 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 field.getAnnotation(RequiredOnPage.class).value();
     }
 
-    protected List<Supplier<Stream<ValidationError>>> validators() {    // Overridable in derived Data classes
+    protected List<Function<Map<String, Object>, Stream<ValidationError>>> validators() {    // Overridable in derived Data classes
 
         return ImmutableList.of(
                 this::mandatoryErrors
         );
     }
 
-    private Stream<ValidationError> mandatoryErrors() {
+    private Stream<ValidationError> mandatoryErrors(Map<String, Object> options) {
+
+        val checkAll = Boolean.parseBoolean(options.getOrDefault("checkAll", false).toString());
                                                         // Default to required is enforced if no onlyIfField
         return requiredFields().filter(field -> {       // exists, otherwise use onlyIfField current boolean
 
@@ -76,9 +89,9 @@ public class WizardData implements Validatable<List<ValidationError>> {
             val fieldOnThisPage = pageNumber.equals(fieldPage(field));
             val finishedWizard = pageNumber.equals(totalPages());
 
-            return requiredEnforced &&                                                // Check all pages if on last page and clicking next
-                    ((fieldOnThisPage || finishedWizard) && !isJumping()) &&          // Check current page if clicking next and not jumping
-                    Strings.isNullOrEmpty(getStringValue(field).orElse(null));  // If jumping don't perform any validation
+            return requiredEnforced &&                                                      // Check all pages if on last page and clicking next
+                    (checkAll || ((fieldOnThisPage || finishedWizard) && !isJumping())) &&  // Check current page if clicking next and not jumping
+                    Strings.isNullOrEmpty(getStringValue(field).orElse(null));        // If jumping don't perform any validation
 
         }).map(field -> new ValidationError(field.getName(), RequiredValidator.message));
     }

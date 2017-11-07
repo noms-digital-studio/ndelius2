@@ -35,4 +35,14 @@ public interface JsonHelper {
 
         return ok(Json.toJson(data));
     }
+
+    static <T> String stringify(T data) {
+
+        return Json.stringify(Json.toJson(data));
+    }
+
+    static <T> T readValue(String json, Class<T> clazz) {
+
+        return Json.fromJson(Json.parse(json), clazz);
+    }
 }

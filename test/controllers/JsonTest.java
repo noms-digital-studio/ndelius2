@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import data.ShortFormatPreSentenceReportData;
 import helper.TestableWizardController;
 import interfaces.DocumentStore;
@@ -42,7 +43,7 @@ public class JsonTest implements PdfGenerator, DocumentStore {
     public CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId) {
 
         this.updatedData = updatedData;
-        return null;
+        return CompletableFuture.completedFuture(ImmutableMap.of());
     }
 
     @Override

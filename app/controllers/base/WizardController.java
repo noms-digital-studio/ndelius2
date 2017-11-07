@@ -1,9 +1,11 @@
 package controllers.base;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.typesafe.config.Config;
 import data.base.WizardData;
 import helpers.Encryption;
+import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -15,6 +17,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.val;
 import org.joda.time.DateTime;
 import org.webjars.play.WebJarsUtil;
@@ -31,6 +34,7 @@ import scala.Function1;
 import scala.compat.java8.functionConverterImpls.FromJavaFunction;
 
 import static helpers.FluentHelper.content;
+import static helpers.FluentHelper.not;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
 
@@ -71,12 +75,15 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> wizardGet() {
 
+        session("visitedPages", "[]");
+        session("completedPages", "[]");
+
         return initialParams().thenApplyAsync(params -> {
 
             val errorMessage = params.get("errorMessage");
 
             return Strings.isNullOrEmpty(errorMessage) ?
-                    ok(formRenderer(viewPageName(Integer.parseInt(params.get("pageNumber")))).apply(wizardForm.bind(params))) :
+                    ok(formRenderer(viewPageName(Integer.parseInt(params.get("pageNumber")))).apply(wizardForm.bind(params), ImmutableList.of())) :
                     badRequest(renderErrorMessage(errorMessage));
 
         }, ec.current());
@@ -86,6 +93,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         val boundForm = wizardForm.bindFromRequest();
         val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
+        val completedPages = updateCompletedPages(boundForm.value(), thisPage);
 
         if (boundForm.hasErrors()) {
 
@@ -96,7 +104,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             val errorData = new HashMap<String, String>(boundForm.rawData());
             errorData.put("pageNumber", errorPage.toString());
 
-            return CompletableFuture.supplyAsync(() -> badRequest(renderPage(errorPage, wizardForm.bind(errorData))), ec.current());
+            return CompletableFuture.supplyAsync(() -> badRequest(renderPage(errorPage, wizardForm.bind(errorData), completedPages)), ec.current());
 
         } else {
 
@@ -111,7 +119,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
             return nextPage <= wizardData.totalPages() ?
                     nextPage > 0 ?
-                            CompletableFuture.supplyAsync(() -> ok(renderPage(nextPage, wizardForm.fill(wizardData))), ec.current()) :
+                            CompletableFuture.supplyAsync(() -> ok(renderPage(nextPage, wizardForm.fill(wizardData), completedPages)), ec.current()) :
                             cancelledWizard(wizardData) :
                     completedWizard(wizardData);
         }
@@ -119,8 +127,14 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> feedbackPost() {
 
-        return CompletableFuture.supplyAsync(() ->
-                ok(formRenderer(baseViewName() + "Feedback").apply(wizardForm.bindFromRequest())), ec.current());
+        return CompletableFuture.supplyAsync(() -> {
+
+            val formData = wizardForm.bindFromRequest();
+
+            return ok(formRenderer(baseViewName() + "Feedback").apply(
+                    formData, updateCompletedPages(formData.value(), 0)));
+
+        }, ec.current());
     }
 
     protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params
@@ -148,7 +162,10 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     protected final Result wizardFailed(T wizardData) {
 
-        return badRequest(formRenderer(viewPageName(wizardData.totalPages())).apply(wizardForm.fill(wizardData)));
+        val formData = wizardForm.fill(wizardData);
+
+        return badRequest(formRenderer(viewPageName(wizardData.totalPages())).apply(
+                formData, updateCompletedPages(formData.value(), wizardData.getPageNumber())));
     }
 
     protected void renderingData(T wizardData) {
@@ -177,15 +194,15 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         analyticsStore.recordEvent(eventData);
     }
 
-    protected Function<Form<T>, Content> formRenderer(String viewName) {
+    protected BiFunction<Form<T>, List<Integer>, Content> formRenderer(String viewName) {
 
-        val render = getRenderMethod(viewName, Form.class, Function1.class, WebJarsUtil.class);
+        val render = getRenderMethod(viewName, Form.class, Function1.class, List.class, WebJarsUtil.class);
 
-        return form -> {
+        return (form, completedPages) -> {
 
             renderingData(form.value().orElseGet(this::newWizardData));
 
-            return render.map(method -> invokeContentMethod(method, form, viewEncrypter, webJarsUtil)).orElseGet(() -> {
+            return render.map(method -> invokeContentMethod(method, form, viewEncrypter, completedPages, webJarsUtil)).orElseGet(() -> {
 
                 val errorMessage = new StringBuilder();
 
@@ -215,14 +232,34 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         }
     }
 
+    private List<Integer> updateCompletedPages(Optional<T> boundForm, int thisPage) {
+
+        val visitedPages = Stream.concat(
+                Stream.of(thisPage),
+                ((List<Integer>)JsonHelper.readValue(Optional.ofNullable(session("visitedPages")).orElse("[]"), List.class)).stream()
+        ).distinct().sorted().collect(Collectors.toList());
+
+        val errorPages = boundForm.map(value ->
+                value.validateAll().stream().map(ValidationError::key).map(value::getField).
+                        filter(Optional::isPresent).map(Optional::get).map(WizardData::fieldPage).distinct()
+        ).orElseGet(Stream::empty).collect(Collectors.toList());
+
+        val completedPages = visitedPages.stream().filter(not(errorPages::contains)).collect(Collectors.toList());
+
+        session("visitedPages", JsonHelper.stringify(visitedPages));
+        session("completedPages", JsonHelper.stringify(completedPages));
+
+        return completedPages;
+    }
+
     private String viewPageName(int pageNumber) {
 
         return baseViewName() + pageNumber;
     }
 
-    private Content renderPage(int pageNumber, Form<T> formContent) {
+    private Content renderPage(int pageNumber, Form<T> formContent, List<Integer> completedPages) {
 
-        return formRenderer(viewPageName(pageNumber)).apply(formContent);
+        return formRenderer(viewPageName(pageNumber)).apply(formContent, completedPages);
     }
 
     private Map<String, String> decryptParams(Map<String, String> params) {

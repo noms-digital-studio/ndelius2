@@ -1,4 +1,4 @@
-@(implicit current: Int)
+@(current: Int)(implicit completedPages: List[Int])
 
 @entries = @{Seq(
     "Offender details",
@@ -25,7 +25,7 @@
     <span class="display-block margin-top"></span>
 
     @for((entry, index) <- entries.zipWithIndex) {
-        @navigationEntry(index + 2, entry)
+        @navigationEntry(index + 2, entry, current, completedPages.contains(index + 2))
     }
 
 </nav>
