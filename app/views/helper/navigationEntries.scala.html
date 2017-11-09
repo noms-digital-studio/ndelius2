@@ -1,0 +1,16 @@
+@(renderer: Seq[String] => Html, transform: Seq[String] => Seq[String] = identity)
+
+@entries = @{ Seq(
+    "Offender details",
+    "Sentencing court details",
+    "Sources of information",
+    "Offence details",
+    "Offence analysis",
+    "Offender assessment",
+    "Risk assessment",
+    "Conclusion",
+    "Check your report",
+    "Sign and date your report"
+)}
+
+@{ renderer(transform(entries)) }

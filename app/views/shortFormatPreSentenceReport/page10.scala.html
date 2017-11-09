@@ -7,24 +7,18 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@entries = @{Seq(
-    "Offender details",
-    "Sentencing court details",
-    "Sources of information",
-    "Offence details",
-    "Offence analysis",
-    "Offender assessment",
-    "Risk assessment",
-    "Conclusion"
-)}
+@renderCheckList(entries: Seq[String]) = {
+
+    @for((entry, index) <- entries.zipWithIndex) {
+        @checkReportEntry(index + 2, entry, completedPages.contains(index + 2))
+    }
+}
 
 @main("Check your report - Short Format Pre Sentence Report") {
 
     <h1 class="heading-xlarge">Check your report</h1>
 
-    @for((entry, index) <- entries.zipWithIndex) {
-        @checkReportEntry(index + 2, entry, completedPages.contains(index + 2))
-    }
+    @navigationEntries(renderCheckList, entries => entries.dropRight(2))
 
     <div class="margin-top medium">&nbsp;</div>
 

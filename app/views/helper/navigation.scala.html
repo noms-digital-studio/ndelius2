@@ -1,32 +1,24 @@
 @(current: Int)
 
-@entries = @{Seq(
-    "Offender details",
-    "Sentencing court details",
-    "Sources of information",
-    "Offence details",
-    "Offence analysis",
-    "Offender assessment",
-    "Risk assessment",
-    "Conclusion",
-    "Check your report",
-    "Sign and date your report"
-)}
+@renderNavigation(entries: Seq[String]) = {
 
-<nav class="js-stick-at-top-when-scrolling">
+    <nav class="js-stick-at-top-when-scrolling">
 
-    @if(current - 1 < entries.length) {
-        <a id="exitLink" href="javascript:void(0);" class="bold font-xsmall no-underline no-margin-top no-margin-bottom">Save a draft of this report</a>
-    }
+        @if(current - 1 < entries.length) {
+            <a id="exitLink" href="javascript:void(0);" class="bold font-xsmall no-underline no-margin-top no-margin-bottom">Save a draft of this report</a>
+        }
 
-    <div class="clearfix"></div>
+        <div class="clearfix"></div>
 
-    <h3 class="font-xsmall bold margin-top medium">Report sections:</h3>
+        <h3 class="font-xsmall bold margin-top medium">Report sections:</h3>
 
-    <span class="display-block margin-top"></span>
+        <span class="display-block margin-top"></span>
 
-    @for((entry, index) <- entries.zipWithIndex) {
-        @navigationEntry(index + 2, entry, current)
-    }
+        @for((entry, index) <- entries.zipWithIndex) {
+            @navigationEntry(index + 2, entry, current)
+        }
 
-</nav>
+    </nav>
+}
+
+@navigationEntries(renderNavigation)
