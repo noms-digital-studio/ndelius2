@@ -1,0 +1,16 @@
+@(entry: Int, title: String, completed: Boolean)
+
+<table role="presentation">
+    <tbody>
+        <tr>
+            <td class="font-medium" width="30">@{entry - 1}.</td>
+            <td><a href="javascript:void(0);" class="nav-item font-medium" data-target="@entry">@title</a></td>
+            <td align="right" width="80">
+                @if(completed) {<strong class="saved-tag">SAVED</strong>
+                } else {<strong class="font-xsmall">Not started</strong>}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<hr class="margin-top margin-bottom"/>

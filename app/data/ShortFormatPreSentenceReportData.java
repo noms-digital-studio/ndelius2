@@ -201,15 +201,17 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 10
 
-    @RequiredOnPage(10)
+    // Page 11
+
+    @RequiredOnPage(11)
     @JsonProperty("REPORT_AUTHOR")
     private String reportAuthor;
 
-    @RequiredOnPage(10)
+    @RequiredOnPage(11)
     @JsonProperty("OFFICE")
     private String office;
 
-    @OnPage(10)
+    @OnPage(11)
     @JsonProperty("REPORT_DATE")
     private String reportDate;
 

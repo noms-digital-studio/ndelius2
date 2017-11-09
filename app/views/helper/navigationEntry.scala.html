@@ -1,5 +1,5 @@
-@(entry: Int, title: String, current: Int, completed: Boolean)
+@(entry: Int, title: String, current: Int)
 
-<span class="display-block@if(entry == 2) { margin-top}"@if(completed) { style="background: lightblue" }>
+<span class="display-block@if(entry == 2) { margin-top}">
     - <a href="javascript:void(0);" class="nav-item@if(current == entry) { active}" data-target="@entry"@if(current == entry) { aria-disabled="true"} title="@title">@title</a>
 </span>

@@ -783,8 +783,10 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
     }
 
+    // PAGE 10
+
     @Test
-    public void postSampleReportPage10SomeFieldsMissingReturnsBadRequest() {
+    public void postSampleReportPage11SomeFieldsMissingReturnsBadRequest() {
 
         Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
 
@@ -837,7 +839,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("officePhone", "0114 114 114");
                 put("counterSignature", "Some other person");
 
-                put("pageNumber", "10");
+                put("pageNumber", "11");
             }
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
@@ -848,7 +850,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void postSampleReportPage10AllRequiredFieldsReturnsOK() {
+    public void postSampleReportPage11AllRequiredFieldsReturnsOK() {
 
         Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
 
@@ -903,7 +905,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("counterSignature", "Some other person");
                 put("reportDate", "21/06/2017");
 
-                put("pageNumber", "10");
+                put("pageNumber", "11");
             }
         };
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
