@@ -1,4 +1,6 @@
-@(entry: Int, title: String, completed: Boolean)
+@import data.viewModel.PageStatus
+
+@(entry: Int, title: String, pageStatus: PageStatus)
 
 <table role="presentation">
     <tbody>
@@ -6,8 +8,13 @@
             <td class="font-medium" width="30">@{entry - 1}.</td>
             <td><a href="javascript:void(0);" class="nav-item font-medium" data-target="@entry">@title</a></td>
             <td align="right" width="80">
-                @if(completed) {<strong class="saved-tag">SAVED</strong>
-                } else {<strong class="font-xsmall">Not started</strong>}
+                @if(pageStatus.isVisited && pageStatus.isValid) {
+                    <strong class="page-ok-tag">OK</strong>
+                } else if(pageStatus.isVisited) {
+                    <strong class="page-invalid-tag">INVALID</strong>
+                } else {
+                    <strong class="page-unstarted-tag">SKIPPED</strong>
+                }
             </td>
         </tr>
     </tbody>

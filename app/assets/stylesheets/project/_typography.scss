@@ -6,9 +6,21 @@
   @include bold-14();
 }
 
-.saved-tag {
+.page-ok-tag {
   @include phase-tag();
   background-color: $govuk-blue;
+  margin: 0;
+}
+
+.page-invalid-tag {
+  @include phase-tag();
+  background-color: $error-colour;
+  margin: 0;
+}
+
+.page-unstarted-tag {
+  @include phase-tag();
+  background-color: $orange;
   margin: 0;
 }
 

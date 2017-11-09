@@ -1,16 +1,17 @@
 @import data._
 @import helper._
+@import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit completedPages: List[Int], webJarsUtil: WebJarsUtil)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @renderCheckList(entries: Seq[String]) = {
 
     @for((entry, index) <- entries.zipWithIndex) {
-        @checkReportEntry(index + 2, entry, completedPages.contains(index + 2))
+        @checkReportEntry(index + 2, entry, pageStatuses.get(index + 2))
     }
 }
 
@@ -81,6 +82,14 @@
         @inputHidden(reportForm("office"))
         @inputHidden(reportForm("reportDate"))
 
-        @pageNumber(10, Some("Sign your report"))
+        @if(pageStatuses.exists { case (page, status) => page < 10 && !(status.isVisited && status.isValid) }) {
+
+            <input type="hidden" id="jumpNumber" name="jumpNumber" />
+            <input type="hidden" id="pageNumber" name="pageNumber" value="10"/>
+
+        } else {
+
+            @pageNumber(10, Some("Sign your report"))
+        }
     }
 }
