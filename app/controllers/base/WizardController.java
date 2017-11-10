@@ -197,13 +197,13 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     protected BiFunction<Form<T>, Map<Integer, PageStatus>, Content> formRenderer(String viewName) {
 
-        val render = getRenderMethod(viewName, Form.class, Function1.class, Map.class, WebJarsUtil.class);
+        val render = getRenderMethod(viewName, Form.class, Function1.class, Map.class, WebJarsUtil.class, Environment.class);
 
         return (form, pageStatuses) -> {
 
             renderingData(form.value().orElseGet(this::newWizardData));
 
-            return render.map(method -> invokeContentMethod(method, form, viewEncrypter, pageStatuses, webJarsUtil)).orElseGet(() -> {
+            return render.map(method -> invokeContentMethod(method, form, viewEncrypter, pageStatuses, webJarsUtil, environment)).orElseGet(() -> {
 
                 val errorMessage = new StringBuilder();
 

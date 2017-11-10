@@ -1,12 +1,16 @@
 @import data._
 @import helper._
+@import play.Environment
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
+@import scala.io.Source
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
+
+@justiceAreas = @{ Source.fromFile(environment.getFile("conf/justiceAreas.txt")).getLines }
 
 @main("Sentencing court details - Short Format Pre Sentence Report") {
 
@@ -39,7 +43,7 @@
 
             @inputText(reportForm("court"), '_label -> "Court", 'required -> "true", '_error -> "Enter the name of the sentencing court")
 
-            @select(reportForm("localJusticeArea"), options(), '_label -> "Local justice area", '_default -> "Please select")
+            @select(reportForm("localJusticeArea"), options(justiceAreas.toList), '_label -> "Local justice area", '_default -> "Please select")
 
             @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true", '_error -> "Enter the date of the hearing")
 

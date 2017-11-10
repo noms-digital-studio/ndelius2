@@ -24,80 +24,16 @@
     @if(elements.input.body.contains("textarea id=")) {
       <span>
         <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" role="textbox" placeholder="@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}" id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} } aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"}>@elements.field.value</textarea>
-
         @if(elements.args.get(Symbol("data-limit"))) {
             <div class="pull-left js-hidden" id="@elements.id-countHolder">
                 <p class="form-hint" id="@elements.id-count"></p>
             </div>
             <div class="clearfix"></div>
         }
-
       </span>
     } else if(elements.input.body.contains("select id=")) {
-      <select id="@elements.id" class="form-control auto-complete @elements.args.get('class)">
-          @if(elements.args.get('_default)) {
-              <option value="">@elements.args.get('_default)</option>
-          }
-          <option value="Avon and Somerset">Avon and Somerset</option>
-          <option value="Bedfordshire">Bedfordshire</option>
-          <option value="Cambridgeshire">Cambridgeshire</option>
-          <option value="Cardiff">Cardiff</option>
-          <option value="Carmarthen">Carmarthen</option>
-          <option value="Ceredigion">Ceredigion</option>
-          <option value="Cheshire">Cheshire</option>
-          <option value="Cleveland">Cleveland</option>
-          <option value="Conwy">Conwy</option>
-          <option value="Cynon Valley">Cynon Valley</option>
-          <option value="De Brycheiniog (south Brecknockshire)">De Brycheiniog (south Brecknockshire)</option>
-          <option value="Denbighshire">Denbighshire</option>
-          <option value="Durham">Durham</option>
-          <option value="Cumbria">Cumbria</option>
-          <option value="Derbyshire">Derbyshire</option>
-          <option value="Devon and Cornwall">Devon and Cornwall</option>
-          <option value="Dorset">Dorset</option>
-          <option value="Essex">Essex</option>
-          <option value="Flintshire">Flintshire</option>
-          <option value="Gloucestershire">Gloucestershire</option>
-          <option value="Greater London">Greater London</option>
-          <option value="Greater Manchester">Greater Manchester</option>
-          <option value="Gwent">Gwent</option>
-          <option value="Gwynedd">Gwynedd</option>
-          <option value="Hampshire (and the Isle of Wight)">Hampshire (and the Isle of Wight)</option>
-          <option value="Hertfordshire">Hertfordshire</option>
-          <option value="Humberside">Humberside</option>
-          <option value="Kent">Kent</option>
-          <option value="Lancashire">Lancashire</option>
-          <option value="Leicestershire (and Rutland)">Leicestershire (and Rutland)</option>
-          <option value="Lincolnshire">Lincolnshire</option>
-          <option value="Llanelli">Llanelli</option>
-          <option value="Merseyside">Merseyside</option>
-          <option value="Merthyr Tydfil">Merthyr Tydfil</option>
-          <option value="Miskin, Rhondda Cynon Taff">Miskin, Rhondda Cynon Taff</option>
-          <option value="Montgomeryshire">Montgomeryshire</option>
-          <option value="Neath Port Talbot">Neath Port Talbot</option>
-          <option value="Newcastle and Ogmore">Newcastle and Ogmore</option>
-          <option value="Norfolk">Norfolk</option>
-          <option value="Northamptonshire">Northamptonshire</option>
-          <option value="Northumbria (Northumberland and Tyne and Wear)">Northumbria (Northumberland and Tyne and Wear)</option>
-          <option value="North Yorkshire">North Yorkshire</option>
-          <option value="Nottinghamshire">Nottinghamshire</option>
-          <option value="Pembrokeshire">Pembrokeshire</option>
-          <option value="Radnorshire and North Brecknock">Radnorshire and North Brecknock</option>
-          <option value="South Yorkshire">South Yorkshire</option>
-          <option value="Staffordshire">Staffordshire</option>
-          <option value="Suffolk">Suffolk</option>
-          <option value="Surrey">Surrey</option>
-          <option value="Sussex">Sussex</option>
-          <option value="Swansea County">Swansea County</option>
-          <option value="Thames Valley (Berkshire, Buckinghamshire, Oxfordshire)">Thames Valley (Berkshire, Buckinghamshire, Oxfordshire)</option>
-          <option value="Vale of Glamorgan">Vale of Glamorgan</option>
-          <option value="Warwickshire">Warwickshire</option>
-          <option value="West Mercia (Herefordshire, Shropshire, Worcestershire)">West Mercia (Herefordshire, Shropshire, Worcestershire)</option>
-          <option value="West Midlands">West Midlands</option>
-          <option value="West Yorkshire">West Yorkshire</option>
-          <option value="Wiltshire">Wiltshire</option>
-          <option value="Wrexham Maelor">Wrexham Maelor</option>
-          <option value="Ynys Môn/Anglesey">Ynys Môn/Anglesey</option>
+      <select class="form-control auto-complete @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">
+          @htmlLines.filter(_.startsWith("<option ")).map(Html(_))
       </select>
     } else {
       <span>
