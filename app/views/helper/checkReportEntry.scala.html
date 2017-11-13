@@ -7,13 +7,13 @@
         <tr>
             <td class="font-medium" width="30">@{entry - 1}.</td>
             <td><a href="javascript:void(0);" class="nav-item font-medium" data-target="@entry">@title</a></td>
-            <td align="right" width="80">
+            <td width="135" class="align-right">
                 @if(pageStatus.isVisited && pageStatus.isValid) {
-                    <strong class="page-ok-tag">OK</strong>
+                    <strong class="page-status-tag saved fixed-width">SAVED</strong>
                 } else if(pageStatus.isVisited) {
-                    <strong class="page-invalid-tag">INVALID</strong>
+                    <strong class="page-status-tag incomplete fixed-width">INCOMPLETE</strong>
                 } else {
-                    <strong class="page-unstarted-tag">SKIPPED</strong>
+                    <span class="font-xsmall margin-right">Not started</span>
                 }
             </td>
         </tr>
