@@ -1,3 +1,4 @@
+// Based on GOVUK show-hide-content edited with non-breaking changes
 ;(function (global) {
   'use strict'
 
@@ -88,6 +89,7 @@
         hideToggledContent($(this))
       })
 
+      // Non-breaking change: allows a radio-button to be ignored
       if ($control.data('ignore') && $control.val() === $control.data('ignore')) {
         return;
       }
