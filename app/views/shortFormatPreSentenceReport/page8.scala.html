@@ -91,7 +91,7 @@
 
             <hr />
 
-            <div class="form-group margin-bottom">
+            <div class="form-group">
                 <fieldset>
                     <legend class="margin-bottom medium">
                         <span class="form-label-bold">Response to previous supervision</span>
@@ -104,15 +104,19 @@
                             "Good" -> "Good",
                             "Satisfactory" -> "Satisfactory",
                             "Poor" -> "Poor",
-                            "Not applicable" -> "N/A"
-                        )
+                            "N/A" -> "Not applicable"
+                        ),
+                        Symbol("data-target") -> "supervision-details",
+                        Symbol("data-ignore") -> "N/A"
                     )
                 </fieldset>
+
+                <div class="panel panel-border-narrow js-hidden" id="supervision-details">
+                    @textarea(reportForm("additionalPreviousSupervision"), '_label -> "Add additional details on supervision (if applicable)", 'class -> "wide", Symbol("data-limit") -> "1000")
+                </div>
             </div>
 
-            <hr />
-
-            @textarea(reportForm("additionalPreviousSupervision"), '_label -> "Add additional details on supervision (if applicable)", 'class -> "wide", Symbol("data-limit") -> "1000")
+            <div>&nbsp;</div>
 
             @inputHidden(reportForm("proposal"))
 

@@ -88,6 +88,10 @@
         hideToggledContent($(this))
       })
 
+      if ($control.data('ignore') && $control.val() === $control.data('ignore')) {
+        return;
+      }
+
       // Select content for this control
       if ($control.is('[aria-controls]')) {
         showToggledContent($control, $content)
