@@ -17,10 +17,16 @@
         <span class="display-block margin-top"></span>
 
         @for((entry, index) <- entries.zipWithIndex) {
-            @navigationEntry(index + 2, entry, current, index < 9 || !pageStatuses.exists { case (page, status) => page < 10 && !(status.isVisited && status.isValid) })
+            @navigationEntry(index + 2, entry, current)
         }
 
     </nav>
 }
 
-@navigationEntries(renderNavigation)
+@navigationEntries(renderNavigation, entries => {
+
+    if (pageStatuses.values().dropRight(1).exists { pageStatus => !(pageStatus.isVisited && pageStatus.isValid) })
+        entries.dropRight(1)
+    else
+        entries
+})
