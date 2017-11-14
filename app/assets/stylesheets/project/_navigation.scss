@@ -2,6 +2,12 @@ a, a:link, a:active, a:visited {
   color: $govuk-blue;
 }
 
+nav {
+  @include media(mobile) {
+    display: none;
+  }
+}
+
 nav.content-fixed {
   margin-top: 20px;
 }
