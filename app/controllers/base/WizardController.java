@@ -76,8 +76,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> wizardGet() {
 
-        session("visitedPages", "[]");
-
         return initialParams().thenApplyAsync(params -> {
 
             val errorMessage = params.get("errorMessage");
@@ -94,7 +92,8 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         val boundForm = wizardForm.bindFromRequest();
         val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
-        val pageStatuses = getPageStatuses(boundForm.value(), thisPage);
+        val visitedPages = new StringBuilder();
+        val pageStatuses = getPageStatuses(boundForm.value(), thisPage, visitedPages);
 
         if (boundForm.hasErrors()) {
 
@@ -104,6 +103,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
             val errorData = new HashMap<String, String>(boundForm.rawData());
             errorData.put("pageNumber", errorPage.toString());
+            errorData.put("visitedPages", visitedPages.toString());
 
             return CompletableFuture.supplyAsync(() -> badRequest(renderPage(errorPage, wizardForm.bind(errorData), pageStatuses)), ec.current());
 
@@ -111,6 +111,8 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
             val wizardData = boundForm.get();
             val nextPage = nextPage(wizardData);
+
+            wizardData.setVisitedPages(visitedPages.toString());
 
             if (nextPage < 1 || nextPage > wizardData.totalPages()) {
                 renderingData(wizardData);
@@ -133,7 +135,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             val formData = wizardForm.bindFromRequest();
 
             return ok(formRenderer(baseViewName() + "Feedback").apply(
-                    formData, getPageStatuses(formData.value(), 0)));
+                    formData, getPageStatuses(formData.value(), 0, null)));
 
         }, ec.current());
     }
@@ -166,7 +168,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         val formData = wizardForm.fill(wizardData);
 
         return badRequest(formRenderer(viewPageName(wizardData.totalPages())).apply(
-                formData, getPageStatuses(formData.value(), wizardData.getPageNumber())));
+                formData, getPageStatuses(formData.value(), wizardData.getPageNumber(), null)));
     }
 
     protected void renderingData(T wizardData) {
@@ -233,19 +235,23 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         }
     }
 
-    private Map<Integer, PageStatus> getPageStatuses(Optional<T> boundForm, int thisPage) {
+    private Map<Integer, PageStatus> getPageStatuses(Optional<T> boundForm, int thisPage, StringBuilder jsonVisitedPages) {
 
         val errorPages = boundForm.map(value ->
                 value.validateAll().stream().map(ValidationError::key).map(value::getField).
                         filter(Optional::isPresent).map(Optional::get).map(WizardData::fieldPage).distinct()
         ).orElseGet(Stream::empty).collect(Collectors.toList());
 
-        val previouslyVisited = (List<Integer>)JsonHelper.readValue(
-                Optional.ofNullable(session("visitedPages")).orElse("[]"), List.class);
+        val previouslyVisited = (List<Integer>)JsonHelper.readValue(boundForm.map(WizardData::getVisitedPages).
+                        flatMap(value -> Strings.isNullOrEmpty(value) ? Optional.empty() : Optional.of(value)).
+                        orElse("[]"),
+                List.class);
 
         val visitedPages = Stream.concat(Stream.of(thisPage), previouslyVisited.stream()).distinct().sorted().collect(Collectors.toList());
 
-        session("visitedPages", JsonHelper.stringify(visitedPages));
+        if (jsonVisitedPages != null) {
+            jsonVisitedPages.append(JsonHelper.stringify(visitedPages));
+        }
 
         return IntStream.rangeClosed(1, newWizardData().totalPages()).boxed().collect(Collectors.toMap(
                 Function.identity(), page -> new PageStatus(visitedPages.contains(page), !errorPages.contains(page))));

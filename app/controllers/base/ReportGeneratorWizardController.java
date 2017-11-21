@@ -135,7 +135,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
                         val errorMessage = stored.get("message");
 
-                        params.put("errorMessage", Strings.isNullOrEmpty(errorMessage) ? "No Document ID" : errorMessage);
+                        params.put("errorMessage", Strings.isNullOrEmpty(errorMessage) && !standaloneOperation ? "No Document ID" : errorMessage);
                     }
 
                     return params;

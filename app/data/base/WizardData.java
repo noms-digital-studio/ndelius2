@@ -33,6 +33,9 @@ public class WizardData implements Validatable<List<ValidationError>> {
     @JsonIgnore
     private String feedback;
 
+    @JsonIgnore
+    private String visitedPages;
+
     @Override
     public List<ValidationError> validate() {   // validate() is called by Play Form submission bindFromRequest()
 

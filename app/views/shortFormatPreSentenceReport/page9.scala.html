@@ -36,6 +36,8 @@
         @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
             @CSRF.formField
 
+            @inputHidden(reportForm("visitedPages"))
+
             @inputHidden(reportForm("onBehalfOfUser"), encrypter)
             @inputHidden(reportForm("entityId"), encrypter)
             @inputHidden(reportForm("documentId"), encrypter)
