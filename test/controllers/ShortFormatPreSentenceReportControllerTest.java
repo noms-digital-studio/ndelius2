@@ -52,6 +52,18 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
+    public void getSampleReportWithFailedAlfrescoSave() {
+
+        val request = new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D&onBehalfOfUser=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D");
+        val result = route(app, request);
+
+        val content = Helpers.contentAsString(result);
+
+        assertEquals(BAD_REQUEST, result.status());
+        assertTrue(content.contains("Upload blows up for this user"));
+    }
+
+    @Test
     public void getSampleReportWithDocumentIdDecryptsAndRetrievesFromStore() {
 
         try {
@@ -932,7 +944,16 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         pdfUploaded = true;
 
-        return CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123"));
+        return CompletableFuture.supplyAsync(() -> {
+
+            if (onBehalfOfUser != null) {
+
+                return ImmutableMap.of("message", "Upload blows up for this user");
+            } else {
+
+                return ImmutableMap.of("ID", "123");
+            }
+        });
     }
 
     @Override

@@ -131,6 +131,13 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                     params.put("documentId", stored.get("ID"));
                     params.put("errorMessage", stored.get("errorMessage"));
 
+                    if (Strings.isNullOrEmpty(params.get("documentId")) && Strings.isNullOrEmpty(params.get("errorMessage"))) {
+
+                        val errorMessage = stored.get("message");
+
+                        params.put("errorMessage", Strings.isNullOrEmpty(errorMessage) ? "No Document ID" : errorMessage);
+                    }
+
                     return params;
                 });
     }
