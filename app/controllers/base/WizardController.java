@@ -222,6 +222,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                 errorMessage.append("\n");
                 errorMessage.append(form.rawData());
 
+                Logger.error(errorMessage.toString());
                 return renderErrorMessage(errorMessage.toString());
             });
         };
@@ -239,6 +240,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         } catch (InstantiationException | IllegalAccessException ex) {
 
+            Logger.error("Unable to instantiate new Wizard Data", ex);
             return null;
         }
     }
@@ -300,6 +302,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         }
         catch (ClassNotFoundException | NoSuchMethodException ex) {
 
+            Logger.error("Unable to Render View: " + viewName, ex);
             return Optional.empty();
         }
     }
@@ -311,6 +314,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         }
         catch (IllegalAccessException | InvocationTargetException ex) {
 
+            Logger.error("Unable to Invoke Method: " + method.getName(), ex);
             return content(ex);
         }
     }
