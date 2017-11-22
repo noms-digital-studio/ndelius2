@@ -80,10 +80,18 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
             val errorMessage = params.get("errorMessage");
 
-            return Strings.isNullOrEmpty(errorMessage) ?
-                    ok(formRenderer(viewPageName(Integer.parseInt(params.get("pageNumber")))).
-                            apply(wizardForm.bind(params), ImmutableMap.of())) :
-                    badRequest(renderErrorMessage(errorMessage));
+            if (Strings.isNullOrEmpty(errorMessage)) {
+
+                val boundForm = wizardForm.bind(params);
+                val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
+                val pageStatuses = getPageStatuses(boundForm.value(), thisPage, null);
+
+                return ok(renderPage(thisPage, boundForm, pageStatuses));
+
+            } else {
+
+                return badRequest(renderErrorMessage(errorMessage));
+            }
 
         }, ec.current());
     }
@@ -167,8 +175,8 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
         val formData = wizardForm.fill(wizardData);
 
-        return badRequest(formRenderer(viewPageName(wizardData.totalPages())).apply(
-                formData, getPageStatuses(formData.value(), wizardData.getPageNumber(), null)));
+        return badRequest(renderPage(wizardData.totalPages(), formData,
+                getPageStatuses(formData.value(), wizardData.getPageNumber(), null)));
     }
 
     protected void renderingData(T wizardData) {
