@@ -85,7 +85,7 @@
         @inputHidden(reportForm("office"))
         @inputHidden(reportForm("reportDate"))
 
-        @if(pageStatuses.exists { case (page, status) => page < 10 && !(status.isVisited && status.isValid) }) {
+        @if(pageStatuses.values().drop(1).dropRight(1).exists { pageStatus => !(pageStatus.isVisited && pageStatus.isValid) }) {
 
             <input type="hidden" id="jumpNumber" name="jumpNumber" />
             <input type="hidden" id="pageNumber" name="pageNumber" value="10"/>
