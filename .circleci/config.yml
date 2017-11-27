@@ -23,6 +23,9 @@ jobs:
             - run:
                 name: Run sbt build
                 command: |
+                  curl -sL https://deb.nodesource.com/setup_8.x | bash -
+                  apt-get install -y nodejs
+                  nodejs --version
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  export | grep SBT
+                  printenv | grep SBT
                   sbt assembly
