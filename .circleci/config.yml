@@ -5,7 +5,7 @@ general:
       - master
 jobs:
     build:
-        working_directory: ~/pdf-generator
+        working_directory: ~/ndelius-new-tech
         docker:
             - image: openjdk:8
         steps:
@@ -20,6 +20,7 @@ jobs:
                     echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
                     apt-get update
                     apt-get install sbt
+                    export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
             - run:
                 name: Run sbt build
                 command: sbt assembly
