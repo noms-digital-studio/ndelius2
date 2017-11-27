@@ -20,7 +20,9 @@ jobs:
                     echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
                     apt-get update
                     apt-get install sbt
-                    export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
             - run:
                 name: Run sbt build
-                command: sbt assembly
+                command: |
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export | grep SBT
+                  sbt assembly
