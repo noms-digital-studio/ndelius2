@@ -24,5 +24,6 @@ jobs:
                 name: Run sbt build
                 command: |
                   curl -sL https://deb.nodesource.com/setup_8.x | bash -
-                  apt-get install -y nodejs nodejs-legacy
+                  apt-get install -y nodejs
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt assembly
