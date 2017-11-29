@@ -18,7 +18,15 @@ Dorset
 Essex
 Flintshire
 Gloucestershire
-Greater London
+Central London (Hammersmith and Fulham and Kensington and Chelsea, City of London, City of Westminster)
+East London (Hackney and Tower Hamlets, Newham, Waltham Forest)
+North East London (Barking, Havering, Redbridge)
+North London (Camden and Islington, Enfield, Haringey)
+North West London (Barnet, Brent, Harrow Gore)
+South East London (Greenwich and Lewisham, Bexley, Bromley)
+South London (Croydon, Lambeth and Southwark, Sutton)
+South West London (Kingston, Merton, Richmon-upon-Thames, Wandsworth)
+West London (Ealing, Hounslow, Hillingdon)
 Greater Manchester
 Gwent
 Gwynedd

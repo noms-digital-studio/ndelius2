@@ -2,16 +2,17 @@ package controllers;
 
 import com.google.common.collect.ImmutableMap;
 import data.ShortFormatPreSentenceReportData;
-import helper.TestableWizardController;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import lombok.val;
+import org.junit.Test;
+import utils.TestableWizardController;
+
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import lombok.val;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class JsonTest implements PdfGenerator, DocumentStore {
 

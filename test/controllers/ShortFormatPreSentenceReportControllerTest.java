@@ -1,17 +1,13 @@
 package controllers;
 
 import com.google.common.collect.ImmutableMap;
+import utils.AnalyticsStoreMock;
+import utils.DocumentStoreMock;
+import utils.PdfGeneratorMock;
 import helpers.Encryption;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.function.Function;
 import lombok.val;
 import org.junit.Test;
 import play.Application;
@@ -19,14 +15,18 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.test.Helpers;
 import play.test.WithApplication;
 
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.function.Function;
+
 import static org.junit.Assert.*;
+import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
-import static play.api.test.CSRFTokenHelper.addCSRFToken;
 
-public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGenerator, DocumentStore, AnalyticsStore {
+public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGeneratorMock, DocumentStoreMock, AnalyticsStoreMock {
 
     @Test
     public void getSampleReportOK() {
@@ -930,70 +930,22 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     private boolean pdfGenerated;
 
     @Override
-    public <T> CompletionStage<Byte[]> generate(String templateName, T values) {
-
-        pdfGenerated = true;
-
-        return CompletableFuture.supplyAsync(() -> new Byte[0]);    // Mocked PdfGenerator returns empty Byte array
+    public void setPdfGenerated(boolean flag) {
+        pdfGenerated = flag;
     }
 
     private boolean pdfUploaded;
 
     @Override
-    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId) {
-
-        pdfUploaded = true;
-
-        return CompletableFuture.supplyAsync(() -> {
-
-            if (onBehalfOfUser != null) {
-
-                return ImmutableMap.of("message", "Upload blows up for this user");
-            } else {
-
-                return ImmutableMap.of("ID", "123");
-            }
-        });
-    }
-
-    @Override
-    public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
-
-        return CompletableFuture.supplyAsync(() -> "{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"pnc\": \"Retrieved From Store\" } }");
-    }
-
-    @Override
-    public CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId) {
-
-        return CompletableFuture.supplyAsync(() -> 200);
+    public void setPdfUploaded(boolean flag) {
+        pdfUploaded = flag;
     }
 
     private boolean pdfUpdated;
 
     @Override
-    public CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId) {
-
-        pdfUpdated = true;
-
-        return CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "456"));
-    }
-
-    @Override
-    public void recordEvent(Map<String, Object> data) {
-
-        // Does nothing in test
-    }
-
-    @Override
-    public CompletableFuture<List<Map<String, Object>>> recentEvents(int limit) {
-
-        return null;
-    }
-
-    @Override
-    public CompletableFuture<Map<Integer, Integer>> pageVisits() {
-
-        return null;
+    public void setPdfUpdated(boolean flag) {
+        pdfUploaded = flag;
     }
 
     @Override
@@ -1001,10 +953,10 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         return new GuiceApplicationBuilder().
                 overrides(
-                        bind(PdfGenerator.class).toInstance(this),  // Mock out PdfGenerator to this Test Class
-                        bind(DocumentStore.class).toInstance(this), // Mock out DocumentStore to this Test Class
+                        bind(PdfGenerator.class).toInstance(this),
+                        bind(DocumentStore.class).toInstance(this),
                         bind(AnalyticsStore.class).toInstance(this)
-                ).
-                build();
+                )
+                .build();
     }
 }
