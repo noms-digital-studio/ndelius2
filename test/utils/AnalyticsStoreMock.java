@@ -15,6 +15,8 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
         return null;
     }
 
+    default CompletableFuture<List<Map<String, Object>>> sessionEvents(String sessionId) {return null; };
+
     default CompletableFuture<Map<Integer, Integer>> pageVisits() {
         return null;
     }
