@@ -15,6 +15,12 @@ Build command (includes running unit and integration tests):
 Run locally:
 - `sbt run`
 
+Standalone:
+
+Add the following environment vairable to run in standalone mode
+
+- `STANDALONE_OPERATION=true`
+
 Running deployable fat jar (after building):
 - `APPLICATION_SECRET=abcdefghijk java -jar ndelius2.jar` (in the `target/scala-2.11` directory)
 
@@ -22,7 +28,6 @@ Configuration parameters can be supplied via environment variables, e.g.:
 
 - `STORE_ALFRESCO_URL=http://alfresco/ sbt run`
 - `STORE_ALFRESCO_URL=http://alfresco/ APPLICATION_SECRET=abcdefghijk java -jar ndelius2.jar`
-
 The website endpoint defaults to local port 9000.
 
 ### Development notes
