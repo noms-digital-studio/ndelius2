@@ -10,7 +10,7 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@justiceAreas = @{ Source.fromInputStream(environment.resourceAsStream("justiceAreas.txt")).getLines }
+@justiceAreas = @{ Source.fromInputStream(environment.resourceAsStream("justiceAreas.txt"), "UTF-8").getLines }
 
 @main("Sentencing court details - Short Format Pre Sentence Report") {
 
