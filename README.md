@@ -1,5 +1,7 @@
 # 'NDelius New Technology' Web Application
 
+[![CircleCI](https://circleci.com/gh/noms-digital-studio/ndelius-new-tech.svg?style=svg)](https://circleci.com/gh/noms-digital-studio/ndelius-new-tech)
+
 A [Play Framework](https://www.playframework.com/) based website, developed in [Java 8](http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html) with additional [Lombok](https://projectlombok.org/features/all) support.
 
 Fully asynchronous and non-blocking from the ground up, with the potential to serve 10,000 concurrent users from a single server.
