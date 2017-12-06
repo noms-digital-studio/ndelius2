@@ -84,6 +84,9 @@
         @inputHidden(reportForm("reportAuthor"))
         @inputHidden(reportForm("office"))
         @inputHidden(reportForm("reportDate"))
+        @inputHidden(reportForm("courtOfficePhoneNumber"))
+        @inputHidden(reportForm("counterSignature"))
+        @inputHidden(reportForm("startDate"), encrypter)
 
         @if(pageStatuses.values().drop(1).dropRight(2).exists { pageStatus => !(pageStatus.isVisited && pageStatus.isValid) }) {
 

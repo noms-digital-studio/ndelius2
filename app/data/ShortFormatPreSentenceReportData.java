@@ -8,6 +8,8 @@ import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import data.base.ReportGeneratorWizardData;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -218,6 +220,19 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("REPORT_DATE")
     private String reportDate;
 
+    @OnPage(11)
+    @JsonProperty("COURT_OFFICE_PHONE_NUMBER")
+    private String courtOfficePhoneNumber;
+
+    @OnPage(11)
+    @JsonProperty("COUNTER_SIGNATURE")
+    private String counterSignature;
+
+    @RequiredOnPage(11)
+    @Encrypted
+    @JsonProperty("START_DATE")
+    private String startDate;
+
 
     @Override
     public List<ValidationError> validate() {
@@ -225,6 +240,13 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
         if (Strings.isNullOrEmpty(reportDate)) { // Fill in for the first read only page, then keep any user changes
 
             reportDate = new SimpleDateFormat("dd/MM/yyy").format(new Date());
+
+        }
+
+        if (Strings.isNullOrEmpty(startDate)) { // Fill in for the first read only page, then keep any user changes
+
+            startDate = new SimpleDateFormat("dd/MM/yyy").format(new Date());
+
         }
 
         return super.validate();

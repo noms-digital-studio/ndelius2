@@ -81,6 +81,9 @@
 
             @inputText(reportForm("reportAuthor"), '_label -> "Report author", 'required -> "true")
             @inputText(reportForm("office"), '_label -> "Office", 'required -> "true")
+            @inputText(reportForm("courtOfficePhoneNumber"), '_label -> "Court office phone number")
+            @inputText(reportForm("counterSignature"), '_label -> "Counter signature (if applicable)")
+            @readOnlyField(reportForm("startDate"), "Start date", encrypter)
             @inputText(reportForm("reportDate"), '_label -> "Completion date", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
 
             @pageNumber(11, Some("Submit and view your report"))
