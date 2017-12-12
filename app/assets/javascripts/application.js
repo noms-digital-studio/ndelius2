@@ -1,3 +1,12 @@
+function formWithZeroJumpNumber(form) {
+    return _.map(form.serializeArray(), function (entry) {
+        if (entry.name === 'jumpNumber') {
+            entry.value = 0;
+        }
+        return entry;
+    });
+}
+
 (function ($) {
 
     'use strict';
@@ -20,7 +29,7 @@
         function showHint(parent, child) {
             child.hasClass('js-hidden') ? child.removeClass('js-hidden') : child.addClass('js-hidden');
 
-            if(child.hasClass('js-hidden')) {
+            if (child.hasClass('js-hidden')) {
                 parent.removeClass('active');
                 parent.attr('aria-expanded', 'false');
                 child.attr('aria-hidden', 'true');
@@ -32,9 +41,55 @@
         }
 
         /**
+         * Start save icon
+         * @param elem
+         */
+        function startSaveIcon(elem) {
+            var saveIcon = $('#' + elem.attr('id') + '_save'),
+                spinner = $('.spinner', saveIcon);
+
+            saveIcon.removeClass('js-hidden');
+            spinner.removeClass('error');
+            spinner.addClass('active');
+        }
+
+        /**
+         * End save icon
+         * @param elem
+         * @param error
+         */
+        function endSaveIcon(elem, error) {
+            var saveIcon = $('#' + elem.attr('id') + '_save'),
+                spinner = $('.spinner', saveIcon);
+
+            spinner.removeClass('active');
+            error ? spinner.addClass('error') : spinner.removeClass('error');
+        }
+
+        /**
+         * Save
+         */
+        function saveProgress(elem) {
+            if ($('form').length) {
+                startSaveIcon(elem);
+                $.ajax({
+                    type: 'POST',
+                    url: $('form').attr('action') + '/save',
+                    data: formWithZeroJumpNumber($('form')),
+                    complete: function(response) {
+                        _.delay(endSaveIcon, 500, elem, response.status !== 200)
+                    }
+                });
+            }
+        }
+
+        var quietSaveProgress = _.debounce(saveProgress, 500);
+        /**
          * Textarea elements
          */
-        $('textarea').keyup(function () {
+         $('textarea').keyup(function () {
+            quietSaveProgress($(this));
+
             var textArea = $(this),
                 limit = textArea.data('limit'),
                 current = textArea.val().length,
@@ -43,11 +98,12 @@
 
             if (limit && current > 0) {
                 messageHolder.removeClass('js-hidden');
-                messageTarget.text(limit + " recommended characters, you have used " + current);
+                messageTarget.text(limit + ' recommended characters, you have used ' + current);
             } else {
                 messageHolder.addClass('js-hidden');
             }
-        });
+
+        })
 
         /**
          * Navigation items
@@ -90,39 +146,13 @@
         });
 
         /**
-         * Auto-save every 15 seconds
-         */
-        function autoSave() {
-
-            var form = $('form');
-
-            if (form.length) {
-                var data =_.map(form.serializeArray(), function(entry) {
-
-                    if (entry.name === 'jumpNumber') {
-                        entry.value = 0;
-                    }
-                    return entry;
-                });
-
-                $.ajax({
-                    type: 'POST',
-                    url: form.attr('action'),
-                    data: data,
-                    complete: function() { setTimeout(autoSave, 15000); }
-                });
-            }
-        }
-        autoSave();
-
-        /**
          *
          */
         $('a.expand-content').each(function (i, elem) {
             var parent = $(this),
                 child = $('#' + elem.getAttribute('data-target'));
             parent.attr('aria-controls', elem.getAttribute('data-target'));
-            parent.click(function() {
+            parent.click(function () {
                 showHint(parent, child)
             });
         });
@@ -135,7 +165,6 @@
             // Autocomplete
             var autoComplete = document.querySelector('.auto-complete');
             if (autoComplete) {
-                console.info(autoComplete.id);
                 accessibleAutocomplete.enhanceSelectElement({
                     selectElement: autoComplete,
                     name: autoComplete.id,

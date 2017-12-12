@@ -62,6 +62,21 @@
       animation-delay: -1.0s;
     }
   }
+
+  &.error {
+    .double-bounce1 {
+      opacity: 1;
+      background-color: $error-colour;
+    }
+    .double-bounce2 {
+      opacity: 1;
+      background: transparent;
+      &::before {
+        display: inline-block;
+        background: transparent url("../images/icon-cross.png") no-repeat;
+      }
+    }
+  }
 }
 
 @-webkit-keyframes sk-bounce {

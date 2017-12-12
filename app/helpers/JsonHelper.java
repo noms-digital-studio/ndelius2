@@ -7,7 +7,11 @@ import lombok.val;
 import play.libs.Json;
 import play.mvc.Result;
 
+import static play.mvc.Http.MimeTypes.JSON;
+import static play.mvc.Http.Status.SERVICE_UNAVAILABLE;
+import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
+import static play.mvc.Results.status;
 
 public interface JsonHelper {
 
@@ -34,6 +38,14 @@ public interface JsonHelper {
     static <T> Result okJson(T data) {
 
         return ok(Json.toJson(data));
+    }
+
+    static <T> Result serverUnavailableJson(T data) {
+        return status(SERVICE_UNAVAILABLE, Json.toJson(data));
+    }
+
+    static <T> Result badRequestJson(T data) {
+        return badRequest(Json.toJson(data));
     }
 
     static <T> String stringify(T data) {

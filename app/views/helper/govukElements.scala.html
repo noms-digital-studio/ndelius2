@@ -24,12 +24,24 @@
     @if(elements.input.body.contains("textarea id=")) {
       <span>
         <textarea class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" role="textbox" placeholder="@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}" id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} } aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"}>@elements.field.value</textarea>
+
         @if(elements.args.get(Symbol("data-limit"))) {
             <div class="pull-left js-hidden" id="@elements.id-countHolder">
                 <p class="form-hint" id="@elements.id-count"></p>
             </div>
             <div class="clearfix"></div>
         }
+
+          <div id="@{elements.id}_save" class="pull-right margin-top js-hidden">
+              <div class="font-xxsmall pull-right">
+                  <span>Changes saved</span>
+              </div>
+              <div class="spinner pull-right active">
+                  <div class="double-bounce1"></div>
+                  <div class="double-bounce2"></div>
+              </div>
+          </div>
+
       </span>
     } else if(elements.input.body.contains("select id=")) {
       <select class="form-control auto-complete @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">

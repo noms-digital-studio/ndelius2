@@ -3,18 +3,19 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /healthcheck                            controllers.UtilityController.healthcheck
+GET     /healthcheck                                controllers.UtilityController.healthcheck
 
-GET     /analytics                              controllers.AnalyticsController.index
-GET     /analytics/pageVisits                   controllers.AnalyticsController.pageVisits
-GET     /analytics/recent/:limit                controllers.AnalyticsController.recentEvents(limit: Integer)
+GET     /analytics                                  controllers.AnalyticsController.index
+GET     /analytics/pageVisits                       controllers.AnalyticsController.pageVisits
+GET     /analytics/recent/:limit                    controllers.AnalyticsController.recentEvents(limit: Integer)
 
-GET     /nationalSearch                         controllers.NationalSearchController.index
-POST    /spellcheck                             controllers.NationalSearchController.postSpellcheck
-GET     /spellcheck/:text                       controllers.NationalSearchController.spellcheck(text)
+GET     /nationalSearch                             controllers.NationalSearchController.index
+POST    /spellcheck                                 controllers.NationalSearchController.postSpellcheck
+GET     /spellcheck/:text                           controllers.NationalSearchController.spellcheck(text)
 
-GET     /report/shortFormatPreSentenceReport    controllers.ShortFormatPreSentenceReportController.wizardGet
-POST    /report/shortFormatPreSentenceReport    controllers.ShortFormatPreSentenceReportController.wizardPost
+GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
+POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost
+POST    /report/shortFormatPreSentenceReport/save   controllers.ShortFormatPreSentenceReportController.reportPost
 
 POST    /report/shortFormatPreSentenceReport/feedback   controllers.ShortFormatPreSentenceReportController.feedbackPost
 
