@@ -8,6 +8,7 @@ import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+
 import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.CompletionStage;

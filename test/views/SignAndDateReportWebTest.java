@@ -67,14 +67,25 @@ public class SignAndDateReportWebTest extends WithBrowser {
     }
 
     @Test
-    public void shouldBePresentedWithReadOnlyStartDateFieldUsingReportDateForExistingReport() {
-        when(mockOriginalReportData.get()).thenReturn(reportDataWith("25/12/2017"));
+    public void startDateFieldIsPopulatedWhenEditingAnExistingReport() {
+        when(mockOriginalReportData.get()).thenReturn(reportDataWithStartDateOf("25/12/2017"));
         startPage.navigateWithExistingReport();
         assertThat(signAndDateReportPage.getStartDate()).isEqualTo("25/12/2017");
     }
 
-    private String reportDataWith(String startDate) {
+    @Test
+    public void startDateFieldIsEmptyWhenEditingALegacyReport() {
+        when(mockOriginalReportData.get()).thenReturn(legacyReportData());
+        startPage.navigateHere();
+        assertThat(signAndDateReportPage.getStartDate()).isEqualTo(null);
+    }
+
+    private String reportDataWithStartDateOf(String startDate) {
         return String.format("{\"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"11\", \"name\": \"Smith,John\", \"address\": \"1234\", \"pnc\": \"Retrieved From Store\",  \"startDate\": \"%s\" } }", startDate);
+    }
+
+    private String legacyReportData() {
+        return "{\"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"11\", \"name\": \"Smith,John\", \"address\": \"1234\", \"pnc\": \"Retrieved From Store\" } }";
     }
 
     @Override

@@ -113,7 +113,10 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             errorData.put("pageNumber", errorPage.toString());
             errorData.put("visitedPages", visitedPages.toString());
 
-            return CompletableFuture.supplyAsync(() -> badRequest(renderPage(errorPage, wizardForm.bind(errorData), pageStatuses)), ec.current());
+            return CompletableFuture.supplyAsync(() -> {
+                Logger.debug("Bad data posted to wizard: " + boundForm.allErrors());
+                return badRequest(renderPage(errorPage, wizardForm.bind(errorData), pageStatuses));
+            }, ec.current());
 
         } else {
 

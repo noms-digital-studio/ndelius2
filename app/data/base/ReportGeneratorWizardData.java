@@ -3,6 +3,7 @@ package data.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import data.annotations.Encrypted;
+import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,6 +30,12 @@ public class ReportGeneratorWizardData extends WizardData {
     @RequiredOnPage(1)
     @JsonProperty("_DELIUS_CRN_")
     private String crn;
+
+    @OnPage(1)
+    @Encrypted
+    @JsonProperty("START_DATE")
+    private String startDate;
+
 
     @JsonProperty("_WATERMARK_")
     private String watermark;

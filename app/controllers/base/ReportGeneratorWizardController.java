@@ -10,8 +10,8 @@ import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -122,6 +122,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     private CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> params) {
 
         params.put("pageNumber", "1");
+        params.put("startDate", new SimpleDateFormat("dd/MM/yyy").format(new Date()));
 
         return generateAndStoreReport(wizardForm.bind(params).value().orElseGet(this::newWizardData)).
                 exceptionally(error -> {
@@ -174,7 +175,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 "values", BeanMap.create(data)
         ));
 
-        CompletionStage<Map<String, String>> result = null;
+        CompletionStage<Map<String, String>> result;
 
         if (Strings.isNullOrEmpty(data.getDocumentId())) {
 
