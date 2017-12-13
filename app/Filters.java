@@ -1,6 +1,5 @@
+import filters.DisableXSSFilter;
 import play.filters.csrf.CSRFFilter;
-import play.filters.headers.SecurityHeadersFilter;
-import play.filters.hosts.AllowedHostsFilter;
 import play.http.DefaultHttpFilters;
 
 import javax.inject.Inject;
@@ -18,7 +17,7 @@ import javax.inject.Singleton;
 public class Filters extends DefaultHttpFilters {
 
     @Inject
-    public Filters(CSRFFilter csrfFilter) {
-        super(csrfFilter);
+    public Filters(CSRFFilter csrfFilter, DisableXSSFilter disableXSSFilter) {
+        super(csrfFilter, disableXSSFilter);
     }
 }
