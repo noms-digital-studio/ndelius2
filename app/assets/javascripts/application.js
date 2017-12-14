@@ -60,10 +60,21 @@ function formWithZeroJumpNumber(form) {
          */
         function endSaveIcon(elem, error) {
             var saveIcon = $('#' + elem.attr('id') + '_save'),
-                spinner = $('.spinner', saveIcon);
+                spinner = $('.spinner', saveIcon),
+                errorMessage = $('#' + elem.attr('id') + '-autosave_error'),
+                formGroup = $(elem).closest('.form-group');
 
-            spinner.removeClass('active');
-            error ? spinner.addClass('error') : spinner.removeClass('error');
+            if (error) {
+                saveIcon.addClass('js-hidden');
+                spinner.removeClass('active');
+                errorMessage.removeClass('js-hidden');
+                formGroup.addClass('form-group-autosave-error');
+            } else {
+                // remove all autosave errors on this page
+                $('.form-group-autosave-error').removeClass('form-group-autosave-error');
+                $('.autosave-error-message').addClass('js-hidden');
+                spinner.removeClass('active');
+            }
         }
 
         /**
