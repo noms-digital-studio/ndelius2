@@ -10,8 +10,8 @@ jobs:
             - checkout
             - restore_cache:
                 keys:
-                  - sbt-{{ checksum "build.sbt" }}
-                  - sbt-
+                  - v1-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v1-ndelius-new-tech-
             - run:
                 name: Install sbt into build container
                 command: |
@@ -29,7 +29,7 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt assembly
             - save_cache:
-                key: sbt-{{ checksum "build.sbt" }}
+                key: v1-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
                   - ~/.ivy2/cache
                   - ~/.sbt
