@@ -127,7 +127,11 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                     Logger.error("Completed Wizard: Generation or Storage error - " + data.toString(), error);
                     return Optional.empty();
                 }).
-                thenApplyAsync(result -> result.map(bytes -> ok(renderCompletedView(bytes))).orElseGet(() -> {
+                thenApplyAsync(result -> result.map(bytes -> {
+                    return standaloneOperation ?
+                            ok(ArrayUtils.toPrimitive(bytes)).as("application/pdf") :
+                            ok(renderCompletedView(bytes));
+                }).orElseGet(() -> {
 
                     Logger.warn("Report generator wizard failed");
                     return wizardFailed(data);

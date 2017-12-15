@@ -3,4 +3,4 @@
 <input type="hidden" id="jumpNumber" name="jumpNumber" />
 <input type="hidden" id="pageNumber" name="pageNumber" value="@pageNumber"/>
 
-<input class="button@if(nextText.nonEmpty) { button-start}" id="nextButton" type="submit" value='@nextText.getOrElse("Save & continue")'/>
+<input class="button@if(nextText.exists(text => text.contains("Start"))) { button-start}" id="nextButton" type="submit" value='@nextText.getOrElse("Save & continue")'/>

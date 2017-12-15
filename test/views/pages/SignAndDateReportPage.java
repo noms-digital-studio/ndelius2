@@ -2,7 +2,6 @@ package views.pages;
 
 import org.fluentlenium.core.FluentControl;
 import org.fluentlenium.core.FluentPage;
-import org.openqa.selenium.By;
 
 import static org.openqa.selenium.By.id;
 
@@ -17,6 +16,15 @@ public class SignAndDateReportPage extends FluentPage {
 
     public SignAndDateReportPage navigateHere() {
         checkYourReportPage.navigateHere().gotoNext();
+        return this;
+    }
+
+    public SignAndDateReportPage gotoNext() {
+        $(id("reportAuthor")).fill().with("Report Author");
+        $(id("office")).fill().with("Office");
+        $(id("courtOfficePhoneNumber")).fill().with("0114 555 5555");
+        $(id("counterSignature")).fill().with("Counter Signature");
+        $(id("nextButton")).click();
         return this;
     }
 
@@ -44,4 +52,7 @@ public class SignAndDateReportPage extends FluentPage {
         return $(id("value_startDate")).text();
     }
 
+    public String getNextButtonText() {
+        return $(id("nextButton")).value();
+    }
 }

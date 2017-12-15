@@ -8,17 +8,15 @@ import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
-
-import java.util.Base64;
-import java.util.Map;
-import java.util.concurrent.CompletionStage;
-import java.util.function.Consumer;
-import javax.inject.Inject;
-import org.apache.commons.lang3.ArrayUtils;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
+
+import javax.inject.Inject;
+import java.util.Map;
+import java.util.concurrent.CompletionStage;
+import java.util.function.Consumer;
 
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData>
 {
@@ -89,7 +87,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
         return views.html.shortFormatPreSentenceReport.completed.render(
                 String.format("PDF Created - %d bytes", bytes.length),
-                Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(bytes)),
                 webJarsUtil
         );
     }

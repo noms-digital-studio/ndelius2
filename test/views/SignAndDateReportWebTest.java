@@ -80,6 +80,11 @@ public class SignAndDateReportWebTest extends WithBrowser {
         assertThat(signAndDateReportPage.getStartDate()).isEqualTo(null);
     }
 
+    @Test
+    public void nextButtonStatesViewDocumentList() {
+        assertThat(signAndDateReportPage.navigateHere().getNextButtonText()).contains("Submit and view your document list");
+    }
+
     private String reportDataWithStartDateOf(String startDate) {
         return String.format("{\"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"11\", \"name\": \"Smith,John\", \"address\": \"1234\", \"pnc\": \"Retrieved From Store\",  \"startDate\": \"%s\" } }", startDate);
     }
