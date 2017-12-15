@@ -15,19 +15,19 @@ jobs:
             - run:
                 name: Install sbt into build container
                 command: |
-                    sudo apt-get update
-                    sudo apt-get install apt-transport-https
-                    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-                    echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
-                    sudo apt-get update
-                    sudo apt-get install sbt
+                   apt-get update
+                   apt-get install apt-transport-https
+                   apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+                    echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
+                   apt-get update
+                   apt-get install sbt
             - run:
                 name: Run sbt build
                 command: |
                   curl -sL https://deb.nodesource.com/setup_8.x | bash -
-                  sudo apt-get install -y nodejs
+                  apt-get install -y nodejs
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sudo sbt assembly
+                  sbt assembly
             - save_cache:
                 key: v1-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
