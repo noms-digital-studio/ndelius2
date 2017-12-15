@@ -12,7 +12,6 @@ jobs:
                 keys:
                   - sbt-{{ checksum "build.sbt" }}
                   - sbt-
-            - setup_remote_docker
             - run:
                 name: Install sbt into build container
                 command: |
