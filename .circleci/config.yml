@@ -8,6 +8,10 @@ jobs:
             - image: openjdk:8
         steps:
             - checkout
+            - restore_cache:
+                keys:
+                  - sbt-{{ checksum "build.sbt" }}
+                  - sbt-
             - setup_remote_docker
             - run:
                 name: Install sbt into build container
@@ -25,6 +29,11 @@ jobs:
                   apt-get install -y nodejs
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt assembly
+            - save_cache:
+                key: sbt-{{ checksum "build.sbt" }}
+                paths:
+                  - ~/.ivy2/cache
+                  - ~/.sbt
             - run:
                 name: Save test results
                 command: |
