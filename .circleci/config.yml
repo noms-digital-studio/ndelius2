@@ -27,7 +27,7 @@ jobs:
                   curl -sL https://deb.nodesource.com/setup_8.x | bash -
                   sudo apt-get install -y nodejs
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sbt assembly
+                  sudo sbt assembly
             - save_cache:
                 key: v1-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
