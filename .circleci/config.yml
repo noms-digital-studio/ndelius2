@@ -5,7 +5,7 @@ jobs:
     build:
         working_directory: ~/ndelius-new-tech
         docker:
-            - image: openjdk:8
+            - image: circleci/openjdk:8
         steps:
             - checkout
             - restore_cache:
@@ -33,12 +33,8 @@ jobs:
                 paths:
                   - ~/.ivy2/cache
                   - ~/.sbt
-            - run:
-                name: Save test results
-                command: |
-                  mkdir -p ~/junit/
-                  find . -type f -regex ".*/target/test-reports/.*xml" -exec cp {} ~/junit/ \;
-                when: always
+            - store_test_results:
+                path: ./target/test-reports/
             - run:
                 name: Save Fat Jar
                 command: |
@@ -48,7 +44,5 @@ jobs:
                 path: target/artifacts
                 destination: jars
             - store_artifacts:
-                path: ~/junit
+                path: ./target/test-reports/
                 destination: reports
-            - store_test_results:
-                path: ~/junit
