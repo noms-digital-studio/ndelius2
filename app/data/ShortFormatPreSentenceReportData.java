@@ -5,16 +5,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
+import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
 import data.base.ReportGeneratorWizardData;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import play.data.validation.ValidationError;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -143,37 +143,69 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 7
 
-    @OnPage(7)
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_ACCOMMODATION")
     private boolean issueAccommodation;
 
     @OnPage(7)
+    @JsonProperty("ISSUE_ACCOMMODATION_DETAILS")
+    private String issueAccommodationDetails;
+
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_EMPLOYMENT")
     private boolean issueEmployment;
 
     @OnPage(7)
+    @JsonProperty("ISSUE_EMPLOYMENT_DETAILS")
+    private String issueEmploymentDetails;
+
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_FINANCE")
     private boolean issueFinance;
 
     @OnPage(7)
-    @JsonProperty("ISSUE_DRUGS")
-    private boolean issueDrugs;
+    @JsonProperty("ISSUE_FINANCE_DETAILS")
+    private String issueFinanceDetails;
+
+    @RequiredGroupOnPage(value = 7)
+    @JsonProperty("ISSUE_RELATIONSHIPS")
+    private boolean issueRelationships;
 
     @OnPage(7)
-    @JsonProperty("ISSUE_ALCOHOL")
-    private boolean issueAlcohol;
+    @JsonProperty("ISSUE_RELATIONSHIPS_DETAILS")
+    private String issueRelationshipsDetails;
+
+    @RequiredGroupOnPage(value = 7)
+    @JsonProperty("ISSUE_SUBSTANCE_MISUSE")
+    private boolean issueSubstanceMisuse;
 
     @OnPage(7)
+    @JsonProperty("ISSUE_SUBSTANCE_MISUSE_DETAILS")
+    private String issueSubstanceMisuseDetails;
+
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_HEALTH")
     private boolean issueHealth;
 
     @OnPage(7)
+    @JsonProperty("ISSUE_HEALTH_DETAILS")
+    private String issueHealthDetails;
+
+    @RequiredGroupOnPage(value = 7)
     @JsonProperty("ISSUE_BEHAVIOUR")
     private boolean issueBehaviour;
 
-    @RequiredOnPage(7)
-    @JsonProperty("OFFENDER_ASSESSMENT")
-    private String offenderAssessment;
+    @OnPage(7)
+    @JsonProperty("ISSUE_BEHAVIOUR_DETAILS")
+    private String issueBehaviourDetails;
+
+    @RequiredGroupOnPage(value = 7)
+    @JsonProperty("ISSUE_OTHER")
+    private boolean issueOther;
+
+    @OnPage(7)
+    @JsonProperty("ISSUE_OTHER_DETAILS")
+    private String issueOtherDetails;
 
 
     // Page 8

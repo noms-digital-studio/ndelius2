@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
+import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -71,32 +72,70 @@ public class WizardData implements Validatable<List<ValidationError>> {
 
         return field.isAnnotationPresent(OnPage.class) ?
                 field.getAnnotation(OnPage.class).value() :
-                field.getAnnotation(RequiredOnPage.class).value();
+                field.isAnnotationPresent(RequiredOnPage.class) ?
+                    field.getAnnotation(RequiredOnPage.class).value() :
+                    field.getAnnotation(RequiredGroupOnPage.class).value();
     }
 
     protected List<Function<Map<String, Object>, Stream<ValidationError>>> validators() {    // Overridable in derived Data classes
 
         return ImmutableList.of(
-                this::mandatoryErrors
+                this::mandatoryErrors,
+                this::mandatoryGroupErrors
         );
     }
 
     private Stream<ValidationError> mandatoryErrors(Map<String, Object> options) {
 
-        val checkAll = Boolean.parseBoolean(options.getOrDefault("checkAll", false).toString());
-                                                        // Default to required is enforced if no onlyIfField
+        // Default to required is enforced if no onlyIfField
         return requiredFields().filter(field -> {       // exists, otherwise use onlyIfField current boolean
 
             val onlyIfName = field.getAnnotation(RequiredOnPage.class).onlyIfField();
             val requiredEnforced = getField(onlyIfName).flatMap(this::getBooleanValue).orElse(true);
-            val fieldOnThisPage = pageNumber.equals(fieldPage(field));
-            val finishedWizard = pageNumber.equals(totalPages());
 
-            return requiredEnforced &&                                                      // Check all pages if on last page and clicking next
-                    (checkAll || ((fieldOnThisPage || finishedWizard) && !isJumping())) &&  // Check current page if clicking next and not jumping
-                    Strings.isNullOrEmpty(getStringValue(field).orElse(null));        // If jumping don't perform any validation
+            return requiredEnforced &&
+                    (mustValidateField(options, field)) &&
+                    Strings.isNullOrEmpty(getStringValue(field).orElse(null));
 
         }).map(field -> new ValidationError(field.getName(), RequiredValidator.message));
+    }
+    private Stream<ValidationError> mandatoryGroupErrors(Map<String, Object> options) {
+
+        return requiredGroupFields().
+                filter(field -> mustValidateField(options, field) && noFieldInPageGroupSelected(field)).
+                map(field -> new ValidationError(field.getName(), RequiredValidator.message));
+    }
+
+    private boolean shouldCheckAll(Map<String, Object> options) {
+        return Boolean.parseBoolean(options.getOrDefault("checkAll", false).toString());
+    }
+
+    private boolean mustValidateField(Map<String, Object> options, Field field) {
+        // Check all pages if on last page and clicking next
+        // Check current page if clicking next and not jumping
+        // If jumping don't perform any validation
+        return shouldCheckAll(options) || ((isFieldOnThisPage(field) || hasFinishedWizard()) && !isJumping());
+    }
+
+    private boolean isFieldOnThisPage(Field field) {
+        return pageNumber.equals(fieldPage(field));
+    }
+
+    private boolean hasFinishedWizard() {
+        return pageNumber.equals(totalPages());
+    }
+
+    private boolean noFieldInPageGroupSelected(Field field) {
+        String group = field.getAnnotation(RequiredGroupOnPage.class).group();
+        int pageNumber = field.getAnnotation(RequiredGroupOnPage.class).value();
+        return requiredGroupFields().
+                filter(anotherField -> isInSameGroup(anotherField, pageNumber, group)).
+                noneMatch(fieldInGroup -> getBooleanValue(fieldInGroup).orElse(Boolean.FALSE));
+    }
+
+    private boolean isInSameGroup(Field field, int pageNumber, String group) {
+        return field.getAnnotation(RequiredGroupOnPage.class).value() == pageNumber &&
+                field.getAnnotation(RequiredGroupOnPage.class).group().equals(group);
     }
 
     private static String suggestions(RuleMatch mistake) {
@@ -142,8 +181,14 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return annotatedFields(RequiredOnPage.class);
     }
 
-    private Stream<Field> onPageFields() {
+    private Stream<Field> requiredGroupFields() {
 
-        return Stream.concat(annotatedFields(OnPage.class), requiredFields());
+        return annotatedFields(RequiredGroupOnPage.class);
+    }
+
+    private Stream<Field> onPageFields() {
+        return Stream.of(annotatedFields(OnPage.class), requiredFields(), requiredGroupFields())
+                .reduce(Stream::concat)
+                .orElseGet(Stream::empty);
     }
 }

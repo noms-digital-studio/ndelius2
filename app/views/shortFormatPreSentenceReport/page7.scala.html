@@ -20,6 +20,22 @@
 
         </div>
         <div class="column-two-thirds">
+            @if(!reportForm.errors("issueAccommodation").isEmpty) {
+                <div class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+
+                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
+                        You need to select one of the underlying issues
+                    </h2>
+
+                    <p>
+                        Please select underlying issues from the options below.
+                    </p>
+                    <p>
+                        If the relevant option is not available select other.
+                    </p>
+                </div>
+            }
+
 
             <h2 class="lede no-margin-top margin-bottom medium">Select the underlying issues that are relevant as motivators or drivers for the main offence</h2>
 
@@ -74,18 +90,16 @@
 
                 @inputHidden(reportForm("offenceAnalysis"))
                 @inputHidden(reportForm("patternOfOffending"))
-
-                @checkbox(reportForm("issueAccommodation"), '_label -> "Accommodation")
-                @checkbox(reportForm("issueEmployment"), '_label -> "Employment")
-                @checkbox(reportForm("issueFinance"), '_label -> "Finance")
-                @checkbox(reportForm("issueDrugs"), '_label -> "Drugs")
-                @checkbox(reportForm("issueAlcohol"), '_label -> "Alcohol")
-                @checkbox(reportForm("issueHealth"), '_label -> "Physical & mental health relationships")
-                @checkbox(reportForm("issueBehaviour"), '_label -> "Thinking & behaviour")
-
-                <hr />
-
-                @textarea(reportForm("offenderAssessment"), '_label -> "Provide a brief assessment covering the all areas", '_help -> "These are the areas you have highlighted as issues above", 'class -> "wide", Symbol("data-limit") -> "4000", Symbol("data-target") -> "assessment-limit", 'required -> "true")
+                <div class="form-group@if(reportForm.hasErrors) { form-group-error}">
+                @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
+                @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment for employment", Some(""))
+                @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment for finance", Some(""))
+                @checkboxDetailsField(reportForm, "issueRelationships", "Relationships", "Provide a brief assessment for relationships", Some(""))
+                @checkboxDetailsField(reportForm, "issueSubstanceMisuse", "Substance misuse", "Provide a brief assessment for substance misuse", Some(""))
+                @checkboxDetailsField(reportForm, "issueHealth", "Physical & mental health", "Provide a brief assessment for physical & mental health", Some(""))
+                @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment for behaviour", Some(""))
+                @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues", Some(""))
+                </div>
 
                 @inputHidden(reportForm("likelihoodOfReOffending"))
                 @inputHidden(reportForm("riskOfSeriousHarm"))

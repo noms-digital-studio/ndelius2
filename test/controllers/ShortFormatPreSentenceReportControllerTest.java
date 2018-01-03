@@ -481,14 +481,14 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
 
-                put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueRelationships", "true");
-                put("issueSubstanceAbuse", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("issueOther", "true");
+                put("issueAccommodation", "false");
+                put("issueEmployment", "false");
+                put("issueFinance", "false");
+                put("issueRelationships", "false");
+                put("issueSubstanceAbuse", "false");
+                put("issueHealth", "false");
+                put("issueBehaviour", "false");
+                put("issueOther", "false");
 
                 put("pageNumber", "7");
             }
@@ -537,14 +537,13 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("patternOfOffending", "Some pattern of offending");
 
                 put("issueAccommodation", "true");
-                put("issueEmployment", "true");
-                put("issueFinance", "true");
-                put("issueRelationships", "true");
-                put("issueSubstanceAbuse", "true");
-                put("issueHealth", "true");
-                put("issueBehaviour", "true");
-                put("issueOther", "true");
-                put("offenderAssessment", "Some assessment");
+                put("issueEmployment", "false");
+                put("issueFinance", "false");
+                put("issueRelationships", "false");
+                put("issueSubstanceMisuse", "false");
+                put("issueHealth", "false");
+                put("issueBehaviour", "false");
+                put("issueOther", "false");
 
                 put("pageNumber", "7");
             }
@@ -595,11 +594,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
                 put("issueRelationships", "true");
-                put("issueSubstanceAbuse", "true");
+                put("issueSubstanceMisuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
                 put("issueOther", "true");
-                put("offenderAssessment", "Some assessment");
+
 
                 put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
@@ -654,11 +653,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
                 put("issueRelationships", "true");
-                put("issueSubstanceAbuse", "true");
+                put("issueSubstanceMisuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
                 put("issueOther", "true");
-                put("offenderAssessment", "Some assessment");
+
 
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");
@@ -714,11 +713,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
                 put("issueRelationships", "true");
-                put("issueSubstanceAbuse", "true");
+                put("issueSubstanceMisuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
                 put("issueOther", "true");
-                put("offenderAssessment", "Some assessment");
+
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
@@ -773,11 +772,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
                 put("issueRelationships", "true");
-                put("issueSubstanceAbuse", "true");
+                put("issueSubstanceMisuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
                 put("issueOther", "true");
-                put("offenderAssessment", "Some assessment");
+
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
@@ -836,11 +835,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
                 put("issueRelationships", "true");
-                put("issueSubstanceAbuse", "true");
+                put("issueSubstanceMisuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
                 put("issueOther", "true");
-                put("offenderAssessment", "Some assessment");
+
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
@@ -900,11 +899,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("issueEmployment", "true");
                 put("issueFinance", "true");
                 put("issueRelationships", "true");
-                put("issueSubstanceAbuse", "true");
+                put("issueSubstanceMisuse", "true");
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
                 put("issueOther", "true");
-                put("offenderAssessment", "Some assessment");
+
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");

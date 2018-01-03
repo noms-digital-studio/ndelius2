@@ -1,6 +1,7 @@
 package controllers;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
@@ -8,6 +9,7 @@ import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import org.apache.commons.lang3.StringUtils;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.libs.concurrent.HttpExecutionContext;
@@ -46,8 +48,26 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
             params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
             params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
-            return params;
+            return migrateLegacyReport(params);
         });
+    }
+
+    private Map<String, String> migrateLegacyReport(Map<String, String> params) {
+        return migrateLegacyOffenderAssessmentIssues(params);
+    }
+
+    private Map<String, String> migrateLegacyOffenderAssessmentIssues(Map<String, String> params) {
+        if(Boolean.parseBoolean(params.get("issueDrugs"))) {
+            params.putIfAbsent("issueSubstanceMisuse", "true");
+        }
+        if(Boolean.parseBoolean(params.get("issueAlcohol"))) {
+            params.putIfAbsent("issueSubstanceMisuse", "true");
+        }
+        if(StringUtils.isNotBlank(params.get("offenderAssessment"))) {
+            params.putIfAbsent("issueOther", "true");
+            params.putIfAbsent("issueOtherDetails", params.get("offenderAssessment"));
+        }
+        return params;
     }
 
     @Override

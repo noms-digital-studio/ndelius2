@@ -1,0 +1,16 @@
+@import helper._
+@(reportForm: Form[_], name: String, label: String, detailsLabel: String, error: Option[String] = None)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@sectionId = @{name + "-details"}
+@arguments = @{ scala.Predef.Map('_label -> label, Symbol("data-target") -> sectionId) }
+@allArguments = @{ error match {
+    case Some(text) => arguments + ('_error -> text)
+    case _ => arguments
+} }
+
+@checkbox(reportForm(name), allArguments.toSeq: _*)
+<div class="panel panel-border-narrow js-hidden" id="@sectionId">
+@textarea(reportForm(name + "Details"), '_label -> detailsLabel, 'class -> "wide")
+</div>

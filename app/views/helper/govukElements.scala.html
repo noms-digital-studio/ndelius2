@@ -3,9 +3,12 @@
 @htmlLines = @{elements.input.body.split("\n").map(_.trim).filterNot(_.isEmpty)}
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
+  @govukInfoErrors(elements)
   <div class="multiple-choice" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>
     <input class="@elements.args.get('class)" type="checkbox" role="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse("false"))) { checked="checked" } aria-checked="@Boolean.parseBoolean(elements.field.value.getOrElse("false"))" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} />
-    @govukLabel(elements)
+    <label for="@elements.id">
+        <span class="form-label-bold">@elements.label</span>
+    </label>
   </div>
   <div class="clearfix"></div>
   <div class="margin-top"></div>
