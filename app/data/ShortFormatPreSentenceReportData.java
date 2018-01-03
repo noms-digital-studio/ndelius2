@@ -107,6 +107,10 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     private boolean policeInformationSource;
 
     @OnPage(4)
+    @JsonProperty("SENTENCING_GUIDELINES_INFORMATION_SOURCE")
+    private boolean sentencingGuidelinesInformationSource;
+
+    @OnPage(4)
     @JsonProperty("OTHER_INFORMATION_SOURCE")
     private boolean otherInformationSource;
 
