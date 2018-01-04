@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.util.Map;
 import lombok.val;
+import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
 
-import static play.mvc.Http.MimeTypes.JSON;
 import static play.mvc.Http.Status.SERVICE_UNAVAILABLE;
 import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
@@ -30,7 +30,7 @@ public interface JsonHelper {
                     mapper.getTypeFactory().constructMapType(Map.class, String.class, String.class)
             );
         } catch (IOException ex) {
-
+            Logger.error("Unable to parse json to Map<String, String>. " + json.toString(), ex);
             return null;
         }
     }

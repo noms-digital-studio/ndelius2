@@ -3,6 +3,7 @@ package data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredGroupOnPage;
@@ -10,11 +11,14 @@ import data.annotations.RequiredOnPage;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 import play.data.validation.ValidationError;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -39,7 +43,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     @Encrypted
     @OnPage(2)
-    @JsonProperty("_ADDRESS_")
+    @JsonIgnore
     private String address;
 
     @JsonIgnore
@@ -264,6 +268,16 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("COUNTER_SIGNATURE")
     private String counterSignature;
 
+    @JsonProperty("ADDRESS_LINES")
+    public List<String> addressLines() {
+        return Optional.ofNullable(address)
+                .map(addressLines ->
+                        ImmutableList.copyOf(addressLines.split("\n"))
+                                .stream()
+                                .filter(StringUtils::isNotBlank)
+                                .collect(Collectors.toList()))
+                .orElse(ImmutableList.of());
+    }
     @Override
     public List<ValidationError> validate() {
 
