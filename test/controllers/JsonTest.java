@@ -41,6 +41,11 @@ public class JsonTest implements PdfGenerator, DocumentStore {
     }
 
     @Override
+    public CompletionStage<Boolean> isHealthy() {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
     public CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId) {
 
         this.updatedData = updatedData;
@@ -62,5 +67,3 @@ public class JsonTest implements PdfGenerator, DocumentStore {
         return null;
     }
 }
-
-//

@@ -4,22 +4,26 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import com.mongodb.rx.client.MongoCollection;
+import com.mongodb.rx.client.MongoDatabase;
 import com.typesafe.config.Config;
 import interfaces.AnalyticsStore;
-import javax.inject.Inject;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 import lombok.val;
 import org.bson.Document;
 import org.joda.time.DateTime;
 import play.Logger;
 
+import javax.inject.Inject;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 public class MongoDbStore implements AnalyticsStore {
 
     private final MongoCollection<Document> events;
+    private final MongoDatabase database;
 
     @Inject
     public MongoDbStore(Config configuration,
@@ -29,6 +33,7 @@ public class MongoDbStore implements AnalyticsStore {
         val collectionName = configuration.getString("analytics.mongo.collection");
 
         events = mongoClient.getDatabase(databaseName).getCollection(collectionName);
+        database = mongoClient.getDatabase(databaseName);
     }
 
     @Override
@@ -98,6 +103,19 @@ public class MongoDbStore implements AnalyticsStore {
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> isUp() {
+        val result = new CompletableFuture<Boolean>();
+
+         database.runCommand(new Document("dbStats", 1))
+             .timeout(5000, TimeUnit.MILLISECONDS)
+             .map(document -> document.get("ok").equals(1.0))
+             .onErrorReturn(ignored -> result.complete(false))
+             .subscribe(result::complete);
 
         return result;
     }

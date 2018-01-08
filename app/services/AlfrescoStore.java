@@ -7,21 +7,27 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.JsonHelper;
 import interfaces.DocumentStore;
-import javax.inject.Inject;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import play.Logger;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
-import play.mvc.Http.MultipartFormData.*;
+import play.mvc.Http.MultipartFormData.DataPart;
+import play.mvc.Http.MultipartFormData.FilePart;
+import play.mvc.Http.MultipartFormData.Part;
+
+import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 
 public class AlfrescoStore implements DocumentStore {
 
@@ -109,6 +115,18 @@ public class AlfrescoStore implements DocumentStore {
 
                     return multiResult;
                 });
+    }
+
+    @Override
+    public CompletionStage<Boolean> isHealthy() {
+        return wsClient.url(alfrescoUrl + "noms-spg/")
+            .addHeader("X-DocRepository-Remote-User", alfrescoUser)
+            .get()
+            .thenApply(wsResponse -> wsResponse.getStatus() <= 500)
+            .exceptionally(throwable -> {
+                Logger.warn("Error calling Alfresco healthcheck", throwable);
+                return false;
+            });
     }
 
     private WSRequest makeRequest(String operation, String onBehalfOfUser) {

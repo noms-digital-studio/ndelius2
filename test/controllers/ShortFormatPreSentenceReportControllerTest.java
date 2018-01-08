@@ -1,9 +1,6 @@
 package controllers;
 
 import com.google.common.collect.ImmutableMap;
-import utils.AnalyticsStoreMock;
-import utils.DocumentStoreMock;
-import utils.PdfGeneratorMock;
 import helpers.Encryption;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
@@ -14,9 +11,14 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.Helpers;
 import play.test.WithApplication;
+import utils.AnalyticsStoreMock;
+import utils.DocumentStoreMock;
+import utils.PdfGeneratorMock;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
 import static org.junit.Assert.*;
@@ -957,5 +959,15 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                         bind(AnalyticsStore.class).toInstance(this)
                 )
                 .build();
+    }
+
+    @Override
+    public CompletionStage<Boolean> isHealthy() {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
+    public CompletableFuture<Boolean> isUp() {
+        throw new RuntimeException("Not yet implemented");
     }
 }

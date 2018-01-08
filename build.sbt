@@ -17,7 +17,7 @@ scalaVersion := "2.12.2"
 libraryDependencies ++= Seq(
   guice,
   filters,
-  javaWs.exclude("commons-logging", "commons-logging"),
+  javaWs,
   "org.webjars" %% "webjars-play" % "2.6.1",
   "org.webjars" % "es5-shim" % "4.5.9",
   "org.webjars.bower" % "react" % "0.14.9", // https://facebook.github.io/react/blog/2016/01/12/discontinuing-ie8-support.html
@@ -27,10 +27,28 @@ libraryDependencies ++= Seq(
   "org.webjars" % "jquery" % "1.12.4",
   "org.webjars" % "jquery-ui" % "1.12.1",
   "org.mongodb" % "mongodb-driver-rx" % "1.4.0",
-  ("org.languagetool" % "language-en" % "3.7").exclude("commons-logging", "commons-logging"),
+  "org.languagetool" % "language-en" % "3.7",
+
   "org.projectlombok" % "lombok" % "1.16.16" % "provided",
+
   "org.assertj" % "assertj-core" % "3.8.0" % "test",
-  "org.mockito" % "mockito-all" % "1.10.19" % Test
+  "org.mockito" % "mockito-all" % "1.10.19" % "test",
+  "com.github.tomakehurst" % "wiremock" % "2.12.0" % "test",
+  "org.apache.opennlp" % "opennlp-tools" % "1.8.2"
+)
+
+excludeDependencies ++= Seq(
+  SbtExclusionRule("commons-logging", "commons-logging")
+)
+
+// Wiremock only works with this older version of Jetty
+val jettyVersion = "9.2.22.v20170606"
+dependencyOverrides ++= Set(
+  "org.eclipse.jetty" % "jetty-server" % jettyVersion,
+  "org.eclipse.jetty" % "jetty-client" % jettyVersion,
+  "org.eclipse.jetty" % "jetty-http" % jettyVersion,
+  "org.eclipse.jetty" % "jetty-io" % jettyVersion,
+  "org.eclipse.jetty" % "jetty-util" % jettyVersion
 )
 
 mainClass in assembly := Some("play.core.server.ProdServerStart")

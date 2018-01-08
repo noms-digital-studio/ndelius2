@@ -1,11 +1,12 @@
 package controllers.base;
 
-import java.util.Map;
-import java.util.function.Function;
 import play.data.Form;
 import play.data.format.Formatters;
 import play.i18n.MessagesApi;
 import play.mvc.Http;
+
+import java.util.Map;
+import java.util.function.Function;
 
 public class EncryptedForm<T> extends Form<T> {
 

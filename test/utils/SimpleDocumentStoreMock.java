@@ -18,6 +18,11 @@ public class SimpleDocumentStoreMock implements DocumentStoreMock {
     }
 
     @Override
+    public CompletionStage<Boolean> isHealthy() {
+        throw new RuntimeException("Not yet implemented");
+    }
+
+    @Override
     public void setPdfUploaded(boolean flag) {
 
     }

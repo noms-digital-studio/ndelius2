@@ -2,7 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
 GET     /healthcheck                                controllers.UtilityController.healthcheck
 
 GET     /analytics                                  controllers.AnalyticsController.index

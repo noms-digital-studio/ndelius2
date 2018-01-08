@@ -12,4 +12,6 @@ public interface DocumentStore {
     CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId);
 
     CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId);
+
+    CompletionStage<Boolean> isHealthy();
 }
