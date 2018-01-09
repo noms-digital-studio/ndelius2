@@ -1,13 +1,10 @@
 import PropTypes from 'prop-types'
 
-const OffenderSearchSummary = ({ mistake, suggestions}) => (
+const OffenderSearchSummary = (offenderSummary) => (
     <li>
-        <span>{mistake}</span>
-        <ul>
-            {suggestions.map((suggestion, index) => (
-                <li key={index}>{suggestion}</li>
-            ))}
-        </ul>
+        <span>{offenderSummary['FIRST_NAME']}</span>
+        <span>{offenderSummary['SURNAME']}</span>
+        <span>{offenderSummary['CRN']}</span>
     </li>
 )
 
