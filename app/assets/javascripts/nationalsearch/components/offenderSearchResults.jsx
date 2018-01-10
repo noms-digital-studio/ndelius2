@@ -1,12 +1,17 @@
 import OffenderSearchSummary from './offenderSearchSummary.jsx';
+import SearchResultsTitle from '../containers/searchResultsTitleContainer.jsx';
+
 import PropTypes from "prop-types";
 
 const OffenderSearchResults = ({results}) => (
-    <ul>
-        {results.map((offenderSummary, index) => (
-            <OffenderSearchSummary {...offenderSummary} key={index}/>
-        ))}
-    </ul>
+    <div className='padded mobile-pad'>
+        <SearchResultsTitle/>
+        <ul>
+            {results.map((offenderSummary) => (
+                <OffenderSearchSummary {...offenderSummary} key={offenderSummary.offenderId}/>
+            ))}
+        </ul>
+    </div>
 );
 
 OffenderSearchResults.propTypes = {
