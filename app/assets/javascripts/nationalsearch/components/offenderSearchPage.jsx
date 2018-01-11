@@ -1,5 +1,6 @@
 import OffenderSearchResults from '../containers/offenderSearchResultsContainer';
 import OffenderSearch from '../containers/offenderSearchContainer';
+import FrameNavigation from '../containers/frameNavigationContainer';
 import GovUkPhaseBanner from './govukPhaseBanner.jsx';
 
 export default () => (
@@ -19,5 +20,6 @@ export default () => (
                 </div>
             </main>
         </div>
+        <FrameNavigation/>
     </div>);
 

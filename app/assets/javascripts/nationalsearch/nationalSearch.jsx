@@ -1,7 +1,7 @@
 import OffenderSearchPage from './components/offenderSearchPage.jsx';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import reducer from './reducers/searchReducer'
+import reducer from './reducers'
 
 let store = createStore(reducer)
 

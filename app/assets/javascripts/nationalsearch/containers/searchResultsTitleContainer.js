@@ -3,8 +3,8 @@ import searchResultsTitle from '../components/searchResultsTitle.jsx'
 
 const mapStateToProps = state => {
     return {
-        results: state.results,
-        searchTerm: state.searchTerm
+        results: state.search.results,
+        searchTerm: state.search.searchTerm
     }
 }
 

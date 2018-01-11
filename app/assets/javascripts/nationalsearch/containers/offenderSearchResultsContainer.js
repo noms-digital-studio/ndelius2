@@ -3,7 +3,7 @@ import offenderSearchResults from '../components/offenderSearchResults.jsx'
 
 const mapStateToProps = state => {
     return {
-        results: state.results
+        results: state.search.results
     }
 }
 
