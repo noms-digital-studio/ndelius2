@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types'
+import MT from '../containers/markableTextContainer'
 
 const OffenderSummaryTitle = (offenderSummary) => (
     <a className='clickable heading-large no-underline'>
-        <span>{offenderSummary.surname}</span>
+        <span><MT text={offenderSummary.surname}/></span>
         <span>,&nbsp;</span>
-        <span>{offenderSummary.firstName}</span>
+        <span><MT text={offenderSummary.firstName}/></span>
         <span>&nbsp;-&nbsp;</span>
-        <span>{offenderSummary.dateOfBirth}</span>
+        <span><MT text={offenderSummary.dateOfBirth}/></span>
     </a>
 )
 

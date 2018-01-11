@@ -1,5 +1,5 @@
 import OffenderSearchSummary from './offenderSearchSummary.jsx';
-import SearchResultsTitle from '../containers/searchResultsTitleContainer.jsx';
+import SearchResultsTitle from '../containers/searchResultsTitleContainer';
 
 import PropTypes from "prop-types";
 

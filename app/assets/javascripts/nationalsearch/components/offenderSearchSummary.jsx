@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import OffenderSummaryTitle from './offenderSummaryTitle.jsx'
+import MT from '../containers/markableTextContainer'
 
 const OffenderSearchSummary = (offenderSummary) => (
     <li>
@@ -7,11 +8,11 @@ const OffenderSearchSummary = (offenderSummary) => (
             <OffenderSummaryTitle {...offenderSummary}/>
             <p className='no-margin bottom'>
                 <span className='bold'>CRN:&nbsp;</span>
-                <span className='bold margin-right'>{offenderSummary.crn}</span>
+                <span className='bold margin-right'><MT text={offenderSummary.crn}/></span>
                 <Risk risk={offenderSummary.risk}/>
                 <CurrentOffender current={offenderSummary.currentOffender}/>
                 <span className='margin-right'>
-                    <span>{offenderSummary.gender},&nbsp;</span>
+                    <span><MT text={offenderSummary.gender}/>,&nbsp;</span>
                     <span>{offenderSummary.age}</span>
                 </span>
             </p>
@@ -70,9 +71,9 @@ const AliasList = ({aliases}) => (
         {aliases.map( (alias, index) => (
             <div key={index}>
                 <span className='margin-right'>Alias:</span>
-                <span>{alias.surname}</span>
+                <span><MT text={alias.surname}/></span>
                 <span>,&nbsp;</span>
-                <span>{alias.firstName}</span>
+                <span><MT text={alias.firstName}/></span>
             </div>
         ))}
         </div>
@@ -102,7 +103,7 @@ const Address = ({address}) => {
     return (
         <span>
             {lines.map( (line, index) => (
-                <span className='margin-right' key={index}>{line}{index + 1  < lines.length ? ',' : ''}</span>
+                <span className='margin-right' key={index}><MT text={line}/>{index + 1  < lines.length ? ',' : ''}</span>
             ))}
         </span>
     )
@@ -115,7 +116,7 @@ const PreviousSurname = ({name}) => {
     if (name) {
         return (<div className='no-margin bottom'>
             <span className='margin-right'>Previous surname:</span>
-            <span>{name}</span>
+            <span><MT text={name}/></span>
         </div>)
     }
     return (<span/>)

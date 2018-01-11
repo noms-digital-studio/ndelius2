@@ -1,13 +1,20 @@
 import { connect } from 'react-redux'
-import searchResultsTitle from '../components/searchResultsTitle'
-import { PAGE_SIZE } from '../actions/search'
+import searchResultsTitle from '../components/searchResultsTitle.jsx'
 
-export default connect(
-    state => ({
-        pageNumber: state.search.pageNumber,
-        total: state.search.total,
-        pageSize: PAGE_SIZE,
-        resultsReceived: state.search.resultsReceived
-    }),
-    () => ({})
-)(searchResultsTitle)
+const mapStateToProps = state => {
+    return {
+        results: state.results,
+        searchTerm: state.searchTerm
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {}
+}
+
+const searchResultsTitleContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(searchResultsTitle);
+
+export default searchResultsTitleContainer

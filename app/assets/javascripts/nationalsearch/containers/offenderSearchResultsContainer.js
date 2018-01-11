@@ -1,9 +1,19 @@
 import { connect } from 'react-redux'
-import offenderSearchResults from '../components/offenderSearchResults'
+import offenderSearchResults from '../components/offenderSearchResults.jsx'
 
-export default connect(
-    state => ({
-        results: state.search.results
-    }),
-    () => ({})
-)(offenderSearchResults)
+const mapStateToProps = state => {
+    return {
+        results: state.results
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {}
+}
+
+const offenderSearchResultsContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(offenderSearchResults);
+
+export default offenderSearchResultsContainer

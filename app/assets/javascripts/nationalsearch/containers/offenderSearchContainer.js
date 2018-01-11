@@ -1,12 +1,24 @@
 import { connect } from 'react-redux'
 import { search } from '../actions/search'
-import offenderSearch from '../components/offenderSearch'
+import offenderSearch from '../components/offenderSearch.jsx'
 
-export default connect(
-    state => ({
-        searchTerm: state.search.searchTerm
-    }),
-    dispatch => ({
-        search: (searchTerm) => dispatch(search(searchTerm))
-    })
-)(offenderSearch)
+const mapStateToProps = (state) => {
+    return {
+        searchTerm: state.searchTerm
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onClick: (searchTerm) => {
+            search(dispatch, searchTerm)
+        }
+    }
+};
+
+const offenderSearchContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(offenderSearch);
+
+export default offenderSearchContainer

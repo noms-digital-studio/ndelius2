@@ -1,5 +1,5 @@
-import OffenderSearchResults from '../containers/offenderSearchResultsContainer.jsx';
-import OffenderSearch from '../containers/offenderSearchContainer.jsx';
+import OffenderSearchResults from '../containers/offenderSearchResultsContainer';
+import OffenderSearch from '../containers/offenderSearchContainer';
 import GovUkPhaseBanner from './govukPhaseBanner.jsx';
 
 export default () => (
