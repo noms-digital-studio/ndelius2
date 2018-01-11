@@ -4,7 +4,7 @@ import offenderSearch from '../components/offenderSearch.jsx'
 
 const mapStateToProps = (state) => {
     return {
-        searchTerm: state.searchTerm
+        searchTerm: state.search.searchTerm
     }
 };
 
