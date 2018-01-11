@@ -2,6 +2,8 @@ package interfaces;
 
 import data.offendersearch.OffenderSearchResult;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface Search {
-    OffenderSearchResult search(String searchTerm);
+    CompletableFuture<OffenderSearchResult> search(String searchTerm);
 }

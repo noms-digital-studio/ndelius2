@@ -12,6 +12,7 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.test.WithApplication;
 
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -36,7 +37,7 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void searchTermReturnsResults() {
-        when(elasticSearch.search(any())).thenReturn(new OffenderSearchResult());
+        when(elasticSearch.search(any())).thenReturn(completedFuture(new OffenderSearchResult()));
         val request = new Http.RequestBuilder().method(GET).uri("/searchOffender/smith");
         val result = route(app, request);
 

@@ -2,7 +2,6 @@ package services;
 
 import data.offendersearch.Address;
 import data.offendersearch.Alias;
-import data.offendersearch.OffenderSearchResult;
 import data.offendersearch.OffenderSummary;
 import lombok.val;
 import org.junit.Test;
@@ -23,12 +22,12 @@ public class ElasticSearchTest {
     @Test
     public void returnsSearchResults() {
 
-        Environment environment = new Environment(null, this.getClass().getClassLoader(), Mode.TEST);
-        ElasticSearch elasticSearch = new ElasticSearch(environment);
-        OffenderSearchResult results = elasticSearch.search("smith");
+        val environment = new Environment(null, this.getClass().getClassLoader(), Mode.TEST);
+        val elasticSearch = new ElasticSearch(environment);
+        val results = elasticSearch.search("smith");
 
-        assertThat(results.getOffenders().size()).isEqualTo(3);
-        assertThat(results.getOffenders()).contains(anOffenderSummary());
+        assertThat(results.join().getOffenders().size()).isEqualTo(3);
+        assertThat(results.join().getOffenders()).contains(anOffenderSummary());
     }
 
     private OffenderSummary anOffenderSummary() {
