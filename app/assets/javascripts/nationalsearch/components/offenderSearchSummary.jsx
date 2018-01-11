@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
-import OffenderSummaryTitle from './offenderSummaryTitle.jsx'
+import OffenderSummaryTitle from '../containers/offenderSummaryTitleContainer'
 import MT from '../containers/markableTextContainer'
+import AddContactLink from '../containers/addContactLinkContainer'
 
 const OffenderSearchSummary = (offenderSummary) => (
     <li>
@@ -19,7 +20,7 @@ const OffenderSearchSummary = (offenderSummary) => (
             <AliasList aliases={offenderSummary.aliases}/>
             <PreviousSurname name={offenderSummary.previousSurname}/>
             <AddressList addresses={offenderSummary.addresses}/>
-            <p><a className="clickable">Add contact</a></p>
+            <p><AddContactLink offenderId={offenderSummary.offenderId}/></p>
         </div>
     </li>
 )
