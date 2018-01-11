@@ -5,8 +5,12 @@ import helpers.Encryption;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import interfaces.Search;
 import lombok.val;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
@@ -25,7 +29,11 @@ import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.test.Helpers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SentencingCourtDetailsTest extends WithApplication {
+
+    @Mock
+    private Search search;
 
     private static final ImmutableList<String> LONDON_LOCALES =
         ImmutableList.<String>builder()
@@ -84,7 +92,8 @@ public class SentencingCourtDetailsTest extends WithApplication {
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                 bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock()),
+                bind(Search.class).toInstance(search)
             )
             .build();
     }

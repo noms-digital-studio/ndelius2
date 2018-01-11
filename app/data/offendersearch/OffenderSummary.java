@@ -1,23 +1,27 @@
 package data.offendersearch;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 @Data
-public class OffenderDetails {
+@Builder
+public class OffenderSummary {
     private String offenderId;
     private String firstName;
     private String surname;
     private String dateOfBirth;
     private String gender;
     private String crn;
-    private String age;
+    private int age;
     private String previousSurname;
 
     private String risk;
     private boolean currentOffender;
 
-    private List<String> aliases;
-    private List<String> addresses;
+    private List<Alias> aliases = emptyList();
+    private List<Address> addresses = emptyList();
 }

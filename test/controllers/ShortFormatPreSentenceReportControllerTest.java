@@ -5,8 +5,12 @@ import helpers.Encryption;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import interfaces.Search;
 import lombok.val;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.Helpers;
@@ -28,7 +32,11 @@ import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGeneratorMock, DocumentStoreMock, AnalyticsStoreMock {
+
+    @Mock
+    private Search search;
 
     @Test
     public void getSampleReportOK() {
@@ -956,7 +964,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 overrides(
                         bind(PdfGenerator.class).toInstance(this),
                         bind(DocumentStore.class).toInstance(this),
-                        bind(AnalyticsStore.class).toInstance(this)
+                        bind(AnalyticsStore.class).toInstance(this),
+                        bind(Search.class).toInstance(search)
                 )
                 .build();
     }
