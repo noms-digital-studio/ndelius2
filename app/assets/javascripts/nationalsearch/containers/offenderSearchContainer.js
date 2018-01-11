@@ -4,13 +4,13 @@ import offenderSearch from '../components/offenderSearch.jsx'
 
 const mapStateToProps = (state) => {
     return {
-        searchTerm: state.search.searchTerm
+        searchTerm: state.searchTerm
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        search: (searchTerm) => {
+        onClick: (searchTerm) => {
             search(dispatch, searchTerm)
         }
     }
