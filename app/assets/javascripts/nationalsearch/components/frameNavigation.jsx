@@ -1,10 +1,7 @@
 import PropTypes from 'prop-types'
 
 const FrameNavigation = ({navigate}) => (
-    <div>
-        <p>{navigate.shouldClose}</p>
-        <p>{navigate.nextPage}</p>
-    </div>
+    <span/>
 );
 
 FrameNavigation.propTypes = {
