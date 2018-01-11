@@ -4,6 +4,7 @@ import data.offendersearch.OffenderSearchResult;
 import interfaces.Search;
 import lombok.val;
 import play.Environment;
+import play.Logger;
 import play.libs.Json;
 import scala.io.Source;
 
@@ -36,7 +37,7 @@ public class ElasticSearch implements Search {
             offenderSearchResult.setOffenders(offenderSummaries);
             return offenderSearchResult;
         } catch (IOException e) {
-            // TODO logger
+            Logger.error("Failed to read offender search results", e);
             throw new RuntimeException(e);
         }
     }
