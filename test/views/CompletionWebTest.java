@@ -3,11 +3,9 @@ package views;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
-import interfaces.Search;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
@@ -23,9 +21,6 @@ import static play.inject.Bindings.bind;
 @RunWith(MockitoJUnitRunner.class)
 public class CompletionWebTest extends WithBrowser {
     private CompletionPage completionPage;
-
-    @Mock
-    private Search search;
 
     @Before
     public void before() {
@@ -48,8 +43,7 @@ public class CompletionWebTest extends WithBrowser {
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                 bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock()),
-                bind(Search.class).toInstance(search)
+                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
             )
             .build();
     }
