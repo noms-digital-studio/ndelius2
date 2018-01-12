@@ -6,7 +6,6 @@ import helpers.Encryption;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
-import interfaces.Search;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,8 +46,6 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
     private PdfGenerator pdfGenerator;
     @Mock
     private AnalyticsStore analyticsStore;
-    @Mock
-    private Search search;
 
     @Captor
     private ArgumentCaptor<ShortFormatPreSentenceReportData> reportData;
@@ -217,8 +214,7 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                bind(AnalyticsStore.class).toInstance(analyticsStore),
-                bind(Search.class).toInstance(search)
+                bind(AnalyticsStore.class).toInstance(analyticsStore)
             )
             .build();
     }

@@ -4,12 +4,10 @@ import com.google.common.collect.ImmutableList;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
-import interfaces.Search;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
@@ -28,9 +26,6 @@ import static play.inject.Bindings.bind;
 @RunWith(MockitoJUnitRunner.class)
 public class SentencingCourtDetailsWebTest extends WithBrowser {
     private SentencingCourtDetailsPage sentencingCourtDetailsPage;
-
-    @Mock
-    private Search search;
 
     private static final List<String> SORTED_LONDON_LOCALES =
             ImmutableList.<String>builder()
@@ -68,8 +63,7 @@ public class SentencingCourtDetailsWebTest extends WithBrowser {
             overrides(
                 bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
                 bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock()),
-                bind(Search.class).toInstance(search)
+                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
             )
             .build();
     }
