@@ -14,19 +14,17 @@ const FrameNavigation = ({navigate}) => {
     return (<span/>)
 };
 
-function toMessage({nextPage, parameters = {}}) {
+function toMessage({action, data = null}) {
     return JSON.stringify({
-        navigate: {
-            nextPage,
-            parameters
-        }
+        action,
+        data
     })
 }
 
 FrameNavigation.propTypes = {
     navigate: PropTypes.shape({
         shouldClose: PropTypes.bool.isRequired,
-        nextPage: PropTypes.string,
+        action: PropTypes.string,
         parameters: PropTypes.object,
     })
 };
