@@ -27,10 +27,12 @@ public class ElasticSearch implements Search {
     }
 
     @Override
-    public CompletionStage<OffenderSearchResult> search(String searchTerm) {
+    public CompletionStage<OffenderSearchResult> search(String searchTerm, int pageSize, int pageNumber) {
 
         val listener = new FutureListener<SearchResponse>();
         val searchSource = new SearchSourceBuilder().query(multiMatchQuery(searchTerm, "surname", "firstName", "gender"));
+        searchSource.size(pageSize);
+        searchSource.from(pageSize * (pageNumber - 1));
         val searchRequest = new SearchRequest("offender").source(searchSource);
 
         elasticSearchClient.searchAsync(searchRequest, listener);
@@ -45,6 +47,7 @@ public class ElasticSearch implements Search {
 
             val offenderSearchResult = new OffenderSearchResult();
             offenderSearchResult.setOffenders(offenderSummaries);
+            offenderSearchResult.setTotal(response.getHits().getTotalHits());
             return offenderSearchResult;
         });
     }
