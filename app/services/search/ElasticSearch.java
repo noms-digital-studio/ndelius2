@@ -2,13 +2,14 @@ package services.search;
 
 import data.offendersearch.OffenderSearchResult;
 import helpers.FutureListener;
-import helpers.JsonHelper;
 import interfaces.Search;
 import lombok.val;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import play.Logger;
+import play.libs.Json;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -34,6 +35,7 @@ public class ElasticSearch implements Search {
         searchSource.size(pageSize);
         searchSource.from(pageSize * (pageNumber - 1));
         val searchRequest = new SearchRequest("offender").source(searchSource);
+        Logger.debug("searchRequest: " + searchRequest.toString());
 
         elasticSearchClient.searchAsync(searchRequest, listener);
 
@@ -41,9 +43,7 @@ public class ElasticSearch implements Search {
 
             val offenderSummaries =
                 Arrays.stream(response.getHits().getHits())
-                    .map(offenderSearchHit -> JsonHelper.readValue(offenderSearchHit.getSourceAsString(),
-                                                                   ElasticSearchResult.class).toOffenderSummary()
-                    ).collect(toList());
+                    .map(documentFields -> Json.parse(documentFields.getSourceAsString())).collect(toList());
 
             val offenderSearchResult = new OffenderSearchResult();
             offenderSearchResult.setOffenders(offenderSummaries);
