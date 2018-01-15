@@ -38,12 +38,12 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void searchTermReturnsResults() {
-        when(elasticSearch.search(any(), anyInt(), anyInt())).thenReturn(completedFuture(new OffenderSearchResult()));
+        when(elasticSearch.search(any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
         val request = new Http.RequestBuilder().method(GET).uri("/searchOffender/smith");
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertEquals("{\"offenders\":[],\"suggestions\":[],\"total\":0}", contentAsString(result));
+        assertEquals("{\"offenders\":null,\"suggestions\":null,\"total\":0}", contentAsString(result));
     }
 
     @Override

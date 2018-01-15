@@ -1,5 +1,7 @@
 package services.search;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import data.offendersearch.OffenderSearchResult;
 import helpers.FutureListener;
 import interfaces.Search;
@@ -8,15 +10,16 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import play.Logger;
-import play.libs.Json;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.concurrent.CompletionStage;
 
+import static helpers.DateTimeHelper.calculateAge;
+import static java.time.Clock.systemUTC;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static play.libs.Json.parse;
 
 public class ElasticSearch implements Search {
 
@@ -33,23 +36,37 @@ public class ElasticSearch implements Search {
         val listener = new FutureListener<SearchResponse>();
         val searchSource = new SearchSourceBuilder().query(multiMatchQuery(searchTerm, "surname", "firstName", "gender"));
         searchSource.size(pageSize);
-        searchSource.from(pageSize * (pageNumber - 1));
-        val searchRequest = new SearchRequest("offender").source(searchSource);
-        Logger.debug("searchRequest: " + searchRequest.toString());
+        searchSource.from(pageSize * aValidPageNumberFor(pageNumber));
 
-        elasticSearchClient.searchAsync(searchRequest, listener);
+        elasticSearchClient.searchAsync(new SearchRequest("offender").source(searchSource), listener);
 
         return listener.stage().thenApply(response -> {
 
             val offenderSummaries =
-                Arrays.stream(response.getHits().getHits())
-                    .map(documentFields -> Json.parse(documentFields.getSourceAsString())).collect(toList());
+                stream(response.getHits().getHits())
+                    .map(documentFields -> {
+                        JsonNode node = parse(documentFields.getSourceAsString());
+                        return embellishNode(node);
+                    }).collect(toList());
 
-            val offenderSearchResult = new OffenderSearchResult();
-            offenderSearchResult.setOffenders(offenderSummaries);
-            offenderSearchResult.setTotal(response.getHits().getTotalHits());
-            return offenderSearchResult;
+            return OffenderSearchResult.builder()
+                .offenders(offenderSummaries)
+                .total(response.getHits().getTotalHits())
+                .build();
         });
+    }
+
+    private int aValidPageNumberFor(int pageNumber) {
+        return pageNumber >= 1 ? pageNumber - 1 : 0;
+    }
+
+    private JsonNode embellishNode(JsonNode node) {
+        JsonNode dateOfBirth =  node.get("dateOfBirth");
+        if (dateOfBirth != null) {
+            return ((ObjectNode) node).put("age", calculateAge(dateOfBirth.asText(), systemUTC()));
+        }
+
+        return node;
     }
 
 }
