@@ -26,7 +26,7 @@ public class ElasticSearchTest {
 
         val environment = new Environment(null, this.getClass().getClassLoader(), Mode.TEST);
         val elasticSearch = new ElasticSearch(null);
-        val results = elasticSearch.search("smith");
+        val results = elasticSearch.search("smith", 10, 0);
 
         assertThat(results.toCompletableFuture().join().getOffenders().size()).isEqualTo(3);
         assertThat(results.toCompletableFuture().join().getOffenders()).contains(anOffenderSummary());
