@@ -29,11 +29,10 @@ public class ElasticSearch implements Search {
     @Override
     public CompletionStage<OffenderSearchResult> search(String searchTerm) {
 
+        val listener = new FutureListener<SearchResponse>();
         val searchSource = new SearchSourceBuilder().query(multiMatchQuery(searchTerm, "surname", "firstName", "gender"));
-
         val searchRequest = new SearchRequest("offender").source(searchSource);
 
-        val listener = new FutureListener<SearchResponse>();
         elasticSearchClient.searchAsync(searchRequest, listener);
 
         return listener.stage().thenApply(response -> {
