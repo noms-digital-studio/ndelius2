@@ -1,5 +1,6 @@
 import OffenderSearchSummary from './offenderSearchSummary.jsx';
 import SearchResultsTitle from '../containers/searchResultsTitleContainer';
+import PageSelection from '../containers/pageSelectionContainer';
 
 import PropTypes from "prop-types";
 
@@ -11,6 +12,7 @@ const OffenderSearchResults = ({results}) => (
                 <OffenderSearchSummary {...offenderSummary} key={offenderSummary.offenderId}/>
             ))}
         </ul>
+        <PageSelection/>
     </div>
 );
 
