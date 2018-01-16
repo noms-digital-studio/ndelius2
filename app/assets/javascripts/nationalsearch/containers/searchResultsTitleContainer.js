@@ -1,9 +1,12 @@
 import { connect } from 'react-redux'
 import searchResultsTitle from '../components/searchResultsTitle.jsx'
+import { PAGE_SIZE } from '../actions/search'
 
 const mapStateToProps = state => {
     return {
-        results: state.search.results,
+        pageNumber: state.search.pageNumber,
+        total: state.search.total,
+        pageSize: PAGE_SIZE,
         searchTerm: state.search.searchTerm
     }
 }
