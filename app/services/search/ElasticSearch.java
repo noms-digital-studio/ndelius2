@@ -44,8 +44,8 @@ public class ElasticSearch implements Search {
 
             val offenderSummaries =
                 stream(response.getHits().getHits())
-                    .map(documentFields -> {
-                        JsonNode node = parse(documentFields.getSourceAsString());
+                    .map(document -> {
+                        JsonNode node = parse(document.getSourceAsString());
                         return embellishNode(node);
                     }).collect(toList());
 
