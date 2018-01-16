@@ -69,6 +69,7 @@ public class ElasticSearchTest {
     }
 
     @Test
+    @Ignore
     public void calculatesTheCorrectSearchSourceFromValueWhenPageNumberIsZero() {
 
         val elasticSearch = new ElasticSearch(restHighLevelClient);
