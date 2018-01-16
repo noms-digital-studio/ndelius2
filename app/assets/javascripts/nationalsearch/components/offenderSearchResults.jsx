@@ -1,6 +1,5 @@
 import OffenderSearchSummary from './offenderSearchSummary.jsx';
 import SearchResultsTitle from '../containers/searchResultsTitleContainer';
-import LegacySearchLink from '../containers/legacySearchLinkContainer';
 import PageSelection from '../containers/pageSelectionContainer';
 
 import PropTypes from "prop-types";
@@ -15,7 +14,6 @@ const OffenderSearchResults = ({results}) => (
             ))}
         </ul>
         <PageSelection/>
-        <LegacySearchLink/>
     </div>
 );
 
