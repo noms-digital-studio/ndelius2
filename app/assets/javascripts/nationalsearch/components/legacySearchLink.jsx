@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types'
 
-const LegacySearchLink = ({legacySearch}) => (
-    <a className="clickable" onClick={legacySearch}>Advanced search</a>
+const LegacySearchLink = ({legacySearch, children}) => (
+    <a className="clickable" onClick={legacySearch}>{children}</a>
 )
 
 LegacySearchLink.propTypes = {
-    legacySearch: PropTypes.func.isRequired
+    legacySearch: PropTypes.func.isRequired,
+    children: PropTypes.node.isRequired
 }
 
 

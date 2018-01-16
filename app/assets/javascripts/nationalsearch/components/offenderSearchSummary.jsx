@@ -5,7 +5,7 @@ import AddContactLink from '../containers/addContactLinkContainer'
 
 const OffenderSearchSummary = (offenderSummary) => (
     <li>
-        <div className='panel panel-border-narrow'>
+        <div className='panel panel-border-narrow offender-summary'>
             <OffenderSummaryTitle {...offenderSummary}/>
             <p className='no-margin bottom'>
                 <span className='bold'>CRN:&nbsp;</span>
