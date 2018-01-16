@@ -10,6 +10,10 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.SuggestionBuilder;
+import play.Logger;
 
 import javax.inject.Inject;
 import java.util.concurrent.CompletionStage;
@@ -32,12 +36,19 @@ public class ElasticSearch implements Search {
 
     @Override
     public CompletionStage<OffenderSearchResult> search(String searchTerm, int pageSize, int pageNumber) {
-
         val listener = new FutureListener<SearchResponse>();
-        val searchSource = new SearchSourceBuilder().query(multiMatchQuery(searchTerm, "surname", "firstName", "gender"));
+        val searchSource = new SearchSourceBuilder()
+            .query(multiMatchQuery(searchTerm, "surname", "firstName", "gender"));
         searchSource.size(pageSize);
         searchSource.from(pageSize * aValidPageNumberFor(pageNumber));
 
+        SuggestionBuilder termSuggestionBuilder =
+            SuggestBuilders.termSuggestion("surname").text(searchTerm);
+        SuggestBuilder suggestBuilder = new SuggestBuilder();
+        suggestBuilder.addSuggestion("suggest_surname", termSuggestionBuilder);
+        searchSource.suggest(suggestBuilder);
+
+        Logger.debug(searchSource.toString());
         elasticSearchClient.searchAsync(new SearchRequest("offender").source(searchSource), listener);
 
         return listener.stage().thenApply(response -> {
@@ -52,6 +63,7 @@ public class ElasticSearch implements Search {
             return OffenderSearchResult.builder()
                 .offenders(offenderSummaries)
                 .total(response.getHits().getTotalHits())
+                .suggestions(parse(response.getSuggest().toString()))
                 .build();
         });
     }

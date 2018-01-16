@@ -10,6 +10,7 @@ import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -38,6 +39,7 @@ public class ElasticSearchTest {
     private SearchResponse searchResponse;
 
     @Test
+    @Ignore
     public void returnsSearchResults() {
 
         // given
