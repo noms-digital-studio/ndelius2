@@ -1,22 +1,28 @@
 import PropTypes from "prop-types";
 
-const SearchResultsTitle = ({results, searchTerm}) => {
+const SearchResultsTitle = ({pageNumber, pageSize, total, searchTerm}) => {
     if (searchTerm === '') {
         return (<div/>);
     }
-    if (results.length === 0) {
+    if (total === 0) {
         return (
             <h2 className="heading-medium margin-top medium"><span>0 results found</span></h2>
         )
     }
     return (
-        <h2 className="heading-medium margin-top medium"><span>{`${results.length} results found, showing 1 to ${results.length}`}</span></h2>
+        <h2 className="heading-medium margin-top medium">
+            <span>{`${total} results found, showing ${fromResult(pageNumber, pageSize)} to ${toResult(pageNumber, pageSize, total)}`}</span>
+        </h2>
     )
 }
 
+const fromResult = (pageNumber, pageSize) => ((pageNumber - 1) * pageSize) + 1
+const toResult = (pageNumber, pageSize, total) => Math.min(total, pageNumber * pageSize)
 
 SearchResultsTitle.propTypes = {
-    results: PropTypes.array.isRequired,
+    pageNumber: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+    total: PropTypes.number.isRequired,
     searchTerm: PropTypes.string.isRequired,
 };
 
