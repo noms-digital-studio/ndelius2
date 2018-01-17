@@ -11,8 +11,6 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
-import org.elasticsearch.search.suggest.SuggestBuilders;
-import org.elasticsearch.search.suggest.SuggestionBuilder;
 import play.Logger;
 
 import javax.inject.Inject;
@@ -23,6 +21,7 @@ import static java.time.Clock.systemUTC;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 import static play.libs.Json.parse;
 
 public class ElasticSearch implements Search {
@@ -42,10 +41,9 @@ public class ElasticSearch implements Search {
         searchSource.size(pageSize);
         searchSource.from(pageSize * aValidPageNumberFor(pageNumber));
 
-        SuggestionBuilder termSuggestionBuilder =
-            SuggestBuilders.termSuggestion("surname").text(searchTerm);
         SuggestBuilder suggestBuilder = new SuggestBuilder();
-        suggestBuilder.addSuggestion("suggest_surname", termSuggestionBuilder);
+        suggestBuilder.addSuggestion("suggest_surname", termSuggestion("surname").text(searchTerm));
+        suggestBuilder.addSuggestion("suggest_firstName", termSuggestion("firstName").text(searchTerm));
         searchSource.suggest(suggestBuilder);
 
         Logger.debug(searchSource.toString());
