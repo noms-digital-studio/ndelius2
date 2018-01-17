@@ -9,12 +9,14 @@ import lombok.val;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import play.Logger;
 
 import javax.inject.Inject;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
 
 import static helpers.DateTimeHelper.calculateAge;
 import static java.time.Clock.systemUTC;
@@ -36,39 +38,75 @@ public class ElasticSearch implements Search {
     @Override
     public CompletionStage<OffenderSearchResult> search(String searchTerm, int pageSize, int pageNumber) {
         val listener = new FutureListener<SearchResponse>();
+        elasticSearchClient.searchAsync(new SearchRequest("offender")
+            .source(searchSourceFor(searchTerm, pageSize, pageNumber)), listener);
+        return listener.stage().thenApply(processSearchResponse());
+    }
+
+    private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
         val searchSource = new SearchSourceBuilder()
-            .query(multiMatchQuery(searchTerm, "surname", "firstName", "gender"));
-        searchSource.size(pageSize);
-        searchSource.from(pageSize * aValidPageNumberFor(pageNumber));
+            .query(multiMatchQuery(searchTerm,
+                    "firstName", "surname", "gender",
+                    "crn",
+                    "aliases.firstName",
+                    "aliases.surname",
+                    "addresses.town",
+                    "addresses.postcode",
+                    "addresses.streetName",
+                    "addresses.county",
 
-        SuggestBuilder suggestBuilder = new SuggestBuilder();
-        suggestBuilder.addSuggestion("surname", termSuggestion("surname").text(searchTerm));
-        suggestBuilder.addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
-        searchSource.suggest(suggestBuilder);
-
+                    // new format, not yet in ES
+                    "otherIds.crn",
+                    "offenderAliases.firstName",
+                    "offenderAliases.surname",
+                    "contactDetails.addresses.streetName",
+                    "contactDetails.addresses.town",
+                    "contactDetails.addresses.postcode")
+                    .fuzziness(Fuzziness.AUTO)
+            )
+            .size(pageSize)
+            .from(pageSize * aValidPageNumberFor(pageNumber))
+            .suggest(suggestionsFor(searchTerm));
         Logger.debug(searchSource.toString());
-        elasticSearchClient.searchAsync(new SearchRequest("offender").source(searchSource), listener);
+        return searchSource;
+    }
 
-        return listener.stage().thenApply(response -> {
+    private SuggestBuilder suggestionsFor(String searchTerm) {
+        return new SuggestBuilder()
+                .addSuggestion("surname", termSuggestion("surname").text(searchTerm))
+                .addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
+    }
 
-            val offenderSummaries =
+    private Function<SearchResponse, OffenderSearchResult> processSearchResponse() {
+        return response -> {
+
+            val offenders =
                 stream(response.getHits().getHits())
-                    .map(document -> {
-                        JsonNode node = parse(document.getSourceAsString());
-                        return embellishNode(node);
+                    .map(searchHit -> {
+                        JsonNode offender = parse(searchHit.getSourceAsString());
+                        return embellishNode(offender);
                     }).collect(toList());
 
             return OffenderSearchResult.builder()
-                .offenders(offenderSummaries)
+                .offenders(offenders)
                 .total(response.getHits().getTotalHits())
-                .suggestions(parse(response.getSuggest().toString()))
+                .suggestions(suggestionsIn(response))
                 .build();
-        });
+        };
+    }
+
+    private JsonNode suggestionsIn(SearchResponse response) {
+        if (response.getSuggest() != null) {
+            return parse(response.getSuggest().toString());
+        }
+
+        return parse("{}");
     }
 
     private int aValidPageNumberFor(int pageNumber) {
         return pageNumber >= 1 ? pageNumber - 1 : 0;
     }
+
 
     private JsonNode embellishNode(JsonNode node) {
         JsonNode dateOfBirth =  node.get("dateOfBirth");

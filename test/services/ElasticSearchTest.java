@@ -3,19 +3,15 @@ package services;
 import data.offendersearch.OffenderSearchResult;
 import helpers.FutureListener;
 import lombok.val;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import play.Environment;
 import play.Mode;
 import scala.io.Source;
@@ -25,9 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ElasticSearchTest {
@@ -39,17 +35,13 @@ public class ElasticSearchTest {
     private SearchResponse searchResponse;
 
     @Test
-    @Ignore
     public void returnsSearchResults() {
 
         // given
         val elasticSearch = new ElasticSearch(restHighLevelClient);
-
         val totalHits = 1;
-        val maxScore = 42;
-        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), totalHits, maxScore));
-
-        doAnswer((Answer) invocation -> {
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), totalHits, 42));
+        doAnswer(invocation -> {
             val listener = (FutureListener)invocation.getArguments()[1];
             listener.onResponse(searchResponse);
             return null;
@@ -59,26 +51,35 @@ public class ElasticSearchTest {
         val results = elasticSearch.search("smith", 10, 3);
 
         // then
-        verify(restHighLevelClient, times(1)).searchAsync(eq(getSearchRequestStartingFrom(20)), isA(FutureListener.class));
-
         OffenderSearchResult result = results.toCompletableFuture().join();
-        assertThat(result.getTotal()).isEqualTo(1);
-        assertThat(result.getOffenders().size()).isEqualTo(1);
+        assertThat(result.getTotal()).isEqualTo(totalHits);
+        assertThat(result.getOffenders().size()).isEqualTo(totalHits);
         assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(123);
         assertThat(result.getOffenders().get(0).get("age").asInt()).isNotEqualTo(0);
     }
 
     @Test
-    @Ignore
     public void calculatesTheCorrectSearchSourceFromValueWhenPageNumberIsZero() {
 
+        // given
         val elasticSearch = new ElasticSearch(restHighLevelClient);
+        val totalHits = 1;
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), totalHits, 42));
+        doAnswer(invocation -> {
+            val listener = (FutureListener)invocation.getArguments()[1];
+            listener.onResponse(searchResponse);
+            return null;
+        }).when(restHighLevelClient).searchAsync(any(), any());
 
-        restHighLevelClient.searchAsync(any(), any());
-
+        // when
         val results = elasticSearch.search("smith", 10, 0);
 
-        verify(restHighLevelClient, times(1)).searchAsync(eq(getSearchRequestStartingFrom(0)), isA(FutureListener.class));
+        // then
+        OffenderSearchResult result = results.toCompletableFuture().join();
+        assertThat(result.getTotal()).isEqualTo(totalHits);
+        assertThat(result.getOffenders().size()).isEqualTo(totalHits);
+        assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(123);
+        assertThat(result.getOffenders().get(0).get("age").asInt()).isNotEqualTo(0);
     }
 
     private SearchHit[] getSearchHitArray() {
@@ -89,13 +90,6 @@ public class ElasticSearchTest {
         searchHitMap.put("_source", bytesReference);
         val searchHit = SearchHit.createFromMap(searchHitMap);
         return new SearchHit[]{searchHit};
-    }
-
-    private SearchRequest getSearchRequestStartingFrom(int i) {
-        val searchSource = new SearchSourceBuilder().query(multiMatchQuery("smith", "surname", "firstName", "gender"));
-        searchSource.size(10);
-        searchSource.from(i);
-        return new SearchRequest("offender").source(searchSource);
     }
 
 }
