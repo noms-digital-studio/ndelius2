@@ -59,7 +59,6 @@ public class ElasticSearchTest {
     }
 
     @Test
-    @Ignore
     public void calculatesTheCorrectSearchSourceFromValueWhenPageNumberIsZero() {
 
         // given
