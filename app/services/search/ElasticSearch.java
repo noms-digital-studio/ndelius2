@@ -42,8 +42,8 @@ public class ElasticSearch implements Search {
         searchSource.from(pageSize * aValidPageNumberFor(pageNumber));
 
         SuggestBuilder suggestBuilder = new SuggestBuilder();
-        suggestBuilder.addSuggestion("suggest_surname", termSuggestion("surname").text(searchTerm));
-        suggestBuilder.addSuggestion("suggest_firstName", termSuggestion("firstName").text(searchTerm));
+        suggestBuilder.addSuggestion("surname", termSuggestion("surname").text(searchTerm));
+        suggestBuilder.addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
         searchSource.suggest(suggestBuilder);
 
         Logger.debug(searchSource.toString());
