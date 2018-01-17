@@ -91,3 +91,9 @@ curl -H "Content-Type: application/json" -XPOST 'localhost:9200/offender/_bulk?p
 
 ```
 
+Bulk insert
+```
+curl -H "Content-Type: application/json" -XPOST 'localhost:9200/offender/_bulk?pretty&refresh' --data-binary "@es-test-data.txt"
+
+```
+
