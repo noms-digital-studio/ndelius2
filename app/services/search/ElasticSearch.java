@@ -9,7 +9,6 @@ import lombok.val;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import play.Logger;
@@ -62,7 +61,6 @@ public class ElasticSearch implements Search {
                     "contactDetails.addresses.streetName",
                     "contactDetails.addresses.town",
                     "contactDetails.addresses.postcode")
-                    .fuzziness(Fuzziness.AUTO)
             )
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
