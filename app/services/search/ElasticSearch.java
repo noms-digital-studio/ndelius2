@@ -60,6 +60,7 @@ public class ElasticSearch implements Search {
         val searchSource = new SearchSourceBuilder()
             .query(multiMatchQuery(searchTerm,
                     "dateOfBirth",
+                                "firstName",
                                 "surname",
                                 "gender",
                                 "otherIds.crn",
@@ -90,6 +91,7 @@ public class ElasticSearch implements Search {
 
     private Function<SearchResponse, OffenderSearchResult> processSearchResponse() {
         return response -> {
+            Logger.debug(response.toString());
 
             val offenders =
                 stream(response.getHits().getHits())
