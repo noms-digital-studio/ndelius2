@@ -59,22 +59,22 @@ public class ElasticSearch implements Search {
     private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
         val searchSource = new SearchSourceBuilder()
             .query(multiMatchQuery(searchTerm,
-                    "dateOfBirth",
-                                "firstName",
-                                "surname",
-                                "gender",
-                                "otherIds.crn",
-                                "otherIds.nomsNumber",
-                                "otherIds.niNumber",
-                                "otherIds.pncNumber",
-                                "otherIds.croNumber",
-                                "offenderAliases.firstName",
-                                "offenderAliases.surname",
-                                "contactDetails.addresses.streetName",
-                                "contactDetails.addresses.town",
-                                "contactDetails.addresses.county",
-                                "contactDetails.addresses.postcode")
-                                .lenient(true)
+                "firstName",
+                "surname",
+                "dateOfBirth",
+                "gender",
+                "otherIds.crn",
+                "otherIds.nomsNumber",
+                "otherIds.niNumber",
+                "otherIds.pncNumber",
+                "otherIds.croNumber",
+                "offenderAliases.firstName",
+                "offenderAliases.surname",
+                "contactDetails.addresses.streetName",
+                "contactDetails.addresses.town",
+                "contactDetails.addresses.county",
+                "contactDetails.addresses.postcode")
+                .lenient(true)
             )
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
@@ -85,8 +85,8 @@ public class ElasticSearch implements Search {
 
     private SuggestBuilder suggestionsFor(String searchTerm) {
         return new SuggestBuilder()
-                .addSuggestion("surname", termSuggestion("surname").text(searchTerm))
-                .addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
+            .addSuggestion("surname", termSuggestion("surname").text(searchTerm))
+            .addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
     }
 
     private Function<SearchResponse, OffenderSearchResult> processSearchResponse() {
@@ -122,7 +122,7 @@ public class ElasticSearch implements Search {
 
 
     private JsonNode embellishNode(JsonNode node) {
-        JsonNode dateOfBirth =  node.get("dateOfBirth");
+        JsonNode dateOfBirth = node.get("dateOfBirth");
         if (dateOfBirth != null) {
             return ((ObjectNode) node).put("age", calculateAge(dateOfBirth.asText(), systemUTC()));
         }
