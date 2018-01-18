@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
-const SearchResultsTitle = ({pageNumber, pageSize, total, searchTerm}) => {
-    if (searchTerm === '') {
+const SearchResultsTitle = ({pageNumber, pageSize, total, resultsReceived}) => {
+    if (resultsReceived === false) {
         return (<div/>);
     }
     if (total === 0) {
@@ -23,7 +23,7 @@ SearchResultsTitle.propTypes = {
     pageNumber: PropTypes.number.isRequired,
     pageSize: PropTypes.number.isRequired,
     total: PropTypes.number.isRequired,
-    searchTerm: PropTypes.string.isRequired,
+    resultsReceived: PropTypes.bool.isRequired,
 };
 
 
