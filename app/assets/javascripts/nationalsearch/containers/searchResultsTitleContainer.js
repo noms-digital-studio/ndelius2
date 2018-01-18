@@ -7,7 +7,7 @@ const mapStateToProps = state => {
         pageNumber: state.search.pageNumber,
         total: state.search.total,
         pageSize: PAGE_SIZE,
-        searchTerm: state.search.searchTerm
+        resultsReceived: state.search.resultsReceived
     }
 }
 
