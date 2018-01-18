@@ -14,6 +14,8 @@ import org.elasticsearch.search.suggest.SuggestBuilder;
 import play.Logger;
 
 import javax.inject.Inject;
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
@@ -40,6 +42,18 @@ public class ElasticSearch implements Search {
         elasticSearchClient.searchAsync(new SearchRequest("offender")
             .source(searchSourceFor(searchTerm, pageSize, pageNumber)), listener);
         return listener.stage().thenApply(processSearchResponse());
+    }
+
+    @Override
+    public CompletionStage<Boolean> isHealthy() {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return elasticSearchClient.ping();
+            } catch (IOException e) {
+                Logger.error(e.getMessage(), e);
+                return false;
+            }
+        });
     }
 
     private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
