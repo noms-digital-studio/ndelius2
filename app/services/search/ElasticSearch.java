@@ -46,20 +46,16 @@ public class ElasticSearch implements Search {
         val searchSource = new SearchSourceBuilder()
             .query(multiMatchQuery(searchTerm,
                     "firstName", "surname", "gender",
-                    "crn",
-                    "aliases.firstName",
-                    "aliases.surname",
-                    "addresses.town",
-                    "addresses.postcode",
-                    "addresses.streetName",
-                    "addresses.county",
-
-                    // new format, not yet in ES
                     "otherIds.crn",
+                    "otherIds.nomsNumber",
+                    "otherIds.niNumber",
+                    "otherIds.pncNumber",
+                    "otherIds.croNumber",
                     "offenderAliases.firstName",
                     "offenderAliases.surname",
                     "contactDetails.addresses.streetName",
                     "contactDetails.addresses.town",
+                    "contactDetails.addresses.county",
                     "contactDetails.addresses.postcode")
             )
             .size(pageSize)
