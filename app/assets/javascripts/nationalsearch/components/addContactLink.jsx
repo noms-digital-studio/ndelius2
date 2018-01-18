@@ -5,7 +5,7 @@ const AddContactLink = ({offenderId, addContact}) => (
 )
 
 AddContactLink.propTypes = {
-    offenderId: PropTypes.string.isRequired,
+    offenderId: PropTypes.number.isRequired,
     addContact: PropTypes.func.isRequired
 }
 

@@ -13,7 +13,7 @@ const OffenderSummaryTitle = ({showOffenderDetails, offenderId, firstName, surna
 
 OffenderSummaryTitle.propTypes = {
     showOffenderDetails: PropTypes.func.isRequired,
-    offenderId: PropTypes.string.isRequired,
+    offenderId: PropTypes.number.isRequired,
     firstName: PropTypes.string.isRequired,
     surname: PropTypes.string.isRequired,
     dateOfBirth: PropTypes.string.isRequired

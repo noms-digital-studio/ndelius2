@@ -9,9 +9,9 @@ const OffenderSearchSummary = (offenderSummary) => (
             <OffenderSummaryTitle {...offenderSummary}/>
             <p className='no-margin bottom'>
                 <span className='bold'>CRN:&nbsp;</span>
-                <span className='bold margin-right'><MT text={offenderSummary.crn}/></span>
-                <Risk risk={offenderSummary.risk}/>
-                <CurrentOffender current={offenderSummary.currentOffender}/>
+                <span className='bold margin-right'><MT text={offenderSummary.otherIds.crn}/></span>
+                <Risk risk={offenderSummary.offenderProfile.riskColour}/>
+                <CurrentOffender current={offenderSummary.currentDisposal}/>
                 <span className='margin-right'>
                     <span><MT text={offenderSummary.gender}/>,&nbsp;</span>
                     <span>{offenderSummary.age}</span>
@@ -29,9 +29,11 @@ OffenderSearchSummary.propTypes = {
     firstName: PropTypes.string.isRequired,
     surname: PropTypes.string.isRequired,
     dateOfBirth: PropTypes.string.isRequired,
-    crn: PropTypes.string.isRequired,
+    otherIds: PropTypes.shape({
+        crn: PropTypes.string.isRequired
+    }).isRequired,
     risk: PropTypes.string,
-    currentOffender: PropTypes.bool.isRequired,
+    currentDisposal: PropTypes.string.isRequired,
     gender: PropTypes.string.isRequired,
     age: PropTypes.number.isRequired,
     aliases: PropTypes.arrayOf(
@@ -61,7 +63,7 @@ const Risk = ({risk}) => {
 }
 
 const CurrentOffender = ({current}) => {
-    if (current) {
+    if (current && current === '1') {
         return (<span className='margin-right'>Current offender&nbsp;|</span>)
     }
     return (<span/>)
@@ -123,13 +125,13 @@ const PreviousSurname = ({name}) => {
     return (<span/>)
 }
 
-function mapRiskColor(risk) {
-    switch (risk) {
-        case 'Red':
+function mapRiskColor(risk = '') {
+    switch (risk.toLowerCase()) {
+        case 'red':
             return 'risk-red';
-        case 'Amber':
+        case 'amber':
             return 'risk-amber';
-        case 'Green':
+        case 'green':
             return 'risk-green';
     }
     return '';
