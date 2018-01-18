@@ -9,9 +9,10 @@ const SearchResultsTitle = ({pageNumber, pageSize, total, resultsReceived}) => {
             <h2 className="heading-medium margin-top medium"><span>0 results found</span></h2>
         )
     }
+    const resultPlural = total === 1 ? 'result' : 'results'
     return (
         <h2 className="heading-medium margin-top medium">
-            <span>{`${total} results found, showing ${fromResult(pageNumber, pageSize)} to ${toResult(pageNumber, pageSize, total)}`}</span>
+            <span>{`${total} ${resultPlural} found, showing ${fromResult(pageNumber, pageSize)} to ${toResult(pageNumber, pageSize, total)}`}</span>
         </h2>
     )
 }
