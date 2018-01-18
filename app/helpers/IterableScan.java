@@ -5,7 +5,6 @@ import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import java.util.Iterator;
 import java.util.Optional;
-import org.jetbrains.annotations.NotNull;
 
 public class IterableScan implements Iterable<ScanResult>, Iterator<ScanResult> {
 
@@ -21,7 +20,6 @@ public class IterableScan implements Iterable<ScanResult>, Iterator<ScanResult> 
         this.scanRequest = scanRequest;
     }
 
-    @NotNull
     @Override
     public Iterator<ScanResult> iterator() {
 

@@ -127,6 +127,11 @@ public class DynamoDbStore implements AnalyticsStore {
         );
     }
 
+    @Override
+    public CompletableFuture<Boolean> isUp() {
+        return CompletableFuture.supplyAsync(() -> true);
+    }
+
     private Table getTable(String name, Function<CreateTableRequest, CreateTableRequest> request) {
 
         TableDescription description;
