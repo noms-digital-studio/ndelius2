@@ -138,4 +138,4 @@ function mapRiskColor(risk = '') {
 
 }
 
-export default OffenderSearchSummary;
+export { OffenderSearchSummary as default, Address }
