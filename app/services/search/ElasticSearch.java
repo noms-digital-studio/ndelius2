@@ -59,7 +59,7 @@ public class ElasticSearch implements Search {
     private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
         val searchSource = new SearchSourceBuilder()
             .query(multiMatchQuery(searchTerm,
-                    "firstName", "surname", "gender",
+                    "dateOfBirth", "surname", "gender", "dateOfBirth",
                     "otherIds.crn",
                     "otherIds.nomsNumber",
                     "otherIds.niNumber",
@@ -71,6 +71,7 @@ public class ElasticSearch implements Search {
                     "contactDetails.addresses.town",
                     "contactDetails.addresses.county",
                     "contactDetails.addresses.postcode")
+                    .lenient(true)
             )
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
