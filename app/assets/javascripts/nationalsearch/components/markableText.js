@@ -24,11 +24,12 @@ const Text = ({text, highlight}) =>  {
     }
 }
 
-const toHighlightList = (text, searchTerm) => findAll({
-    autoEscape: true,
-    searchWords: searchTerm.split(' '),
-    textToHighlight: text
-})
+function toHighlightList(text, searchTerm) {
+    return findAll({
+        autoEscape: true,
+        searchWords: searchTerm.split(' '),
+        textToHighlight: text});
+}
 
 
 MarkableText.propTypes = {

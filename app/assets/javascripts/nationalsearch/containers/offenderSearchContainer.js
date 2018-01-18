@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { search } from '../actions/search'
-import offenderSearch from '../components/offenderSearch.jsx'
+import offenderSearch from '../components/offenderSearch'
 
 const mapStateToProps = (state) => {
     return {

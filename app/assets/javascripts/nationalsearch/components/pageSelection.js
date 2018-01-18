@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types'
 
-const MAX_PAGES = 10
-
 const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm}) => (
     <div>
         {shouldDisplay(pageSize, total) &&
@@ -12,7 +10,7 @@ const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm}) => (
                 <span className='margin-right'>-</span>
             </span>
             }
-            {range(Math.min(totalPages(pageSize, total), MAX_PAGES))
+            {range(totalPages(pageSize, total))
                 .map(linkPageNumber => <PageLink
                                             key={linkPageNumber}
                                             pageNumber={pageNumber}
@@ -50,7 +48,7 @@ const PageLink = ({pageNumber, linkPageNumber, gotoPage, searchTerm}) => {
 
 const shouldDisplay = (pageSize, total) => total > pageSize
 const totalPages = (pageSize, total) => Math.ceil(total / pageSize)
-const range = (count) => [...Array(count)].map((v, i) => i + 1)
+const range = (count) => [...Array(count).keys()].map(key => key + 1)
 const notOnFirstPage = (currentPageNumber) => currentPageNumber > 1
 const notOnLastPage = (currentPageNumber, totalPages) => currentPageNumber !== totalPages
 

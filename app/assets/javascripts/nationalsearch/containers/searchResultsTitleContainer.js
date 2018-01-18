@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import searchResultsTitle from '../components/searchResultsTitle.jsx'
+import searchResultsTitle from '../components/searchResultsTitle'
 import { PAGE_SIZE } from '../actions/search'
 
 const mapStateToProps = state => {

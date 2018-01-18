@@ -21,21 +21,16 @@ const Suggestions = ({searchTerm, suggestions, search}) => {
 
 }
 
-const suggestionsToOrderedMapping = suggestions =>
-    sortByScore(flatMap(suggestions, (
-        suggestion =>
-            suggestion.options.map(option => ({
-                                text: option.text,
-                                score: option.score,
-                                original: suggestion.text})
-    ))))
+const suggestionsToOrderedMapping = (suggestions) => sort(flatMap(suggestions, (suggestion => suggestion.options.map(option => ({
+    text: option.text,
+    score: option.score,
+    original: suggestion.text
+})))), (a, b) => b.score - a.score)
 const replace = (searchTerm, from, to) => searchTerm.replace(new RegExp(from, 'gi'), to)
-const sortByScore = (array) => {
-    array.sort(scoreComparator)
+const sort = (array, fn) => {
+    array.sort(fn)
     return array
 }
-const scoreComparator = (a, b) => b.score - a.score
-
 Suggestions.propTypes = {
     suggestions: PropTypes.arrayOf(
         PropTypes.shape({

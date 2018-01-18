@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import offenderSearchResults from '../components/offenderSearchResults.jsx'
+import offenderSearchResults from '../components/offenderSearchResults'
 
 const mapStateToProps = state => {
     return {

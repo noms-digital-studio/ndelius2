@@ -14,11 +14,12 @@ const FrameNavigation = ({navigate}) => {
     return (<span/>)
 };
 
-const toMessage = ({action, data = null}) =>
-    JSON.stringify({
+function toMessage({action, data = null}) {
+    return JSON.stringify({
         action,
         data
     })
+}
 
 FrameNavigation.propTypes = {
     navigate: PropTypes.shape({
