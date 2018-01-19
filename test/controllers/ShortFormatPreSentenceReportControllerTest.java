@@ -7,8 +7,6 @@ import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.Helpers;
@@ -30,7 +28,6 @@ import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 
-@RunWith(MockitoJUnitRunner.class)
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGeneratorMock, DocumentStoreMock, AnalyticsStoreMock {
 
     @Test

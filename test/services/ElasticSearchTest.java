@@ -52,7 +52,7 @@ public class ElasticSearchTest {
         verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
         assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(MultiMatchQueryBuilder.class);
 
-        MultiMatchQueryBuilder query = (MultiMatchQueryBuilder) searchRequest.getValue().source().query();
+        val query = (MultiMatchQueryBuilder) searchRequest.getValue().source().query();
 
         assertThat(query.fields()).containsKeys("firstName");
         assertThat(query.fields()).containsKeys("surname");
@@ -87,7 +87,7 @@ public class ElasticSearchTest {
         val results = elasticSearch.search("smith", 10, 3);
 
         // then
-        OffenderSearchResult result = results.toCompletableFuture().join();
+        val result = results.toCompletableFuture().join();
         assertThat(result.getTotal()).isEqualTo(totalHits);
         assertThat(result.getOffenders().size()).isEqualTo(totalHits);
         assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(123);
@@ -111,7 +111,7 @@ public class ElasticSearchTest {
         val results = elasticSearch.search("smith", 10, 0);
 
         // then
-        OffenderSearchResult result = results.toCompletableFuture().join();
+        val result = results.toCompletableFuture().join();
         assertThat(result.getTotal()).isEqualTo(totalHits);
         assertThat(result.getOffenders().size()).isEqualTo(totalHits);
         assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(123);
@@ -119,7 +119,7 @@ public class ElasticSearchTest {
     }
 
     private SearchHit[] getSearchHitArray() {
-        Map<String, Object> searchHitMap = new HashMap<>();
+        val searchHitMap = new HashMap<String, Object>();
         val environment = new Environment(null, this.getClass().getClassLoader(), Mode.TEST);
         val offenderSearchResults = Source.fromInputStream(environment.resourceAsStream("offender-search-result.json"), "UTF-8").mkString();
         val bytesReference = new BytesArray(offenderSearchResults);

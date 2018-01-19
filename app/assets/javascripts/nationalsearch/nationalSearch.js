@@ -1,9 +1,9 @@
 import OffenderSearchPage from './components/offenderSearchPage';
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
+import {Provider} from 'react-redux'
+import {createStore} from 'redux'
 import reducer from './reducers'
 
-let store = createStore(reducer)
+const store = createStore(reducer)
 
 ReactDOM.render(
     <Provider store={store}>

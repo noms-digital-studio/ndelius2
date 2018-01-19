@@ -7,8 +7,6 @@ import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
@@ -23,7 +21,6 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static play.inject.Bindings.bind;
 
-@RunWith(MockitoJUnitRunner.class)
 public class SentencingCourtDetailsWebTest extends WithBrowser {
     private SentencingCourtDetailsPage sentencingCourtDetailsPage;
 

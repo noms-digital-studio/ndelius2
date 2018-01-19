@@ -15,9 +15,9 @@ import play.Logger;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.function.Function;
 
 import static helpers.DateTimeHelper.calculateAge;
 import static java.time.Clock.systemUTC;
@@ -41,7 +41,7 @@ public class ElasticSearch implements Search {
         val listener = new FutureListener<SearchResponse>();
         elasticSearchClient.searchAsync(new SearchRequest("offender")
             .source(searchSourceFor(searchTerm, pageSize, pageNumber)), listener);
-        return listener.stage().thenApply(processSearchResponse());
+        return listener.stage().thenApply(this::processSearchResponse);
     }
 
     @Override
@@ -89,45 +89,40 @@ public class ElasticSearch implements Search {
             .addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
     }
 
-    private Function<SearchResponse, OffenderSearchResult> processSearchResponse() {
-        return response -> {
-            Logger.debug(response.toString());
+    private OffenderSearchResult processSearchResponse(SearchResponse response) {
+        Logger.debug(response.toString());
 
-            val offenders =
-                stream(response.getHits().getHits())
-                    .map(searchHit -> {
-                        JsonNode offender = parse(searchHit.getSourceAsString());
-                        return embellishNode(offender);
-                    }).collect(toList());
+        val offenders =
+            stream(response.getHits().getHits())
+                .map(searchHit -> {
+                    JsonNode offender = parse(searchHit.getSourceAsString());
+                    return embellishNode(offender);
+                }).collect(toList());
 
-            return OffenderSearchResult.builder()
-                .offenders(offenders)
-                .total(response.getHits().getTotalHits())
-                .suggestions(suggestionsIn(response))
-                .build();
-        };
+        return OffenderSearchResult.builder()
+            .offenders(offenders)
+            .total(response.getHits().getTotalHits())
+            .suggestions(suggestionsIn(response))
+            .build();
     }
 
     private JsonNode suggestionsIn(SearchResponse response) {
-        if (response.getSuggest() != null) {
-            return parse(response.getSuggest().toString());
-        }
-
-        return parse("{}");
+        return Optional.ofNullable(response.getSuggest())
+            .map(suggest -> parse(suggest.toString()))
+            .orElse(parse("{}"));
     }
 
     private int aValidPageNumberFor(int pageNumber) {
         return pageNumber >= 1 ? pageNumber - 1 : 0;
     }
 
-
     private JsonNode embellishNode(JsonNode node) {
-        JsonNode dateOfBirth = node.get("dateOfBirth");
-        if (dateOfBirth != null) {
-            return ((ObjectNode) node).put("age", calculateAge(dateOfBirth.asText(), systemUTC()));
-        }
+        ObjectNode rootNode = (ObjectNode) node;
+        JsonNode dateOfBirth = rootNode.get("dateOfBirth");
 
-        return node;
+        return Optional.ofNullable(dateOfBirth)
+            .map(dob -> rootNode.put("age", calculateAge(dob.asText(), systemUTC())))
+            .orElse(rootNode);
     }
 
 }

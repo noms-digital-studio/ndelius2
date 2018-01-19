@@ -28,15 +28,6 @@ public class NationalSearchControllerTest extends WithApplication {
     private Search elasticSearch;
 
     @Test
-    public void blankSearchTermReturnsAnEmptyArrayResult() {
-        val request = new Http.RequestBuilder().method(GET).uri("/searchOffender/blank");
-        val result = route(app, request);
-
-        assertEquals(OK, result.status());
-        assertEquals("[]", contentAsString(result));
-    }
-
-    @Test
     public void searchTermReturnsResults() {
         when(elasticSearch.search(any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
         val request = new Http.RequestBuilder().method(GET).uri("/searchOffender/smith");
