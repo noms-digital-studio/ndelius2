@@ -48,7 +48,7 @@ const PageLink = ({pageNumber, linkPageNumber, gotoPage, searchTerm}) => {
 
 const shouldDisplay = (pageSize, total) => total > pageSize
 const totalPages = (pageSize, total) => Math.ceil(total / pageSize)
-const range = (count) => [...Array(count).keys()].map(key => key + 1)
+const range = (count) => [...Array(count)].map((v, i) => i + 1)
 const notOnFirstPage = (currentPageNumber) => currentPageNumber > 1
 const notOnLastPage = (currentPageNumber, totalPages) => currentPageNumber !== totalPages
 
