@@ -3,13 +3,17 @@ package services;
 import data.offendersearch.OffenderSearchResult;
 import helpers.FutureListener;
 import lombok.val;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.bytes.BytesArray;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Environment;
@@ -23,6 +27,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,6 +38,37 @@ public class ElasticSearchTest {
 
     @Mock
     private SearchResponse searchResponse;
+
+    @Captor
+    private ArgumentCaptor<SearchRequest> searchRequest;
+
+    @Test
+    public void searchesOnlySubsetOfFields() {
+        val elasticSearch = new ElasticSearch(restHighLevelClient);
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
+
+        elasticSearch.search("smith", 10, 3);
+
+        verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
+        assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(MultiMatchQueryBuilder.class);
+
+        MultiMatchQueryBuilder query = (MultiMatchQueryBuilder) searchRequest.getValue().source().query();
+
+        assertThat(query.fields()).containsKeys("firstName");
+        assertThat(query.fields()).containsKeys("surname");
+        assertThat(query.fields()).containsKeys("dateOfBirth");
+        assertThat(query.fields()).containsKeys("gender");
+        assertThat(query.fields()).containsKeys("otherIds.crn");
+        assertThat(query.fields()).containsKeys("otherIds.nomsNumber");
+        assertThat(query.fields()).containsKeys("otherIds.pncNumber");
+        assertThat(query.fields()).containsKeys("otherIds.croNumber");
+        assertThat(query.fields()).containsKeys("offenderAliases.firstName");
+        assertThat(query.fields()).containsKeys("offenderAliases.surname");
+        assertThat(query.fields()).containsKeys("contactDetails.addresses.streetName");
+        assertThat(query.fields()).containsKeys("contactDetails.addresses.town");
+        assertThat(query.fields()).containsKeys("contactDetails.addresses.county");
+        assertThat(query.fields()).containsKeys("contactDetails.addresses.postcode");
+    }
 
     @Test
     public void returnsSearchResults() {
