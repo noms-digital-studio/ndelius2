@@ -9,7 +9,7 @@ const OffenderSearchResults = ({results}) => (
         <SearchResultsTitle/>
 
         <ul>
-            {results.map((offenderSummary) => (
+            {results.map(offenderSummary => (
                 <OffenderSearchSummary {...offenderSummary} key={offenderSummary.offenderId}/>
             ))}
         </ul>
