@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 
 const OffenderSearch = ({searchTerm, search}) => (
-    <div>
-        <input className="form-control padded" value={searchTerm} onChange={(event) => search(event.target.value)} placeholder="Find names, addresses, date of birth, CRN and more..." />
-    </div>
+    <form className="padding-left-right" onSubmit={(event) => onSubmit(event, searchTerm, search)}>
+        <input autoFocus={true} name='searchTerms' className="form-control padded" value={searchTerm} onChange={event => search(event.target.value)} placeholder="Find names, addresses, date of birth, CRN and more..." />
+    </form>
 );
 
 OffenderSearch.propTypes = {
@@ -11,5 +11,9 @@ OffenderSearch.propTypes = {
     search: PropTypes.func.isRequired
 };
 
+const onSubmit = (event, searchTerm, search) => {
+    search(searchTerm)
+    event.preventDefault()
+}
 
 export default OffenderSearch;

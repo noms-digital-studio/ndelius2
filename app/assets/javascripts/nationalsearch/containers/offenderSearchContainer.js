@@ -7,6 +7,6 @@ export default connect(
         searchTerm: state.search.searchTerm
     }),
     dispatch => ({
-        search: (searchTerm) => search(dispatch, searchTerm)
+        search: (searchTerm) => dispatch(search(searchTerm))
     })
 )(offenderSearch)
