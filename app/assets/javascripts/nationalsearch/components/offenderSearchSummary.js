@@ -112,9 +112,7 @@ const Address = ({address}) => {
     )
 }
 
-function firstAddressLine(number, street) {
-    return `${number} ${street}`;
-}
+const firstAddressLine = (number, street) => `${number} ${street}`
 const PreviousSurname = ({name}) => {
     if (name) {
         return (<div className='no-margin bottom'>
@@ -125,17 +123,16 @@ const PreviousSurname = ({name}) => {
     return (<span/>)
 }
 
-function mapRiskColor(risk = '') {
+const mapRiskColor = (risk = '') => {
     switch (risk.toLowerCase()) {
         case 'red':
-            return 'risk-red';
+            return 'risk-red'
         case 'amber':
-            return 'risk-amber';
+            return 'risk-amber'
         case 'green':
-            return 'risk-green';
+            return 'risk-green'
     }
-    return '';
-
+    return ''
 }
 
 export { OffenderSearchSummary as default, Address }
