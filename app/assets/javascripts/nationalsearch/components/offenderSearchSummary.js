@@ -2,14 +2,39 @@ import PropTypes from 'prop-types'
 import OffenderSummaryTitle from '../containers/offenderSummaryTitleContainer'
 import MT from '../containers/markableTextContainer'
 import AddContactLink from '../containers/addContactLinkContainer'
+import {matches} from '../../helpers/searchMatcher'
 
-const OffenderSearchSummary = (offenderSummary) => (
+const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
     <li>
         <div className='panel panel-border-narrow offender-summary'>
             <OffenderSummaryTitle {...offenderSummary}/>
             <p className='no-margin bottom'>
                 <span className='bold'>CRN:&nbsp;</span>
                 <span className='bold margin-right'><MT text={offenderSummary.otherIds.crn}/></span>
+                {shouldDisplay(searchTerm, offenderSummary.otherIds.pncNumber) &&
+                    <span>
+                        <span className='bold'>PNC:&nbsp;</span>
+                        <span id='pncNumber' className='bold margin-right'><MT text={offenderSummary.otherIds.pncNumber}/></span>
+                    </span>
+                }
+                {shouldDisplay(searchTerm, offenderSummary.otherIds.nomsNumber) &&
+                    <span>
+                        <span className='bold'>NOMS:&nbsp;</span>
+                        <span id='nomsNumber' className='bold margin-right'><MT text={offenderSummary.otherIds.nomsNumber}/></span>
+                    </span>
+                }
+                {shouldDisplay(searchTerm, offenderSummary.otherIds.niNumber) &&
+                    <span>
+                        <span className='bold'>NI Number:&nbsp;</span>
+                        <span id='niNumber' className='bold margin-right'><MT text={offenderSummary.otherIds.niNumber}/></span>
+                    </span>
+                }
+                {shouldDisplay(searchTerm, offenderSummary.otherIds.croNumber) &&
+                    <span>
+                        <span className='bold'>CRO:&nbsp;</span>
+                        <span id='croNumber' className='bold margin-right'><MT text={offenderSummary.otherIds.croNumber}/></span>
+                    </span>
+                }
                 <Risk risk={offenderSummary.offenderProfile.riskColour}/>
                 <CurrentOffender current={offenderSummary.currentDisposal}/>
                 <span className='margin-right'>
@@ -26,33 +51,39 @@ const OffenderSearchSummary = (offenderSummary) => (
 )
 
 OffenderSearchSummary.propTypes = {
-    firstName: PropTypes.string.isRequired,
-    surname: PropTypes.string.isRequired,
-    dateOfBirth: PropTypes.string.isRequired,
-    otherIds: PropTypes.shape({
-        crn: PropTypes.string.isRequired
-    }).isRequired,
-    risk: PropTypes.string,
-    currentDisposal: PropTypes.string.isRequired,
-    gender: PropTypes.string.isRequired,
-    age: PropTypes.number.isRequired,
-    aliases: PropTypes.arrayOf(
-        PropTypes.shape({
-            surname: PropTypes.string.isRequired,
-            firstName: PropTypes.string.isRequired
-        })
-    ).isRequired,
-    addresses: PropTypes.arrayOf(
-        PropTypes.shape({
-            buildingName: PropTypes.string,
-            addressNumber: PropTypes.string,
-            streetName: PropTypes.string,
-            town: PropTypes.string,
-            county: PropTypes.string,
-            postcode: PropTypes.string
-        })
-    ).isRequired,
-    previousSurname: PropTypes.string
+    offenderSummary: PropTypes.shape({
+        firstName: PropTypes.string.isRequired,
+        surname: PropTypes.string.isRequired,
+        dateOfBirth: PropTypes.string.isRequired,
+        otherIds: PropTypes.shape({
+            crn: PropTypes.string.isRequired,
+            pncNumber: PropTypes.string,
+            nomsNumber: PropTypes.string,
+            croNumber: PropTypes.string
+        }).isRequired,
+        risk: PropTypes.string,
+        currentDisposal: PropTypes.string.isRequired,
+        gender: PropTypes.string.isRequired,
+        age: PropTypes.number.isRequired,
+        aliases: PropTypes.arrayOf(
+            PropTypes.shape({
+                surname: PropTypes.string.isRequired,
+                firstName: PropTypes.string.isRequired
+            })
+        ).isRequired,
+        addresses: PropTypes.arrayOf(
+            PropTypes.shape({
+                buildingName: PropTypes.string,
+                addressNumber: PropTypes.string,
+                streetName: PropTypes.string,
+                town: PropTypes.string,
+                county: PropTypes.string,
+                postcode: PropTypes.string
+            })
+        ).isRequired,
+        previousSurname: PropTypes.string
+        }).isRequired,
+    searchTerm: PropTypes.string.isRequired
 };
 
 const Risk = ({risk}) => {
@@ -134,5 +165,7 @@ const mapRiskColor = (risk = '') => {
     }
     return ''
 }
+
+const shouldDisplay = (searchTerm, text = '') => matches(text, searchTerm)
 
 export { OffenderSearchSummary as default, Address }

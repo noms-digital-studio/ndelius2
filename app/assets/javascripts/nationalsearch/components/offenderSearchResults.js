@@ -1,4 +1,4 @@
-import OffenderSearchSummary from './offenderSearchSummary';
+import OffenderSearchSummary from '../containers/offenderSearchSummaryContainer';
 import SearchResultsTitle from '../containers/searchResultsTitleContainer';
 import PageSelection from '../containers/pageSelectionContainer';
 
@@ -10,7 +10,7 @@ const OffenderSearchResults = ({results}) => (
 
         <ul>
             {results.map(offenderSummary => (
-                <OffenderSearchSummary {...offenderSummary} key={offenderSummary.offenderId}/>
+                <OffenderSearchSummary offenderSummary={offenderSummary} key={offenderSummary.offenderId}/>
             ))}
         </ul>
         <PageSelection/>
