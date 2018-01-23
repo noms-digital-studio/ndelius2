@@ -77,7 +77,7 @@ curl -XPUT 'http://localhost:9200/offender/document/4500020000?pretty' -H 'Conte
     }
 '
 ```
-See `./test/resources/offender-offenderSearch-result.json` for example data structure.
+See `./test/resources/offender-search-result.json` for example data structure.
 
 Bulk insert
 ```
