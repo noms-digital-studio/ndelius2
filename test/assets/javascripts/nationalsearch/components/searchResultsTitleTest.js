@@ -53,21 +53,6 @@ describe('SearchResultsTitle component', () => {
             })
         })
     })
-    context('only one result found', () => {
-        context('results have been searched for with two found', () => {
-            let title
-
-            beforeEach(() => {
-                title = shallow(<SearchResultsTitle total={1} pageNumber={1} pageSize={10} resultsReceived={true}/>)
-            })
-            it('h2 rendered', () => {
-                expect(title.find('h2')).to.have.length(1)
-            })
-            it('showing 1 to 1 result (no plural) found rendered', () => {
-                expect(title.text()).to.equal('1 result found, showing 1 to 1')
-            })
-        })
-    })
     context('results spread over several pages', () => {
         let title
         context('on first page', () => {

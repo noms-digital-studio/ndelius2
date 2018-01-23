@@ -86,26 +86,6 @@ describe("searchReducer", () => {
                 expect(state.resultsReceived).to.equal(true)
             });
         })
-        context('when searchTerm partial matches from request action', () => {
-            beforeEach(() => {
-                state = search(
-                    {searchTerm: 'Mr Bean Bobby', results: someResults()},
-                    {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
-            })
-            it('results are replaced with new results', () => {
-                expect(state.results).to.eql(emptyResults())
-            });
-        })
-        context('when searchTerm partial matches from request action', () => {
-            beforeEach(() => {
-                state = search(
-                    {searchTerm: 'Mr Bean Bobby', results: someResults()},
-                    {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
-            })
-            it('results are replaced with new results', () => {
-                expect(state.results).to.eql(emptyResults())
-            });
-        })
         context('when searchTerm does not match from request action', () => {
             beforeEach(() => {
                 state = search(
@@ -139,26 +119,6 @@ describe("searchReducer", () => {
             });
             it('pageNumber is kept at existing value', () => {
                 expect(state.pageNumber).to.equal(1)
-            });
-        })
-        context('when current searchTerm is blank but results received from previous request', () => {
-            beforeEach(() => {
-                state = search(
-                    {searchTerm: '', results: emptyResults()},
-                    {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: someResults()})
-            })
-            it('existing empty results are kept and new results discarded', () => {
-                expect(state.results).to.eql(emptyResults())
-            });
-        })
-        context('when current searchTerm is blank but results received from previous request', () => {
-            beforeEach(() => {
-                state = search(
-                    {searchTerm: '', results: emptyResults()},
-                    {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: someResults()})
-            })
-            it('existing empty results are kept and new results discarded', () => {
-                expect(state.results).to.eql(emptyResults())
             });
         })
         describe('search results copying', () => {
