@@ -83,6 +83,12 @@ describe('PageSelection component', () => {
                 expect(allPageNumbers(pages)).to.contains('1').and.contains('2').and.contains('3').and.contains('4')
             })
         })
+        context('Results span over 10 pages', () => {
+            it('only pages up to 10 are displayed', () => {
+                const pages = shallow(<PageSelection pageSize={10} pageNumber={1} total={200} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                expect(allPageNumbers(pages)).to.contains('1').and.contains('10').and.not.contains('11')
+            })
+        })
     })
     describe('clicking links', () => {
         it('clicking a page link will call gotoPage with page number', () => {
