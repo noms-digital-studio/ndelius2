@@ -1,50 +1,30 @@
 package controllers;
 
-import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
+import interfaces.OffenderSearch;
+import play.mvc.Controller;
+import play.mvc.Result;
+
 import javax.inject.Inject;
-import java.io.IOException;
-import lombok.val;
-import org.languagetool.JLanguageTool;
-import org.languagetool.language.BritishEnglish;
-import play.mvc.*;
-import views.html.nationalSearch;
+import java.util.concurrent.CompletionStage;
 
 public class NationalSearchController extends Controller {
 
-    private final nationalSearch template;
+    private final views.html.nationalSearch template;
+    private final OffenderSearch offenderSearch;
 
     @Inject
-    public NationalSearchController(nationalSearch template) {
-
+    public NationalSearchController(views.html.nationalSearch template, OffenderSearch offenderSearch) {
         this.template = template;
+        this.offenderSearch = offenderSearch;
     }
 
     public Result index() {
-
         return ok(template.render());
     }
 
-    public Result postSpellcheck() {
-
-        return spellcheck(request().body().asText());
+    public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
+        return offenderSearch.search(searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
     }
 
-    public Result spellcheck(String text) {
-
-        val spellChecker = new JLanguageTool(new BritishEnglish());
-
-        try {
-            return JsonHelper.okJson(
-                    spellChecker.check(text).stream().map(mistake -> ImmutableMap.of(
-                            "mistake", text.substring(mistake.getFromPos(), mistake.getToPos()),
-                            "suggestions", mistake.getSuggestedReplacements()
-                            )
-                    )
-            );
-        } catch (IOException ex) {
-
-            return badRequest(ex.getMessage());
-        }
-    }
 }

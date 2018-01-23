@@ -31,6 +31,7 @@ import static play.inject.Bindings.bind;
 public class SignAndDateReportWebTest extends WithBrowser {
     private SignAndDateReportPage signAndDateReportPage;
     private StartPage startPage;
+
     @Mock
     private Supplier<String> mockOriginalReportData;
 

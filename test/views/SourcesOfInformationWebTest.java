@@ -40,6 +40,7 @@ import static play.libs.Json.toJson;
 public class SourcesOfInformationWebTest extends WithBrowser {
     @Mock
     private DocumentStore alfrescoDocumentStore;
+
     @Captor
     private ArgumentCaptor<String> metaDataCaptor;
 

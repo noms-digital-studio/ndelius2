@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import interfaces.AnalyticsStore;
+import interfaces.OffenderSearch;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,12 +17,10 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import play.mvc.Result;
 import play.test.WithApplication;
-import utils.SimpleAnalyticsStoreMock;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static java.lang.String.format;
@@ -39,15 +38,19 @@ public class UtilityControllerTest extends WithApplication {
 
     @Rule
     public  WireMockRule wireMock = new WireMockRule(8080);
-    @Mock
-    private Supplier<Boolean> isMonogoDbUp;
 
+    @Mock
+    private AnalyticsStore analyticsStore;
+
+    @Mock
+    private OffenderSearch offenderSearch;
 
     @Before
     public void setup() {
         stubPdfGeneratorWithStatus("OK");
         stubDocumentStoreToReturn(ok());
-        when(isMonogoDbUp.get()).thenReturn(true);
+        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> true));
+        when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
     }
 
     @Test
@@ -134,7 +137,7 @@ public class UtilityControllerTest extends WithApplication {
     @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesOkWhenAnalyticsStoreIsUnhealthy() throws IOException {
-        when(isMonogoDbUp.get()).thenReturn(false);
+        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> false));
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
@@ -142,6 +145,32 @@ public class UtilityControllerTest extends WithApplication {
         assertEquals(OK, result.status());
         assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("analytics-store", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesOkWhenElasticSearchIsHealthy() throws IOException {
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("elastic-offenderSearch", "OK"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesFailedWhenElasticSearchIsUnhealthy() throws IOException {
+        when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> false));
+
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("elastic-offenderSearch", "FAILED"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 
     private Map<String, Object> convertToJson(Result result) throws IOException {
@@ -165,18 +194,12 @@ public class UtilityControllerTest extends WithApplication {
 
     @Override
     protected Application provideApplication() {
-        return new GuiceApplicationBuilder().
-            overrides(
-                bind(AnalyticsStore.class).toInstance(new AnalyticsStoreMock())
+        return new GuiceApplicationBuilder()
+            .overrides(
+                bind(AnalyticsStore.class).toInstance(analyticsStore),
+                bind(OffenderSearch.class).toInstance(offenderSearch)
             )
             .build();
-    }
-
-    class AnalyticsStoreMock extends SimpleAnalyticsStoreMock {
-        @Override
-        public CompletableFuture<Boolean> isUp() {
-            return CompletableFuture.supplyAsync(isMonogoDbUp);
-        }
     }
 
 }

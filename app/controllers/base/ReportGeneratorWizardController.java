@@ -154,7 +154,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     private CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> params) {
 
         params.put("pageNumber", "1");
-        params.put("startDate", new SimpleDateFormat("dd/MM/yyy").format(new Date()));
+        params.put("startDate", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 
         return generateAndStoreReport(wizardForm.bind(params).value().orElseGet(this::newWizardData)).
                 exceptionally(error -> {

@@ -20,11 +20,10 @@ import java.util.function.Function;
 import static org.assertj.core.api.Assertions.assertThat;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
-import static play.test.Helpers.*;
+import static play.test.Helpers.POST;
+import static play.test.Helpers.route;
 
 public class HttpHeadersTest extends WithApplication {
-
-
 
     @Test
     public void shouldTurnOff_IE_XSSFilter() {

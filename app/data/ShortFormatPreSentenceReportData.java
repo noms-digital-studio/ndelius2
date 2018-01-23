@@ -283,7 +283,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
         if (Strings.isNullOrEmpty(reportDate)) { // Fill in for the first read only page, then keep any user changes
 
-            reportDate = new SimpleDateFormat("dd/MM/yyy").format(new Date());
+            reportDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 
         }
 

@@ -5,19 +5,32 @@
 @()
 
 <!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
-  <div id="content"></div>
+<!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
+  <head>
 
-  <script type='text/javascript' src='@relative(webJarsUtil.url("es5-shim", "es5-shim.js").get)'></script>
-  <script type='text/javascript' src='@relative(webJarsUtil.url("es5-shim", "es5-sham.js").get)'></script>
-  <script type='text/javascript' src='@relative(webJarsUtil.url("react", "react.js").get)'></script>
-  <script type='text/javascript' src='@relative(webJarsUtil.url("react", "react-dom.js").get)'></script>
-  <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
-  <script type='text/javascript' src='@relative(webJarsUtil.url("jquery", "jquery.js").get)'></script>
-  <script type='text/javascript' src='@relative(routes.Assets.versioned("javascripts/jsx/nationalSearch.js"))'></script>
+    <title>HMPPS - National Search</title>
+   <!--[if gt IE 8]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge" /><!--<![endif]-->
 
-</body>
-</html>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <!--[if IE 8]><link rel="stylesheet" type="text/css" media="screen" href='@relative(routes.Assets.versioned("stylesheets/govuk-elements-styles-ie8.css"))' /><![endif]-->
+      <!--[if gt IE 8]><!--><link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/govuk-elements-styles.css"))' /><!--<![endif]-->
+    <!--[if IE 8]><link rel="stylesheet" type="text/css" media="all" href='@relative(routes.Assets.versioned("stylesheets/fonts-ie8.css"))' /><![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href='@relative(routes.Assets.versioned("stylesheets/national-search.css"))' />
+    <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
+
+  </head>
+  <body>
+    <div id="content"></div>
+
+    <script type='text/javascript' src='@relative(webJarsUtil.url("es5-shim", "es5-shim.js").get)'></script>
+    <script type='text/javascript' src='@relative(webJarsUtil.url("es5-shim", "es5-sham.js").get)'></script>
+    <script type='text/javascript' src='@relative(webJarsUtil.url("react", "react.js").get)'></script>
+    <script type='text/javascript' src='@relative(webJarsUtil.url("react", "react-dom.js").get)'></script>
+    <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
+    <script type='text/javascript' src='@relative(webJarsUtil.url("jquery", "jquery.js").get)'></script>
+    <script type='text/javascript' src='@routes.Assets.versioned("bundle.js")'></script>
+
+  </body>
+  </html>

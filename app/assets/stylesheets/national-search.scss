@@ -1,0 +1,53 @@
+@import "react";
+
+.govuk-box-highlight.blue {
+  background: #005ea5;
+}
+
+a.white {
+  color: #fff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a.clickable {
+  text-decoration: underline;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.form-control.padded {
+  width: 100%;
+  padding: 10px 20px 10px 20px;
+}
+
+.risk-icon {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin: 0;
+  padding: 0;
+}
+
+.risk-icon.risk-green {
+  background: #006435;
+}
+
+.risk-icon.risk-amber {
+  background: #ffbf47;
+}
+
+.risk-icon.risk-red {
+  background: #b10e1e;
+}
+
+.mark {
+  background-color: #fff2d3;
+}
+
+.offender-summary {
+  margin-bottom: 40px;
+}

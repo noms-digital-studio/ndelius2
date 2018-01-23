@@ -42,3 +42,46 @@ Spell Checking validation of appropriate user-entered form fields is achieved vi
 
 - Build Docker Image `./buildDocker.sh`
 - Run Docker Container `docker run -d -p 9000:9000 --name ndelius2 -e APPLICATION_SECRET=abcdef ndelius2`
+
+### Elastic Search
+To configure an 'offenders' index.
+```
+curl -XPUT 'http://localhost:9200/offender?pretty' -H 'Content-Type: application/json' -d'
+{
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 6, 
+            "number_of_replicas" : 1 
+        }
+    },
+    "mappings": {
+      "document": {
+        "properties": {
+          "dateOfBirth": {
+            "type":   "date",
+            "format": "yyyy-MM-dd||yyyy/MM/dd||dd-MM-yy||dd/MM/yy||dd-MM-yyyy||dd/MM/yyyy"
+          }
+        }
+      }
+    }
+}
+'
+```
+
+To insert a document.
+```
+curl -XPUT 'http://localhost:9200/offender/document/4500020000?pretty' -H 'Content-Type: application/json' -d'
+    {
+      "offenderId": 4500020000,
+      ...
+    }
+'
+```
+See `./test/resources/offender-search-result.json` for example data structure.
+
+Bulk insert
+```
+curl -H "Content-Type: application/json" -XPOST 'localhost:9200/offender/_bulk?pretty&refresh' --data-binary "@es-test-data.txt"
+
+```
+

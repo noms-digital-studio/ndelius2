@@ -9,8 +9,7 @@ GET     /analytics/pageVisits                       controllers.AnalyticsControl
 GET     /analytics/recent/:limit                    controllers.AnalyticsController.recentEvents(limit: Integer)
 
 GET     /nationalSearch                             controllers.NationalSearchController.index
-POST    /spellcheck                                 controllers.NationalSearchController.postSpellcheck
-GET     /spellcheck/:text                           controllers.NationalSearchController.spellcheck(text)
+GET     /searchOffender/:searchTerm                 controllers.NationalSearchController.searchOffender(searchTerm, pageSize: Int ?=10, pageNumber: Int ?=1)
 
 GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
 POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost

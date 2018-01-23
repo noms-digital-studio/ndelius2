@@ -5,6 +5,7 @@ import com.typesafe.config.Config;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderSearch;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.joda.time.DateTime;
@@ -29,41 +30,50 @@ public class UtilityController extends Controller {
     private final PdfGenerator pdfGenerator;
     private final DocumentStore documentStore;
     private final AnalyticsStore analyticsStore;
+    private final OffenderSearch offenderSearch;
 
     private final boolean standaloneOperation;
 
     @Inject
     public UtilityController(Config configuration, PdfGenerator pdfGenerator,
                              DocumentStore documentStore,
-                             AnalyticsStore analyticsStore) {
+                             AnalyticsStore analyticsStore,
+                             OffenderSearch offenderSearch) {
 
         version = configuration.getString("app.version");
         standaloneOperation = configuration.getBoolean("standalone.operation");
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
         this.analyticsStore = analyticsStore;
+        this.offenderSearch = offenderSearch;
     }
 
     public CompletionStage<Result> healthcheck() {
         val pdfGeneratorHealthFuture = pdfGenerator.isHealthy().toCompletableFuture();
         val documentGeneratorHealthFuture = documentStore.isHealthy().toCompletableFuture();
         val analyticsStoreHealthFuture = analyticsStore.isUp();
+        val searchHealthFuture = offenderSearch.isHealthy().toCompletableFuture();
 
         val allHealthFutures =
             CompletableFuture.allOf(pdfGeneratorHealthFuture,
                                     documentGeneratorHealthFuture,
-                                    analyticsStoreHealthFuture);
+                                    analyticsStoreHealthFuture,
+                                    searchHealthFuture);
 
         return allHealthFutures
             .thenApply(ignored -> buildResult(pdfGeneratorHealthFuture.join(),
                                               documentGeneratorHealthFuture.join(),
-                                              analyticsStoreHealthFuture.join()));
+                                              analyticsStoreHealthFuture.join(),
+                                              searchHealthFuture.join()));
     }
 
-    private Result buildResult(Boolean pdfGeneratorStatus, Boolean documentStoreStatus, Boolean analyticsStoreStatus) {
+    private Result buildResult(Boolean pdfGeneratorStatus, Boolean documentStoreStatus,
+                               Boolean analyticsStoreStatus, Boolean searchStatus) {
         return JsonHelper.okJson(
             ImmutableMap.builder()
-                .put("status", pdfGeneratorStatus && getDocumentStoreStatus(documentStoreStatus) ? "OK" : "FAILED")
+                .put("status", pdfGeneratorStatus &&
+                               getDocumentStoreStatus(documentStoreStatus) &&
+                               searchStatus ? "OK" : "FAILED")
                 .put("dateTime", DateTime.now().toString())
                 .put("version", version)
                 .put("runtime", runtimeInfo())
@@ -72,7 +82,8 @@ public class UtilityController extends Controller {
                 .put("dependencies", ImmutableMap.of(
                     "pdf-generator", pdfGeneratorStatus ? "OK" : "FAILED",
                     "document-store", documentStoreStatus ? "OK" : "FAILED",
-                    "analytics-store", analyticsStoreStatus ? "OK" : "FAILED"))
+                    "analytics-store", analyticsStoreStatus ? "OK" : "FAILED",
+                    "elastic-offenderSearch", searchStatus ? "OK" : "FAILED"))
                 .build());
     }
 

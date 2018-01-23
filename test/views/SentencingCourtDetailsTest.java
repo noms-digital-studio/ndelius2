@@ -11,7 +11,9 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.test.WithApplication;
-import utils.*;
+import utils.SimpleAnalyticsStoreMock;
+import utils.SimpleDocumentStoreMock;
+import utils.SimplePdfGeneratorMock;
 
 import java.util.HashMap;
 import java.util.function.Function;
