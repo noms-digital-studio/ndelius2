@@ -75,7 +75,7 @@ public class UtilityController extends Controller {
                                getDocumentStoreStatus(documentStoreStatus) &&
                                searchStatus ? "OK" : "FAILED")
                 .put("dateTime", DateTime.now().toString())
-                .put("version", version)
+                .put("version", version())
                 .put("runtime", runtimeInfo())
                 .put("fileSystems", fileSystemDetails())
                 .put("localHost", localhost())
@@ -121,5 +121,11 @@ public class UtilityController extends Controller {
                     "freeSpace", root.getFreeSpace(),
                     "usableSpace", root.getUsableSpace()
             ));
+    }
+
+    private String version() {
+        Package aPackage = UtilityController.class.getPackage();
+        return aPackage != null && aPackage.getImplementationVersion() != null
+            ? aPackage.getImplementationVersion() : "UNKNOWN";
     }
 }
