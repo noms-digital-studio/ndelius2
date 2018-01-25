@@ -93,7 +93,7 @@ browserifyTask := {
           Seq(modules),
           baseDirectory.value / "browserify.js",
           Seq(inputFile.getPath, outputFile.getPath),
-          30.seconds)
+          60.seconds)
         ()
       }
 

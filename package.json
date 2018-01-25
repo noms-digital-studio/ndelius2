@@ -19,6 +19,7 @@
     "sinon-chai": "^2.14.0"
   },
   "dependencies": {
+    "moment": "^2.20.1",
     "prop-types": "^15.6.0",
     "react": "^0.14.9",
     "react-redux": "^5.0.6",

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import MT from '../containers/markableTextContainer'
+import moment from 'moment'
 
 const OffenderSummaryTitle = ({showOffenderDetails, offenderId, firstName, surname, dateOfBirth}) => (
     <a className='clickable heading-large no-underline' onClick={() => showOffenderDetails(offenderId)}>
@@ -7,7 +8,7 @@ const OffenderSummaryTitle = ({showOffenderDetails, offenderId, firstName, surna
         <span>,&nbsp;</span>
         <span><MT text={firstName}/></span>
         <span>&nbsp;-&nbsp;</span>
-        <span><MT text={dateOfBirth}/></span>
+        <span><MT text={moment(dateOfBirth, 'YYYY-MM-DD').format('DD/MM/YYYY')} isDate={true}/></span>
     </a>
 )
 

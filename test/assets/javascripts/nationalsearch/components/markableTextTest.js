@@ -38,6 +38,50 @@ describe('MarkableText component', () => {
             expect(markedText.find({text: ' ', highlight: false})).to.have.length(1)
         })
     })
+    describe('date handling', () => {
+        context('date matches in same format', () => {
+            it('date is highlighted', () => {
+                const markedText = shallow(<MarkableText text={'1975-07-13'} searchTerm={'1975-07-13 beans'} isDate={true}/>)
+                expect(markedText.find({text: '1975-07-13', highlight: true})).to.have.length(1)
+            })
+        })
+        context('date matches in yyyy/MM/dd format', () => {
+            it('date is highlighted', () => {
+                const markedText = shallow(<MarkableText text={'1975-07-13'} searchTerm={'1975/07/13 beans'} isDate={true}/>)
+                expect(markedText.find({text: '1975-07-13', highlight: true})).to.have.length(1)
+            })
+        })
+        context('date matches in dd/MM/yyyy format', () => {
+            it('date is highlighted', () => {
+                const markedText = shallow(<MarkableText text={'1975-07-13'} searchTerm={'13/07/1975 beans'} isDate={true}/>)
+                expect(markedText.find({text: '1975-07-13', highlight: true})).to.have.length(1)
+            })
+        })
+        context('date matches in dd/MM/yy format', () => {
+            it('date is highlighted', () => {
+                const markedText = shallow(<MarkableText text={'1975-07-13'} searchTerm={'13/07/75 beans'} isDate={true}/>)
+                expect(markedText.find({text: '1975-07-13', highlight: true})).to.have.length(1)
+            })
+        })
+        context('date matches in dd-MM-yyyy format', () => {
+            it('date is highlighted', () => {
+                const markedText = shallow(<MarkableText text={'1975-07-13'} searchTerm={'13-07-1975 beans'} isDate={true}/>)
+                expect(markedText.find({text: '1975-07-13', highlight: true})).to.have.length(1)
+            })
+        })
+        context('date matches in dd-M-yyyy format', () => {
+            it('date is highlighted', () => {
+                const markedText = shallow(<MarkableText text={'1975-07-13'} searchTerm={'13-7-1975 beans'} isDate={true}/>)
+                expect(markedText.find({text: '1975-07-13', highlight: true})).to.have.length(1)
+            })
+        })
+        context('date matches in dd-MM-yy format', () => {
+            it('date is highlighted', () => {
+                const markedText = shallow(<MarkableText text={'1975-07-13'} searchTerm={'13-07-75 beans'} isDate={true}/>)
+                expect(markedText.find({text: '1975-07-13', highlight: true})).to.have.length(1)
+            })
+        })
+    })
 })
 
 

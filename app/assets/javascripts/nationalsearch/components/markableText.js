@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
+import {flatMap} from '../../helpers/streams'
+import moment from 'moment'
 
-const MarkableText = ({text, searchTerm}) => {
-    const chunks = toHighlightList(text, searchTerm);
+const MarkableText = ({text, searchTerm, isDate}) => {
+    const chunks = toHighlightList(text, searchTerm, isDate);
     return (
         <span>
             {chunks.map( (chunk, index) => {
@@ -24,16 +26,28 @@ const Text = ({text, highlight}) =>  {
     }
 }
 
-const toHighlightList = (text, searchTerm) => findAll({
+const toHighlightList = (text, searchTerm, isDate) => findAll({
     autoEscape: true,
-    searchWords: searchTerm.split(' '),
+    searchWords: isDate ? expandDateFormats(searchTerm.split(' ')) : searchTerm.split(' '),
     textToHighlight: text
 })
 
 
+const expandDateFormats = searchWords => flatMap(searchWords, searchWord => isDate(searchWord) ? expandDateWithAllFormats(searchWord): [searchWord])
+const isDate = searchWord => toDateFormat(searchWord)
+const toDateFormat = date => supportedDateFormats
+    .filter(format => moment(date, format, true).isValid())
+    .reduce((accumulator, currentValue) => accumulator || currentValue, '')
+const expandDateWithAllFormats = (searchWord) => {
+    const date = moment(searchWord, toDateFormat(searchWord))
+    return supportedDateFormats.map(format => date.format(format))
+}
+const supportedDateFormats = ['YYYY/MM/DD', 'YYYY-MM-DD', 'DD/MM/YYYY', 'DD-MM-YYYY', 'DD/MM/YY', 'DD-MM-YY', 'YYYY/M/DD', 'YYYY-M-DD', 'DD/M/YYYY', 'DD-M-YYYY', 'DD/M/YY', 'DD-M-YY']
+
 MarkableText.propTypes = {
     text: PropTypes.node.isRequired,
-    searchTerm: PropTypes.string.isRequired
+    searchTerm: PropTypes.string.isRequired,
+    isDate: PropTypes.bool
 };
 
 /**

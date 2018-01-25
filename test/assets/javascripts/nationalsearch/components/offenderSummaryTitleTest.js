@@ -4,6 +4,18 @@ import {shallow} from 'enzyme';
 import {stub} from 'sinon';
 
 describe('OffenderSummaryTitle component', () => {
+    describe('date rendering', () => {
+        it('should render date in dd/mm/yyyy format', () => {
+            const title = shallow(<OffenderSummaryTitle offenderId={123}
+                                                        showOffenderDetails={()=>{}}
+                                                        firstName={'name'}
+                                                        surname={'name'}
+                                                        dateOfBirth={'1965-07-19'}/>)
+
+
+            expect(title.find({text: '19/07/1965', isDate: true})).to.have.length(1)
+        })
+    })
     context('link clicked', () => {
         it('showOffenderDetails callback function called with offenderId', () => {
             const showOffenderDetails = stub()
@@ -11,7 +23,7 @@ describe('OffenderSummaryTitle component', () => {
                                                         showOffenderDetails={showOffenderDetails}
                                                         firstName={'name'}
                                                         surname={'name'}
-                                                        dateOfBirth={'dob'}/>)
+                                                        dateOfBirth={'1965-07-19'}/>)
 
             title.find('a').simulate('click');
 
