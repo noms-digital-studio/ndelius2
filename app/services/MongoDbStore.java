@@ -75,9 +75,9 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     @Override
-    public CompletableFuture<Map<Integer, Integer>> pageVisits() {
+    public CompletableFuture<Map<Integer, Long>> pageVisits() {
 
-        val result = new CompletableFuture<Map<Integer, Integer>>();
+        val result = new CompletableFuture<Map<Integer, Long>>();
 
         val group = ImmutableList.of(
                 new Document(ImmutableMap.of(
@@ -99,7 +99,7 @@ public class MongoDbStore implements AnalyticsStore {
                 toObservable().
                 toList().
                 map(documents -> documents.stream().collect(
-                        Collectors.toMap(doc -> doc.getInteger("_id"), doc -> doc.getInteger("total")))
+                        Collectors.toMap(doc -> doc.getInteger("_id"), doc -> doc.getLong("total")))
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
