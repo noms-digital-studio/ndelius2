@@ -27,6 +27,8 @@ import static helpers.DateTimeHelper.calculateAge;
 import static java.time.Clock.systemUTC;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
+import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
+import static org.elasticsearch.index.query.Operator.AND;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 import static play.libs.Json.parse;
@@ -81,7 +83,8 @@ public class ElasticOffenderSearch implements OffenderSearch {
                 "contactDetails.addresses.county",
                 "contactDetails.addresses.postcode")
                 .lenient(true)
-                .operator(Operator.AND)
+                .operator(AND)
+                .type(CROSS_FIELDS)
             )
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
