@@ -22,7 +22,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Environment;
 import play.Mode;
 import scala.io.Source;
-import services.search.ElasticOffenderSearch;
 
 import java.util.HashMap;
 import java.util.List;
@@ -229,7 +228,6 @@ public class ElasticOffenderSearchTest {
         val iterator = node.fieldNames();
         return  StreamSupport.stream(((Iterable<String>) () -> iterator).spliterator(), false).collect(toList());
     }
-
 
     @SafeVarargs
     private final SearchHit[] getSearchHitArray(Map<String, Object>... replacements) {

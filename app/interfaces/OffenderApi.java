@@ -6,4 +6,6 @@ public interface OffenderApi {
     CompletionStage<String> logon(String username);
 
     CompletionStage<Boolean> canAccess(String bearerToken, long offenderId);
+
+    CompletionStage<Boolean> isHealthy();
 }

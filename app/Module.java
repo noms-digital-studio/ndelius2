@@ -6,7 +6,7 @@ import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import services.AlfrescoStore;
 import services.RestPdfGenerator;
-import services.search.ElasticOffenderSearch;
+import services.ElasticOffenderSearch;
 
 /**
  * This class is a Guice module that tells Guice how to bind several

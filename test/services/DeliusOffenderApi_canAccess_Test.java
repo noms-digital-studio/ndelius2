@@ -39,7 +39,7 @@ public class DeliusOffenderApi_canAccess_Test {
 
     @Before
     public void setup() {
-        final Config config = ConfigFactory.load().withValue("offender.api.url", ConfigValueFactory.fromAnyRef("http://delius-api/api/"));
+        val config = ConfigFactory.load().withValue("offender.api.url", ConfigValueFactory.fromAnyRef("http://delius-api/api/"));
         offenderApi = new DeliusOffenderApi(config, wsClient);
         when(wsClient.url(any())).thenReturn(wsRequest);
         when(wsRequest.addHeader(any(), any())).thenReturn(wsRequest);

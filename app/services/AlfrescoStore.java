@@ -119,12 +119,18 @@ public class AlfrescoStore implements DocumentStore {
 
     @Override
     public CompletionStage<Boolean> isHealthy() {
-        return wsClient.url(alfrescoUrl + "noms-spg/")
+        return wsClient.url(alfrescoUrl + "noms-spg/notificationStatus")
             .addHeader("X-DocRepository-Remote-User", alfrescoUser)
             .get()
-            .thenApply(wsResponse -> wsResponse.getStatus() <= 500)
+            .thenApply(wsResponse -> {
+                if (wsResponse.getStatus() != 200) {
+                    Logger.warn("Error calling Alfresco. Status {}", wsResponse.getStatus());
+                    return false;
+                }
+                return true;
+            })
             .exceptionally(throwable -> {
-                Logger.warn("Error calling Alfresco healthcheck", throwable);
+                Logger.warn("Error calling Alfresco", throwable);
                 return false;
             });
     }

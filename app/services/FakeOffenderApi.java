@@ -15,4 +15,9 @@ public class FakeOffenderApi implements OffenderApi {
     public CompletionStage<Boolean> canAccess(String bearerToken, long offenderId) {
         return CompletableFuture.completedFuture(false);
     }
+
+    @Override
+    public CompletionStage<Boolean> isHealthy() {
+        return CompletableFuture.completedFuture(Boolean.TRUE);
+    }
 }

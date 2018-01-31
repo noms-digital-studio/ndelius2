@@ -3,10 +3,7 @@ package controllers;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.JsonHelper;
-import interfaces.AnalyticsStore;
-import interfaces.DocumentStore;
-import interfaces.OffenderSearch;
-import interfaces.PdfGenerator;
+import interfaces.*;
 import lombok.val;
 import org.joda.time.DateTime;
 import play.mvc.Controller;
@@ -25,12 +22,11 @@ import static java.lang.Runtime.getRuntime;
 
 public class UtilityController extends Controller {
 
-    private final String version;
-
     private final PdfGenerator pdfGenerator;
     private final DocumentStore documentStore;
     private final AnalyticsStore analyticsStore;
     private final OffenderSearch offenderSearch;
+    private final OffenderApi offenderApi;
 
     private final boolean standaloneOperation;
 
@@ -38,52 +34,59 @@ public class UtilityController extends Controller {
     public UtilityController(Config configuration, PdfGenerator pdfGenerator,
                              DocumentStore documentStore,
                              AnalyticsStore analyticsStore,
-                             OffenderSearch offenderSearch) {
+                             OffenderSearch offenderSearch,
+                             OffenderApi offenderApi) {
 
-        version = configuration.getString("app.version");
         standaloneOperation = configuration.getBoolean("standalone.operation");
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
         this.analyticsStore = analyticsStore;
         this.offenderSearch = offenderSearch;
+        this.offenderApi = offenderApi;
     }
 
     public CompletionStage<Result> healthcheck() {
         val pdfGeneratorHealthFuture = pdfGenerator.isHealthy().toCompletableFuture();
-        val documentGeneratorHealthFuture = documentStore.isHealthy().toCompletableFuture();
+        val documentStoreHealthFuture = documentStore.isHealthy().toCompletableFuture();
         val analyticsStoreHealthFuture = analyticsStore.isUp();
-        val searchHealthFuture = offenderSearch.isHealthy().toCompletableFuture();
+        val offenderSearchHealthFuture = offenderSearch.isHealthy().toCompletableFuture();
+        val offenderApiFuture = offenderApi.isHealthy().toCompletableFuture();
 
         val allHealthFutures =
             CompletableFuture.allOf(pdfGeneratorHealthFuture,
-                                    documentGeneratorHealthFuture,
+                                    documentStoreHealthFuture,
                                     analyticsStoreHealthFuture,
-                                    searchHealthFuture);
+                                    offenderSearchHealthFuture,
+                                    offenderApiFuture);
 
         return allHealthFutures
             .thenApply(ignored -> buildResult(pdfGeneratorHealthFuture.join(),
-                                              documentGeneratorHealthFuture.join(),
+                                              documentStoreHealthFuture.join(),
                                               analyticsStoreHealthFuture.join(),
-                                              searchHealthFuture.join()));
+                                              offenderSearchHealthFuture.join(),
+                                              offenderApiFuture.join()));
     }
 
     private Result buildResult(Boolean pdfGeneratorStatus, Boolean documentStoreStatus,
-                               Boolean analyticsStoreStatus, Boolean searchStatus) {
+                               Boolean analyticsStoreStatus, Boolean searchStatus, Boolean offenderApiStatus) {
         return JsonHelper.okJson(
             ImmutableMap.builder()
                 .put("status", pdfGeneratorStatus &&
                                getDocumentStoreStatus(documentStoreStatus) &&
+                               offenderApiStatus &&
                                searchStatus ? "OK" : "FAILED")
                 .put("dateTime", DateTime.now().toString())
                 .put("version", version())
                 .put("runtime", runtimeInfo())
                 .put("fileSystems", fileSystemDetails())
                 .put("localHost", localhost())
-                .put("dependencies", ImmutableMap.of(
-                    "pdf-generator", pdfGeneratorStatus ? "OK" : "FAILED",
-                    "document-store", documentStoreStatus ? "OK" : "FAILED",
-                    "analytics-store", analyticsStoreStatus ? "OK" : "FAILED",
-                    "elastic-offenderSearch", searchStatus ? "OK" : "FAILED"))
+                .put("dependencies", ImmutableMap.builder()
+                    .put("pdf-generator", pdfGeneratorStatus ? "OK" : "FAILED")
+                    .put("document-store", documentStoreStatus ? "OK" : "FAILED")
+                    .put("analytics-store", analyticsStoreStatus ? "OK" : "FAILED")
+                    .put("offender-search", searchStatus ? "OK" : "FAILED")
+                    .put("offender-api", offenderApiStatus ? "OK" : "FAILED")
+                    .build())
                 .build());
     }
 
