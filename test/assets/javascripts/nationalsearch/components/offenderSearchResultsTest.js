@@ -1,7 +1,7 @@
 import OffenderSearchResults  from './offenderSearchResults'
 import {expect} from 'chai';
 import {shallow} from 'enzyme';
-import {offender} from '../test-helper'
+import {offender, restrictedAccessOffender} from '../test-helper'
 
 describe('OffenderSearchResults component', () => {
     context('with no results', () => {
@@ -20,6 +20,14 @@ describe('OffenderSearchResults component', () => {
         it('many summaries rendered', () => {
             const results = shallow(<OffenderSearchResults results={twoResults()} />)
             expect(results.find('Connect(OffenderSearchSummary)')).to.have.length(2)
+        })
+    })
+    context('with one restricted and one not restricted access offender', () => {
+        it('should show a normal summary and a restricted summary', () => {
+            const results = shallow(<OffenderSearchResults results={[offender(), restrictedAccessOffender()]} />)
+            expect(results.find('Connect(OffenderSearchSummary)')).to.have.length(1)
+            expect(results.find('Connect(RestrictedOffenderSearchSummary)')).to.have.length(1)
+
         })
     })
 })

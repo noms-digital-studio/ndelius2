@@ -1,13 +1,7 @@
 import com.google.inject.AbstractModule;
 import com.mongodb.rx.client.MongoClient;
-import injection.AnalyticsStoreProvider;
-import injection.MongoClientProvider;
-import injection.RestClientBuilderProvider;
-import injection.RestHighLevelClientProvider;
-import interfaces.AnalyticsStore;
-import interfaces.DocumentStore;
-import interfaces.OffenderSearch;
-import interfaces.PdfGenerator;
+import injection.*;
+import interfaces.*;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 import services.AlfrescoStore;
@@ -33,6 +27,7 @@ public class Module extends AbstractModule {
         bind(DocumentStore.class).to(AlfrescoStore.class);
         bind(OffenderSearch.class).to(ElasticOffenderSearch.class);
 
+        bind(OffenderApi.class).toProvider(OffenderApiProvider.class);
         bind(RestClientBuilder.class).toProvider(RestClientBuilderProvider.class);
         bind(RestHighLevelClient.class).toProvider(RestHighLevelClientProvider.class);
 

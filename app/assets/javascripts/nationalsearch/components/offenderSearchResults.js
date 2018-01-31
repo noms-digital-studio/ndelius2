@@ -1,4 +1,5 @@
 import OffenderSearchSummary from '../containers/offenderSearchSummaryContainer';
+import RestrictedOffenderSearchSummary from '../containers/restrictedOffenderSearchSummaryContainer'
 import SearchResultsTitle from '../containers/searchResultsTitleContainer';
 import PageSelection from '../containers/pageSelectionContainer';
 
@@ -10,7 +11,7 @@ const OffenderSearchResults = ({results}) => (
 
         <ul>
             {results.map(offenderSummary => (
-                <OffenderSearchSummary offenderSummary={offenderSummary} key={offenderSummary.offenderId}/>
+                renderSummary(offenderSummary)
             ))}
         </ul>
         <PageSelection/>
@@ -21,5 +22,11 @@ OffenderSearchResults.propTypes = {
     results: PropTypes.array.isRequired
 };
 
+const renderSummary = offenderSummary => {
+    if (offenderSummary.accessDenied) {
+        return <RestrictedOffenderSearchSummary offenderSummary={offenderSummary} key={offenderSummary.offenderId}/>
+    }
+    return <OffenderSearchSummary offenderSummary={offenderSummary} key={offenderSummary.offenderId}/>
+}
 
 export default OffenderSearchResults;

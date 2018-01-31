@@ -5,7 +5,7 @@ const FrameNavigation = ({navigate}) => {
         const message = toMessage(navigate)
         parent.postMessage(message, '*');
         if ( top === self ) {
-            if (console && console.log) {
+            if (window.console && console.log) {
                 console.log('No nDelius iframe found but we would have sent:')
                 console.log(message)
             }

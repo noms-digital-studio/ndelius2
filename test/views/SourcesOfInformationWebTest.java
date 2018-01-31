@@ -147,7 +147,7 @@ public class SourcesOfInformationWebTest extends WithBrowser {
     }
 
     private CompletionStage<String> existingReportWith(ImmutableMap<String, Object> values) {
-        val originalReport = Json.parse(getClass().getResourceAsStream("/alfresodata/existingReport.json"));
+        val originalReport = Json.parse(getClass().getResourceAsStream("/alfrescodata/existingReport.json"));
 
         val reportJson = stringify(toJson(merge(
                 ImmutableMap.of("templateName", originalReport.get("templateName").asText()),

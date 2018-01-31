@@ -17,5 +17,13 @@ const offender = (offender = {}) =>
         age: 19,
     }, offender)
 
+const restrictedAccessOffender = (offender = {}) =>
+    Object.assign({
+        offenderId: '123',
+        accessDenied: true,
+        otherIds: {
+            crn: 'D123X'
+        }
+    }, offender)
 
-export {offender};
+export {offender, restrictedAccessOffender};

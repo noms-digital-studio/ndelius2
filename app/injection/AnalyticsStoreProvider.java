@@ -22,11 +22,6 @@ public class AnalyticsStoreProvider implements Provider<AnalyticsStore> {
 
     @Override
     public AnalyticsStore get() {
-
-        if (standAloneOperation) {
-            return injector.instanceOf(InMemoryAnalyticsStore.class);
-        }
-
-        return injector.instanceOf(MongoDbStore.class);
+        return standAloneOperation ? injector.instanceOf(InMemoryAnalyticsStore.class) : injector.instanceOf(MongoDbStore.class);
     }
 }

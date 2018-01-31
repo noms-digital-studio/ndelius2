@@ -8,7 +8,7 @@ GET     /analytics                                  controllers.AnalyticsControl
 GET     /analytics/pageVisits                       controllers.AnalyticsController.pageVisits
 GET     /analytics/recent/:limit                    controllers.AnalyticsController.recentEvents(limit: Integer)
 
-GET     /nationalSearch                             controllers.NationalSearchController.index
+GET     /nationalSearch                             controllers.NationalSearchController.index(user: String, t: String)
 GET     /searchOffender/:searchTerm                 controllers.NationalSearchController.searchOffender(searchTerm, pageSize: Int ?=10, pageNumber: Int ?=1)
 
 GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
