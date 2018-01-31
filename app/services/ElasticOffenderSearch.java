@@ -11,6 +11,7 @@ import lombok.val;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import play.Logger;
@@ -80,6 +81,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                 "contactDetails.addresses.county",
                 "contactDetails.addresses.postcode")
                 .lenient(true)
+                .operator(Operator.AND)
             )
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
