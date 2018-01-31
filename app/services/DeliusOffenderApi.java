@@ -23,16 +23,7 @@ public class DeliusOffenderApi implements OffenderApi {
     @Inject
     public DeliusOffenderApi(Config configuration, WSClient wsClient) {
         this.wsClient = wsClient;
-        offenderApiBaseUrl = hackToBeRemoved(configuration.getString("offender.api.url"));
-    }
-
-    // temp hack while env variable is changed to add slash
-    private String hackToBeRemoved(String url) {
-        if (url.endsWith("/")) {
-            return url;
-        }
-
-        return url + "/";
+        offenderApiBaseUrl = configuration.getString("offender.api.url");
     }
 
     @Override

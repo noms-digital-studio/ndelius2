@@ -33,8 +33,8 @@ describe('SearchResultsTitle component', () => {
             it('h2 rendered', () => {
                 expect(title.find('h2')).to.have.length(1)
             })
-            it('showing 1 to 2 results found rendered', () => {
-                expect(title.text()).to.equal('2 results found, showing 1 to 2')
+            it('showing 2 results found rendered', () => {
+                expect(title.text()).to.equal('2 results found')
             })
         })
     })
@@ -48,8 +48,8 @@ describe('SearchResultsTitle component', () => {
             it('h2 rendered', () => {
                 expect(title.find('h2')).to.have.length(1)
             })
-            it('showing 1 to 1 result (no plural) found rendered', () => {
-                expect(title.text()).to.equal('1 result found, showing 1 to 1')
+            it('showing  1 result (no plural) found rendered', () => {
+                expect(title.text()).to.equal('1 result found')
             })
         })
     })
