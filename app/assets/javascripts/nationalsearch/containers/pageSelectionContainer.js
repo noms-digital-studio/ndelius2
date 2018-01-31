@@ -4,7 +4,7 @@ import pageSelection from '../components/pageSelection'
 
 export default connect(
     state => ({
-        searchTerm: state.search.searchTerm,
+        searchTerm: state.search.resultsSearchTerm,
         pageSize: PAGE_SIZE,
         total: state.search.total,
         pageNumber: state.search.pageNumber

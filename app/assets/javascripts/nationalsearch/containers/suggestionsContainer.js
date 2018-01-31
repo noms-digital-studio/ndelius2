@@ -5,7 +5,7 @@ import {search} from '../actions/search'
 export default connect(
     state => ({
         suggestions: state.search.suggestions,
-        searchTerm: state.search.searchTerm
+        searchTerm: state.search.resultsSearchTerm
     }),
     dispatch => ({
         search: (searchTerm) => dispatch(search(searchTerm))

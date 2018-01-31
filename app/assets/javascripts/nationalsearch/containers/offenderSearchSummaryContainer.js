@@ -3,7 +3,7 @@ import offenderSearchSummary from '../components/offenderSearchSummary'
 
 export default connect(
     state => ({
-        searchTerm: state.search.searchTerm
+        searchTerm: state.search.resultsSearchTerm
     }),
     () => ({})
 )(offenderSearchSummary)

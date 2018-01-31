@@ -2,7 +2,7 @@ import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
 import {matches} from '../../helpers/searchMatcher'
 
-const searchResults = (state = {searchTerm: '', resultsReceived: false, results: [], suggestions: [], total: 0, pageNumber: 1}, action) => {
+const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], total: 0, pageNumber: 1}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
@@ -13,6 +13,7 @@ const searchResults = (state = {searchTerm: '', resultsReceived: false, results:
             if (areSearchResultsStillRelevant(state, action)) {
                 return {
                     searchTerm: state.searchTerm,
+                    resultsSearchTerm: action.searchTerm,
                     pageNumber: action.pageNumber,
                     total: action.results.total,
                     results: mapResults(action.results.offenders, state.searchTerm),
@@ -24,6 +25,7 @@ const searchResults = (state = {searchTerm: '', resultsReceived: false, results:
         case CLEAR_RESULTS:
             return {
                 searchTerm: '',
+                resultsSearchTerm: '',
                 results: [],
                 suggestions: [],
                 total: 0,

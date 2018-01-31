@@ -3,7 +3,7 @@ import markableText from '../components/markableText'
 
 export default connect(
     state => ({
-        searchTerm: state.search.searchTerm
+        searchTerm: state.search.resultsSearchTerm
     }),
     () => ({})
 )(markableText)
