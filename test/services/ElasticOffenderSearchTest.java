@@ -9,6 +9,7 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.bytes.BytesArray;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -71,24 +72,27 @@ public class ElasticOffenderSearchTest {
         elasticOffenderSearch.search("bearer-token", "smith", 10, 3);
 
         verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
-        assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(MultiMatchQueryBuilder.class);
+        assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(BoolQueryBuilder.class);
 
-        val query = (MultiMatchQueryBuilder) searchRequest.getValue().source().query();
+        val query = (BoolQueryBuilder) searchRequest.getValue().source().query();
 
-        assertThat(query.fields()).containsKeys("firstName");
-        assertThat(query.fields()).containsKeys("surname");
-        assertThat(query.fields()).containsKeys("dateOfBirth");
-        assertThat(query.fields()).containsKeys("gender");
-        assertThat(query.fields()).containsKeys("otherIds.crn");
-        assertThat(query.fields()).containsKeys("otherIds.nomsNumber");
-        assertThat(query.fields()).containsKeys("otherIds.pncNumber");
-        assertThat(query.fields()).containsKeys("otherIds.croNumber");
-        assertThat(query.fields()).containsKeys("offenderAliases.firstName");
-        assertThat(query.fields()).containsKeys("offenderAliases.surname");
-        assertThat(query.fields()).containsKeys("contactDetails.addresses.streetName");
-        assertThat(query.fields()).containsKeys("contactDetails.addresses.town");
-        assertThat(query.fields()).containsKeys("contactDetails.addresses.county");
-        assertThat(query.fields()).containsKeys("contactDetails.addresses.postcode");
+        val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
+        assertThat(queryBuilder1.fields()).containsKeys("firstName");
+        assertThat(queryBuilder1.fields()).containsKeys("surname");
+        assertThat(queryBuilder1.fields()).containsKeys("offenderAliases.firstName");
+        assertThat(queryBuilder1.fields()).containsKeys("offenderAliases.surname");
+        assertThat(queryBuilder1.fields()).containsKeys("contactDetails.addresses.town");
+
+        val queryBuilder2 = (MultiMatchQueryBuilder)query.should().get(1);
+        assertThat(queryBuilder2.fields()).containsKeys("dateOfBirth");
+        assertThat(queryBuilder2.fields()).containsKeys("gender");
+        assertThat(queryBuilder2.fields()).containsKeys("otherIds.crn");
+        assertThat(queryBuilder2.fields()).containsKeys("otherIds.nomsNumber");
+        assertThat(queryBuilder2.fields()).containsKeys("otherIds.pncNumber");
+        assertThat(queryBuilder2.fields()).containsKeys("otherIds.croNumber");
+        assertThat(queryBuilder2.fields()).containsKeys("contactDetails.addresses.streetName");
+        assertThat(queryBuilder2.fields()).containsKeys("contactDetails.addresses.county");
+        assertThat(queryBuilder2.fields()).containsKeys("contactDetails.addresses.postcode");
     }
 
     @Test

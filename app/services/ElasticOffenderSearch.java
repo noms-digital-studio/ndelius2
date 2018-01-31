@@ -11,7 +11,7 @@ import lombok.val;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import play.Logger;
@@ -28,7 +28,9 @@ import static java.time.Clock.systemUTC;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
+import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
 import static org.elasticsearch.index.query.Operator.AND;
+import static org.elasticsearch.index.query.Operator.OR;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 import static play.libs.Json.parse;
@@ -65,27 +67,35 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
+
+        val boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.should().add(multiMatchQuery(searchTerm,
+            "firstName",
+            "surname",
+            "offenderAliases.firstName",
+            "offenderAliases.surname",
+            "contactDetails.addresses.town")
+            .lenient(true)
+            .operator(AND)
+            .type(CROSS_FIELDS));
+
+        boolQueryBuilder.should().add(multiMatchQuery(searchTerm,
+            "dateOfBirth",
+            "gender",
+            "otherIds.crn",
+            "otherIds.nomsNumber",
+            "otherIds.niNumber",
+            "otherIds.pncNumber",
+            "otherIds.croNumber",
+            "contactDetails.addresses.streetName",
+            "contactDetails.addresses.county",
+            "contactDetails.addresses.postcode")
+            .lenient(true)
+            .operator(OR)
+            .type(MOST_FIELDS));
+
         val searchSource = new SearchSourceBuilder()
-            .query(multiMatchQuery(searchTerm,
-                "firstName",
-                "surname",
-                "dateOfBirth",
-                "gender",
-                "otherIds.crn",
-                "otherIds.nomsNumber",
-                "otherIds.niNumber",
-                "otherIds.pncNumber",
-                "otherIds.croNumber",
-                "offenderAliases.firstName",
-                "offenderAliases.surname",
-                "contactDetails.addresses.streetName",
-                "contactDetails.addresses.town",
-                "contactDetails.addresses.county",
-                "contactDetails.addresses.postcode")
-                .lenient(true)
-                .operator(AND)
-                .type(CROSS_FIELDS)
-            )
+            .query(boolQueryBuilder)
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
             .suggest(suggestionsFor(searchTerm));
