@@ -221,7 +221,7 @@ public class UtilityControllerTest extends WithApplication {
 
     private void stubOffenderApiToReturn(ResponseDefinitionBuilder response) {
         wireMock.stubFor(
-            get(urlEqualTo("/api/healthcheck"))
+            get(urlEqualTo("/api/health"))
                 .willReturn(response));
     }
 

@@ -59,7 +59,7 @@ public class DeliusOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Boolean> isHealthy() {
-        return wsClient.url(offenderApiBaseUrl + "healthcheck")
+        return wsClient.url(offenderApiBaseUrl + "health")
             .get()
             .thenApply(wsResponse -> {
                 if (wsResponse.getStatus() != 200) {
