@@ -69,27 +69,27 @@ public class ElasticOffenderSearch implements OffenderSearch {
     private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
 
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(searchTerm,
-            "firstName",
-            "surname",
-            "offenderAliases.firstName",
-            "offenderAliases.surname",
-            "contactDetails.addresses.town")
+        boolQueryBuilder.should().add(multiMatchQuery(searchTerm)
+            .field("firstName", 10)
+            .field("surname", 10)
+            .field("offenderAliases.firstName", 8)
+            .field("offenderAliases.surname", 8)
+            .field("contactDetails.addresses.town")
             .lenient(true)
             .operator(AND)
             .type(CROSS_FIELDS));
 
-        boolQueryBuilder.should().add(multiMatchQuery(searchTerm,
-            "dateOfBirth",
-            "gender",
-            "otherIds.crn",
-            "otherIds.nomsNumber",
-            "otherIds.niNumber",
-            "otherIds.pncNumber",
-            "otherIds.croNumber",
-            "contactDetails.addresses.streetName",
-            "contactDetails.addresses.county",
-            "contactDetails.addresses.postcode")
+        boolQueryBuilder.should().add(multiMatchQuery(searchTerm)
+            .field("dateOfBirth", 5)
+            .field("gender")
+            .field("otherIds.crn", 10)
+            .field("otherIds.nomsNumber", 8)
+            .field("otherIds.niNumber", 6)
+            .field("otherIds.pncNumber", 6)
+            .field("otherIds.croNumber", 6)
+            .field("contactDetails.addresses.streetName")
+            .field("contactDetails.addresses.county")
+            .field("contactDetails.addresses.postcode", 3)
             .lenient(true)
             .operator(OR)
             .type(MOST_FIELDS));
@@ -99,7 +99,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
             .suggest(suggestionsFor(searchTerm));
-        Logger.debug(searchSource.toString());
+        Logger.info(searchSource.toString());
         return searchSource;
     }
 
