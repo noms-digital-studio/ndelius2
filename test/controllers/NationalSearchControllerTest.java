@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
+import play.mvc.Result;
 import play.test.WithApplication;
 
 import java.io.UnsupportedEncodingException;
@@ -76,11 +77,19 @@ public class NationalSearchControllerTest extends WithApplication {
     @Test
     public void searchTermReturnsResults() {
         when(elasticOffenderSearch.search(any(), any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
-        val request = new Http.RequestBuilder().method(GET).uri("/searchOffender/smith");
+        val request = new Http.RequestBuilder().session("offenderApiBearerToken", "bearer-token").method(GET).uri("/searchOffender/smith");
         val result = route(app, request);
 
         assertEquals(OK, result.status());
         assertEquals("{\"offenders\":null,\"suggestions\":null,\"total\":0}", contentAsString(result));
+    }
+
+    @Test
+    public void searchingWithoutABearerTokenReturns401() {
+        val request = new Http.RequestBuilder().method(GET).uri("/searchOffender/smith");
+        val result = route(app, request);
+
+        assertEquals(UNAUTHORIZED, result.status());
     }
 
     @Test

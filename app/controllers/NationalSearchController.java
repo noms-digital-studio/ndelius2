@@ -65,7 +65,9 @@ public class NationalSearchController extends Controller {
     }
 
     public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
-        return offenderSearch.search(session(OFFENDER_API_BEARER_TOKEN), searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
+        return Optional.ofNullable(session(OFFENDER_API_BEARER_TOKEN))
+                .map(bearerToken -> offenderSearch.search(bearerToken, searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson))
+                .orElse(CompletableFuture.supplyAsync(Results::unauthorized));
     }
 
     private Optional<CompletionStage<Result>> validate(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {
