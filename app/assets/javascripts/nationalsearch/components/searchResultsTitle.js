@@ -13,13 +13,13 @@ const SearchResultsTitle = ({pageNumber, pageSize, total, resultsReceived}) => {
     if (numberOfPages(pageSize, total) === 1) {
         return (
             <h2 className="heading-medium margin-top medium">
-                <span>{`${total} ${resultPlural} found`}</span>
+                <span>{`${formatNumber(total)} ${resultPlural} found`}</span>
             </h2>
         )
     }
     return (
         <h2 className="heading-medium margin-top medium">
-            <span>{`${total} ${resultPlural} found, showing ${fromResult(pageNumber, pageSize)} to ${toResult(pageNumber, pageSize, total)}`}</span>
+            <span>{`${formatNumber(total)} ${resultPlural} found, showing ${formatNumber(fromResult(pageNumber, pageSize))} to ${formatNumber(toResult(pageNumber, pageSize, total))}`}</span>
         </h2>
     )
 }
@@ -27,7 +27,7 @@ const SearchResultsTitle = ({pageNumber, pageSize, total, resultsReceived}) => {
 const fromResult = (pageNumber, pageSize) => ((pageNumber - 1) * pageSize) + 1
 const toResult = (pageNumber, pageSize, total) => Math.min(total, pageNumber * pageSize)
 const numberOfPages = (pageSize, total) => Math.ceil(total / pageSize)
-
+const formatNumber = number => number.toLocaleString().replace('\.00','')
 SearchResultsTitle.propTypes = {
     pageNumber: PropTypes.number.isRequired,
     pageSize: PropTypes.number.isRequired,

@@ -75,8 +75,24 @@ describe('SearchResultsTitle component', () => {
             beforeEach(() => {
                 title = shallow(<SearchResultsTitle total={21} pageNumber={3} pageSize={10} resultsReceived={true}/>)
             })
-            it('total shown with reminder results range (21 to 21) for this page shown', () => {
+            it('total shown with remainder results range (21 to 21) for this page shown', () => {
                 expect(title.text()).to.equal('21 results found, showing 21 to 21')
+            })
+        })
+        context('with huge number of results', () => {
+            beforeEach(() => {
+                title = shallow(<SearchResultsTitle total={1234567} pageNumber={3} pageSize={10} resultsReceived={true}/>)
+            })
+            it('total shown with formatted total', () => {
+                expect(title.text()).to.equal('1,234,567 results found, showing 21 to 30')
+            })
+        })
+        context('with huge number of results on high page number', () => {
+            beforeEach(() => {
+                title = shallow(<SearchResultsTitle total={1234567} pageNumber={123456} pageSize={10} resultsReceived={true}/>)
+            })
+            it('total shown with formatted total', () => {
+                expect(title.text()).to.equal('1,234,567 results found, showing 1,234,551 to 1,234,560')
             })
         })
     })
