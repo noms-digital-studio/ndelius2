@@ -1,4 +1,4 @@
-import OffenderSearchPage from './components/offenderSearchPage';
+import OffenderSearchPage from './containers/offenderSearchPageContainer';
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import reducer from './reducers'

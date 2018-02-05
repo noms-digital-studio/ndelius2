@@ -4,8 +4,10 @@ import FrameNavigation from '../containers/frameNavigationContainer';
 import AddNewOffenderLink from '../containers/addNewOffenderLinkContainer';
 import Suggestions from '../containers/suggestionsContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
+import SearchFooter from "./searchFooter";
+import PropTypes from "prop-types";
 
-export default () => (
+const OffenderSearchPage = ({firstTimeIn}) => (
     <div>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root">
@@ -19,10 +21,16 @@ export default () => (
                         <p className="bold margin-top medium no-margin-bottom">Can't find who you are looking for? <AddNewOffenderLink/></p></div>
                 </div>
                 <div className="padded mobile-pad">
-                    <OffenderSearchResults/>
+                    {firstTimeIn && <SearchFooter/>}
+                    {!firstTimeIn && <OffenderSearchResults/>}
                 </div>
             </main>
         </div>
         <FrameNavigation/>
     </div>);
 
+OffenderSearchPage.propTypes = {
+    firstTimeIn: PropTypes.bool.isRequired
+};
+
+export default OffenderSearchPage;

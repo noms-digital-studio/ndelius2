@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 const OffenderSearch = ({searchTerm, search}) => (
     <form className="padding-left-right" onSubmit={(event) => onSubmit(event, searchTerm, search)}>
-        <input autoFocus={true} name='searchTerms' className="form-control padded" value={searchTerm} onChange={event => search(event.target.value)} placeholder="Find names, addresses, date of birth, CRN and more..." />
+        <input autoFocus={true} name='searchTerms' className="form-control padded" value={searchTerm} onChange={event => search(event.target.value)} placeholder="Enter names, addresses, date of birth, identification numbers and more..." />
     </form>
 );
 

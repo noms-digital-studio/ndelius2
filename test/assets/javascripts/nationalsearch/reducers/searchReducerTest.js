@@ -32,11 +32,14 @@ describe("searchReducer", () => {
         it('resultsReceived will be false', () => {
             expect(state.resultsReceived).to.equal(false)
         });
+        it('firstTimeIn will be true', () => {
+            expect(state.firstTimeIn).to.equal(true)
+        });
     })
     describe("when REQUEST_SEARCH action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: true, suggestions: someSuggestions(), total: 28, pageNumber: 3}, {
+            state = search({searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: true, suggestions: someSuggestions(), total: 28, pageNumber: 3, firstTimeIn: true}, {
                 type: REQUEST_SEARCH,
                 searchTerm: 'John Smith'
             })
@@ -63,13 +66,16 @@ describe("searchReducer", () => {
         it('resultsReceived is kept at existing value', () => {
             expect(state.resultsReceived).to.equal(true)
         });
+        it('firstTimeIn will be true', () => {
+            expect(state.firstTimeIn).to.equal(true)
+        });
     })
     describe("when SEARCH_RESULTS action received", () => {
 
         context('when searchTerm matches from request action', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3},
+                    {searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3, firstTimeIn: true},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('results are replaced with new results', () => {
@@ -80,6 +86,9 @@ describe("searchReducer", () => {
             });
             it('resultsReceived is set to true',  () => {
                 expect(state.resultsReceived).to.equal(true)
+            });
+            it('firstTimeIn will be false', () => {
+                expect(state.firstTimeIn).to.equal(false)
             });
         })
         context('when searchTerm partial matches from request action', () => {
@@ -603,7 +612,7 @@ describe("searchReducer", () => {
     describe("when CLEAR_RESULTS action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', resultsReceived: true, resultsSearchTerm: 'nobby', results: [{aResult: {}}], suggestions: someSuggestions(), total: 28, pageNumber: 3}, {type: CLEAR_RESULTS})
+            state = search({searchTerm: 'Mr Bean', resultsReceived: true, resultsSearchTerm: 'nobby', results: [{aResult: {}}], suggestions: someSuggestions(), total: 28, pageNumber: 3, firstTimeIn: false}, {type: CLEAR_RESULTS})
         })
 
         it('searchTerm will be blank', () => {
@@ -626,6 +635,9 @@ describe("searchReducer", () => {
         });
         it('resultsReceived is set to false',  () => {
             expect(state.resultsReceived).to.equal(false)
+        });
+        it('firstTimeIn will remain false', () => {
+            expect(state.firstTimeIn).to.equal(false)
         });
     })
 
