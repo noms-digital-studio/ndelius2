@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 const MAX_PAGES = 10
 
 const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm}) => (
-    <div>
+    <div role='navigation'>
         {shouldDisplay(pageSize, total) &&
         <span>
             {notOnFirstPage(pageNumber) &&
             <span>
-                <a id='previous-page-link' className='clickable margin-right' onClick={() => gotoPage(searchTerm, pageNumber - 1)}>&lt; Previous</a>
+                <a tabIndex="1" href='#' id='previous-page-link' aria-label='Previous Page' className='clickable margin-right' onClick={() => gotoPage(searchTerm, pageNumber - 1)}>&lt; Previous</a>
                 <span className='margin-right'>-</span>
             </span>
             }
@@ -18,12 +18,13 @@ const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm}) => (
                                             pageNumber={pageNumber}
                                             linkPageNumber={linkPageNumber}
                                             gotoPage={gotoPage}
-                                            searchTerm={searchTerm}/>)
+                                            searchTerm={searchTerm}
+                                            tabIndex="1"/>)
             }
             {notOnLastPage(pageNumber, totalPages(pageSize, total)) &&
             <span>
                 <span className="margin-right">-</span>
-                <a id='next-page-link' className='clickable' onClick={() => gotoPage(searchTerm, pageNumber + 1)}>Next &gt;</a>
+                <a tabIndex="1" href='#' id='next-page-link' aria-label='Next Page'  className='clickable' onClick={() => gotoPage(searchTerm, pageNumber + 1)}>Next &gt;</a>
             </span>
             }
         </span>
@@ -40,11 +41,11 @@ PageSelection.propTypes = {
 };
 
 
-const PageLink = ({pageNumber, linkPageNumber, gotoPage, searchTerm}) => {
+const PageLink = ({pageNumber, linkPageNumber, gotoPage, searchTerm, tabIndex}) => {
     if (pageNumber === linkPageNumber) {
         return (<span className='margin-right'>{linkPageNumber}</span>)
     }
-    return (<span className='margin-right'><a className='clickable' onClick={() => gotoPage(searchTerm, linkPageNumber)}>{linkPageNumber}</a></span>)
+    return (<span className='margin-right'><a  tabIndex={tabIndex} href='#' aria-label={`Page ${linkPageNumber}`} className='clickable' onClick={() => gotoPage(searchTerm, linkPageNumber)}>{linkPageNumber}</a></span>)
 }
 
 

@@ -6,46 +6,46 @@ import {matches} from '../../helpers/searchMatcher'
 
 const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
     <li>
-        <div className='panel panel-border-narrow offender-summary'>
-            <OffenderSummaryTitle {...offenderSummary}/>
+        <div role='group' className='panel panel-border-narrow offender-summary'>
+            <OffenderSummaryTitle {...offenderSummary} tabIndex="1"/>
             <p className='no-margin bottom'>
-                <span className='bold'>CRN:&nbsp;</span>
-                <span className='bold margin-right'><MT text={offenderSummary.otherIds.crn}/></span>
+                <span id='crn-label'className='bold'>CRN:&nbsp;</span>
+                <span className='bold margin-right' aria-labelledby="crn-label"><MT text={offenderSummary.otherIds.crn}/></span>
                 {shouldDisplay(searchTerm, offenderSummary.otherIds.pncNumber) &&
                     <span>
-                        <span className='bold'>PNC:&nbsp;</span>
-                        <span id='pncNumber' className='bold margin-right'><MT text={offenderSummary.otherIds.pncNumber}/></span>
+                        <span id='pncNumber-label' className='bold'>PNC:&nbsp;</span>
+                        <span id='pncNumber' aria-labelledby="pncNumber-label" className='bold margin-right'><MT text={offenderSummary.otherIds.pncNumber}/></span>
                     </span>
                 }
                 {shouldDisplay(searchTerm, offenderSummary.otherIds.nomsNumber) &&
                     <span>
-                        <span className='bold'>NOMS:&nbsp;</span>
-                        <span id='nomsNumber' className='bold margin-right'><MT text={offenderSummary.otherIds.nomsNumber}/></span>
+                        <span id='nomsNumber-label' className='bold'>NOMS:&nbsp;</span>
+                        <span id='nomsNumber' aria-labelledby='nomsNumber-label' className='bold margin-right'><MT text={offenderSummary.otherIds.nomsNumber}/></span>
                     </span>
                 }
                 {shouldDisplay(searchTerm, offenderSummary.otherIds.niNumber) &&
                     <span>
-                        <span className='bold'>NI Number:&nbsp;</span>
-                        <span id='niNumber' className='bold margin-right'><MT text={offenderSummary.otherIds.niNumber}/></span>
+                        <span id='niNumber-label' className='bold'>NI Number:&nbsp;</span>
+                        <span id='niNumber' aria-labelledby="niNumber-label" className='bold margin-right'><MT text={offenderSummary.otherIds.niNumber}/></span>
                     </span>
                 }
                 {shouldDisplay(searchTerm, offenderSummary.otherIds.croNumber) &&
                     <span>
-                        <span className='bold'>CRO:&nbsp;</span>
-                        <span id='croNumber' className='bold margin-right'><MT text={offenderSummary.otherIds.croNumber}/></span>
+                        <span id='croNumber-label' className='bold'>CRO:&nbsp;</span>
+                        <span id='croNumber' aria-labelledby="croNumber-label" className='bold margin-right'><MT text={offenderSummary.otherIds.croNumber}/></span>
                     </span>
                 }
                 <Risk risk={offenderSummary.offenderProfile.riskColour}/>
                 <CurrentOffender current={offenderSummary.currentDisposal}/>
                 <span className='margin-right'>
-                    <span><MT text={offenderSummary.gender}/>,&nbsp;</span>
-                    <span>{offenderSummary.age}</span>
+                    <span aria-label="Gender"><MT text={offenderSummary.gender}/>,&nbsp;</span>
+                    <span aria-label="Age">{offenderSummary.age}</span>
                 </span>
             </p>
             <AliasList aliases={offenderSummary.aliases}/>
             <PreviousSurname name={offenderSummary.previousSurname}/>
             <AddressList addresses={offenderSummary.addresses}/>
-            <p><AddContactLink offenderId={offenderSummary.offenderId}/></p>
+            <p><AddContactLink tabIndex="1" firstName={offenderSummary.firstName} surname={offenderSummary.surname} offenderId={offenderSummary.offenderId}/></p>
         </div>
     </li>
 )
@@ -88,7 +88,7 @@ OffenderSearchSummary.propTypes = {
 
 const Risk = ({risk}) => {
     if (risk) {
-        return (<span className='margin-right'>Risk <span className={`risk-icon ${mapRiskColor(risk)}`}/>&nbsp;|</span>)
+        return (<span aria-label={`risk alert colour`}  className='margin-right'>Risk <span className={`risk-icon ${mapRiskColor(risk)}`}/><span className='visually-hidden'>{risk}</span>&nbsp;|</span>)
     }
     return (<span/>)
 }

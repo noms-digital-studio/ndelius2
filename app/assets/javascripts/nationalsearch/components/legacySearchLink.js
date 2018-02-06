@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types'
 
-const LegacySearchLink = ({legacySearch, children}) => (
-    <a className="clickable" onClick={legacySearch}>{children}</a>
+const LegacySearchLink = ({legacySearch, children, tabIndex}) => (
+    <a className="clickable" href='#'  tabIndex={tabIndex} onClick={legacySearch}>{children}</a>
 )
 
 LegacySearchLink.propTypes = {
     legacySearch: PropTypes.func.isRequired,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
+    tabIndex: PropTypes.string
 }
 
 

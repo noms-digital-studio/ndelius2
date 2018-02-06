@@ -18,7 +18,7 @@ const OffenderSearchPage = ({firstTimeIn}) => (
                         <h1 className="heading-large no-margin-top margin-bottom medium">Search for an offender</h1>
                         <OffenderSearch/>
                         <Suggestions/>
-                        <p className="bold margin-top medium no-margin-bottom">Can't find who you are looking for? <AddNewOffenderLink/></p></div>
+                        <p className="bold margin-top medium no-margin-bottom">Can't find who you are looking for? <AddNewOffenderLink tabIndex="1"/></p></div>
                 </div>
                 <div className="padded mobile-pad">
                     {firstTimeIn && <SearchFooter/>}

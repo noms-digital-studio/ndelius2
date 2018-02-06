@@ -14,7 +14,7 @@ const SearchFooter = () => (
         <div className="margin-top medium">&nbsp;</div>
 
         <div>
-            <span>You can still access the <LegacySearchLink>previous version of this search.</LegacySearchLink> </span>
+            <span>You can still access the <LegacySearchLink tabIndex="1">previous version of this search.</LegacySearchLink> </span>
         </div>
     </div>);
 

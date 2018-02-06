@@ -4,23 +4,20 @@ const SearchResultsTitle = ({pageNumber, pageSize, total, resultsReceived}) => {
     if (resultsReceived === false) {
         return (<div/>);
     }
+
+    return (<h2 aria-live='polite' className="heading-medium margin-top medium">{renderHeader(pageNumber, pageSize, total)}</h2>)
+}
+
+const renderHeader = (pageNumber, pageSize, total) => {
     if (total === 0) {
-        return (
-            <h2 className="heading-medium margin-top medium"><span>0 results found</span></h2>
-        )
+        return (<span>0 results found</span>)
     }
     const resultPlural = total === 1 ? 'result' : 'results'
     if (numberOfPages(pageSize, total) === 1) {
-        return (
-            <h2 className="heading-medium margin-top medium">
-                <span>{`${formatNumber(total)} ${resultPlural} found`}</span>
-            </h2>
-        )
+        return (<span>{`${formatNumber(total)} ${resultPlural} found`}</span>)
     }
     return (
-        <h2 className="heading-medium margin-top medium">
-            <span>{`${formatNumber(total)} ${resultPlural} found, showing ${formatNumber(fromResult(pageNumber, pageSize))} to ${formatNumber(toResult(pageNumber, pageSize, total))}`}</span>
-        </h2>
+        <span>{`${formatNumber(total)} ${resultPlural} found, showing ${formatNumber(fromResult(pageNumber, pageSize))} to ${formatNumber(toResult(pageNumber, pageSize, total))}`}</span>
     )
 }
 
