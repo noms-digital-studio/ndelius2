@@ -1,9 +1,12 @@
 package services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import data.offendersearch.OffenderSearchResult;
+import helpers.DateTimeHelper;
 import helpers.FutureListener;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
@@ -22,15 +25,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Stream;
 
 import static helpers.DateTimeHelper.calculateAge;
 import static java.time.Clock.systemUTC;
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
-import static org.elasticsearch.index.query.Operator.AND;
-import static org.elasticsearch.index.query.Operator.OR;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 import static play.libs.Json.parse;
@@ -67,40 +70,55 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
-
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(searchTerm)
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDatesIn(searchTerm))
             .field("firstName", 10)
             .field("surname", 10)
             .field("offenderAliases.firstName", 8)
             .field("offenderAliases.surname", 8)
             .field("contactDetails.addresses.town")
-            .lenient(true)
-            .operator(AND)
             .type(CROSS_FIELDS));
 
-        boolQueryBuilder.should().add(multiMatchQuery(searchTerm)
-            .field("dateOfBirth", 5)
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDatesIn(searchTerm))
             .field("gender")
             .field("otherIds.crn", 10)
-            .field("otherIds.nomsNumber", 8)
-            .field("otherIds.niNumber", 6)
-            .field("otherIds.pncNumber", 6)
-            .field("otherIds.croNumber", 6)
+            .field("otherIds.nomsNumber", 10)
+            .field("otherIds.niNumber", 10)
+            .field("otherIds.pncNumber", 10)
+            .field("otherIds.croNumber", 10)
             .field("contactDetails.addresses.streetName")
             .field("contactDetails.addresses.county")
-            .field("contactDetails.addresses.postcode", 3)
-            .lenient(true)
-            .operator(OR)
+            .field("contactDetails.addresses.postcode", 10)
             .type(MOST_FIELDS));
+
+        termsThatLookLikeDatesIn(searchTerm).forEach(dateTerm ->
+            boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
+                .field("dateOfBirth", 11)
+                .lenient(true)));
 
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
+            .explain(Logger.isDebugEnabled())
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
             .suggest(suggestionsFor(searchTerm));
+
         Logger.info(searchSource.toString());
         return searchSource;
+    }
+
+    private List<String> termsThatLookLikeDatesIn(String searchTerm) {
+        val parts = searchTerm.split(" ");
+        return Stream.of(parts)
+            .filter(DateTimeHelper::looksLikeADate)
+            .collect(toList());
+    }
+
+    private String termsWithoutDatesIn(String searchTerm) {
+        val parts = searchTerm.split(" ");
+        return Stream.of(parts)
+                .filter(DateTimeHelper::doesNotlookLikeADate)
+                .collect(joining(" "));
     }
 
     private SuggestBuilder suggestionsFor(String searchTerm) {
@@ -110,8 +128,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     private CompletionStage<OffenderSearchResult> processSearchResponse(String bearerToken, SearchResponse response) {
-        Logger.debug(response.toString());
-
+        logResults(response);
 
         val offenderNodesCompletionStages = stream(response.getHits().getHits())
                 .map(searchHit -> {
@@ -127,6 +144,16 @@ public class ElasticOffenderSearch implements OffenderSearch {
                                 .total(response.getHits().getTotalHits())
                                 .suggestions(suggestionsIn(response))
                                 .build());
+    }
+
+    private void logResults(SearchResponse response) {
+        Logger.debug(() -> {
+            try {
+                return new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).writeValueAsString(parse(response.toString()));
+            } catch (Exception e) {
+                return response.toString();
+            }
+        });
     }
 
     private CompletableFuture[] toCompletableFutureArray(List<CompletionStage<ObjectNode>> offenderNodesCompletionStages) {
