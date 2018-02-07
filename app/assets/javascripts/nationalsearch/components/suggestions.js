@@ -11,7 +11,7 @@ const Suggestions = ({searchTerm, suggestions, search}) => {
             {suggestionsToOrderedMapping(suggestions).map( (suggestion, index) =>
                 <span key={index}>
                     &nbsp;
-                    <a className='white' tabIndex="1" href='#' aria-label={`Search again using ${suggestion.text}`} onClick={() => search(replace(searchTerm, suggestion.original, suggestion.text))}>
+                    <a className='white' tabIndex="1" href='javascript:' aria-label={`Search again using ${suggestion.text}`} onClick={() => search(replace(searchTerm, suggestion.original, suggestion.text))}>
                      {suggestion.text}
                      </a>
                 </span>)}

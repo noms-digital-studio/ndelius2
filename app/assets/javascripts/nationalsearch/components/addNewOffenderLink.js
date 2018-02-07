@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 
 const AddNewOffenderLink = ({addNewOffender, tabIndex}) => (
-    <a tabIndex={tabIndex} href='#' className="clickable white" onClick={addNewOffender}>Add a new offender</a>
+    <a tabIndex={tabIndex} href='javascript:' className="clickable white" onClick={addNewOffender}>Add a new offender</a>
 );
 
 AddNewOffenderLink.propTypes = {

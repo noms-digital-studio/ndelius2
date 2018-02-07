@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 const AddContactLink = ({offenderId, surname, firstName, addContact, tabIndex}) => (
     <span>
-        <a tabIndex={tabIndex} href='#' className="clickable" aria-label={`Add contact to ${firstName} ${surname}`} onClick={() => addContact(offenderId)}>Add contact</a>
+        <a tabIndex={tabIndex} href='javascript:' className="clickable" aria-label={`Add contact to ${firstName} ${surname}`} onClick={() => addContact(offenderId)}>Add contact</a>
     </span>
 )
 

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 
 const LegacySearchLink = ({legacySearch, children, tabIndex}) => (
-    <a className="clickable" href='#'  tabIndex={tabIndex} onClick={legacySearch}>{children}</a>
+    <a className="clickable" href='javascript:'  tabIndex={tabIndex} onClick={legacySearch}>{children}</a>
 )
 
 LegacySearchLink.propTypes = {

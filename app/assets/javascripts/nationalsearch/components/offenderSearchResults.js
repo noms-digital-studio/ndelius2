@@ -6,7 +6,7 @@ import PageSelection from '../containers/pageSelectionContainer';
 import PropTypes from "prop-types";
 
 const OffenderSearchResults = ({results}) => (
-    <div className='padded mobile-pad'>
+    <div className='padded mobile-pad' id='offender-results'>
         <SearchResultsTitle/>
 
         <ul>
