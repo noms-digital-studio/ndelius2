@@ -42,8 +42,24 @@ const expandDateWithAllFormats = (searchWord) => {
     const date = moment(searchWord, toDateFormat(searchWord))
     return supportedDateFormats.map(format => date.format(format))
 }
-const supportedDateFormats = ['YYYY/MM/DD', 'YYYY-MM-DD', 'DD/MM/YYYY', 'DD-MM-YYYY', 'DD/MM/YY', 'DD-MM-YY', 'YYYY/M/DD', 'YYYY-M-DD', 'DD/M/YYYY', 'DD-M-YYYY', 'DD/M/YY', 'DD-M-YY']
-
+const supportedDateFormats = ['YYYY/MMMM/DD', 'YYYY-MMMM-DD',
+                              'YYYY/MMMM/D', 'YYYY-MMMM-D',
+                              'YYYY/MMM/DD', 'YYYY-MMM-DD',
+                              'YYYY/MMM/D', 'YYYY-MMM-D',
+                              'YYYY/MM/DD', 'YYYY-MM-DD',
+                              'YYYY/M/DD', 'YYYY-M-DD',
+                              'YYYY/MM/D', 'YYYY-MM-D',
+                              'YYYY/M/D', 'YYYY-M-D',
+                              'DD/MMMM/YYYY', 'DD-MMMM-YYYY',
+                              'D/MMMM/YYYY', 'D-MMMM-YYYY',
+                              'DD/MMM/YYYY', 'DD-MMM-YYYY',
+                              'D/MMM/YYYY', 'D-MMM-YYYY',
+                              'DD/MM/YYYY', 'DD-MM-YYYY',
+                              'DD/M/YYYY', 'DD-M-YYYY',
+                              'D/MM/YYYY', 'D-MM-YYYY',
+                              'D/M/YYYY', 'D-M-YYYY',
+                              'DD/MM/YY', 'DD-MM-YY',
+                              'DD/M/YY', 'DD-M-YY']
 MarkableText.propTypes = {
     text: PropTypes.node.isRequired,
     searchTerm: PropTypes.string.isRequired,

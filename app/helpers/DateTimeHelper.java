@@ -3,9 +3,12 @@ package helpers;
 import lombok.val;
 
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
 
 import static java.time.LocalDate.now;
 import static java.time.LocalDate.parse;
@@ -18,32 +21,47 @@ public class DateTimeHelper {
         return ChronoUnit.YEARS.between(dateOfBirth, now(clock));
     }
 
-    public static boolean doesNotlookLikeADate(String dateString) {
-        return !looksLikeADate(dateString);
+    public static boolean canBeConvertedToADate(String dateString) {
+        return covertToCanonicalDate(dateString).isPresent();
     }
 
-    public static boolean looksLikeADate(String dateString) {
-        val datePatterns = asList(
-            "yyyy-MM-dd", "yyyy-M-dd", "yyyy-M-d",
-            "dd-MM-yyyy", "d-MM-yyyy", "d-M-yyyy",
-            "yyyy-MMM-dd", "yyyy-MMM-d",
-            "dd-MMM-yyyy", "d-MMM-yyyy",
-            "yyyy/MM/dd", "yyyy/M/dd", "yyyy/M/d",
-            "dd/MM/yyyy", "d/MM/yyyy", "d/M/yyyy",
-            "yyyy/MMM/dd", "yyyy/MMM/d",
-            "dd/MMM/yyyy", "d/MMM/yyyy"
+    public static Optional<String> covertToCanonicalDate(String dateString) {
+        List<String> datePatterns = asList(
+            "yyyy/MMMM/dd", "yyyy-MMMM-dd",
+            "yyyy/MMMM/d", "yyyy-MMMM-d",
+            "yyyy/MMM/dd", "yyyy-MMM-dd",
+            "yyyy/MMM/d", "yyyy-MMM-d",
+            "yyyy/MM/dd", "yyyy-MM-dd",
+            "yyyy/M/dd", "yyyy-M-dd",
+            "yyyy/MM/d", "yyyy-MM-d",
+            "yyyy/M/d", "yyyy-M-d",
+            "dd/MMMM/yyyy", "dd-MMMM-yyyy",
+            "d/MMMM/yyyy", "d-MMMM-yyyy",
+            "dd/MMM/yyyy", "dd-MMM-yyyy",
+            "d/MMM/yyyy", "d-MMM-yyyy",
+            "dd/MM/yyyy", "dd-MM-yyyy",
+            "dd/M/yyyy", "dd-M-yyyy",
+            "d/MM/yyyy", "d-MM-yyyy",
+            "d/M/yyyy", "d-M-yyyy"
             );
 
         return datePatterns.stream()
-                .anyMatch((datePattern) -> canParse(dateString, datePattern));
+                .filter(datePattern -> canParse(dateString, datePattern))
+                .map(datePattern -> LocalDate.parse(dateString, dateTimeBuilderFor(datePattern).toFormatter()))
+                .map(date -> date.format(ISO_LOCAL_DATE))
+                .findFirst();
     }
 
     private static boolean canParse(String dateString, String pattern) {
         try {
-            parse(dateString, new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern(pattern).toFormatter());
+            parse(dateString, dateTimeBuilderFor(pattern).toFormatter());
             return true;
         } catch (DateTimeParseException e) {
             return false;
         }
+    }
+
+    private static DateTimeFormatterBuilder dateTimeBuilderFor(String datePattern) {
+        return new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern(datePattern);
     }
 }

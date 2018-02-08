@@ -69,7 +69,7 @@ public class ElasticOffenderSearchTest {
     public void searchesOnlySubsetOfFields() {
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
 
-        elasticOffenderSearch.search("bearer-token", "smith andy 15-09-1970 1992-2-1", 10, 3);
+        elasticOffenderSearch.search("bearer-token", "smith andy 15-09-1970 1-2-1992", 10, 3);
 
         verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
         assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(BoolQueryBuilder.class);
@@ -95,10 +95,10 @@ public class ElasticOffenderSearchTest {
         assertThat(queryBuilder2.fields()).containsKeys("contactDetails.addresses.postcode");
 
         val queryBuilder3 = (MultiMatchQueryBuilder)query.should().get(2);
-        assertThat(queryBuilder3.value()).isEqualTo("15-09-1970");
+        assertThat(queryBuilder3.value()).isEqualTo("1970-09-15");
 
         val queryBuilder4 = (MultiMatchQueryBuilder)query.should().get(3);
-        assertThat(queryBuilder4.value()).isEqualTo("1992-2-1");
+        assertThat(queryBuilder4.value()).isEqualTo("1992-02-01");
     }
 
     @Test

@@ -108,17 +108,18 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     private List<String> termsThatLookLikeDatesIn(String searchTerm) {
-        val parts = searchTerm.split(" ");
-        return Stream.of(parts)
-            .filter(DateTimeHelper::looksLikeADate)
+        val searchTerms = searchTerm.split(" ");
+        return Stream.of(searchTerms)
+            .filter(DateTimeHelper::canBeConvertedToADate)
+            .map(term -> DateTimeHelper.covertToCanonicalDate(term).get())
             .collect(toList());
     }
 
     private String termsWithoutDatesIn(String searchTerm) {
-        val parts = searchTerm.split(" ");
-        return Stream.of(parts)
-                .filter(DateTimeHelper::doesNotlookLikeADate)
-                .collect(joining(" "));
+        val searchTerms = searchTerm.split(" ");
+        return Stream.of(searchTerms)
+            .filter(term -> !DateTimeHelper.covertToCanonicalDate(term).isPresent())
+            .collect(joining(" "));
     }
 
     private SuggestBuilder suggestionsFor(String searchTerm) {
