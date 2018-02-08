@@ -19,10 +19,12 @@
     "sinon-chai": "^2.14.0"
   },
   "dependencies": {
+    "history": "^2.0.0",
     "moment": "^2.20.1",
     "prop-types": "^15.6.0",
     "react": "^0.14.9",
     "react-redux": "^5.0.6",
+    "react-router": "2.0.1",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0"
   }

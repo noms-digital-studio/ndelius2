@@ -1,6 +1,6 @@
 const offender = (offender = {}) =>
     Object.assign({
-        offenderId: '123',
+        offenderId: 123,
         firstName: 'John',
         surname: 'Smith',
         dateOfBirth: '19-07-1965',
@@ -19,7 +19,7 @@ const offender = (offender = {}) =>
 
 const restrictedAccessOffender = (offender = {}) =>
     Object.assign({
-        offenderId: '123',
+        offenderId: 123,
         accessDenied: true,
         otherIds: {
             crn: 'D123X'
