@@ -22,6 +22,8 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
+import static helpers.JwtHelper.principal;
+
 public class NationalSearchController extends Controller {
 
     private static final String OFFENDER_API_BEARER_TOKEN = "offenderApiBearerToken";
@@ -50,15 +52,17 @@ public class NationalSearchController extends Controller {
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
         val username = Encryption.decrypt(encryptedUsername, paramsSecretKey);
+        Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
 
         return validate(encryptedUsername, encryptedEpochRequestTimeMills, username)
             .orElseGet(() -> offenderApi.logon(username)
                 .thenApplyAsync(bearerToken -> {
-                    Logger.info("Successful logon to API for user {}", username);
+                    Logger.info("AUDIT:{}: Successful logon for user {}", principal(bearerToken), username);
                     session(OFFENDER_API_BEARER_TOKEN, bearerToken);
                     return ok(template.render());
                 }, ec.current())
                 .exceptionally(e -> {
+                    Logger.info("AUDIT:{}: Unable to login {}", "anonymous", username);
                     Logger.error("Unable to logon to offender API", e);
                     return internalServerError();
                 }));
@@ -66,7 +70,10 @@ public class NationalSearchController extends Controller {
 
     public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
         return Optional.ofNullable(session(OFFENDER_API_BEARER_TOKEN))
-                .map(bearerToken -> offenderSearch.search(bearerToken, searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson))
+                .map(bearerToken -> {
+                    Logger.info("AUDIT:{}: Search performed with term '{}'", principal(bearerToken), searchTerm);
+                    return offenderSearch.search(bearerToken, searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
+                })
                 .orElse(CompletableFuture.supplyAsync(Results::unauthorized));
     }
 

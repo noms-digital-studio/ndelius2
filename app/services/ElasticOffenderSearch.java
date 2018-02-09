@@ -108,7 +108,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .from(pageSize * aValidPageNumberFor(pageNumber))
             .suggest(suggestionsFor(searchTerm));
 
-        Logger.info(searchSource.toString());
+        Logger.debug(searchSource.toString());
         return searchSource;
     }
 

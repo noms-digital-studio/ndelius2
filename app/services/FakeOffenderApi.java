@@ -8,7 +8,8 @@ import java.util.concurrent.CompletionStage;
 public class FakeOffenderApi implements OffenderApi {
     @Override
     public CompletionStage<String> logon(String username) {
-        return CompletableFuture.completedFuture("fake-bearer");
+        // JWT Header/Body is {"alg":"HS512"}{"sub":"cn=fake.user,cn=Users,dc=moj,dc=com","uid":"fake.user","exp":1517631939}
+        return CompletableFuture.completedFuture("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjbj1mYWtlLnVzZXIsY249VXNlcnMsZGM9bW9qLGRjPWNvbSIsInVpZCI6ImZha2UudXNlciIsImV4cCI6MTUxNzYzMTkzOX0=.FsI0VbLbqLRUGo7GXDEr0hHLvDRJjMQWcuEJCCaevXY1KAyJ_05I8V6wE6UqH7gB1Nq2Y4tY7-GgZN824dEOqQ");
     }
 
     @Override
