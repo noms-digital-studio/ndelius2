@@ -1,4 +1,5 @@
 @import "react";
+@import "measurements";
 
 .govuk-box-highlight.blue {
   background: #005ea5;
@@ -54,4 +55,24 @@ a.clickable {
 
 textarea.form-control {
   border: 2px solid #0b0c0c;
+}
+
+#content {
+  max-width: none;
+  margin-right: 0;
+  margin-left: 0;
+
+}
+
+.key-content {
+  margin-left: $gutter;
+  margin-right: $gutter;
+}
+
+.govuk-box-highlight {
+  margin-top: 0;
+}
+
+.phase-banner-boxed {
+  border-bottom: none;
 }
