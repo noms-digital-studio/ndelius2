@@ -42,6 +42,9 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                     <span aria-label="Age">{offenderSummary.age}</span>
                 </span>
             </p>
+            {shouldDisplay(searchTerm, offenderSummary.middleNames) &&
+                <MiddleNames middleNames={offenderSummary.middleNames}/>
+            }
             <AliasList aliases={offenderSummary.aliases}/>
             <PreviousSurname name={offenderSummary.previousSurname}/>
             <AddressList addresses={offenderSummary.addresses}/>
@@ -54,6 +57,9 @@ OffenderSearchSummary.propTypes = {
     offenderSummary: PropTypes.shape({
         firstName: PropTypes.string.isRequired,
         surname: PropTypes.string.isRequired,
+        middleNames: PropTypes.arrayOf(
+            PropTypes.string.isRequired
+        ),
         dateOfBirth: PropTypes.string.isRequired,
         otherIds: PropTypes.shape({
             crn: PropTypes.string.isRequired,
@@ -99,6 +105,18 @@ const CurrentOffender = ({current}) => {
     }
     return (<span/>)
 }
+
+const MiddleNames = ({middleNames}) => (
+    <div className='no-margin bottom'>
+        <span className='margin-right'>Middle Names:</span>
+        {middleNames.map( (middleName, index) => (
+            <span key={index}>
+                <span><MT text={middleName}/></span>
+                <span>&nbsp;</span>
+            </span>
+        ))}
+    </div>
+)
 
 const AliasList = ({aliases}) => (
     <div className='no-margin bottom'>

@@ -32,6 +32,12 @@ Configuration parameters can be supplied via environment variables, e.g.:
 - `STORE_ALFRESCO_URL=http://alfresco/ APPLICATION_SECRET=abcdefghijk java -jar ndelius2.jar`
 The website endpoint defaults to local port 9000.
 
+All tests:
+- sbt clean test
+
+Frontend tests:
+- sbt mocha
+
 ### Development notes
 
 The [Play Framework](https://www.playframework.com/) provides the [Google Guice](https://github.com/google/guice/wiki/Motivation) Dependency Injection framework as standard, and [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) based webpages are generated via Play Framework [Twirl](https://www.playframework.com/documentation/2.5.x/ScalaTemplates) templates.
@@ -85,3 +91,5 @@ curl -H "Content-Type: application/json" -XPOST 'localhost:9200/offender/_bulk?p
 
 ```
 
+####
+Use `sbt -Dlogback.application.level=DEBUG run` to turn on ElasticSearch explain feature.

@@ -10,7 +10,6 @@ describe('OffenderSearchSummary component', () => {
         const offenderSummary = offender()
         const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Mr Bean'}/>)
 
-
         expect(summary.find('Connect(OffenderSummaryTitle)')).to.have.length(1)
         expect(summary.find('CurrentOffender')).to.have.length(1)
         expect(summary.find('AliasList')).to.have.length(1)
@@ -179,6 +178,38 @@ describe('OffenderSearchSummary component', () => {
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 123456/12A'}/>)
 
                 expect(summary.find('#croNumber')).to.have.length(0)
+            })
+        })
+    })
+    describe('Middle names display', () => {
+        context('Middle names present and matches a search term', () => {
+            it('Middle names are displayed', () => {
+                const offenderSummary = offender({
+                    middleNames: ['Bob Jon']
+                })
+                const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Jon'}/>)
+
+                expect(summary.find('MiddleNames')).to.have.length(1)
+            })
+        })
+        context('Middle names present and does not match a search term', () => {
+            it('Middle names not displayed', () => {
+                const offenderSummary = offender({
+                    middleNames: ['Bob Jon']
+                })
+                const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
+
+                expect(summary.find('MiddleNames')).to.have.length(0)
+            })
+        })
+        context('Middle names not present', () => {
+            it('Middle names not displayed', () => {
+                const offenderSummary = offender({
+                    middleNames: []
+                })
+                const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+
+                expect(summary.find('MiddleNames')).to.have.length(0)
             })
         })
     })

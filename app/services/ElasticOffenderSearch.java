@@ -35,6 +35,7 @@ import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 import static play.libs.Json.parse;
 
@@ -74,6 +75,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
         boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDatesIn(searchTerm))
             .field("firstName", 10)
             .field("surname", 10)
+            .field("middleNames", 8)
             .field("offenderAliases.firstName", 8)
             .field("offenderAliases.surname", 8)
             .field("contactDetails.addresses.town")
@@ -95,6 +97,9 @@ public class ElasticOffenderSearch implements OffenderSearch {
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
                 .field("dateOfBirth", 11)
                 .lenient(true)));
+
+        Stream.of(termsWithoutDatesIn(searchTerm).split(" "))
+            .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
 
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)

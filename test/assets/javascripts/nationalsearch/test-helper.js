@@ -3,6 +3,7 @@ const offender = (offender = {}) =>
         offenderId: 123,
         firstName: 'John',
         surname: 'Smith',
+        middleNames: ['Bod', 'Jon'],
         dateOfBirth: '19-07-1965',
         otherIds: {
             crn: 'D123X'
