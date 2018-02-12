@@ -59,17 +59,18 @@ public class DeliusOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Boolean> isHealthy() {
-        return wsClient.url(offenderApiBaseUrl + "health")
+        String url = offenderApiBaseUrl + "health";
+        return wsClient.url(url)
             .get()
             .thenApply(wsResponse -> {
                 if (wsResponse.getStatus() != 200) {
-                    Logger.warn("Error calling Delius Offender API. Status {}", wsResponse.getStatus());
+                    Logger.warn("Bad response calling Delius Offender API {}. Status {}", url, wsResponse.getStatus());
                     return false;
                 }
                 return true;
             })
             .exceptionally(throwable -> {
-                Logger.warn("Error calling Delius Offender API", throwable);
+                Logger.error("Got an error calling Delius Offender API health endpoint", throwable);
                 return false;
             });
 
@@ -77,7 +78,7 @@ public class DeliusOffenderApi implements OffenderApi {
 
     private WSResponse assertOkResponse(WSResponse response) {
         if (response.getStatus() != OK) {
-            Logger.error("Logon API bad response " + response.getStatus());
+            Logger.error("Logon API bad response {}", response.getStatus());
             throw new RuntimeException("Unable to call logon. Status = " + response.getStatus());
         }
         return response;

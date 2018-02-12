@@ -74,7 +74,10 @@ public class NationalSearchController extends Controller {
                     Logger.info("AUDIT:{}: Search performed with term '{}'", principal(bearerToken), searchTerm);
                     return offenderSearch.search(bearerToken, searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
                 })
-                .orElse(CompletableFuture.supplyAsync(Results::unauthorized));
+                .orElse(CompletableFuture.supplyAsync(() -> {
+                    Logger.warn("Unauthorized search attempted for search term '{}'. No Offender API bearer token found in session", searchTerm);
+                    return Results.unauthorized();
+                }));
     }
 
     private Optional<CompletionStage<Result>> validate(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {

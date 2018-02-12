@@ -64,7 +64,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
             try {
                 return elasticSearchClient.ping();
             } catch (IOException e) {
-                Logger.error(e.getMessage(), e);
+                Logger.error("Got an error calling ElasticSearch health endpoint", e);
                 return false;
             }
         });

@@ -1,6 +1,7 @@
 package helpers;
 
 import org.elasticsearch.action.ActionListener;
+import play.Logger;
 
 public class FutureListener<T> extends CompletionStageAdapter<T> implements ActionListener<T> {
     @Override
@@ -10,6 +11,7 @@ public class FutureListener<T> extends CompletionStageAdapter<T> implements Acti
 
     @Override
     public void onFailure(Exception e) {
+        Logger.error("Got an error calling ElasticSearch API", e);
         promise.completeExceptionally(e);
     }
 }
