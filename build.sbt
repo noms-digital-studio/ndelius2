@@ -15,7 +15,7 @@ organization := "uk.gov.justice.digital"
 version := conf.getString("app.version")
 version += sys.env.getOrElse("CIRCLE_BUILD_NUM", "SNAPSHOT")
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb, SbtJsEngine)
+lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb, SbtJsEngine).configs( IntegrationTest )
 
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
 MochaKeys.requires += "setup.js"
@@ -107,3 +107,4 @@ browserifyTask := {
 
 sourceGenerators in Assets +=  browserifyTask.taskValue
 resourceDirectories in Assets += browserifyOutputDir.value
+unmanagedResourceDirectories in IntegrationTest += baseDirectory.value  / "target/web/public/test"
