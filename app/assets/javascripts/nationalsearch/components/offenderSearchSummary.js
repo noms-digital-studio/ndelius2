@@ -161,7 +161,8 @@ const Address = ({address}) => {
     )
 }
 
-const firstAddressLine = (number, street) => `${number} ${street}`
+const firstAddressLine = (number='', street='') => `${number} ${street}`.trim()
+
 const PreviousSurname = ({name}) => {
     if (name) {
         return (<div className='no-margin bottom'>

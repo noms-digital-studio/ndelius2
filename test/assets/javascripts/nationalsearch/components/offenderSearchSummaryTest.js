@@ -236,6 +236,32 @@ describe('Address component', () => {
             )
         })
     })
+    context('with streetName but no addressNumber', () => {
+        it('streetName rendered on its own with no white space padding', () => {
+            const address = shallow(<Address address={ {
+                "streetName": "Foo Street"
+            }}/>)
+
+            const lines = extractLines(address)
+
+            expect(lines).to.eql(
+                ['Foo Street']
+            )
+        })
+    })
+    context('with no streetName but an addressNumber', () => {
+        it('addressNumber rendered on its own with no white space padding', () => {
+            const address = shallow(<Address address={ {
+                "addressNumber": "42"
+            }}/>)
+
+            const lines = extractLines(address)
+
+            expect(lines).to.eql(
+                ['42']
+            )
+        })
+    })
     context('with many address lines missing', () => {
         it('lines removed but with address number concatenated with street name', () => {
             const address = shallow(<Address address={{
