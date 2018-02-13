@@ -45,13 +45,13 @@ const mapResults = (results = [], searchTerm) =>
     results.map(
         offenderDetails => ({
             ...offenderDetails,
-            aliases: offenderAliases(offenderDetails).map((alias) => {
+            aliases: offenderAliasesWithUnwantedFieldsRemoved(offenderDetails).map((alias) => {
                 return {
                     ...alias
                 }
             }).filter(item => anyMatch(item, searchTerm)),
             previousSurname: whenMatched(offenderDetails.previousSurname, searchTerm),
-            addresses: offenderAddresses(offenderDetails).map((address) => {
+            addresses: offenderAddressesWithUnwantedFieldsRemoved(offenderDetails).map((address) => {
                 return {
                     ...address
                 }
@@ -59,7 +59,18 @@ const mapResults = (results = [], searchTerm) =>
         )
     )
 
+const offenderAliasesWithUnwantedFieldsRemoved = (offenderDetails) => {
+    const aliases = offenderAliases(offenderDetails);
+    aliases.forEach(alias => removeFields(alias, ['dateOfBirth', 'gender']))
+    return aliases
+}
 const offenderAliases = (offenderDetails) => offenderDetails.offenderAliases || []
+
+const offenderAddressesWithUnwantedFieldsRemoved = (offenderDetails) => {
+    const addresses = offenderAddresses(offenderDetails);
+    addresses.forEach(address => removeFields(address, ['from']))
+    return addresses
+}
 const offenderAddresses = (offenderDetails) => offenderContactDetails(offenderDetails).addresses || []
 const offenderContactDetails = (offenderDetails) => offenderDetails.contactDetails || {}
 
@@ -77,6 +88,11 @@ const anyMatch = (item, searchTerm) =>
         .map(property => item[property])
         .map(text => matches(text, searchTerm))
         .reduce((accumulator, currentValue) => accumulator || currentValue, false)
+
+const removeFields = (object, fieldsToRemove) => {
+    fieldsToRemove.forEach(field => delete object[field])
+    return object
+}
 
 const whenMatched = (text, searchTerm) => matches(text, searchTerm) ? text : null
 

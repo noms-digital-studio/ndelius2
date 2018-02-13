@@ -277,6 +277,35 @@ describe("searchReducer", () => {
                     expect(state.results[0].addresses[0].postcode).to.equal('S1 2BX')
                 });
             })
+            context("searchTerm only has matches for fields in the address that are not searched on", () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'sheffield 2000-02-08 2002-12-23', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'sheffield 2000-02-08 2002-12-23', results: someSingleResultWithAddresses([
+                                {
+                                    buildingName: 'Some Buildings',
+                                    addressNumber: '1',
+                                    streetName: 'High Street',
+                                    town: 'York',
+                                    county: 'South Yorkshire',
+                                    postcode: 'S1 2BX',
+                                    from: "2000-02-08",
+                                },
+                                {
+                                    addressNumber: '1',
+                                    streetName: 'London Road',
+                                    town: 'Leeds',
+                                    postcode: 'LS1 2BX',
+                                    from: "2002-12-23",
+                                }
+                            ])})
+                })
+
+                it('filters out all the addresses', () => {
+                    expect(state.results[0].addresses).to.have.lengthOf(0)
+                });
+            })
+
         })
         describe("alias filtering", () => {
             context('no aliases', () => {
@@ -343,6 +372,28 @@ describe("searchReducer", () => {
                 it('all aliases attributes copied from matching alias', () => {
                     expect(state.results[0].aliases[0].firstName).to.equal('Bean')
                     expect(state.results[0].aliases[0].surname).to.equal('Bland')
+                });
+            })
+            context("searchTerm only has matches for fields in the alias that are not searched on", () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'smith 1955-02-17 male', results: someResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'smith 1955-02-17 male', results: someSingleResultWithAliases([
+                                {
+                                    dateOfBirth: "1955-02-17",
+                                    surname: 'Jones',
+                                    gender: 'Female',
+                                },
+                                {
+                                    dateOfBirth: "1960-03-17",
+                                    surname: 'Moore',
+                                    gender:  'Male',
+                                }
+                            ])})
+                })
+
+                it('filters out all the aliases', () => {
+                    expect(state.results[0].aliases).to.have.lengthOf(0)
                 });
             })
         })
@@ -750,6 +801,7 @@ const someSingleResultWithAliases = aliases => {
     const results = someResults();
     results.offenders = [results.offenders[0]];
     results.offenders[0].offenderAliases = aliases;
+    console.log('YYYY ' + JSON.stringify(results))
     return results;
 }
 
