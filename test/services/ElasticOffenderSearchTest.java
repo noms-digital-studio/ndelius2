@@ -12,6 +12,7 @@ import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.PrefixQueryBuilder;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.junit.Before;
@@ -106,6 +107,10 @@ public class ElasticOffenderSearchTest {
         assertThat(((PrefixQueryBuilder)query.should().get(4)).value()).isEqualTo("a");
 
         assertThat(((PrefixQueryBuilder)query.should().get(5)).value()).isEqualTo("smith");
+
+        TermQueryBuilder termQueryBuilder = (TermQueryBuilder) searchRequest.getValue().source().postFilter();
+        assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
+        assertThat(termQueryBuilder.value()).isEqualTo(false);
     }
 
     @Test

@@ -36,6 +36,7 @@ import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FI
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 import static play.libs.Json.parse;
 
@@ -103,6 +104,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
+            .postFilter(termQuery("softDeleted", false))
             .explain(Logger.isDebugEnabled())
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
