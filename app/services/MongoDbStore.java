@@ -9,16 +9,23 @@ import com.typesafe.config.Config;
 import interfaces.AnalyticsStore;
 import lombok.val;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.joda.time.DateTime;
 import play.Logger;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gte;
 
 public class MongoDbStore implements AnalyticsStore {
 
@@ -79,21 +86,34 @@ public class MongoDbStore implements AnalyticsStore {
 
         val result = new CompletableFuture<Map<Integer, Long>>();
 
-        val group = ImmutableList.of(
-                new Document(ImmutableMap.of(
-                        "$group", new Document(ImmutableMap.of(
-                                "_id", "$pageNumber",
-                                "total", new Document(ImmutableMap.of(
-                                        "$sum", 1
-                                ))
-                        ))
-                )),
-                new Document(ImmutableMap.of(
-                        "$sort", new Document(ImmutableMap.of(
-                                "_id", 1
-                        ))
+        Document match = new Document(
+            ImmutableMap.of(
+                "$match", new Document(
+                    ImmutableMap.of(
+                        "type", new Document(
+                            "$exists", false
+                        )
                 ))
-        );
+            ));
+
+        Document sum = new Document(
+            ImmutableMap.of(
+                "$group", new Document(
+                    ImmutableMap.of(
+                        "_id", "$pageNumber",
+                        "total", new Document(
+                            ImmutableMap.of("$sum", 1l)
+                        )
+                    ))
+            ));
+
+        Document sort = new Document(ImmutableMap.of(
+            "$sort", new Document(ImmutableMap.of(
+                "_id", 1
+            ))
+        ));
+
+        val group = ImmutableList.of(match, sum, sort);
 
         events.aggregate(group).
                 toObservable().
@@ -103,6 +123,31 @@ public class MongoDbStore implements AnalyticsStore {
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Long> pageVisits(String eventType, LocalDateTime from) {
+        val result = new CompletableFuture<Long>();
+
+        events.count(and(eq("type", eventType), filterByDate(from))).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Long> uniquePageVisits(String eventType, LocalDateTime from) {
+        val result = new CompletableFuture<Long>();
+
+        events.distinct("username", String.class).
+                filter(and(eq("type", eventType), filterByDate(from))).
+                toObservable().
+                toList().
+                doOnError(result::completeExceptionally).
+                subscribe((usernameList) -> result.complete((long) usernameList.size()));
 
         return result;
     }
@@ -119,4 +164,9 @@ public class MongoDbStore implements AnalyticsStore {
 
         return result;
     }
+
+    private Bson filterByDate(LocalDateTime from) {
+        return gte("dateTime", Date.from(from.atZone(ZoneId.systemDefault()).toInstant()));
+    }
+
 }

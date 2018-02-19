@@ -1,7 +1,10 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import data.offendersearch.OffenderSearchResult;
 import helpers.Encryption;
+import helpers.JsonHelper;
+import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
@@ -9,26 +12,31 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
-import play.mvc.Result;
 import play.test.WithApplication;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import static helpers.JwtHelperTest.FAKE_USER_BEARKER_TOKEN;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.OK;
@@ -46,9 +54,16 @@ public class NationalSearchControllerTest extends WithApplication {
     @Mock
     private OffenderApi offenderApi;
 
+    @Mock
+    private AnalyticsStore analyticsStore;
+
+    @Captor
+    private ArgumentCaptor<Map<String, Object>> analyticsEventCaptor;
+
     @Before
     public void setUp() {
         when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture("bearerToken"));
+        when(elasticOffenderSearch.search(any(), any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
         secretKey = "ThisIsASecretKey";
     }
 
@@ -66,6 +81,18 @@ public class NationalSearchControllerTest extends WithApplication {
     }
 
     @Test
+    public void analyticsSearchIndexEventRecordedWhenLogonSucceeds() throws UnsupportedEncodingException {
+        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(FAKE_USER_BEARKER_TOKEN));
+        route(app, buildIndexPageRequest());
+
+        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
+
+        assertThat(analyticsEventCaptor.getValue()).containsKeys("correlationId", "sessionId", "type", "username", "dateTime");
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-index"));
+    }
+
+    @Test
     public void returnsServerErrorWhenLogonFails() throws UnsupportedEncodingException {
         when(offenderApi.logon(any())).thenReturn(supplyAsync(() -> { throw new RuntimeException("boom"); }));
 
@@ -76,12 +103,29 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void searchTermReturnsResults() {
-        when(elasticOffenderSearch.search(any(), any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
-        val request = new Http.RequestBuilder().session("offenderApiBearerToken", "bearer-token").method(GET).uri("/searchOffender/smith");
+        val request = new Http.RequestBuilder().
+                session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                method(GET).uri("/searchOffender/smith");
         val result = route(app, request);
 
         assertEquals(OK, result.status());
         assertEquals("{\"offenders\":null,\"suggestions\":null,\"total\":0}", contentAsString(result));
+    }
+
+    @Test
+    public void analyticsSearchRequestEventRecordedWhenSearchCalled() {
+        val request = new Http.RequestBuilder().
+                session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                method(GET).uri("/searchOffender/smith");
+        route(app, request);
+
+        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
+
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("correlationId", "999-aaa-888"));
     }
 
     @Test
@@ -155,6 +199,31 @@ public class NationalSearchControllerTest extends WithApplication {
         assertEquals(OK, result.status());
     }
 
+    @Test
+    public void recordsSearchOutcomeEventWithData() {
+        val request = new Http.
+                RequestBuilder().
+                method(PUT).
+                session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                header("Content-Type", "application/json").
+                uri("/nationalSearch/recordSearchOutcome").
+                bodyText(JsonHelper.stringify(ImmutableMap.of("type", "search-offender-details", "selectedIndex", 23)));
+        val result = route(app, request);
+
+        assertEquals(CREATED, result.status());
+
+        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
+
+        assertThat(analyticsEventCaptor.getValue()).containsKeys("correlationId", "sessionId", "type", "username", "dateTime", "selectedIndex");
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-offender-details"));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("selectedIndex", 23));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("correlationId", "999-aaa-888"));
+    }
+
+
+
     private Http.RequestBuilder buildIndexPageRequest() throws UnsupportedEncodingException {
         val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
         val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(System.currentTimeMillis()+ FIFTY_NINE_MINUTES), secretKey), "UTF-8");
@@ -162,16 +231,21 @@ public class NationalSearchControllerTest extends WithApplication {
         return new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
     }
 
+    private static Map.Entry<String, Object> entry(String key, Object value) {
+        return new SimpleImmutableEntry<>(key, value);
+    }
+
+
     @Override
     protected Application provideApplication() {
 
         return new GuiceApplicationBuilder().
             overrides(
                 bind(OffenderSearch.class).toInstance(elasticOffenderSearch),
-                bind(OffenderApi.class).toInstance(offenderApi)
+                bind(OffenderApi.class).toInstance(offenderApi),
+                bind(AnalyticsStore.class).toInstance(analyticsStore)
             )
             .configure("params.user.token.valid.duration", userTokenValidDuration)
             .build();
     }
-
 }

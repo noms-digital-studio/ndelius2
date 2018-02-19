@@ -20,6 +20,11 @@ public interface JsonHelper {
         return jsonToMap(Json.parse(json));
     }
 
+    static Map<String, Object> jsonToObjectMap(String json) {
+
+        return jsonToObjectMap(Json.parse(json));
+    }
+
     static Map<String, String> jsonToMap(JsonNode json) {
 
         val mapper = Json.mapper();
@@ -28,6 +33,21 @@ public interface JsonHelper {
             return mapper.readValue(
                     mapper.treeAsTokens(json),
                     mapper.getTypeFactory().constructMapType(Map.class, String.class, String.class)
+            );
+        } catch (IOException ex) {
+            Logger.error("Unable to parse json to Map<String, String>. " + json.toString(), ex);
+            return null;
+        }
+    }
+
+    static Map<String, Object> jsonToObjectMap(JsonNode json) {
+
+        val mapper = Json.mapper();
+
+        try {
+            return mapper.readValue(
+                    mapper.treeAsTokens(json),
+                    mapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class)
             );
         } catch (IOException ex) {
             Logger.error("Unable to parse json to Map<String, String>. " + json.toString(), ex);

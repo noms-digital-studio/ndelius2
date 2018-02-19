@@ -1,7 +1,9 @@
 package services;
 
 import interfaces.AnalyticsStore;
+import lombok.val;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -26,10 +28,32 @@ public class InMemoryAnalyticsStore implements AnalyticsStore {
     @Override
     public CompletableFuture<Map<Integer, Long>> pageVisits() {
         Map<Integer, Long> pageVisits = events.getAll().stream()
+            .filter(event -> event.containsKey("pageNumber"))
             .collect(groupingBy(event -> (int) event.get("pageNumber"),
                                 counting()));
 
         return CompletableFuture.supplyAsync(() -> pageVisits);
+    }
+
+    @Override
+    public CompletableFuture<Long> pageVisits(String eventType, LocalDateTime from) {
+        val allVisits = events.getAll().stream()
+                .filter(event -> event.containsKey("type"))
+                .filter(event -> event.get("type").equals(eventType))
+                .count();
+
+        return CompletableFuture.supplyAsync(() -> allVisits);
+    }
+
+    @Override
+    public CompletableFuture<Long> uniquePageVisits(String eventType, LocalDateTime from) {
+        val uniqueUserVisits = (long)events.getAll().stream()
+                .filter(event -> event.containsKey("type"))
+                .filter(event -> event.get("type").equals(eventType))
+                .collect(groupingBy(event -> (String)event.get("username"),
+                        counting())).size();
+
+        return CompletableFuture.supplyAsync(() -> uniqueUserVisits);
     }
 
     @Override

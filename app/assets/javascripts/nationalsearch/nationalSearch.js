@@ -1,5 +1,6 @@
 import OffenderSearchPage from './containers/offenderSearchPageContainer';
 import FeedbackPage from './components/feedbackPage'
+import AnalyticsPage from './containers/analyticsPageContainer'
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import reducer from './reducers'
@@ -12,6 +13,7 @@ ReactDOM.render(
     <Provider store={store}>
         <Router history={hashHistory}>
             <Route path="/feedback" component={FeedbackPage}/>
+            <Route path="/analytics" component={AnalyticsPage}/>
             <Route path="/*" component={OffenderSearchPage}/>
         </Router>
     </Provider>,

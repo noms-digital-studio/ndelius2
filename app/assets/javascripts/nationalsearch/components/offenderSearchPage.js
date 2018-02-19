@@ -9,7 +9,6 @@ import PropTypes from "prop-types";
 
 const OffenderSearchPage = ({firstTimeIn}) => (
     <div>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root">
             <main id="content">
                 <GovUkPhaseBanner/>
