@@ -31,4 +31,10 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
     default CompletableFuture<Map<Integer, Long>> rankGrouping(String eventType, LocalDateTime from) {
         return null;
     }
+
+    default CompletableFuture<Map<String, Long>> eventOutcome(String eventType, LocalDateTime from) {
+        return null;
+    }
+
+
 }

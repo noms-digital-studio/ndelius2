@@ -1,5 +1,6 @@
 package services;
 
+import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import lombok.val;
 
@@ -65,6 +66,17 @@ public class InMemoryAnalyticsStore implements AnalyticsStore {
                         counting()));
 
         return CompletableFuture.supplyAsync(() -> rankGrouping);
+    }
+
+    @Override
+    public CompletableFuture<Map<String, Long>> eventOutcome(String eventType, LocalDateTime from) {
+        Map<String, Long> outcomeGrouping = events.getAll().stream()
+                .filter(event -> event.containsKey("type"))
+                .filter(event -> event.get("type").equals(eventType))
+                .collect(groupingBy(event -> (String)event.get("eventType"),
+                        counting()));
+
+        return CompletableFuture.supplyAsync(() -> outcomeGrouping);
     }
 
     @Override

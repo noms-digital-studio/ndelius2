@@ -19,5 +19,7 @@ public interface AnalyticsStore {
 
     CompletableFuture<Map<Integer, Long>> rankGrouping(String eventType, LocalDateTime from);
 
+    CompletableFuture<Map<String, Long>> eventOutcome(String eventType, LocalDateTime from);
+
     CompletableFuture<Boolean> isUp();
 }

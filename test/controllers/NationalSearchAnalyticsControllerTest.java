@@ -46,6 +46,12 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
                 2, 200L,
                 3, 30L
         )));
+        when(analyticsStore.eventOutcome(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+                "search-index", 1L,
+                "search-request", 10L,
+                "search-offender-details", 100L,
+                "search-legacy-search", 4L
+        )));
     }
     @Test
     public void defaultsToBeginningOf2017WhenFromIsMissing() {
@@ -74,7 +80,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertEquals("{\"uniqueUserVisits\":10,\"allVisits\":100,\"allSearches\":1000,\"rankGrouping\":{\"1\":1000,\"2\":200,\"3\":30}}", contentAsString(result));
+        assertEquals("{\"uniqueUserVisits\":10,\"allVisits\":100,\"allSearches\":1000,\"rankGrouping\":{\"1\":1000,\"2\":200,\"3\":30},\"eventOutcome\":{\"search-index\":1,\"search-request\":10,\"search-offender-details\":100,\"search-legacy-search\":4}}", contentAsString(result));
     }
 
     @Override

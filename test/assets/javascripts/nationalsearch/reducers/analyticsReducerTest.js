@@ -17,6 +17,9 @@ describe("analylticsReducer", () => {
         it('rankGrouping is set to empty object', () => {
             expect(state.rankGrouping).to.eql({})
         })
+        it('eventOutcome is set to empty object', () => {
+            expect(state.eventOutcome).to.eql({})
+        })
         it('fetching is false', () => {
             expect(state.fetching).to.equal(false)
         });
@@ -32,7 +35,22 @@ describe("analylticsReducer", () => {
     })
     describe("when VISIT_COUNTS action received", () => {
         beforeEach(() => {
-            state = analytics({fetching: true}, {type: VISIT_COUNTS, uniqueUserVisits: 12, allVisits: 17, allSearches: 24, rankGrouping: {"1": 10, "2": 5, "3": 1}})
+            state = analytics({fetching: true}, {
+                type: VISIT_COUNTS,
+                uniqueUserVisits: 12,
+                allVisits: 17,
+                allSearches: 24,
+                rankGrouping: {
+                    "1": 10,
+                    "2": 5,
+                    "3": 1},
+                eventOutcome: {
+                    "search-add-new-offender": 2,
+                    "search-request": 1,
+                    "search-offender-details": 1,
+                    "search-index": 4,
+                    "search-add-contact": 1}
+            })
         })
 
         it('fetching is false', () => {
@@ -49,6 +67,15 @@ describe("analylticsReducer", () => {
         });
         it('rankGrouping is set', () => {
             expect(state.rankGrouping).to.eql({"1": 10, "2": 5, "3": 1})
+        })
+        it('eventOutcome is set', () => {
+            expect(state.eventOutcome).to.eql({
+                "search-add-new-offender": 2,
+                "search-request": 1,
+                "search-offender-details": 1,
+                "search-index": 4,
+                "search-add-contact": 1}
+            )
         })
     })
     describe("when TIME_RANGE action received", () => {

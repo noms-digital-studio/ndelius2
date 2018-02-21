@@ -156,54 +156,11 @@ public class MongoDbStore implements AnalyticsStore {
     public CompletableFuture<Map<Integer, Long>> rankGrouping(String eventType, LocalDateTime from) {
         val result = new CompletableFuture<Map<Integer, Long>>();
 
-        Document hasRank = new Document(
-                ImmutableMap.of(
-                        "$match", new Document(
-                                ImmutableMap.of(
-                                        "rankIndex", new Document(
-                                                "$exists", true
-                                        )
-                                ))
-                ));
-
-
-        Document match = new Document(
-                ImmutableMap.of(
-                        "$match", new Document(
-                                ImmutableMap.of(
-                                        "type", new Document(
-                                                "$eq", eventType
-                                        )
-                                ))
-                ));
-
-        Document dateFilter = new Document(
-                ImmutableMap.of(
-                        "$match", new Document(
-                                ImmutableMap.of(
-                                        "dateTime", new Document(
-                                                "$gte", toDate(from)
-                                        )
-                                ))
-                ));
-
-        Document sum = new Document(
-                ImmutableMap.of(
-                        "$group", new Document(
-                                ImmutableMap.of(
-                                        "_id", "$rankIndex",
-                                        "total", new Document(
-                                                ImmutableMap.of("$sum", 1l)
-                                        )
-                                ))
-                ));
-
-        Document sort = new Document(ImmutableMap.of(
-                "$sort", new Document(ImmutableMap.of(
-                        "_id", 1
-                ))
-        ));
-
+        val hasRank = _match( _exists("rankIndex"));
+        val match = _match( _eq("type", eventType));
+        val dateFilter = _match( _gte("dateTime", from));
+        val sum = _group(_by("_id", "$rankIndex", "total", _sum()));
+        val sort = _sort("_id", 1);
         val group = ImmutableList.of(hasRank, dateFilter, match, sum, sort);
 
         events.aggregate(group).
@@ -211,6 +168,30 @@ public class MongoDbStore implements AnalyticsStore {
                 toList().
                 map(documents -> documents.stream().collect(
                         Collectors.toMap(doc -> doc.getInteger("_id"), doc -> doc.getLong("total")))
+                ).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Map<String, Long>> eventOutcome(String eventType, LocalDateTime from) {
+        val result = new CompletableFuture<Map<String, Long>>();
+
+        val hasCorrelationId = _match(_exists("correlationId"));
+        val dateFilter = _match( _gte("dateTime", from));
+        val lastType = _group(_by("_id", "$correlationId", "lastType", _last("$type")));
+        val sum = _group(_by("_id", "$lastType", "total", _sum()));
+        val sort = _sort("_id", 1);
+
+        val eventOutcome = ImmutableList.of(hasCorrelationId, dateFilter, lastType, sum, sort);
+
+        events.aggregate(eventOutcome).
+                toObservable().
+                toList().
+                map(documents -> documents.stream().collect(
+                        Collectors.toMap(doc -> doc.getString("_id"), doc -> doc.getLong("total")))
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
@@ -238,5 +219,74 @@ public class MongoDbStore implements AnalyticsStore {
     private Date toDate(LocalDateTime from) {
         return Date.from(from.atZone(ZoneId.systemDefault()).toInstant());
     }
+
+    private Document _last(String field) {
+        return new Document(
+                ImmutableMap.of("$last", field)
+        );
+    }
+
+
+    private Document _match(Document document) {
+        return new Document(
+                ImmutableMap.of(
+                        "$match", document
+                ));
+    }
+
+    private Document _exists(String field) {
+        return new Document(
+                ImmutableMap.of(
+                        field, new Document(
+                                "$exists", true
+                        )
+                ));
+    }
+    private Document _eq(String field, String value) {
+        return new Document(
+                ImmutableMap.of(
+                        field, new Document(
+                                "$eq", value
+                        )
+                ));
+    }
+
+    private Document _gte(String field, LocalDateTime date) {
+        return new Document(
+                ImmutableMap.of(
+                        field, new Document(
+                                "$gte", toDate(date)
+                        )
+                ));
+    }
+
+    private Document _sort(String field, int direction) {
+        return new Document(ImmutableMap.of(
+                "$sort", new Document(ImmutableMap.of(
+                        field, direction
+                ))
+        ));
+    }
+    private Document _group(Document document) {
+        return new Document(
+                ImmutableMap.of(
+                        "$group", document
+                ));
+
+    }
+    private Document _sum() {
+        return new Document(
+                ImmutableMap.of("$sum", 1l)
+        );
+    }
+
+    private Document _by(String resultFieldName, String groupFieldName, String aggregateFieldName, Document aggregation) {
+        return new Document(
+                ImmutableMap.of(
+                        resultFieldName, groupFieldName,
+                        aggregateFieldName, aggregation
+                ));
+    }
+
 
 }
