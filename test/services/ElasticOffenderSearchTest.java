@@ -37,6 +37,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -65,6 +66,17 @@ public class ElasticOffenderSearchTest {
             listener.onResponse(searchResponse);
             return null;
         }).when(restHighLevelClient).searchAsync(any(), any());
+    }
+
+    @Test
+    public void dateOnlySearchDoesNotAddAPrefixSearch() {
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
+
+        elasticOffenderSearch.search("bearer-token", "15-09-1970", 10, 3);
+        verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
+
+        val query = (BoolQueryBuilder) searchRequest.getValue().source().query();
+        assertThat((query.should())).doesNotContain(prefixQuery("firstName", "").boost(11));
     }
 
     @Test
