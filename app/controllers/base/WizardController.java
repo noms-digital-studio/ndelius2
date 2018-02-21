@@ -1,7 +1,6 @@
 package controllers.base;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import data.base.WizardData;
 import data.viewModel.PageStatus;
