@@ -15,6 +15,7 @@ import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
+import play.mvc.Http;
 import play.mvc.Http.MultipartFormData.DataPart;
 import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Http.MultipartFormData.Part;
@@ -68,9 +69,11 @@ public class AlfrescoStore implements DocumentStore {
 
             if (Strings.isNullOrEmpty(documentId)) {
 
-                Logger.error("No Alfresco Document ID retrieved for document '" + filename + "'");
+                val errorMessage = "No Alfresco Document ID retrieved for document: " + filename ;
 
-                stored.put("linkResult", "N/A");
+                Logger.error(errorMessage);
+                stored.put("errorMessage", errorMessage);
+
                 return CompletableFuture.completedFuture(stored);
 
             } else {
@@ -87,14 +90,21 @@ public class AlfrescoStore implements DocumentStore {
                     }
                 };
 
-                Logger.info("Creating Alfresco Document Link: " + documentLink.toString());
+                Logger.info("Creating Delius Document Link: " + documentLink.toString());
 
                 return wsClient.url(offenderApiUrl + "documentLink").
                         post(Json.toJson(documentLink)).
                         thenApply(WSResponse::getStatus).
                         thenApply(status -> {
 
-                            stored.put("linkResult", status != null ? status.toString() : "");
+                            if (status != Http.Status.CREATED) {
+
+                                val errorMessage = String.format("Delius Document Link Result: %d", status);
+
+                                Logger.error(errorMessage);
+                                stored.put("errorMessage", errorMessage);
+                            }
+
                             return stored;
                         });
             }
