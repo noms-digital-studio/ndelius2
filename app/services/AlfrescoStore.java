@@ -2,6 +2,7 @@ package services;
 
 import akka.stream.javadsl.FileIO;
 import akka.stream.javadsl.Source;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
@@ -10,6 +11,7 @@ import interfaces.DocumentStore;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import play.Logger;
+import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
@@ -33,6 +35,7 @@ public class AlfrescoStore implements DocumentStore {
 
     private final String alfrescoUrl;
     private final String alfrescoUser;
+    private final String offenderApiUrl;
     private final WSClient wsClient;
 
     @Inject
@@ -40,6 +43,7 @@ public class AlfrescoStore implements DocumentStore {
 
         alfrescoUrl = configuration.getString("store.alfresco.url");
         alfrescoUser = configuration.getString("store.alfresco.user");
+        offenderApiUrl = configuration.getString("offender.api.url");
 
         this.wsClient = wsClient;
     }
@@ -55,11 +59,46 @@ public class AlfrescoStore implements DocumentStore {
                 put("entityId", entityId != null ? entityId.toString() : "");
                 put("docType", "DOCUMENT");
                 put("userData", originalData);
-                put("forceBroadcast", "true");
             }
         };
 
-        return postFileUpload(filename, document, onBehalfOfUser, "uploadnew", parameters);
+        return postFileUpload(filename, document, onBehalfOfUser, "uploadnew", parameters).thenCompose(stored -> {
+
+            val documentId = stored.get("ID");
+
+            if (Strings.isNullOrEmpty(documentId)) {
+
+                Logger.error("No Alfresco Document ID retrieved for document '" + filename + "'");
+
+                stored.put("linkResult", "N/A");
+                return CompletableFuture.completedFuture(stored);
+
+            } else {
+
+                val documentLink = new HashMap<String, String>() {
+                    {
+                        put("crn", crn);
+                        put("username", onBehalfOfUser);
+                        put("filename", filename);
+                        put("entityId", entityId != null ? entityId.toString() : "");
+                        put("tableName", "COURT_REPORT");
+                        put("probationArea", alfrescoUser);
+                        put("alfrescoDocumentId", documentId);
+                    }
+                };
+
+                Logger.info("Creating Alfresco Document Link: " + documentLink.toString());
+
+                return wsClient.url(offenderApiUrl + "documentLink").
+                        post(Json.toJson(documentLink)).
+                        thenApply(WSResponse::getStatus).
+                        thenApply(status -> {
+
+                            stored.put("linkResult", status != null ? status.toString() : "");
+                            return stored;
+                        });
+            }
+        });
     }
 
     @Override
