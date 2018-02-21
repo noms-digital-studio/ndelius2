@@ -3,6 +3,8 @@ import UniqueVisitsCounts from '../containers/uniqueVisitsCountContainer';
 import AllVisitsCounts from '../containers/allVisitsCountContainer';
 import AllSearchesCounts from '../containers/allSearchesCountContainer';
 import TimeRangeLink from '../containers/analyticsTimeRangeLinkContainer';
+import TopPagesRankingChart from '../containers/topPagesRankingChartContainer';
+import PageRankingChart from '../containers/pageRankingChartContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
 import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
 import PropTypes from 'prop-types'
@@ -31,6 +33,8 @@ class AnalyticsPage extends Component {
                         <UniqueVisitsCounts description='Unique visits'/>
                         <AllVisitsCounts description='All visits'/>
                         <AllSearchesCounts description='All searches'/>
+                        <TopPagesRankingChart description='Offender details clicks - ranking within top 2 pages' label='Clicks per rank within page'/>
+                        <PageRankingChart description='Offender details clicks - ranking across pages' label='Clicks per page'/>
                     </div>
                     <div className="column-one-third">
                         <NavigationPanel/>

@@ -57,6 +57,17 @@ public class InMemoryAnalyticsStore implements AnalyticsStore {
     }
 
     @Override
+    public CompletableFuture<Map<Integer, Long>> rankGrouping(String eventType, LocalDateTime from) {
+        Map<Integer, Long> rankGrouping = events.getAll().stream()
+                .filter(event -> event.containsKey("type"))
+                .filter(event -> event.get("type").equals(eventType))
+                .collect(groupingBy(event -> (int) event.get("rankingIndex"),
+                        counting()));
+
+        return CompletableFuture.supplyAsync(() -> rankGrouping);
+    }
+
+    @Override
     public CompletableFuture<Boolean> isUp() {
         return CompletableFuture.completedFuture(Boolean.TRUE);
     }

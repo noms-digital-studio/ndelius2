@@ -93,7 +93,7 @@ public class NationalSearchController extends Controller {
     }
 
     public CompletionStage<Result>  recordSearchOutcome() {
-        analyticsStore.recordEvent(combine(analyticsContext(), JsonHelper.jsonToObjectMap(request().body().asText())));
+        analyticsStore.recordEvent(combine(analyticsContext(), JsonHelper.jsonToObjectMap(request().body().asJson())));
         return CompletableFuture.supplyAsync(Results::created);
     }
 

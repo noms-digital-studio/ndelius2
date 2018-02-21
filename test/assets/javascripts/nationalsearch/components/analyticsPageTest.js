@@ -52,6 +52,12 @@ describe('AnalyticsPage component', () => {
         it('displays all searches count', () => {
             expect(page.find({description: 'All searches'}).exists()).to.be.true
         })
+        it('displays offender details page rank', () => {
+            expect(page.find({description: 'Offender details clicks - ranking across pages'}).exists()).to.be.true
+        })
+        it('displays offender details top 2 pages ranking', () => {
+            expect(page.find({description: 'Offender details clicks - ranking within top 2 pages'}).exists()).to.be.true
+        })
     })
 })
 

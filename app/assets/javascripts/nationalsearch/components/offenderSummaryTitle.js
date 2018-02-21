@@ -2,8 +2,8 @@ import PropTypes from 'prop-types'
 import MT from '../containers/markableTextContainer'
 import moment from 'moment'
 
-const OffenderSummaryTitle = ({showOffenderDetails, offenderId, firstName, surname, dateOfBirth, tabIndex}) => (
-    <a tabIndex={tabIndex} href='javascript:' className='clickable heading-large no-underline' onClick={() => showOffenderDetails(offenderId)}>
+const OffenderSummaryTitle = ({showOffenderDetails, offenderId, rankIndex, firstName, surname, dateOfBirth, tabIndex}) => (
+    <a tabIndex={tabIndex} href='javascript:' className='clickable heading-large no-underline' onClick={() => showOffenderDetails(offenderId, rankIndex)}>
         <span><MT text={surname}/></span>
         <span>,&nbsp;</span>
         <span><MT text={firstName}/></span>
@@ -15,6 +15,7 @@ const OffenderSummaryTitle = ({showOffenderDetails, offenderId, firstName, surna
 OffenderSummaryTitle.propTypes = {
     showOffenderDetails: PropTypes.func.isRequired,
     offenderId: PropTypes.number.isRequired,
+    rankIndex: PropTypes.number.isRequired,
     firstName: PropTypes.string.isRequired,
     surname: PropTypes.string.isRequired,
     dateOfBirth: PropTypes.string.isRequired,

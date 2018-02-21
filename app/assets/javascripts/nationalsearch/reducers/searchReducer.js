@@ -1,4 +1,4 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
 import {matches} from '../../helpers/searchMatcher'
 
@@ -16,7 +16,7 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
                     resultsSearchTerm: action.searchTerm,
                     pageNumber: action.pageNumber,
                     total: action.results.total,
-                    results: mapResults(action.results.offenders, state.searchTerm),
+                    results: mapResults(action.results.offenders, state.searchTerm, action.pageNumber),
                     suggestions: mapSuggestions(action.results.suggestions),
                     resultsReceived: true,
                     firstTimeIn: false
@@ -41,10 +41,11 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
 
 export default searchResults
 
-const mapResults = (results = [], searchTerm) =>
+const mapResults = (results = [], searchTerm, pageNumber) =>
     results.map(
-        offenderDetails => ({
+        (offenderDetails, index) => ({
             ...offenderDetails,
+            rankIndex: toRankIndex(index, pageNumber),
             aliases: offenderAliasesWithUnwantedFieldsRemoved(offenderDetails).map((alias) => {
                 return {
                     ...alias
@@ -59,6 +60,7 @@ const mapResults = (results = [], searchTerm) =>
         )
     )
 
+const toRankIndex = (index, pageNumber) => ((pageNumber - 1) * PAGE_SIZE) + index + 1
 const offenderAliasesWithUnwantedFieldsRemoved = (offenderDetails) => {
     const aliases = offenderAliases(offenderDetails);
     aliases.forEach(alias => removeFields(alias, ['dateOfBirth', 'gender']))

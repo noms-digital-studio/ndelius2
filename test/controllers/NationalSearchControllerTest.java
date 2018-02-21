@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
+import play.libs.Json;
 import play.mvc.Http;
 import play.test.WithApplication;
 
@@ -203,22 +204,21 @@ public class NationalSearchControllerTest extends WithApplication {
     public void recordsSearchOutcomeEventWithData() {
         val request = new Http.
                 RequestBuilder().
-                method(PUT).
+                method(POST).
                 session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
                 session("searchAnalyticsGroupId", "999-aaa-888").
-                header("Content-Type", "application/json").
                 uri("/nationalSearch/recordSearchOutcome").
-                bodyText(JsonHelper.stringify(ImmutableMap.of("type", "search-offender-details", "selectedIndex", 23)));
+                bodyJson(Json.toJson(ImmutableMap.of("type", "search-offender-details", "rankIndex", 23)));
         val result = route(app, request);
 
         assertEquals(CREATED, result.status());
 
         verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
 
-        assertThat(analyticsEventCaptor.getValue()).containsKeys("correlationId", "sessionId", "type", "username", "dateTime", "selectedIndex");
+        assertThat(analyticsEventCaptor.getValue()).containsKeys("correlationId", "sessionId", "type", "username", "dateTime", "rankIndex");
         assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
         assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-offender-details"));
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("selectedIndex", 23));
+        assertThat(analyticsEventCaptor.getValue()).contains(entry("rankIndex", 23));
         assertThat(analyticsEventCaptor.getValue()).contains(entry("correlationId", "999-aaa-888"));
     }
 

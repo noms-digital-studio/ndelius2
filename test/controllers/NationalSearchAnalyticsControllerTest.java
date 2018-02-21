@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import lombok.val;
 import org.junit.Before;
@@ -40,9 +41,14 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         when(analyticsStore.pageVisits(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(100L));
         when(analyticsStore.pageVisits(eq("search-request"), any())).thenReturn(CompletableFuture.completedFuture(1000L));
         when(analyticsStore.uniquePageVisits(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(10L));
+        when(analyticsStore.rankGrouping(eq("search-offender-details"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+                1, 1000L,
+                2, 200L,
+                3, 30L
+        )));
     }
     @Test
-    public void defaultsToBeginningOf2017WhenFrom() {
+    public void defaultsToBeginningOf2017WhenFromIsMissing() {
         val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts");
         route(app, request);
 
@@ -68,7 +74,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertEquals("{\"uniqueUserVisits\":10,\"allVisits\":100,\"allSearches\":1000}", contentAsString(result));
+        assertEquals("{\"uniqueUserVisits\":10,\"allVisits\":100,\"allSearches\":1000,\"rankGrouping\":{\"1\":1000,\"2\":200,\"3\":30}}", contentAsString(result));
     }
 
     @Override

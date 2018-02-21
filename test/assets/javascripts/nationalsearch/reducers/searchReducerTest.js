@@ -1,6 +1,7 @@
 import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS} from '../actions/search'
 import search from './searchReducer'
 import {expect} from 'chai';
+import {offender} from '../test-helper'
 
 describe("searchReducer", () => {
     let state;
@@ -189,7 +190,49 @@ describe("searchReducer", () => {
                 expect(state.results[0].currentOffender).to.equal(false)
                 expect(state.results[0].gender).to.equal('Female')
                 expect(state.results[0].age).to.equal(23)
-            });
+            })
+        })
+        describe('search rank index calculation', () => {
+            context(('result is on first page'), () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'Mr Bean', results: emptyResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', pageNumber: 1, results: someResults({
+                                offenders: [
+                                    offender({offenderId: '101'}),
+                                    offender({offenderId: '102'}),
+                                    offender({offenderId: '103'})
+                                ],
+                                total: 20
+                            })})
+                })
+                it('set rank index based on position and page', () => {
+                    expect(state.results[0].rankIndex).to.equal(1)
+                    expect(state.results[1].rankIndex).to.equal(2)
+                    expect(state.results[2].rankIndex).to.equal(3)
+                })
+
+            })
+
+            context(('result is on second page'), () => {
+                beforeEach(() => {
+                    state = search(
+                        {searchTerm: 'Mr Bean', results: emptyResults(), total: 0, pageNumber: 1},
+                        {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', pageNumber: 2, results: someResults({
+                                offenders: [
+                                    offender({offenderId: '101'}),
+                                    offender({offenderId: '102'}),
+                                    offender({offenderId: '103'})
+                                ],
+                                total: 20
+                            })})
+                })
+                it('set rank index based on position and page', () => {
+                    expect(state.results[0].rankIndex).to.equal(11)
+                    expect(state.results[1].rankIndex).to.equal(12)
+                    expect(state.results[2].rankIndex).to.equal(13)
+                })
+            })
         })
         describe("address filtering", () => {
             context('no contact details', () => {

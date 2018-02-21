@@ -23,7 +23,12 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
     default CompletableFuture<Long> pageVisits(String eventType, LocalDateTime from) {
         return null;
     }
+
     default CompletableFuture<Long> uniquePageVisits(String eventType, LocalDateTime from) {
+        return null;
+    }
+
+    default CompletableFuture<Map<Integer, Long>> rankGrouping(String eventType, LocalDateTime from) {
         return null;
     }
 }

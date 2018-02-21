@@ -17,5 +17,7 @@ public interface AnalyticsStore {
 
     CompletableFuture<Long> uniquePageVisits(String eventType, LocalDateTime from);
 
+    CompletableFuture<Map<Integer, Long>> rankGrouping(String eventType, LocalDateTime from);
+
     CompletableFuture<Boolean> isUp();
 }

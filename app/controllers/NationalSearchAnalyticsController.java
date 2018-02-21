@@ -36,12 +36,15 @@ public class NationalSearchAnalyticsController extends Controller {
         val allVisits = analyticsStore.pageVisits("search-index", fromDateTime(from));
         val allSearches = analyticsStore.pageVisits("search-request", fromDateTime(from));
         val uniqueUserVisits = analyticsStore.uniquePageVisits("search-index", fromDateTime(from));
+        val rankGrouping = analyticsStore.rankGrouping("search-offender-details", fromDateTime(from));
 
-        return CompletableFuture.allOf(allVisits, allSearches, uniqueUserVisits).
+        return CompletableFuture.allOf(allVisits, allSearches, uniqueUserVisits, rankGrouping).
                 thenApply(ignoredVoid -> ImmutableMap.of(
                         "uniqueUserVisits", uniqueUserVisits.join(),
                         "allVisits", allVisits.join(),
-                        "allSearches", allSearches.join())).
+                        "allSearches", allSearches.join(),
+                        "rankGrouping", rankGrouping.join()
+                        )).
                 thenApply(JsonHelper::okJson);
     }
 

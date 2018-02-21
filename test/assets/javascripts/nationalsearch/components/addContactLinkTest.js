@@ -7,11 +7,13 @@ describe('AddContactLink component', () => {
     context('link clicked', () => {
         it('addContact callback function called with offenderId', () => {
             const addContact = stub()
-            const link = shallow(<AddContactLink offenderId={123} addContact={addContact}/>)
+            const link = shallow(<AddContactLink offenderId={123}
+                                                 rankIndex={3}
+                                                 addContact={addContact}/>)
 
             link.find('a').simulate('click');
 
-            expect(addContact).to.be.calledWith(123);
+            expect(addContact).to.be.calledWith(123, 3);
         })
     })
 })

@@ -153,6 +153,72 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     @Override
+    public CompletableFuture<Map<Integer, Long>> rankGrouping(String eventType, LocalDateTime from) {
+        val result = new CompletableFuture<Map<Integer, Long>>();
+
+        Document hasRank = new Document(
+                ImmutableMap.of(
+                        "$match", new Document(
+                                ImmutableMap.of(
+                                        "rankIndex", new Document(
+                                                "$exists", true
+                                        )
+                                ))
+                ));
+
+
+        Document match = new Document(
+                ImmutableMap.of(
+                        "$match", new Document(
+                                ImmutableMap.of(
+                                        "type", new Document(
+                                                "$eq", eventType
+                                        )
+                                ))
+                ));
+
+        Document dateFilter = new Document(
+                ImmutableMap.of(
+                        "$match", new Document(
+                                ImmutableMap.of(
+                                        "dateTime", new Document(
+                                                "$gte", toDate(from)
+                                        )
+                                ))
+                ));
+
+        Document sum = new Document(
+                ImmutableMap.of(
+                        "$group", new Document(
+                                ImmutableMap.of(
+                                        "_id", "$rankIndex",
+                                        "total", new Document(
+                                                ImmutableMap.of("$sum", 1l)
+                                        )
+                                ))
+                ));
+
+        Document sort = new Document(ImmutableMap.of(
+                "$sort", new Document(ImmutableMap.of(
+                        "_id", 1
+                ))
+        ));
+
+        val group = ImmutableList.of(hasRank, dateFilter, match, sum, sort);
+
+        events.aggregate(group).
+                toObservable().
+                toList().
+                map(documents -> documents.stream().collect(
+                        Collectors.toMap(doc -> doc.getInteger("_id"), doc -> doc.getLong("total")))
+                ).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
     public CompletableFuture<Boolean> isUp() {
         val result = new CompletableFuture<Boolean>();
 
@@ -166,7 +232,11 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     private Bson filterByDate(LocalDateTime from) {
-        return gte("dateTime", Date.from(from.atZone(ZoneId.systemDefault()).toInstant()));
+        return gte("dateTime", toDate(from));
+    }
+
+    private Date toDate(LocalDateTime from) {
+        return Date.from(from.atZone(ZoneId.systemDefault()).toInstant());
     }
 
 }

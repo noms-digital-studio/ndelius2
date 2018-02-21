@@ -48,7 +48,7 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
             <AliasList aliases={offenderSummary.aliases}/>
             <PreviousSurname name={offenderSummary.previousSurname}/>
             <AddressList addresses={offenderSummary.addresses}/>
-            <p><AddContactLink tabIndex="1" firstName={offenderSummary.firstName} surname={offenderSummary.surname} offenderId={offenderSummary.offenderId}/></p>
+            <p><AddContactLink tabIndex="1" firstName={offenderSummary.firstName} surname={offenderSummary.surname} offenderId={offenderSummary.offenderId} rankIndex={offenderSummary.rankIndex}/></p>
         </div>
     </li>
 )
