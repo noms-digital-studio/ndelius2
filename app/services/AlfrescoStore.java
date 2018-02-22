@@ -80,13 +80,13 @@ public class AlfrescoStore implements DocumentStore {
 
                 val documentLink = new HashMap<String, String>() {
                     {
+                        put("alfrescoId", documentId);
+                        put("alfrescoUser", onBehalfOfUser);
+                        put("probationAreaCode", alfrescoUser);
+                        put("documentName", filename);
                         put("crn", crn);
-                        put("username", onBehalfOfUser);
-                        put("filename", filename);
-                        put("entityId", entityId != null ? entityId.toString() : "");
                         put("tableName", "COURT_REPORT");
-                        put("probationArea", alfrescoUser);
-                        put("alfrescoDocumentId", documentId);
+                        put("entityId", entityId != null ? entityId.toString() : "");
                     }
                 };
 
