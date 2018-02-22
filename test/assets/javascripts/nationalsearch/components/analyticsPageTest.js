@@ -61,6 +61,9 @@ describe('AnalyticsPage component', () => {
         it('displays search outcomes', () => {
             expect(page.find({description: 'Search visit outcome'}).exists()).to.be.true
         })
+        it('displays duration to search', () => {
+            expect(page.find({description: 'Duration to find offender'}).exists()).to.be.true
+        })
     })
 })
 

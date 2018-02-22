@@ -1,8 +1,8 @@
-import {FETCHING_VISIT_COUNTS, VISIT_COUNTS, TIME_RANGE} from '../actions/analytics'
+import {FETCHING_VISIT_COUNTS, VISIT_COUNTS, TIME_RANGE, TODAY} from '../actions/analytics'
 import analytics  from './analylticsReducer'
 import {expect} from 'chai';
 
-describe("analylticsReducer", () => {
+describe("analyticsReducer", () => {
     let state;
     describe("when in default state", () => {
         beforeEach(() => {
@@ -20,8 +20,14 @@ describe("analylticsReducer", () => {
         it('eventOutcome is set to empty object', () => {
             expect(state.eventOutcome).to.eql({})
         })
+        it('durationBetweenStartEndSearch is set to empty object', () => {
+            expect(state.durationBetweenStartEndSearch).to.eql({})
+        })
         it('fetching is false', () => {
             expect(state.fetching).to.equal(false)
+        });
+        it('timeRange is TODAY', () => {
+            expect(state.timeRange).to.equal(TODAY)
         });
     })
     describe("when FETCHING_VISIT_COUNTS action received", () => {
@@ -49,7 +55,12 @@ describe("analylticsReducer", () => {
                     "search-request": 1,
                     "search-offender-details": 1,
                     "search-index": 4,
-                    "search-add-contact": 1}
+                    "search-add-contact": 1},
+                durationBetweenStartEndSearch: {
+                    "1": 100,
+                    "2": 20,
+                    "3": 5
+                }
             })
         })
 
@@ -77,6 +88,13 @@ describe("analylticsReducer", () => {
                 "search-add-contact": 1}
             )
         })
+        it('durationBetweenStartEndSearch is set', () => {
+            expect(state.durationBetweenStartEndSearch).to.eql({
+                "1": 100,
+                "2": 20,
+                "3": 5})
+        })
+
     })
     describe("when TIME_RANGE action received", () => {
         beforeEach(() => {

@@ -80,6 +80,11 @@ public class InMemoryAnalyticsStore implements AnalyticsStore {
     }
 
     @Override
+    public CompletableFuture<Map<Long, Long>> durationBetween(String firstEventType, String secondEventType, LocalDateTime from, long groupBySeconds) {
+        return CompletableFuture.supplyAsync(() -> ImmutableMap.of());
+    }
+
+    @Override
     public CompletableFuture<Boolean> isUp() {
         return CompletableFuture.completedFuture(Boolean.TRUE);
     }

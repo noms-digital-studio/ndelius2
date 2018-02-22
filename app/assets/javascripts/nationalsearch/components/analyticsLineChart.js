@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import {Component} from 'react'
 
-class AnalyticsBarChart extends Component {
+class AnalyticsLineChart extends Component {
     constructor(props) {
         super(props);
     }
@@ -19,22 +19,27 @@ class AnalyticsBarChart extends Component {
         if (this.chart) {
             this.chart.destroy()
         }
+
         this.chart = new Chart(this.canvas.getContext('2d'), chartOptions(this.props));
     }
 }
 
 
 export const chartOptions = props => {
-    const {label, numberToCountData} = props
+    const {label, numberToCountData, xAxesLabel} = props
+    const defaultLabelMapper = data => Object.getOwnPropertyNames(data)
+    const labelMapper = props.labelMapper || defaultLabelMapper
 
     return {
-        type: 'bar',
+        type: 'line',
         data: {
-            labels: Object.getOwnPropertyNames(numberToCountData),
+            labels: labelMapper(numberToCountData),
             datasets: [{
                 label,
                 data: Object.getOwnPropertyNames(numberToCountData).map(property => numberToCountData[property]),
-                borderWidth: 1
+                backgroundColor: '#2b8cc4',
+                borderWidth: 1,
+                fill: false
             }]
         },
         options: {
@@ -42,6 +47,12 @@ export const chartOptions = props => {
                 yAxes: [{
                     ticks: {
                         beginAtZero: true
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: xAxesLabel
                     }
                 }]
             }
@@ -51,12 +62,14 @@ export const chartOptions = props => {
 }
 
 
-AnalyticsBarChart.propTypes = {
+AnalyticsLineChart.propTypes = {
     description: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
+    xAxesLabel: PropTypes.string.isRequired,
     fetching: PropTypes.bool.isRequired,
-    numberToCountData: PropTypes.object.isRequired
+    numberToCountData: PropTypes.object.isRequired,
+    labelMapper: PropTypes.func
 };
 
 
-export default AnalyticsBarChart;
+export default AnalyticsLineChart;

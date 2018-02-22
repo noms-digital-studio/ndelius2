@@ -6,6 +6,7 @@ import TimeRangeLink from '../containers/analyticsTimeRangeLinkContainer';
 import TopPagesRankingChart from '../containers/topPagesRankingChartContainer';
 import PageRankingChart from '../containers/pageRankingChartContainer';
 import SearchOutcomeChart from '../containers/searchOutcomeChartContainer';
+import DurationBetweenStartEndSearchChart from '../containers/durationBetweenStartEndSearchChartContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
 import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
 import PropTypes from 'prop-types'
@@ -37,6 +38,7 @@ class AnalyticsPage extends Component {
                         <TopPagesRankingChart description='Offender details clicks - ranking within top 2 pages' label='Clicks per rank within page'/>
                         <PageRankingChart description='Offender details clicks - ranking across pages' label='Clicks per page'/>
                         <SearchOutcomeChart description='Search visit outcome' label='Outcome'/>
+                        <DurationBetweenStartEndSearchChart description='Duration to find offender' label='From search to clicking offender' xAxesLabel='Up to minutes' />
                     </div>
                     <div className="column-one-third">
                         <NavigationPanel/>

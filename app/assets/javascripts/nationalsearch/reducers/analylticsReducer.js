@@ -1,11 +1,15 @@
-import {
-    VISIT_COUNTS,
-    FETCHING_VISIT_COUNTS,
-    TIME_RANGE,
-    THIS_WEEK
-} from '../actions/analytics'
+import {FETCHING_VISIT_COUNTS, TIME_RANGE, VISIT_COUNTS, TODAY} from '../actions/analytics'
 
-const analytics = (state = {uniqueUserVisits: 0, allVisits: 0, allSearches: 0, rankGrouping: {}, eventOutcome: {}, fetching: false, timeRange: 'THIS_YEAR'}, action) => {
+const analytics = (state = {
+    uniqueUserVisits: 0,
+    allVisits: 0,
+    allSearches: 0,
+    rankGrouping: {},
+    eventOutcome: {},
+    durationBetweenStartEndSearch: {},
+    fetching: false,
+    timeRange: TODAY
+}, action) => {
     switch (action.type) {
         case VISIT_COUNTS:
             return {
@@ -15,6 +19,7 @@ const analytics = (state = {uniqueUserVisits: 0, allVisits: 0, allSearches: 0, r
                 allSearches: action.allSearches,
                 rankGrouping: action.rankGrouping,
                 eventOutcome: action.eventOutcome,
+                durationBetweenStartEndSearch: action.durationBetweenStartEndSearch,
                 fetching: false
             };
         case FETCHING_VISIT_COUNTS:

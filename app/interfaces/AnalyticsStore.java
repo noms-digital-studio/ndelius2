@@ -21,5 +21,7 @@ public interface AnalyticsStore {
 
     CompletableFuture<Map<String, Long>> eventOutcome(String eventType, LocalDateTime from);
 
+    CompletableFuture<Map<Long, Long>> durationBetween(String firstEventType, String secondEventType, LocalDateTime from, long groupBySeconds);
+
     CompletableFuture<Boolean> isUp();
 }

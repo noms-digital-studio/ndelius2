@@ -16,16 +16,14 @@ import play.Logger;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.gte;
+import static com.mongodb.client.model.Filters.*;
+import static java.util.Arrays.asList;
 
 public class MongoDbStore implements AnalyticsStore {
 
@@ -102,7 +100,7 @@ public class MongoDbStore implements AnalyticsStore {
                     ImmutableMap.of(
                         "_id", "$pageNumber",
                         "total", new Document(
-                            ImmutableMap.of("$sum", 1l)
+                            ImmutableMap.of("$sum", 1L)
                         )
                     ))
             ));
@@ -200,6 +198,60 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     @Override
+    public CompletableFuture<Map<Long, Long>> durationBetween(String firstEventType, String secondEventType, LocalDateTime from, long groupBySeconds) {
+        val result = new CompletableFuture<Map<Long, Long>>();
+        val hasCorrelationId = _match(_exists("correlationId"));
+        val dateFilter = _match(_gte("dateTime", from));
+        val eventTypeFilter = _match(_or(_eq("type", firstEventType), _eq("type", secondEventType)));
+        val firstAndLastDates = _group(_by(
+                        "_id", "$correlationId",
+                        "firstDateTime", _first("$dateTime"),
+                        "firstType", _first("$type"),
+                        "lastDateTime", _last("$dateTime"),
+                        "lastType", _last("$type")
+                ));
+        val firstAndLastMatchingEventType = _match(_and(_eq("firstType", firstEventType), _eq("lastType", secondEventType)));
+        val durationInMills = _project(ImmutableMap.of(
+                "durationInMills",
+                _subtract("$lastDateTime", "$firstDateTime")
+                )
+        );
+        val duration = _project(ImmutableMap.of(
+                "duration",
+                _divide("$durationInMills", 1000 * groupBySeconds))
+        );
+        val roundedDuration = _project(ImmutableMap.of(
+                "roundedDuration",
+                _ceil("$duration"))
+        );
+        val sum = _group(_by("_id", "$roundedDuration", "total", _sum()));
+        val sort = _sort("_id", 1);
+
+        val durationBetween = ImmutableList.of(
+                hasCorrelationId,
+                dateFilter,
+                eventTypeFilter,
+                firstAndLastDates,
+                firstAndLastMatchingEventType,
+                durationInMills,
+                duration,
+                roundedDuration,
+                sum,
+                sort);
+
+        events.aggregate(durationBetween).
+                toObservable().
+                toList().
+                map(documents -> documents.stream().collect(
+                        Collectors.toMap(doc -> doc.getDouble("_id").longValue(), doc -> doc.getLong("total"), firstDuplicate(), LinkedHashMap::new))
+                ).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
     public CompletableFuture<Boolean> isUp() {
         val result = new CompletableFuture<Boolean>();
 
@@ -223,6 +275,17 @@ public class MongoDbStore implements AnalyticsStore {
     private Document _last(String field) {
         return new Document(
                 ImmutableMap.of("$last", field)
+        );
+    }
+
+    private Document _first(String field) {
+        return new Document(
+                ImmutableMap.of("$first", field)
+        );
+    }
+    private Document _ceil(String field) {
+        return new Document(
+                ImmutableMap.of("$ceil", field)
         );
     }
 
@@ -274,9 +337,30 @@ public class MongoDbStore implements AnalyticsStore {
                 ));
 
     }
+    private Document _project(Map projection) {
+        return new Document(
+                ImmutableMap.of(
+                        "$project", projection
+                ));
+
+    }
+    private Document _or(Document document1, Document document2) {
+        return new Document(
+                ImmutableMap.of(
+                        "$or", asList(document1, document2)
+                ));
+
+    }
+    private Document _and(Document document1, Document document2) {
+        return new Document(
+                ImmutableMap.of(
+                        "$and", asList(document1, document2)
+                ));
+
+    }
     private Document _sum() {
         return new Document(
-                ImmutableMap.of("$sum", 1l)
+                ImmutableMap.of("$sum", 1L)
         );
     }
 
@@ -286,6 +370,29 @@ public class MongoDbStore implements AnalyticsStore {
                         resultFieldName, groupFieldName,
                         aggregateFieldName, aggregation
                 ));
+    }
+
+    private Document _by(String resultFieldName, String groupFieldName, String aggregateFieldName1, Document aggregation1, String aggregateFieldName2, Document aggregation2, String aggregateFieldName3, Document aggregation3, String aggregateFieldName4, Document aggregation4) {
+        return new Document(
+                ImmutableMap.of(
+                        resultFieldName, groupFieldName,
+                        aggregateFieldName1, aggregation1,
+                        aggregateFieldName2, aggregation2,
+                        aggregateFieldName3, aggregation3,
+                        aggregateFieldName4, aggregation4
+                ));
+    }
+
+    private Document _subtract(Object first, Object second) {
+        return new Document(ImmutableMap.of("$subtract", asList(first, second)));
+    }
+
+    private Document _divide(Object first, Object second) {
+        return new Document(ImmutableMap.of("$divide", asList(first, second)));
+    }
+
+    private BinaryOperator<Long> firstDuplicate() {
+        return (key1, key2) -> key1;
     }
 
 

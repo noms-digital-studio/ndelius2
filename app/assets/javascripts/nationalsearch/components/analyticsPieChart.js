@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types'
 import {Component} from 'react'
 
-class AnalyticsBarChart extends Component {
+class AnalyticsPieChart extends Component {
     constructor(props) {
         super(props);
     }
     render() {
         const {description} = this.props
         return (
-            <div style={{float: 'left', margin: '10px', backgroundColor: '#f8f8f8', padding: '10px', minWidth: '440px', minHeight: '300px'}}>
+            <div style={{float: 'left', margin: '10px', backgroundColor: '#f8f8f8', padding: '10px', minWidth: '440px', minHeight: '400px'}}>
                 <p style={{fontSize: '16px', textAlign: 'center', margin: '10px'}}>{description}</p>
 
                 <canvas ref={(canvas) => { this.canvas = canvas; }}/>
@@ -16,7 +16,11 @@ class AnalyticsBarChart extends Component {
         )
     }
     componentDidUpdate() {
-        new Chart(this.canvas.getContext('2d'), chartOptions(this.props));
+        if (this.chart) {
+            this.chart.destroy()
+        }
+
+        this.chart = new Chart(this.canvas.getContext('2d'), chartOptions(this.props));
     }
 }
 
@@ -67,7 +71,7 @@ export const chartOptions = props => {
 }
 
 
-AnalyticsBarChart.propTypes = {
+AnalyticsPieChart.propTypes = {
     description: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     fetching: PropTypes.bool.isRequired,
@@ -76,4 +80,4 @@ AnalyticsBarChart.propTypes = {
 };
 
 
-export default AnalyticsBarChart;
+export default AnalyticsPieChart;

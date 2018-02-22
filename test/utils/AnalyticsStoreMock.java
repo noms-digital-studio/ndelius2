@@ -36,5 +36,8 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
         return null;
     }
 
+    default CompletableFuture<Map<Long, Long>> durationBetween(String firstEventType, String secondEventType, LocalDateTime from, long groupBySeconds) {
+        return null;
+    }
 
 }
