@@ -3,6 +3,8 @@
 # ~~~~
 
 GET     /healthcheck                                controllers.UtilityController.healthcheck
+GET     /utility/searchDb                           controllers.UtilityController.searchDb
+GET     /utility/searchLdap                         controllers.UtilityController.searchLdap
 
 GET     /analytics                                  controllers.AnalyticsController.index
 GET     /analytics/pageVisits                       controllers.AnalyticsController.pageVisits
