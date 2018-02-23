@@ -90,6 +90,11 @@ public class InMemoryAnalyticsStore implements AnalyticsStore {
     }
 
     @Override
+    public CompletableFuture<Map<String, Long>> countGroupingArray(String eventType, String countFieldName, LocalDateTime from) {
+        return CompletableFuture.supplyAsync(ImmutableMap::of);
+    }
+
+    @Override
     public CompletableFuture<Boolean> isUp() {
         return CompletableFuture.completedFuture(Boolean.TRUE);
     }

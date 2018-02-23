@@ -8,6 +8,7 @@ import PageRankingChart from '../containers/pageRankingChartContainer';
 import SearchOutcomeChart from '../containers/searchOutcomeChartContainer';
 import DurationBetweenStartEndSearchChart from '../containers/durationBetweenStartEndSearchChartContainer';
 import SearchCountChart from '../containers/searchCountChartContainer';
+import SearchFieldMatchChart from '../containers/searchFieldMatchChartContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
 import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
 import PropTypes from 'prop-types'
@@ -40,6 +41,7 @@ class AnalyticsPage extends Component {
                         <PageRankingChart description='Offender details clicks - ranking across pages' label='Clicks per page'/>
                         <SearchOutcomeChart description='Search visit outcome' label='Outcome'/>
                         <DurationBetweenStartEndSearchChart description='Duration to find offender' label='From search to clicking offender' xAxesLabel='Up to minutes' />
+                        <SearchFieldMatchChart description='Top field matches' label='Search term'/>
                         <SearchCountChart description='Count of results returned' label='Result total' xAxesLabel='Totals return (grouped in 10s)' />
                     </div>
                     <div className="column-one-third">

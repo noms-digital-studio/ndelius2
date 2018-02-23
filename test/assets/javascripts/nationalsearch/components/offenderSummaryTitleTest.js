@@ -25,11 +25,12 @@ describe('OffenderSummaryTitle component', () => {
                                                         showOffenderDetails={showOffenderDetails}
                                                         firstName={'name'}
                                                         surname={'name'}
-                                                        dateOfBirth={'1965-07-19'}/>)
+                                                        dateOfBirth={'1965-07-19'}
+                                                        highlight={{firstName: ["Jill"]}}/>)
 
             title.find('a').simulate('click');
 
-            expect(showOffenderDetails).to.be.calledWith(123, 3);
+            expect(showOffenderDetails).to.be.calledWith(123, 3, {firstName: ["Jill"]});
         })
     })
 })

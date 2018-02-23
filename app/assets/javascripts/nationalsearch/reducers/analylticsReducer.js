@@ -8,6 +8,7 @@ const analytics = (state = {
     eventOutcome: {},
     durationBetweenStartEndSearch: {},
     searchCount: {},
+    searchFieldMatch: {},
     fetching: false,
     timeRange: TODAY
 }, action) => {
@@ -22,6 +23,7 @@ const analytics = (state = {
                 eventOutcome: action.eventOutcome,
                 durationBetweenStartEndSearch: action.durationBetweenStartEndSearch,
                 searchCount: action.searchCount,
+                searchFieldMatch: action.searchFieldMatch,
                 fetching: false
             };
         case FETCHING_VISIT_COUNTS:

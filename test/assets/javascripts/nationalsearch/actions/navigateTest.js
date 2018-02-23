@@ -15,16 +15,16 @@ describe('navigate action', () => {
 
     describe('on addContact', () => {
         beforeEach(() => {
-            addContact(1234567, 2)(dispatch)
+            addContact(1234567, 2, {firstName: ["Josephina"], surname: ["Se"]})(dispatch)
         })
         it ('dispatches ADD_CONTACT', () => {
             expect(dispatch).to.be.calledWith({type: 'ADD_CONTACT', offenderId: 1234567})
         })
-        it ('calls endpoint with rankIndex and type', () => {
+        it ('calls endpoint with rankIndex, type and fieldMatch', () => {
             expect(global.$.ajax).to.be.calledWith({
                 url: '/nationalSearch/recordSearchOutcome',
                 type: 'POST',
-                data: JSON.stringify({type: 'search-add-contact', rankIndex: 2}),
+                data: JSON.stringify({type: 'search-add-contact', rankIndex: 2, fieldMatch: ["firstName", "surname"]}),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: null
@@ -51,16 +51,16 @@ describe('navigate action', () => {
     })
     describe('on showOffenderDetails', () => {
         beforeEach(() => {
-            showOffenderDetails(1234567, 2)(dispatch)
+            showOffenderDetails(1234567, 2, {firstName: ["Josephina"], surname: ["Se"]})(dispatch)
         })
         it ('dispatches SHOW_OFFENDER_DETAILS', () => {
             expect(dispatch).to.be.calledWith({type: 'SHOW_OFFENDER_DETAILS', offenderId: 1234567})
         })
-        it ('calls endpoint with rankIndex and type', () => {
+        it ('calls endpoint with rankIndex, type and fieldMatch', () => {
             expect(global.$.ajax).to.be.calledWith({
                 url: '/nationalSearch/recordSearchOutcome',
                 type: 'POST',
-                data: JSON.stringify({type: 'search-offender-details', rankIndex: 2}),
+                data: JSON.stringify({type: 'search-offender-details', rankIndex: 2, fieldMatch: ["firstName", "surname"]}),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: null

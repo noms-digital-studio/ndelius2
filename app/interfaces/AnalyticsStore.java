@@ -25,5 +25,7 @@ public interface AnalyticsStore {
 
     CompletableFuture<Map<Integer, Long>> countGrouping(String eventType, String countFieldName, LocalDateTime from, long groupByScale);
 
+    CompletableFuture<Map<String, Long>> countGroupingArray(String eventType, String countFieldName, LocalDateTime from);
+
     CompletableFuture<Boolean> isUp();
 }

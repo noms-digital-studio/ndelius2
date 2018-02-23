@@ -46,6 +46,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         when(analyticsStore.eventOutcome(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
         when(analyticsStore.durationBetween(eq("search-request"), eq("search-offender-details"), any(), eq(60L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
         when(analyticsStore.countGrouping(eq("search-results"), eq("total"), any(), eq(10L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
+        when(analyticsStore.countGroupingArray(eq("search-offender-details"), eq("fieldMatch"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
 
     }
     @Test
@@ -171,6 +172,22 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         assertThat(body.get("searchCount").get("10").asLong()).isEqualTo(10L);
         assertThat(body.get("searchCount").get("20").asLong()).isEqualTo(5L);
         assertThat(body.get("searchCount").get("30").asLong()).isEqualTo(1L);
+    }
+    @Test
+
+    public void returnsSearchFieldMatch() {
+        when(analyticsStore.countGroupingArray(eq("search-offender-details"), eq("fieldMatch"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+                "otherIds.crn", 3L,
+                "firstName", 5L,
+                "surname", 2L
+        )));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
+
+        final JsonNode body = Json.parse(contentAsString(result));
+        assertThat(body.get("searchFieldMatch").get("otherIds.crn").asLong()).isEqualTo(3L);
+        assertThat(body.get("searchFieldMatch").get("firstName").asLong()).isEqualTo(5L);
+        assertThat(body.get("searchFieldMatch").get("surname").asLong()).isEqualTo(2L);
     }
 
 

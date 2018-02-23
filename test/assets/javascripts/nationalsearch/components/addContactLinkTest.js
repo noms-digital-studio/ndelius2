@@ -9,11 +9,12 @@ describe('AddContactLink component', () => {
             const addContact = stub()
             const link = shallow(<AddContactLink offenderId={123}
                                                  rankIndex={3}
+                                                 highlight={{firstName: ["Jill"]}}
                                                  addContact={addContact}/>)
 
             link.find('a').simulate('click');
 
-            expect(addContact).to.be.calledWith(123, 3);
+            expect(addContact).to.be.calledWith(123, 3, {firstName: ["Jill"]});
         })
     })
 })

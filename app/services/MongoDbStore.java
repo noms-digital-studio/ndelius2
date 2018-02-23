@@ -16,7 +16,10 @@ import play.Logger;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BinaryOperator;
@@ -296,6 +299,37 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     @Override
+    public CompletableFuture<Map<String, Long>> countGroupingArray(String eventType, String countFieldName, LocalDateTime from) {
+        val result = new CompletableFuture<Map<String, Long>>();
+        val match = _match( _eq("type", eventType));
+        val hasCountField = _match( _exists(countFieldName));
+        val dateFilter = _match( _gte("dateTime", from));
+        val deconstructedArray = _unwind( countFieldName);
+        val sum = _group(_by("_id", "$"+countFieldName, "total", _sum()));
+        val sort = _sort("total", 1);
+
+        val countGrouping = ImmutableList.of(
+                match,
+                hasCountField,
+                dateFilter,
+                deconstructedArray,
+                sum,
+                sort);
+
+        events.aggregate(countGrouping).
+                toObservable().
+                toList().
+                map(documents -> documents.stream().collect(
+                        Collectors.toMap(doc -> doc.getString("_id"), doc -> doc.getLong("total")))
+                ).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+
+        return result;
+    }
+
+    @Override
     public CompletableFuture<Boolean> isUp() {
         val result = new CompletableFuture<Boolean>();
 
@@ -436,6 +470,10 @@ public class MongoDbStore implements AnalyticsStore {
 
     private Document _multiply(Object first, Object second) {
         return new Document(ImmutableMap.of("$multiply", asList(first, second)));
+    }
+
+    private Document _unwind(String field) {
+        return new Document(ImmutableMap.of("$unwind", "$" + field));
     }
 
     private BinaryOperator<Long> firstDuplicate() {

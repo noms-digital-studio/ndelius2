@@ -5,6 +5,6 @@ import addContactLink from '../components/addContactLink'
 export default connect(
     () => ({}),
     dispatch => ({
-        addContact: (offenderId) => dispatch(addContact(offenderId))
+        addContact: (offenderId, rankIndex, highlight) => dispatch(addContact(offenderId, rankIndex, highlight))
     }),
 )(addContactLink)

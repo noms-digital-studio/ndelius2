@@ -26,6 +26,9 @@ describe("analyticsReducer", () => {
         it('searchCount is set to empty object', () => {
             expect(state.searchCount).to.eql({})
         })
+        it('searchFieldMatch is set to empty object', () => {
+            expect(state.searchFieldMatch).to.eql({})
+        })
         it('fetching is false', () => {
             expect(state.fetching).to.equal(false)
         });
@@ -68,6 +71,11 @@ describe("analyticsReducer", () => {
                     "134": 100,
                     "200": 20,
                     "300": 5
+                },
+                searchFieldMatch: {
+                    "otherIds.crn": 3,
+                    "firstName": 5,
+                    "surname": 6
                 }
             })
         })
@@ -107,6 +115,14 @@ describe("analyticsReducer", () => {
                     "134": 100,
                     "200": 20,
                     "300": 5
+                }
+            )
+        })
+        it('searchFieldMatch is set', () => {
+            expect(state.searchFieldMatch).to.eql({
+                    "otherIds.crn": 3,
+                    "firstName": 5,
+                    "surname": 6
                 }
             )
         })

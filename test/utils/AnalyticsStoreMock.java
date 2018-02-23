@@ -43,4 +43,8 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
     default CompletableFuture<Map<Integer, Long>> countGrouping(String eventType, String countFieldName, LocalDateTime from, long groupByScale) {
         return null;
     }
+
+    default CompletableFuture<Map<String, Long>> countGroupingArray(String eventType, String countFieldName, LocalDateTime from) {
+        return null;
+    }
 }

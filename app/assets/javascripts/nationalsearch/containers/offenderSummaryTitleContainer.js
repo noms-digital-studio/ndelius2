@@ -5,6 +5,6 @@ import offenderSummaryTitle from '../components/offenderSummaryTitle'
 export default connect(
     () => ({}),
     dispatch => ({
-        showOffenderDetails: (offenderId, rankIndex) => dispatch(showOffenderDetails(offenderId, rankIndex))
+        showOffenderDetails: (offenderId, rankIndex, highlight) => dispatch(showOffenderDetails(offenderId, rankIndex, highlight))
     })
 )(offenderSummaryTitle)

@@ -67,6 +67,9 @@ describe('AnalyticsPage component', () => {
         it('displays search counts', () => {
             expect(page.find({description: 'Count of results returned'}).exists()).to.be.true
         })
+        it('displays search field match', () => {
+            expect(page.find({description: 'Top field matches'}).exists()).to.be.true
+        })
     })
 })
 

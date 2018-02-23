@@ -13,16 +13,16 @@ const recordSearchOutcome = data => {
         success: null
     })
 }
-export const showOffenderDetails = (offenderId, rankIndex) => (
+export const showOffenderDetails = (offenderId, rankIndex, highlight = {}) => (
     dispatch => {
-        recordSearchOutcome({ type: 'search-offender-details', rankIndex })
+        recordSearchOutcome({ type: 'search-offender-details', rankIndex, fieldMatch: highlightToFieldMatch(highlight) })
         dispatch({type: SHOW_OFFENDER_DETAILS, offenderId})
     }
 )
 
-export const addContact = (offenderId, rankIndex) => (
+export const addContact = (offenderId, rankIndex, highlight = {}) => (
     dispatch => {
-        recordSearchOutcome({ type: 'search-add-contact', rankIndex })
+        recordSearchOutcome({ type: 'search-add-contact', rankIndex, fieldMatch: highlightToFieldMatch(highlight) })
         dispatch({type: ADD_CONTACT, offenderId})
     }
 )
@@ -41,4 +41,5 @@ export const addNewOffender = () => (
     }
 )
 
+const highlightToFieldMatch = highlight => Object.getOwnPropertyNames(highlight)
 
