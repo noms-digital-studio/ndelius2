@@ -81,6 +81,8 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .field("offenderAliases.firstName", 8)
             .field("offenderAliases.surname", 8)
             .field("contactDetails.addresses.town")
+            // CROSS_FIELDS Analyzes the query string into individual terms, then looks
+            // for each term in any of the fields, as though they were one big field
             .type(CROSS_FIELDS));
 
         boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters(termsWithoutDates(searchTerm)))
@@ -93,6 +95,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .field("contactDetails.addresses.streetName")
             .field("contactDetails.addresses.county")
             .field("contactDetails.addresses.postcode", 10)
+            // MOST_FIELDS Finds documents which match any field and combines the _score from each field
             .type(MOST_FIELDS));
 
         termsThatLookLikeDates(searchTerm).forEach(dateTerm ->
@@ -109,6 +112,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                 field("*").
                 preTags("").
                 postTags("");
+
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
             .highlighter(highlight)
@@ -204,11 +208,11 @@ public class ElasticOffenderSearch implements OffenderSearch {
     private CompletionStage<ObjectNode> embellishNode(String bearerToken, JsonNode node, Map<String, HighlightField> highlightFields) {
         return restrictViewOfOffenderIfNecessary(
                 bearerToken,
-                appendHighlightFields(appendDateOfBirth((ObjectNode)node), highlightFields)
+                appendHighlightFields(appendOffendersAge((ObjectNode)node), highlightFields)
         );
     }
 
-    private ObjectNode appendDateOfBirth(ObjectNode rootNode) {
+    private ObjectNode appendOffendersAge(ObjectNode rootNode) {
         JsonNode dateOfBirth = rootNode.get("dateOfBirth");
 
         return Optional.ofNullable(dateOfBirth)
