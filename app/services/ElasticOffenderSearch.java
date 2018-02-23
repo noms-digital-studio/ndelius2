@@ -73,7 +73,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
     private SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDatesIn(searchTerm))
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDates(searchTerm))
             .field("firstName", 10)
             .field("surname", 10)
             .field("middleNames", 8)
@@ -82,7 +82,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .field("contactDetails.addresses.town")
             .type(CROSS_FIELDS));
 
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDatesIn(searchTerm))
+        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters(termsWithoutDates(searchTerm)))
             .field("gender")
             .field("otherIds.crn", 10)
             .field("otherIds.nomsNumber", 10)
@@ -94,12 +94,12 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .field("contactDetails.addresses.postcode", 10)
             .type(MOST_FIELDS));
 
-        termsThatLookLikeDatesIn(searchTerm).forEach(dateTerm ->
+        termsThatLookLikeDates(searchTerm).forEach(dateTerm ->
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
                 .field("dateOfBirth", 11)
                 .lenient(true)));
 
-        Stream.of(termsWithoutDatesIn(searchTerm).split(" "))
+        Stream.of(termsWithoutDates(searchTerm).split(" "))
             .filter(term -> !term.isEmpty())
             .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
 
@@ -115,17 +115,21 @@ public class ElasticOffenderSearch implements OffenderSearch {
         return searchSource;
     }
 
-    private List<String> termsThatLookLikeDatesIn(String searchTerm) {
-        val searchTerms = searchTerm.split(" ");
-        return Stream.of(searchTerms)
+    private String termsWithoutSingleLetters(String searchTerm) {
+        return Stream.of(searchTerm.split(" "))
+            .filter(term -> term.length() > 1)
+            .collect(joining(" "));
+    }
+
+    private List<String> termsThatLookLikeDates(String searchTerm) {
+        return Stream.of(searchTerm.split(" "))
             .filter(DateTimeHelper::canBeConvertedToADate)
             .map(term -> DateTimeHelper.covertToCanonicalDate(term).get())
             .collect(toList());
     }
 
-    private String termsWithoutDatesIn(String searchTerm) {
-        val searchTerms = searchTerm.split(" ");
-        return Stream.of(searchTerms)
+    private String termsWithoutDates(String searchTerm) {
+        return Stream.of(searchTerm.split(" "))
             .filter(term -> !DateTimeHelper.covertToCanonicalDate(term).isPresent())
             .collect(joining(" "));
     }

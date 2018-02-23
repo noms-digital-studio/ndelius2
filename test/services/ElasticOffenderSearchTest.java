@@ -100,7 +100,7 @@ public class ElasticOffenderSearchTest {
             "contactDetails.addresses.town");
 
         val queryBuilder2 = (MultiMatchQueryBuilder)query.should().get(1);
-        assertThat(queryBuilder2.value()).isEqualTo("a smith");
+        assertThat(queryBuilder2.value()).isEqualTo("smith");
         assertThat(queryBuilder2.fields()).containsOnlyKeys(
             "gender",
             "otherIds.crn",
