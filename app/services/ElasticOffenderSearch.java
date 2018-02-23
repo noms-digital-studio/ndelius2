@@ -16,12 +16,15 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import play.Logger;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -34,9 +37,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 import static play.libs.Json.parse;
 
@@ -103,8 +104,14 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .filter(term -> !term.isEmpty())
             .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
 
+        val highlight = new HighlightBuilder().
+                highlighterType("unified").
+                field("*").
+                preTags("").
+                postTags("");
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
+            .highlighter(highlight)
             .postFilter(termQuery("softDeleted", false))
             .explain(Logger.isDebugEnabled())
             .size(pageSize)
@@ -146,7 +153,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
         val offenderNodesCompletionStages = stream(response.getHits().getHits())
                 .map(searchHit -> {
                     JsonNode offender = parse(searchHit.getSourceAsString());
-                    return embellishNode(bearerToken, offender);
+                    return embellishNode(bearerToken, offender, searchHit.getHighlightFields());
                 }).collect(toList());
 
         return CompletableFuture.allOf(
@@ -194,10 +201,11 @@ public class ElasticOffenderSearch implements OffenderSearch {
         return pageNumber >= 1 ? pageNumber - 1 : 0;
     }
 
-    private CompletionStage<ObjectNode> embellishNode(String bearerToken, JsonNode node) {
+    private CompletionStage<ObjectNode> embellishNode(String bearerToken, JsonNode node, Map<String, HighlightField> highlightFields) {
         return restrictViewOfOffenderIfNecessary(
                 bearerToken,
-                appendDateOfBirth((ObjectNode)node));
+                appendHighlightFields(appendDateOfBirth((ObjectNode)node), highlightFields)
+        );
     }
 
     private ObjectNode appendDateOfBirth(ObjectNode rootNode) {
@@ -208,7 +216,19 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .orElse(rootNode);
     }
 
-    private CompletionStage<ObjectNode> restrictViewOfOffenderIfNecessary(String bearerToken, ObjectNode rootNode) {
+    private ObjectNode appendHighlightFields(ObjectNode rootNode, Map<String, HighlightField> highlightFields) {
+        val highlightNode = JsonNodeFactory.instance.objectNode();
+        highlightFields.forEach((key, value) -> {
+            val arrayNode = JsonNodeFactory.instance.arrayNode();
+            Stream.of(value.fragments()).forEach(text -> arrayNode.add(text.string()));
+            highlightNode.set(key, arrayNode);
+        });
+
+        rootNode.set("highlight", highlightNode);
+        return rootNode;
+    }
+
+        private CompletionStage<ObjectNode> restrictViewOfOffenderIfNecessary(String bearerToken, ObjectNode rootNode) {
         if (toBoolean(rootNode, "currentExclusion") || toBoolean(rootNode, "currentRestriction")) {
             return offenderApi.canAccess(bearerToken, rootNode.get("offenderId").asLong())
                     .thenApply(canAccess -> canAccess ? rootNode : restrictView(rootNode));
@@ -222,7 +242,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     private ObjectNode restrictView(ObjectNode rootNode) {
-        final ObjectNode restrictedAccessRootNode = JsonNodeFactory.instance.objectNode();
+        val restrictedAccessRootNode = JsonNodeFactory.instance.objectNode();
         restrictedAccessRootNode
             .put("accessDenied", true)
             .put("offenderId", rootNode.get("offenderId").asLong())

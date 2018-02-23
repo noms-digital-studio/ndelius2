@@ -9,12 +9,14 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.bytes.BytesArray;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.PrefixQueryBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -124,6 +126,18 @@ public class ElasticOffenderSearchTest {
         assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
         assertThat(termQueryBuilder.value()).isEqualTo(false);
     }
+    @Test
+    public void unifiedHighlighterIsRequested() {
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
+
+        elasticOffenderSearch.search("bearer-token", "15-09-1970 a smith 1/2/1992", 10, 3);
+
+        verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
+        assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(BoolQueryBuilder.class);
+
+        val highlighter = searchRequest.getValue().source().highlighter();
+        assertThat(highlighter.highlighterType()).isEqualTo("unified");
+    }
 
     @Test
     public void returnsSearchResults() {
@@ -141,6 +155,50 @@ public class ElasticOffenderSearchTest {
         assertThat(result.getOffenders().size()).isEqualTo(totalHits);
         assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(123);
         assertThat(result.getOffenders().get(0).get("age").asInt()).isNotEqualTo(0);
+    }
+
+    @Test
+    public void returnsHighlightsInSearchResults() {
+
+        // given
+        val totalHits = 1;
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithReplacements(
+                ImmutableMap.of(
+                        "forename", new HighlightField("forename", new Text[]{new Text("bob")}),
+                        "surname", new HighlightField("surname", new Text[]{new Text("smith"), new Text("smithy")})
+                ),
+                ImmutableMap.of("offenderId", 1, "crn", "X1", "currentRestriction", false, "currentExclusion", false)), totalHits, 42));
+
+        // when
+        val results = elasticOffenderSearch.search("bearer-token","smith", 10, 3);
+
+        // then
+        val result = results.toCompletableFuture().join();
+        assertThat(result.getOffenders().get(0).get("highlight")).isNotNull();
+        assertThat(result.getOffenders().get(0).get("highlight").get("forename")).isNotNull();
+        assertThat(result.getOffenders().get(0).get("highlight").get("forename").get(0).asText()).isEqualTo("bob");
+        assertThat(result.getOffenders().get(0).get("highlight").get("surname")).isNotNull();
+        assertThat(result.getOffenders().get(0).get("highlight").get("surname").get(0).asText()).isEqualTo("smith");
+        assertThat(result.getOffenders().get(0).get("highlight").get("surname").get(1).asText()).isEqualTo("smithy");
+    }
+    @Test
+    public void highlightsNotReturnedForRestrictedInSearchResults() {
+        // given
+        val totalHits = 1;
+        when(offenderApi.canAccess("bearer-token", 1)).thenReturn(CompletableFuture.completedFuture(false));
+
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithReplacements(
+                ImmutableMap.of(
+                        "forename", new HighlightField("forename", new Text[]{new Text("bob")})
+                ),
+                ImmutableMap.of("offenderId", 1, "crn", "X1", "currentRestriction", true, "currentExclusion", true)), totalHits, 42));
+
+        // when
+        val results = elasticOffenderSearch.search("bearer-token","smith", 10, 3);
+
+        // then
+        val result = results.toCompletableFuture().join();
+        assertThat(result.getOffenders().get(0).get("highlight")).isNull();
     }
 
     @Test
@@ -265,11 +323,16 @@ public class ElasticOffenderSearchTest {
     }
 
     @SafeVarargs
-    private final SearchHit[] getSearchHitArray(Map<String, Object>... replacements) {
-        return stream(replacements).map(this::toSearchHit).collect(toList()).toArray(new SearchHit[replacements.length]);
+    private final SearchHit[] getSearchHitArrayWithReplacements(Map<String, HighlightField> highlightFields, Map<String, Object>... replacements) {
+        return stream(replacements).map((replacement) -> toSearchHit(highlightFields, replacement)).collect(toList()).toArray(new SearchHit[replacements.length]);
     }
 
-    private SearchHit toSearchHit(Map<String, Object> replacementMap) {
+    @SafeVarargs
+    private final SearchHit[] getSearchHitArray(Map<String, Object>... replacements) {
+        return stream(replacements).map((replacement) -> toSearchHit(ImmutableMap.of(), replacement)).collect(toList()).toArray(new SearchHit[replacements.length]);
+    }
+
+    private SearchHit toSearchHit(Map<String, HighlightField> highlightFields, Map<String, Object> replacementMap) {
         val searchHitMap = new HashMap<String, Object>();
         val environment = new Environment(null, this.getClass().getClassLoader(), Mode.TEST);
 
@@ -285,6 +348,7 @@ public class ElasticOffenderSearchTest {
 
         val bytesReference = new BytesArray(offenderSearchResults);
         searchHitMap.put("_source", bytesReference);
+        searchHitMap.put("highlight", highlightFields);
         return SearchHit.createFromMap(searchHitMap);
     }
 
