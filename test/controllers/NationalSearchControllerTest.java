@@ -37,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
@@ -115,18 +116,24 @@ public class NationalSearchControllerTest extends WithApplication {
     }
 
     @Test
-    public void analyticsSearchRequestEventRecordedWhenSearchCalled() {
+    public void analyticsSearchRequestEventRecordedBeforeAndAfterWhenSearchCalled() {
         val request = new Http.RequestBuilder().
                 session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
                 session("searchAnalyticsGroupId", "999-aaa-888").
                 method(GET).uri("/searchOffender/smith");
         route(app, request);
 
-        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
+        verify(analyticsStore, times(2)).recordEvent(analyticsEventCaptor.capture());
 
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-request"));
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("correlationId", "999-aaa-888"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("correlationId", "999-aaa-888"));
+
+        assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
+        assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("type", "search-results"));
+        assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("total", 0L));
+        assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("correlationId", "999-aaa-888"));
+
     }
 
     @Test

@@ -23,6 +23,9 @@ describe("analyticsReducer", () => {
         it('durationBetweenStartEndSearch is set to empty object', () => {
             expect(state.durationBetweenStartEndSearch).to.eql({})
         })
+        it('searchCount is set to empty object', () => {
+            expect(state.searchCount).to.eql({})
+        })
         it('fetching is false', () => {
             expect(state.fetching).to.equal(false)
         });
@@ -60,6 +63,11 @@ describe("analyticsReducer", () => {
                     "1": 100,
                     "2": 20,
                     "3": 5
+                },
+                searchCount: {
+                    "134": 100,
+                    "200": 20,
+                    "300": 5
                 }
             })
         })
@@ -93,6 +101,14 @@ describe("analyticsReducer", () => {
                 "1": 100,
                 "2": 20,
                 "3": 5})
+        })
+        it('searchCount is set', () => {
+            expect(state.searchCount).to.eql({
+                    "134": 100,
+                    "200": 20,
+                    "300": 5
+                }
+            )
         })
 
     })

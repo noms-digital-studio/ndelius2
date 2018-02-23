@@ -21,9 +21,7 @@ import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
@@ -46,11 +44,9 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         when(analyticsStore.uniquePageVisits(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(0L));
         when(analyticsStore.rankGrouping(eq("search-offender-details"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
         when(analyticsStore.eventOutcome(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
-        when(analyticsStore.durationBetween(eq("search-request"), eq("search-offender-details"), any(), eq(60L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
-                1L, 10L,
-                2L, 5L,
-                3L, 1L
-        )));
+        when(analyticsStore.durationBetween(eq("search-request"), eq("search-offender-details"), any(), eq(60L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
+        when(analyticsStore.countGrouping(eq("search-results"), eq("total"), any(), eq(10L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
+
     }
     @Test
     public void defaultsToBeginningOf2017WhenFromIsMissing() {
@@ -159,6 +155,22 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         assertThat(body.get("durationBetweenStartEndSearch").get("1").asLong()).isEqualTo(10L);
         assertThat(body.get("durationBetweenStartEndSearch").get("2").asLong()).isEqualTo(5L);
         assertThat(body.get("durationBetweenStartEndSearch").get("3").asLong()).isEqualTo(1L);
+    }
+
+    @Test
+    public void returnsSearchCount() {
+        when(analyticsStore.countGrouping(eq("search-results"), eq("total"), any(), eq(10L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+                10, 10L,
+                20, 5L,
+                30, 1L
+        )));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
+
+        final JsonNode body = Json.parse(contentAsString(result));
+        assertThat(body.get("searchCount").get("10").asLong()).isEqualTo(10L);
+        assertThat(body.get("searchCount").get("20").asLong()).isEqualTo(5L);
+        assertThat(body.get("searchCount").get("30").asLong()).isEqualTo(1L);
     }
 
 

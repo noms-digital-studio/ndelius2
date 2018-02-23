@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
+import data.offendersearch.OffenderSearchResult;
 import helpers.Encryption;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
@@ -84,7 +85,9 @@ public class NationalSearchController extends Controller {
                 .map(bearerToken -> {
                     Logger.info("AUDIT:{}: Search performed with term '{}'", principal(bearerToken), searchTerm);
                     analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-request"));
-                    return offenderSearch.search(bearerToken, searchTerm, pageSize, pageNumber).thenApply(JsonHelper::okJson);
+                    return offenderSearch.search(bearerToken, searchTerm, pageSize, pageNumber).
+                            thenApplyAsync(this::recordSearchResultsAnalytics, ec.current()).
+                            thenApply(JsonHelper::okJson);
                 })
                 .orElseGet(() -> CompletableFuture.supplyAsync(() -> {
                     Logger.warn("Unauthorized search attempted for search term '{}'. No Offender API bearer token found in session", searchTerm);
@@ -97,6 +100,10 @@ public class NationalSearchController extends Controller {
         return CompletableFuture.supplyAsync(Results::created);
     }
 
+    private OffenderSearchResult recordSearchResultsAnalytics(OffenderSearchResult results) {
+        analyticsStore.recordEvent(combine(analyticsContext(), ImmutableMap.of("type", "search-results", "total", results.getTotal())));
+        return results;
+    }
 
     private Optional<CompletionStage<Result>> validate(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {
         val epochRequestTime = Encryption.decrypt(encryptedEpochRequestTimeMills, paramsSecretKey);

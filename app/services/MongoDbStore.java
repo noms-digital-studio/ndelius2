@@ -252,6 +252,50 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     @Override
+    public CompletableFuture<Map<Integer, Long>> countGrouping(String eventType, String countFieldName, LocalDateTime from, long groupByScale) {
+        val result = new CompletableFuture<Map<Integer, Long>>();
+        val match = _match( _eq("type", eventType));
+        val hasRank = _match( _exists(countFieldName));
+        val dateFilter = _match( _gte("dateTime", from));
+        val scaledDownCount = _project(ImmutableMap.of(
+                "scaledDownCount",
+                _divide("$" + countFieldName, groupByScale))
+        );
+        val roundedCount = _project(ImmutableMap.of(
+                "roundedCount",
+                _ceil("$scaledDownCount"))
+        );
+        val groupedScaleCount = _project(ImmutableMap.of(
+                "groupedScaleCount",
+                _multiply("$roundedCount", groupByScale))
+        );
+        val sum = _group(_by("_id", "$groupedScaleCount", "total", _sum()));
+        val sort = _sort("_id", 1);
+
+        val countGrouping = ImmutableList.of(
+                match,
+                hasRank,
+                dateFilter,
+                scaledDownCount,
+                roundedCount,
+                groupedScaleCount,
+                sum,
+                sort);
+
+        events.aggregate(countGrouping).
+                toObservable().
+                toList().
+                map(documents -> documents.stream().collect(
+                        Collectors.toMap(doc -> doc.getDouble("_id").intValue(), doc -> doc.getLong("total"), firstDuplicate(), LinkedHashMap::new))
+                ).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
+
+    }
+
+    @Override
     public CompletableFuture<Boolean> isUp() {
         val result = new CompletableFuture<Boolean>();
 
@@ -288,7 +332,6 @@ public class MongoDbStore implements AnalyticsStore {
                 ImmutableMap.of("$ceil", field)
         );
     }
-
 
     private Document _match(Document document) {
         return new Document(
@@ -389,6 +432,10 @@ public class MongoDbStore implements AnalyticsStore {
 
     private Document _divide(Object first, Object second) {
         return new Document(ImmutableMap.of("$divide", asList(first, second)));
+    }
+
+    private Document _multiply(Object first, Object second) {
+        return new Document(ImmutableMap.of("$multiply", asList(first, second)));
     }
 
     private BinaryOperator<Long> firstDuplicate() {

@@ -7,6 +7,7 @@ const analytics = (state = {
     rankGrouping: {},
     eventOutcome: {},
     durationBetweenStartEndSearch: {},
+    searchCount: {},
     fetching: false,
     timeRange: TODAY
 }, action) => {
@@ -20,6 +21,7 @@ const analytics = (state = {
                 rankGrouping: action.rankGrouping,
                 eventOutcome: action.eventOutcome,
                 durationBetweenStartEndSearch: action.durationBetweenStartEndSearch,
+                searchCount: action.searchCount,
                 fetching: false
             };
         case FETCHING_VISIT_COUNTS:
