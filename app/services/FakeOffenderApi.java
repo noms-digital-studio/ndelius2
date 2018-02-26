@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
+import static play.libs.Json.toJson;
+
 public class FakeOffenderApi implements OffenderApi {
     @Override
     public CompletionStage<String> logon(String username) {
@@ -23,12 +25,12 @@ public class FakeOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Boolean> isHealthy() {
-        return CompletableFuture.completedFuture(Boolean.TRUE);
+        return CompletableFuture.completedFuture(true);
     }
 
     @Override
     public CompletionStage<JsonNode> searchDb(Map<String, String> queryParams) {
-        return CompletableFuture.completedFuture(Json.toJson(ImmutableMap.of("db", "example")));
+        return CompletableFuture.completedFuture(toJson(ImmutableMap.of("db", "example")));
     }
 
     @Override

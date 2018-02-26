@@ -70,13 +70,11 @@ public class UtilityController extends Controller {
     }
 
     public CompletionStage<Result> searchDb() {
-        return offenderApi.searchDb(getQueryParams())
-                .thenApply(JsonHelper::okJson);
+        return offenderApi.searchDb(getQueryParams()).thenApply(JsonHelper::okJson);
     }
 
     public CompletionStage<Result> searchLdap() {
-        return offenderApi.searchLdap(getQueryParams())
-                .thenApply(JsonHelper::okJson);
+        return offenderApi.searchLdap(getQueryParams()).thenApply(JsonHelper::okJson);
     }
 
     private Map<String, String> getQueryParams() {
