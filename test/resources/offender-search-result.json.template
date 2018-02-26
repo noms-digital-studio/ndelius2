@@ -18,7 +18,7 @@
   "surname": "string",
   "previousSurnames": [ "string" ],
 
-  "dateOfBirth": "1978-01-16",
+  "dateOfBirth": "${dateOfBirth}",
   "gender": "string",
 
   "currentDisposal": "something",

@@ -162,7 +162,7 @@ public class ElasticOffenderSearchTest {
 
         // given
         val totalHits = 1;
-        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithReplacements(
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithHighlights(
                 ImmutableMap.of(
                         "forename", new HighlightField("forename", new Text[]{new Text("bob")}),
                         "surname", new HighlightField("surname", new Text[]{new Text("smith"), new Text("smithy")})
@@ -181,13 +181,51 @@ public class ElasticOffenderSearchTest {
         assertThat(result.getOffenders().get(0).get("highlight").get("surname").get(0).asText()).isEqualTo("smith");
         assertThat(result.getOffenders().get(0).get("highlight").get("surname").get(1).asText()).isEqualTo("smithy");
     }
+
+    @Test
+    public void returnsDateOfBirthHighlightWhenDatesMatch() {
+
+        // given
+        val totalHits = 1;
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithHighlights(
+                ImmutableMap.of(),
+                ImmutableMap.of("offenderId", 1, "crn", "X1", "currentRestriction", false, "currentExclusion", false, "dateOfBirth", "1965-07-19")), totalHits, 42));
+
+        // when
+        val results = elasticOffenderSearch.search("bearer-token","19/7/1965", 10, 3);
+
+        // then
+        val result = results.toCompletableFuture().join();
+        assertThat(result.getOffenders().get(0).get("highlight")).isNotNull();
+        assertThat(result.getOffenders().get(0).get("highlight").get("dateOfBirth")).isNotNull();
+        assertThat(result.getOffenders().get(0).get("highlight").get("dateOfBirth").get(0).asText()).isEqualTo("1965-07-19");
+    }
+
+    @Test
+    public void doesNotReturnDateOfBirthHighlightWhenDatesDoNotMatch() {
+
+        // given
+        val totalHits = 1;
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithHighlights(
+                ImmutableMap.of(),
+                ImmutableMap.of("offenderId", 1, "crn", "X1", "currentRestriction", false, "currentExclusion", false, "dateOfBirth", "1965-07-19")), totalHits, 42));
+
+        // when
+        val results = elasticOffenderSearch.search("bearer-token","3/11/1999", 10, 3);
+
+        // then
+        val result = results.toCompletableFuture().join();
+        assertThat(result.getOffenders().get(0).get("highlight")).isNotNull();
+        assertThat(result.getOffenders().get(0).get("highlight").get("dateOfBirth")).isNull();
+    }
+
     @Test
     public void highlightsNotReturnedForRestrictedInSearchResults() {
         // given
         val totalHits = 1;
         when(offenderApi.canAccess("bearer-token", 1)).thenReturn(CompletableFuture.completedFuture(false));
 
-        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithReplacements(
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithHighlights(
                 ImmutableMap.of(
                         "forename", new HighlightField("forename", new Text[]{new Text("bob")})
                 ),
@@ -323,7 +361,7 @@ public class ElasticOffenderSearchTest {
     }
 
     @SafeVarargs
-    private final SearchHit[] getSearchHitArrayWithReplacements(Map<String, HighlightField> highlightFields, Map<String, Object>... replacements) {
+    private final SearchHit[] getSearchHitArrayWithHighlights(Map<String, HighlightField> highlightFields, Map<String, Object>... replacements) {
         return stream(replacements).map((replacement) -> toSearchHit(highlightFields, replacement)).collect(toList()).toArray(new SearchHit[replacements.length]);
     }
 
@@ -339,17 +377,24 @@ public class ElasticOffenderSearchTest {
         val offenderSearchResultsTemplate = Source.fromInputStream(environment.resourceAsStream("offender-search-result.json.template"), "UTF-8").mkString();
 
         val offenderSearchResults =
-                replacementMap.
+                withDefaults(replacementMap).
                         keySet().
                         stream().
                         reduce(offenderSearchResultsTemplate,
-                                (template, key) -> template.replace(format("${%s}", key), replacementMap.get(key).toString()));
+                                (template, key) -> template.replace(format("${%s}", key), withDefaults(replacementMap).get(key).toString()));
 
 
         val bytesReference = new BytesArray(offenderSearchResults);
         searchHitMap.put("_source", bytesReference);
         searchHitMap.put("highlight", highlightFields);
         return SearchHit.createFromMap(searchHitMap);
+    }
+
+    private Map<String, Object> withDefaults(Map<String, Object> replacementMap) {
+        if (!replacementMap.containsKey("dateOfBirth")) {
+            return ImmutableMap.<String, Object>builder().putAll(replacementMap).put("dateOfBirth", "1978-01-16").build();
+        }
+        return replacementMap;
     }
 
 }

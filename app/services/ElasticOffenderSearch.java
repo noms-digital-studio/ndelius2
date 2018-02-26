@@ -57,7 +57,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
         val listener = new FutureListener<SearchResponse>();
         elasticSearchClient.searchAsync(new SearchRequest("offender")
             .source(searchSourceFor(searchTerm, pageSize, pageNumber)), listener);
-        return listener.stage().thenComposeAsync(response -> processSearchResponse(bearerToken, response));
+        return listener.stage().thenComposeAsync(response -> processSearchResponse(bearerToken, searchTerm, response));
     }
 
     @Override
@@ -151,13 +151,13 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
     }
 
-    private CompletionStage<OffenderSearchResult> processSearchResponse(String bearerToken, SearchResponse response) {
+    private CompletionStage<OffenderSearchResult> processSearchResponse(String bearerToken, String searchTerm, SearchResponse response) {
         logResults(response);
 
         val offenderNodesCompletionStages = stream(response.getHits().getHits())
                 .map(searchHit -> {
                     JsonNode offender = parse(searchHit.getSourceAsString());
-                    return embellishNode(bearerToken, offender, searchHit.getHighlightFields());
+                    return embellishNode(bearerToken, searchTerm, offender, searchHit.getHighlightFields());
                 }).collect(toList());
 
         return CompletableFuture.allOf(
@@ -205,22 +205,22 @@ public class ElasticOffenderSearch implements OffenderSearch {
         return pageNumber >= 1 ? pageNumber - 1 : 0;
     }
 
-    private CompletionStage<ObjectNode> embellishNode(String bearerToken, JsonNode node, Map<String, HighlightField> highlightFields) {
+    private CompletionStage<ObjectNode> embellishNode(String bearerToken, String searchTerm, JsonNode node, Map<String, HighlightField> highlightFields) {
         return restrictViewOfOffenderIfNecessary(
                 bearerToken,
-                appendHighlightFields(appendOffendersAge((ObjectNode)node), highlightFields)
+                appendHighlightFields(appendOffendersAge((ObjectNode)node), searchTerm, highlightFields)
         );
     }
 
     private ObjectNode appendOffendersAge(ObjectNode rootNode) {
-        JsonNode dateOfBirth = rootNode.get("dateOfBirth");
+        val dateOfBirth = dateOfBirth(rootNode);
 
         return Optional.ofNullable(dateOfBirth)
-            .map(dob -> rootNode.put("age", calculateAge(dob.asText(), systemUTC())))
+            .map(dob -> rootNode.put("age", calculateAge(dob, systemUTC())))
             .orElse(rootNode);
     }
 
-    private ObjectNode appendHighlightFields(ObjectNode rootNode, Map<String, HighlightField> highlightFields) {
+    private ObjectNode appendHighlightFields(ObjectNode rootNode, String searchTerm, Map<String, HighlightField> highlightFields) {
         val highlightNode = JsonNodeFactory.instance.objectNode();
         highlightFields.forEach((key, value) -> {
             val arrayNode = JsonNodeFactory.instance.arrayNode();
@@ -228,11 +228,32 @@ public class ElasticOffenderSearch implements OffenderSearch {
             highlightNode.set(key, arrayNode);
         });
 
+        if (shouldHighlightDateOfBirth(rootNode, searchTerm)) {
+            val arrayNode = JsonNodeFactory.instance.arrayNode();
+            arrayNode.add(dateOfBirth(rootNode));
+            highlightNode.set("dateOfBirth", arrayNode);
+        }
+
         rootNode.set("highlight", highlightNode);
         return rootNode;
     }
 
-        private CompletionStage<ObjectNode> restrictViewOfOffenderIfNecessary(String bearerToken, ObjectNode rootNode) {
+    private String dateOfBirth(ObjectNode rootNode) {
+        val dateOfBirth = rootNode.get("dateOfBirth");
+        return Optional.ofNullable(dateOfBirth).map(JsonNode::asText).orElse(null);
+    }
+
+    private boolean shouldHighlightDateOfBirth(ObjectNode rootNode, String searchTerm) {
+        val dateOfBirth = dateOfBirth(rootNode);
+
+        return Optional.ofNullable(dateOfBirth).map(dob -> doAnySearchTermsMatchDateOfBirth(searchTerm, dob)).orElse(false);
+    }
+
+    private boolean doAnySearchTermsMatchDateOfBirth(String searchTerm, String dateOfBirth) {
+        return termsThatLookLikeDates(searchTerm).stream().anyMatch(currentDate -> currentDate.equals(dateOfBirth));
+    }
+
+    private CompletionStage<ObjectNode> restrictViewOfOffenderIfNecessary(String bearerToken, ObjectNode rootNode) {
         if (toBoolean(rootNode, "currentExclusion") || toBoolean(rootNode, "currentRestriction")) {
             return offenderApi.canAccess(bearerToken, rootNode.get("offenderId").asLong())
                     .thenApply(canAccess -> canAccess ? rootNode : restrictView(rootNode));
