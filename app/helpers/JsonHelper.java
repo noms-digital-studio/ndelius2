@@ -50,7 +50,7 @@ public interface JsonHelper {
                     mapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class)
             );
         } catch (IOException ex) {
-            Logger.error("Unable to parse json to Map<String, String>. " + json.toString(), ex);
+            Logger.error("Unable to parse json to Map<String, Object>. " + json.toString(), ex);
             return null;
         }
     }

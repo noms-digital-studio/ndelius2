@@ -213,6 +213,36 @@ describe('OffenderSearchSummary component', () => {
             })
         })
     })
+    describe('offender image display', () => {
+        let summary
+        context('has a noms image', () => {
+            beforeEach(() => {
+                const offenderSummary = offender({
+                    oneTimeNomisRef: 'IMAGEREF'
+                })
+                summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+            })
+
+            it('renders image tag with noms image url', () => {
+                expect(summary.find({
+                    src: `offender/oneTimeNomisRef/IMAGEREF/image`
+                }).exists()).to.be.true
+            })
+        })
+        context('has no noms image', () => {
+            beforeEach(() => {
+                const offenderSummary = offender()
+                delete offenderSummary.oneTimeNomisRef
+                summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+            })
+            it('renders image tag with blank image url', () => {
+                expect(summary.find({
+                    src: 'assets/images/NoPhoto@2x.png'
+                }).exists()).to.be.true
+            })
+
+        })
+    })
 })
 
 describe('Address component', () => {

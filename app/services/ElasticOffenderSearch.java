@@ -5,9 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.ImmutableMap;
+import com.typesafe.config.Config;
 import data.offendersearch.OffenderSearchResult;
-import helpers.DateTimeHelper;
-import helpers.FutureListener;
+import helpers.*;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
@@ -23,11 +24,15 @@ import play.Logger;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static helpers.DateTimeHelper.calculateAge;
@@ -43,13 +48,18 @@ import static play.libs.Json.parse;
 
 public class ElasticOffenderSearch implements OffenderSearch {
 
-    private final RestHighLevelClient elasticSearchClient;
     private final OffenderApi offenderApi;
+    private final RestHighLevelClient elasticSearchClient;
+    private final Function<String, String> encrypter;
 
     @Inject
-    public ElasticOffenderSearch(RestHighLevelClient elasticSearchClient, OffenderApi offenderApi) {
+    public ElasticOffenderSearch(Config configuration, RestHighLevelClient elasticSearchClient, OffenderApi offenderApi) {
         this.elasticSearchClient = elasticSearchClient;
         this.offenderApi = offenderApi;
+
+        val paramsSecretKey = configuration.getString("params.secret.key");
+
+        encrypter = plainText -> Encryption.encrypt(plainText, paramsSecretKey);
     }
 
     @Override
@@ -208,8 +218,33 @@ public class ElasticOffenderSearch implements OffenderSearch {
     private CompletionStage<ObjectNode> embellishNode(String bearerToken, String searchTerm, JsonNode node, Map<String, HighlightField> highlightFields) {
         return restrictViewOfOffenderIfNecessary(
                 bearerToken,
-                appendHighlightFields(appendOffendersAge((ObjectNode)node), searchTerm, highlightFields)
+                appendHighlightFields(appendOffendersAgeAndOneTimeNomisRef(bearerToken, (ObjectNode)node), searchTerm, highlightFields)
         );
+    }
+
+    private ObjectNode appendOffendersAgeAndOneTimeNomisRef(String bearerToken, ObjectNode rootNode) {
+
+        val pipeline = new HashMap<Function<ObjectNode, Optional<JsonNode>>, BiFunction<ObjectNode, JsonNode, ObjectNode>>() {
+            {
+                put(
+                        source -> Optional.ofNullable(source.get("dateOfBirth")),
+                        (result, dateOfBirth) -> result.put("age", calculateAge(dateOfBirth.asText(), systemUTC()))
+                );
+                put(
+                        source -> Optional.ofNullable(source.get("otherIds")).flatMap(otherIds -> Optional.ofNullable(otherIds.get("nomsNumber"))),
+//                        source -> Optional.of(JsonNodeFactory.instance.textNode("A3597AE")),
+                        (result, nomsNumber) -> result.put("oneTimeNomisRef", oneTimeNomisRef(bearerToken, nomsNumber.asText()))
+                );
+            }
+        };
+
+        for (val entry : pipeline.entrySet()) {
+
+            val objectNode = rootNode;
+            rootNode = entry.getKey().apply(objectNode).map(jsonNode -> entry.getValue().apply(objectNode, jsonNode)).orElse(rootNode);
+        }
+
+        return rootNode;
     }
 
     private ObjectNode appendOffendersAge(ObjectNode rootNode) {
@@ -219,6 +254,18 @@ public class ElasticOffenderSearch implements OffenderSearch {
             .map(dob -> rootNode.put("age", calculateAge(dob, systemUTC())))
             .orElse(rootNode);
     }
+
+    private String oneTimeNomisRef(String bearerToken, String nomisId) {
+
+        val reference = ImmutableMap.of(                        // Creates a limited-time reference to the nomisId number
+                "user", JwtHelper.principal(bearerToken),   // as a string that can only be used by the same user wthin
+                "noms", nomisId,                            // a limited time frame. This allows safe access to a NomisId
+                "tick", Instant.now().toEpochMilli()        // only by a User that has already had Offender canAccess() checked
+        );
+
+        return encrypter.apply(JsonHelper.stringify(reference));
+    }
+
 
     private ObjectNode appendHighlightFields(ObjectNode rootNode, String searchTerm, Map<String, HighlightField> highlightFields) {
         val highlightNode = JsonNodeFactory.instance.objectNode();

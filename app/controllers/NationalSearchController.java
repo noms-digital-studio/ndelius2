@@ -19,14 +19,12 @@ import play.mvc.Results;
 import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
 
 import static helpers.JwtHelper.principal;
 
@@ -37,11 +35,10 @@ public class NationalSearchController extends Controller {
     private final views.html.nationalSearch template;
     private final OffenderSearch offenderSearch;
     private final Duration userTokenValidDuration;
-    private final String paramsSecretKey;
     private final OffenderApi offenderApi;
     private final AnalyticsStore analyticsStore;
     private final HttpExecutionContext ec;
-
+    private final Function<String, String> decrypter;
 
     @Inject
     public NationalSearchController(
@@ -54,14 +51,17 @@ public class NationalSearchController extends Controller {
         this.template = template;
         this.offenderSearch = offenderSearch;
         this.offenderApi = offenderApi;
-        paramsSecretKey = configuration.getString("params.secret.key");
-        userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
         this.ec = ec;
         this.analyticsStore = analyticsStore;
+
+        userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
+
+        val paramsSecretKey = configuration.getString("params.secret.key");
+        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
     }
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
-        val username = Encryption.decrypt(encryptedUsername, paramsSecretKey);
+        val username = decrypter.apply(encryptedUsername);
         Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
 
         return validate(encryptedUsername, encryptedEpochRequestTimeMills, username)
@@ -95,7 +95,7 @@ public class NationalSearchController extends Controller {
                 }));
     }
 
-    public CompletionStage<Result>  recordSearchOutcome() {
+    public CompletionStage<Result> recordSearchOutcome() {
         analyticsStore.recordEvent(combine(analyticsContext(), JsonHelper.jsonToObjectMap(request().body().asJson())));
         return CompletableFuture.supplyAsync(Results::created);
     }
@@ -106,26 +106,25 @@ public class NationalSearchController extends Controller {
     }
 
     private Optional<CompletionStage<Result>> validate(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {
-        val epochRequestTime = Encryption.decrypt(encryptedEpochRequestTimeMills, paramsSecretKey);
+        val epochRequestTime = decrypter.apply(encryptedEpochRequestTimeMills);
 
         if (username == null || epochRequestTime == null) {
             Logger.error(String.format("Request did not receive user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
             return Optional.of(CompletableFuture.supplyAsync(() -> badRequest("no 'user' or 't' supplied")));
         }
 
-        if (Duration.between(toLocalDateTime(epochRequestTime), LocalDateTime.now()).compareTo(userTokenValidDuration) > 0) {
+        val timeNowInstant = Instant.now();
+        val epochRequestInstant = Instant.ofEpochMilli(Long.valueOf(epochRequestTime));
+
+        if (Math.abs(timeNowInstant.toEpochMilli() - epochRequestInstant.toEpochMilli()) > userTokenValidDuration.toMillis()) {
             Logger.warn(String.format(
                     "Request not authorised because time currently is %s but token time %s",
-                    LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME),
-                    toLocalDateTime(epochRequestTime).format(DateTimeFormatter.ISO_DATE_TIME)));
+                    timeNowInstant.toString(),
+                    epochRequestInstant.toString()));
             return Optional.of(CompletableFuture.supplyAsync(Results::unauthorized));
         }
 
         return Optional.empty();
-    }
-
-    private LocalDateTime toLocalDateTime(String epochRequestTime) {
-        return Instant.ofEpochMilli(Long.valueOf(epochRequestTime)).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
     private Map<String, Object> analyticsContext() {

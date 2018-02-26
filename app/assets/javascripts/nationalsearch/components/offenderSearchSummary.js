@@ -7,48 +7,54 @@ import {matches} from '../../helpers/searchMatcher'
 const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
     <li>
         <div role='group' className='panel panel-border-narrow offender-summary'>
-            <OffenderSummaryTitle {...offenderSummary} tabIndex="1"/>
-            <p className='no-margin bottom'>
-                <span id='crn-label'className='bold'>CRN:&nbsp;</span>
-                <span className='bold margin-right' aria-labelledby="crn-label"><MT text={offenderSummary.otherIds.crn}/></span>
-                {shouldDisplay(searchTerm, offenderSummary.otherIds.pncNumber) &&
-                    <span>
-                        <span id='pncNumber-label' className='bold'>PNC:&nbsp;</span>
-                        <span id='pncNumber' aria-labelledby="pncNumber-label" className='bold margin-right'><MT text={offenderSummary.otherIds.pncNumber}/></span>
+            <div className='offenderTextBlock'>
+                <OffenderSummaryTitle {...offenderSummary} tabIndex="1"/>
+                <p className='no-margin bottom'>
+                    <span id='crn-label'className='bold'>CRN:&nbsp;</span>
+                    <span className='bold margin-right' aria-labelledby="crn-label"><MT text={offenderSummary.otherIds.crn}/></span>
+                    {shouldDisplay(searchTerm, offenderSummary.otherIds.pncNumber) &&
+                        <span>
+                            <span id='pncNumber-label' className='bold'>PNC:&nbsp;</span>
+                            <span id='pncNumber' aria-labelledby="pncNumber-label" className='bold margin-right'><MT text={offenderSummary.otherIds.pncNumber}/></span>
+                        </span>
+                    }
+                    {shouldDisplay(searchTerm, offenderSummary.otherIds.nomsNumber) &&
+                        <span>
+                            <span id='nomsNumber-label' className='bold'>NOMS:&nbsp;</span>
+                            <span id='nomsNumber' aria-labelledby='nomsNumber-label' className='bold margin-right'><MT text={offenderSummary.otherIds.nomsNumber}/></span>
+                        </span>
+                    }
+                    {shouldDisplay(searchTerm, offenderSummary.otherIds.niNumber) &&
+                        <span>
+                            <span id='niNumber-label' className='bold'>NI Number:&nbsp;</span>
+                            <span id='niNumber' aria-labelledby="niNumber-label" className='bold margin-right'><MT text={offenderSummary.otherIds.niNumber}/></span>
+                        </span>
+                    }
+                    {shouldDisplay(searchTerm, offenderSummary.otherIds.croNumber) &&
+                        <span>
+                            <span id='croNumber-label' className='bold'>CRO:&nbsp;</span>
+                            <span id='croNumber' aria-labelledby="croNumber-label" className='bold margin-right'><MT text={offenderSummary.otherIds.croNumber}/></span>
+                        </span>
+                    }
+                    <Risk risk={offenderSummary.offenderProfile.riskColour}/>
+                    <CurrentOffender current={offenderSummary.currentDisposal}/>
+                    <span className='margin-right'>
+                        <span aria-label="Gender"><MT text={offenderSummary.gender}/>,&nbsp;</span>
+                        <span aria-label="Age">{offenderSummary.age}</span>
                     </span>
+                </p>
+                {shouldDisplay(searchTerm, offenderSummary.middleNames) &&
+                    <MiddleNames middleNames={offenderSummary.middleNames}/>
                 }
-                {shouldDisplay(searchTerm, offenderSummary.otherIds.nomsNumber) &&
-                    <span>
-                        <span id='nomsNumber-label' className='bold'>NOMS:&nbsp;</span>
-                        <span id='nomsNumber' aria-labelledby='nomsNumber-label' className='bold margin-right'><MT text={offenderSummary.otherIds.nomsNumber}/></span>
-                    </span>
-                }
-                {shouldDisplay(searchTerm, offenderSummary.otherIds.niNumber) &&
-                    <span>
-                        <span id='niNumber-label' className='bold'>NI Number:&nbsp;</span>
-                        <span id='niNumber' aria-labelledby="niNumber-label" className='bold margin-right'><MT text={offenderSummary.otherIds.niNumber}/></span>
-                    </span>
-                }
-                {shouldDisplay(searchTerm, offenderSummary.otherIds.croNumber) &&
-                    <span>
-                        <span id='croNumber-label' className='bold'>CRO:&nbsp;</span>
-                        <span id='croNumber' aria-labelledby="croNumber-label" className='bold margin-right'><MT text={offenderSummary.otherIds.croNumber}/></span>
-                    </span>
-                }
-                <Risk risk={offenderSummary.offenderProfile.riskColour}/>
-                <CurrentOffender current={offenderSummary.currentDisposal}/>
-                <span className='margin-right'>
-                    <span aria-label="Gender"><MT text={offenderSummary.gender}/>,&nbsp;</span>
-                    <span aria-label="Age">{offenderSummary.age}</span>
-                </span>
-            </p>
-            {shouldDisplay(searchTerm, offenderSummary.middleNames) &&
-                <MiddleNames middleNames={offenderSummary.middleNames}/>
-            }
-            <AliasList aliases={offenderSummary.aliases}/>
-            <PreviousSurname name={offenderSummary.previousSurname}/>
-            <AddressList addresses={offenderSummary.addresses}/>
-            <p><AddContactLink tabIndex="1" firstName={offenderSummary.firstName} surname={offenderSummary.surname} offenderId={offenderSummary.offenderId} rankIndex={offenderSummary.rankIndex}/></p>
+                <AliasList aliases={offenderSummary.aliases}/>
+                <PreviousSurname name={offenderSummary.previousSurname}/>
+                <AddressList addresses={offenderSummary.addresses}/>
+                <p><AddContactLink tabIndex="1" firstName={offenderSummary.firstName} surname={offenderSummary.surname} offenderId={offenderSummary.offenderId} rankIndex={offenderSummary.rankIndex}/></p>
+            </div>
+            <div className='offenderImageContainer'>
+                {offenderSummary.oneTimeNomisRef && <img className="offenderImage" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`}/>}
+                {!offenderSummary.oneTimeNomisRef && <img className="offenderImage" src='assets/images/NoPhoto@2x.png'/>}
+            </div>
         </div>
     </li>
 )

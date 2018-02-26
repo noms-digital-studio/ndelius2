@@ -52,6 +52,22 @@ a.clickable {
 .offender-summary {
   margin-bottom: 40px;
 }
+.offenderTextBlock {
+  float: left;
+}
+
+.offenderImageContainer {
+  float: right;
+  width: 120px;
+  height: 150px;
+  padding: 10px;
+  border: 1px #0b0c0c solid;
+}
+
+.offenderImage {
+  width: 120px;
+  height: 150px;
+}
 
 textarea.form-control {
   border: 2px solid #0b0c0c;

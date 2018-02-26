@@ -1,5 +1,6 @@
 package services;
 
+import com.typesafe.config.ConfigFactory;
 import interfaces.OffenderApi;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class ElasticOffenderSearch_isHealthy_Test {
 
     @Before
     public void setup() {
-        elasticOffenderSearch = new ElasticOffenderSearch(elasticSearchClient, offenderApi);
+        elasticOffenderSearch = new ElasticOffenderSearch(ConfigFactory.load(), elasticSearchClient, offenderApi);
     }
 
     @Test

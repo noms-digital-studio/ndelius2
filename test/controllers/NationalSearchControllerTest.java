@@ -24,6 +24,7 @@ import play.test.WithApplication;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.AbstractMap.SimpleImmutableEntry;
@@ -31,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static helpers.JwtHelperTest.FAKE_USER_BEARKER_TOKEN;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +48,7 @@ import static play.test.Helpers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NationalSearchControllerTest extends WithApplication {
-    private static final int FIFTY_NINE_MINUTES = 1000 * 60 * 59;
+
     private String userTokenValidDuration = "1h";
     private String secretKey;
 
@@ -76,7 +78,7 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void indexPageSessionContainsBearerTokenWhenLogonSucceeds() throws UnsupportedEncodingException {
-        val result = route(app, buildIndexPageRequest());
+        val result = route(app, buildIndexPageRequest(59));
 
         assertThat(result.status()).isEqualTo(OK);
         assertThat(result.session().get("offenderApiBearerToken")).isEqualTo("bearerToken");
@@ -85,7 +87,7 @@ public class NationalSearchControllerTest extends WithApplication {
     @Test
     public void analyticsSearchIndexEventRecordedWhenLogonSucceeds() throws UnsupportedEncodingException {
         when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(FAKE_USER_BEARKER_TOKEN));
-        route(app, buildIndexPageRequest());
+        route(app, buildIndexPageRequest(59));
 
         verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
 
@@ -98,7 +100,7 @@ public class NationalSearchControllerTest extends WithApplication {
     public void returnsServerErrorWhenLogonFails() throws UnsupportedEncodingException {
         when(offenderApi.logon(any())).thenReturn(supplyAsync(() -> { throw new RuntimeException("boom"); }));
 
-        val result = route(app, buildIndexPageRequest());
+        val result = route(app, buildIndexPageRequest(59));
 
         assertThat(result.status()).isEqualTo(INTERNAL_SERVER_ERROR);
     }
@@ -162,8 +164,9 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void validUserAndTimeTokenReturns200Response() throws UnsupportedEncodingException {
+
         val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
-        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(System.currentTimeMillis()), secretKey), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(Instant.now().toEpochMilli()), secretKey), "UTF-8");
 
         val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
         val result = route(app, request);
@@ -173,16 +176,48 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void timeTokenIsALittleBitInTheFutureDueToMachineTimeDriftReturns200Response() throws UnsupportedEncodingException {
-        Http.RequestBuilder request = buildIndexPageRequest();
+        Http.RequestBuilder request = buildIndexPageRequest(59);
         val result = route(app, request);
 
         assertEquals(OK, result.status());
     }
 
     @Test
+    public void timeTokenInFuture30MinsIsOk() throws UnsupportedEncodingException {
+        Http.RequestBuilder request = buildIndexPageRequest(30);
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void timeTokenInPast30MinsIsOk() throws UnsupportedEncodingException {
+        Http.RequestBuilder request = buildIndexPageRequest(-30);
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void timeTokenInFuture61MinsIsError() throws UnsupportedEncodingException {
+        Http.RequestBuilder request = buildIndexPageRequest(61);
+        val result = route(app, request);
+
+        assertEquals(UNAUTHORIZED, result.status());
+    }
+
+    @Test
+    public void timeTokenInPast61MinsIsError() throws UnsupportedEncodingException {
+        Http.RequestBuilder request = buildIndexPageRequest(-61);
+        val result = route(app, request);
+
+        assertEquals(UNAUTHORIZED, result.status());
+    }
+
+    @Test
     public void validUserAndOldTimeTokenReturns401Response() throws UnsupportedEncodingException {
         val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
-        val overAnHourAgo = String.valueOf(LocalDateTime.now().minusMinutes(61).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        val overAnHourAgo = String.valueOf(Instant.now().minus(61, MINUTES).toEpochMilli());
         val encryptedTime = URLEncoder.encode(Encryption.encrypt(overAnHourAgo, secretKey), "UTF-8");
 
         val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
@@ -231,9 +266,10 @@ public class NationalSearchControllerTest extends WithApplication {
 
 
 
-    private Http.RequestBuilder buildIndexPageRequest() throws UnsupportedEncodingException {
+    private Http.RequestBuilder buildIndexPageRequest(int minutesDrift) throws UnsupportedEncodingException {
+
         val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
-        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(System.currentTimeMillis()+ FIFTY_NINE_MINUTES), secretKey), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(Instant.now().toEpochMilli() + (1000 * 60 * minutesDrift)), secretKey), "UTF-8");
 
         return new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
     }

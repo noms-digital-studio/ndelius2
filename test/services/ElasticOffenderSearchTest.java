@@ -2,6 +2,7 @@ package services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
+import com.typesafe.config.ConfigFactory;
 import helpers.FutureListener;
 import interfaces.OffenderApi;
 import lombok.val;
@@ -62,7 +63,7 @@ public class ElasticOffenderSearchTest {
 
     @Before
     public void setup() {
-        elasticOffenderSearch = new ElasticOffenderSearch(restHighLevelClient, offenderApi);
+        elasticOffenderSearch = new ElasticOffenderSearch(ConfigFactory.load(), restHighLevelClient, offenderApi);
         doAnswer(invocation -> {
             val listener = (FutureListener)invocation.getArguments()[1];
             listener.onResponse(searchResponse);

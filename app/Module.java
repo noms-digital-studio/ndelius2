@@ -4,9 +4,7 @@ import injection.*;
 import interfaces.*;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
-import services.AlfrescoStore;
-import services.RestPdfGenerator;
-import services.ElasticOffenderSearch;
+import services.*;
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -26,6 +24,8 @@ public class Module extends AbstractModule {
         bind(PdfGenerator.class).to(RestPdfGenerator.class);
         bind(DocumentStore.class).to(AlfrescoStore.class);
         bind(OffenderSearch.class).to(ElasticOffenderSearch.class);
+        bind(PrisonerApi.class).to(NomisPrisonerApi.class);
+        bind(PrisonerApiToken.class).to(JwtNomisPrisonerApi.class);
 
         bind(OffenderApi.class).toProvider(OffenderApiProvider.class);
         bind(RestClientBuilder.class).toProvider(RestClientBuilderProvider.class);

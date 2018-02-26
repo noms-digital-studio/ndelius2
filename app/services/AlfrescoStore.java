@@ -32,6 +32,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
+import static play.mvc.Http.Status.OK;
+
 public class AlfrescoStore implements DocumentStore {
 
     private final String alfrescoUrl;
@@ -172,7 +174,7 @@ public class AlfrescoStore implements DocumentStore {
             .addHeader("X-DocRepository-Remote-User", alfrescoUser)
             .get()
             .thenApply(wsResponse -> {
-                if (wsResponse.getStatus() != 200) {
+                if (wsResponse.getStatus() != OK) {
                     Logger.warn("Error calling Alfresco. Status {}", wsResponse.getStatus());
                     return false;
                 }
