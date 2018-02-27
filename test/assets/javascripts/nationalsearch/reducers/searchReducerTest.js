@@ -234,7 +234,7 @@ describe("searchReducer", () => {
                 })
             })
         })
-        describe("address filtering", () => {
+        describe("address copying", () => {
             context('no contact details', () => {
                 beforeEach(() => {
                     const results = someResults()
@@ -248,38 +248,7 @@ describe("searchReducer", () => {
                     expect(state.results[0].addresses).to.have.lengthOf(0)
                 });
             })
-            context("searchTerm has no matches in address", () => {
-                beforeEach(() => {
-                    state = search(
-                        {searchTerm: 'Mr Bean', results: someResults(), total: 0, pageNumber: 1},
-                        {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: someSingleResultWithAddresses([
-                                {
-                                    addressNumber: '1',
-                                    streetName: 'High Street',
-                                    town: 'Sheffield',
-                                    postcode: 'S1 2BX'
-                                },
-                                {
-                                    addressNumber: '1',
-                                    streetName: 'Sheffield Road',
-                                    town: 'Leeds',
-                                    postcode: 'LS1 2BX'
-                                },
-                                {
-                                    addressNumber: '1',
-                                    streetName: 'Ticky Street',
-                                    town: 'London',
-                                    postcode: 'SW11 2BX'
-
-                                }
-                            ])})
-                })
-
-                it('all addresses are filtered out', () => {
-                    expect(state.results[0].addresses).to.have.lengthOf(0)
-                });
-            })
-            context("searchTerm has some matches in address", () => {
+            context("with contact details", () => {
                 beforeEach(() => {
                     state = search(
                         {searchTerm: 'Mr Bean sheffield', results: someResults(), total: 0, pageNumber: 1},
@@ -308,10 +277,10 @@ describe("searchReducer", () => {
                             ])})
                 })
 
-                it('non matching addresses are filtered out', () => {
-                    expect(state.results[0].addresses).to.have.lengthOf(2)
+                it('all addresses are copied', () => {
+                    expect(state.results[0].addresses).to.have.lengthOf(3)
                 });
-                it('all addresses attributes copied from matching address', () => {
+                it('all addresses attributes copied from address', () => {
                     expect(state.results[0].addresses[0].buildingName).to.equal('Sloppy Buildings')
                     expect(state.results[0].addresses[0].addressNumber).to.equal('1')
                     expect(state.results[0].addresses[0].streetName).to.equal('High Street')
@@ -320,37 +289,8 @@ describe("searchReducer", () => {
                     expect(state.results[0].addresses[0].postcode).to.equal('S1 2BX')
                 });
             })
-            context("searchTerm only has matches for fields in the address that are not searched on", () => {
-                beforeEach(() => {
-                    state = search(
-                        {searchTerm: 'sheffield 2000-02-08 2002-12-23', results: someResults(), total: 0, pageNumber: 1},
-                        {type: SEARCH_RESULTS, searchTerm: 'sheffield 2000-02-08 2002-12-23', results: someSingleResultWithAddresses([
-                                {
-                                    buildingName: 'Some Buildings',
-                                    addressNumber: '1',
-                                    streetName: 'High Street',
-                                    town: 'York',
-                                    county: 'South Yorkshire',
-                                    postcode: 'S1 2BX',
-                                    from: "2000-02-08",
-                                },
-                                {
-                                    addressNumber: '1',
-                                    streetName: 'London Road',
-                                    town: 'Leeds',
-                                    postcode: 'LS1 2BX',
-                                    from: "2002-12-23",
-                                }
-                            ])})
-                })
-
-                it('filters out all the addresses', () => {
-                    expect(state.results[0].addresses).to.have.lengthOf(0)
-                });
-            })
-
         })
-        describe("alias filtering", () => {
+        describe("alias copying", () => {
             context('no aliases', () => {
                 beforeEach(() => {
                     const results = someResults()
@@ -365,31 +305,7 @@ describe("searchReducer", () => {
                 });
             })
 
-            context("searchTerm has no matches in alias", () => {
-                beforeEach(() => {
-                    state = search(
-                        {searchTerm: 'Trevor', results: someResults(), total: 0, pageNumber: 1},
-                        {type: SEARCH_RESULTS, searchTerm: 'Trevor', results: someSingleResultWithAliases([
-                                {
-                                    firstName: 'Bean',
-                                    surname: 'Bland',
-                                },
-                                {
-                                    firstName: 'Bobby',
-                                    surname: 'Bean',
-                                },
-                                {
-                                    firstName: 'Tommy',
-                                    surname: 'Tibbs',
-                                }
-                            ])})
-                })
-
-                it('all aliases are filtered out', () => {
-                    expect(state.results[0].aliases).to.have.lengthOf(0)
-                });
-            })
-            context("searchTerm has some matches in alias", () => {
+            context("aliases present", () => {
                 beforeEach(() => {
                     state = search(
                         {searchTerm: 'bean', results: someResults(), total: 0, pageNumber: 1},
@@ -409,49 +325,16 @@ describe("searchReducer", () => {
                             ])})
                 })
 
-                it('non matching aliases are filtered out', () => {
-                    expect(state.results[0].aliases).to.have.lengthOf(2)
+                it('all aliases copied', () => {
+                    expect(state.results[0].aliases).to.have.lengthOf(3)
                 });
-                it('all aliases attributes copied from matching alias', () => {
+                it('all aliases attributes copied from alias', () => {
                     expect(state.results[0].aliases[0].firstName).to.equal('Bean')
                     expect(state.results[0].aliases[0].surname).to.equal('Bland')
                 });
             })
-            context("searchTerm only has matches for fields in the alias that are not searched on", () => {
-                beforeEach(() => {
-                    state = search(
-                        {searchTerm: 'smith 1955-02-17 male', results: someResults(), total: 0, pageNumber: 1},
-                        {type: SEARCH_RESULTS, searchTerm: 'smith 1955-02-17 male', results: someSingleResultWithAliases([
-                                {
-                                    dateOfBirth: "1955-02-17",
-                                    surname: 'Jones',
-                                    gender: 'Female',
-                                },
-                                {
-                                    dateOfBirth: "1960-03-17",
-                                    surname: 'Moore',
-                                    gender:  'Male',
-                                }
-                            ])})
-                })
-
-                it('filters out all the aliases', () => {
-                    expect(state.results[0].aliases).to.have.lengthOf(0)
-                });
-            })
         })
         describe("previous surname filtering", () => {
-            context("searchTerm has no matches in previous surname", () => {
-                beforeEach(() => {
-                    state = search(
-                        {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
-                        {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someSingleResultWithPreviousSurname('Bobby')})
-                })
-
-                it('previous surname is set to null', () => {
-                    expect(state.results[0].previousSurname).to.equal(null);
-                });
-            })
             context("previous surname not present in results", () => {
                 beforeEach(() => {
                     state = search(
@@ -459,11 +342,11 @@ describe("searchReducer", () => {
                         {type: SEARCH_RESULTS, searchTerm: 'trevor', results: someSingleResultWithPreviousSurname()})
                 })
 
-                it('previous surname is set to null', () => {
-                    expect(state.results[0].previousSurname).to.equal(null);
+                it('previous surname remains undefined', () => {
+                    expect(state.results[0].previousSurname).to.be.undefined;
                 });
             })
-            context("searchTerm has some matches in previous surname", () => {
+            context("previous surname in results", () => {
                 beforeEach(() => {
                     state = search(
                         {searchTerm: 'trevor', results: someResults(), total: 0, pageNumber: 1},
@@ -844,7 +727,6 @@ const someSingleResultWithAliases = aliases => {
     const results = someResults();
     results.offenders = [results.offenders[0]];
     results.offenders[0].offenderAliases = aliases;
-    console.log('YYYY ' + JSON.stringify(results))
     return results;
 }
 

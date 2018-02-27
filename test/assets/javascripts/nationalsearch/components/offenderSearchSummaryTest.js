@@ -7,15 +7,40 @@ import {offender} from '../test-helper'
 describe('OffenderSearchSummary component', () => {
     it('should render offender summary elements', () => {
 
-        const offenderSummary = offender()
+        const offenderSummary = offender({
+            highlight: {
+                "middleNames" : [ "Bobby", "Jim" ],
+                "previousSurnames" : [ "Bobby"],
+                "offenderAliases.surname" : [ "Marke" ],
+                "contactDetails.addresses.postcode" : [ "LE2 2PJ" ],
+                "contactDetails.addresses.streetName" : [ "London Rd" ],
+                "contactDetails.addresses.town" : [ "Leicester" ],
+                "contactDetails.addresses.county" : [ "Leicestershire" ]
+            }
+        })
         const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Mr Bean'}/>)
 
-        expect(summary.find('Connect(OffenderSummaryTitle)')).to.have.length(1)
-        expect(summary.find('CurrentOffender')).to.have.length(1)
-        expect(summary.find('AliasList')).to.have.length(1)
-        expect(summary.find('PreviousSurname')).to.have.length(1)
-        expect(summary.find('AddressList')).to.have.length(1)
-        expect(summary.find('Connect(AddContactLink)')).to.have.length(1)
+        expect(summary.find('Connect(OffenderSummaryTitle)').exists()).to.be.true
+        expect(summary.find('CurrentOffender').exists()).to.be.true
+        expect(summary.find('AliasList').exists()).to.be.true
+        expect(summary.find('PreviousSurname').exists()).to.be.true
+        expect(summary.find('AddressList').exists()).to.be.true
+        expect(summary.find('Connect(AddContactLink)').exists()).to.be.true
+    })
+    it('should not render optional offender summary elements when not flagged as highlighted', () => {
+
+        const offenderSummary = offender({
+            highlight: {
+            }
+        })
+        const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Mr Bean'}/>)
+
+        expect(summary.find('Connect(OffenderSummaryTitle)').exists()).to.be.true
+        expect(summary.find('CurrentOffender').exists()).to.be.true
+        expect(summary.find('AliasList').exists()).to.be.false
+        expect(summary.find('PreviousSurname').exists()).to.be.false
+        expect(summary.find('AddressList').exists()).to.be.false
+        expect(summary.find('Connect(AddContactLink)').exists()).to.be.true
     })
     describe('pnc display', () => {
         context('pnc present and matches a search term', () => {
@@ -24,6 +49,9 @@ describe('OffenderSearchSummary component', () => {
                     otherIds: {
                         crn: 'X1234',
                         pncNumber: '1965/1234567X'
+                    },
+                    highlight: {
+                        "otherIds.pncNumber" : [ "1965/1234567X" ]
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 1965/1234567X'}/>)
@@ -38,6 +66,8 @@ describe('OffenderSearchSummary component', () => {
                     otherIds: {
                         crn: 'X1234',
                         pncNumber: '1965/1234567X'
+                    },
+                    highlight: {
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
@@ -50,6 +80,8 @@ describe('OffenderSearchSummary component', () => {
                 const offenderSummary = offender({
                     otherIds: {
                         crn: 'X1234'
+                    },
+                    highlight: {
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 1965/1234567X'}/>)
@@ -65,6 +97,9 @@ describe('OffenderSearchSummary component', () => {
                     otherIds: {
                         crn: 'X1234',
                         nomsNumber: 'A1234AA'
+                    },
+                    highlight: {
+                        "otherIds.nomsNumber" : [ "A1234AA" ]
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith A1234AA'}/>)
@@ -79,6 +114,8 @@ describe('OffenderSearchSummary component', () => {
                     otherIds: {
                         crn: 'X1234',
                         nomsNumber: 'A1234AA'
+                    },
+                    highlight: {
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
@@ -91,6 +128,8 @@ describe('OffenderSearchSummary component', () => {
                 const offenderSummary = offender({
                     otherIds: {
                         crn: 'X1234'
+                    },
+                    highlight: {
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith A1234AA'}/>)
@@ -106,6 +145,9 @@ describe('OffenderSearchSummary component', () => {
                     otherIds: {
                         crn: 'X1234',
                         niNumber: 'NE998877A'
+                    },
+                    highlight: {
+                        "otherIds.niNumber" : [ "NE998877A" ]
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith NE998877A'}/>)
@@ -120,6 +162,8 @@ describe('OffenderSearchSummary component', () => {
                     otherIds: {
                         crn: 'X1234',
                         niNumber: 'NE998877A'
+                    },
+                    highlight: {
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
@@ -132,6 +176,8 @@ describe('OffenderSearchSummary component', () => {
                 const offenderSummary = offender({
                     otherIds: {
                         crn: 'X1234'
+                    },
+                    highlight: {
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith NE998877A'}/>)
@@ -147,6 +193,9 @@ describe('OffenderSearchSummary component', () => {
                     otherIds: {
                         crn: 'X1234',
                         croNumber: '123456/12A'
+                    },
+                    highlight: {
+                        "otherIds.croNumber" : [ "123456/12A" ]
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 123456/12A'}/>)
@@ -161,6 +210,8 @@ describe('OffenderSearchSummary component', () => {
                     otherIds: {
                         crn: 'X1234',
                         croNumber: '123456/12A'
+                    },
+                    highlight: {
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
@@ -173,6 +224,8 @@ describe('OffenderSearchSummary component', () => {
                 const offenderSummary = offender({
                     otherIds: {
                         crn: 'X1234'
+                    },
+                    highlight: {
                     }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 123456/12A'}/>)
@@ -185,7 +238,10 @@ describe('OffenderSearchSummary component', () => {
         context('Middle names present and matches a search term', () => {
             it('Middle names are displayed', () => {
                 const offenderSummary = offender({
-                    middleNames: ['Bob Jon']
+                    middleNames: ['Bob Jon'],
+                    highlight: {
+                        "middleNames" : [ "Bob" ]
+                    }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Jon'}/>)
 
@@ -195,7 +251,9 @@ describe('OffenderSearchSummary component', () => {
         context('Middle names present and does not match a search term', () => {
             it('Middle names not displayed', () => {
                 const offenderSummary = offender({
-                    middleNames: ['Bob Jon']
+                    middleNames: ['Bob Jon'],
+                    highlight: {
+                    }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
 
@@ -205,7 +263,9 @@ describe('OffenderSearchSummary component', () => {
         context('Middle names not present', () => {
             it('Middle names not displayed', () => {
                 const offenderSummary = offender({
-                    middleNames: []
+                    middleNames: [],
+                    highlight: {
+                    }
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
 

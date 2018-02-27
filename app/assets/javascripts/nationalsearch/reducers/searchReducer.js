@@ -1,6 +1,5 @@
 import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
-import {matches} from '../../helpers/searchMatcher'
 
 const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], total: 0, pageNumber: 1, firstTimeIn: true}, action) => {
     switch (action.type) {
@@ -50,13 +49,12 @@ const mapResults = (results = [], searchTerm, pageNumber) =>
                 return {
                     ...alias
                 }
-            }).filter(item => anyMatch(item, searchTerm)),
-            previousSurname: whenMatched(offenderDetails.previousSurname, searchTerm),
+            }),
             addresses: offenderAddressesWithUnwantedFieldsRemoved(offenderDetails).map((address) => {
                 return {
                     ...address
                 }
-            }).filter(item => anyMatch(item, searchTerm))}
+            })}
         )
     )
 
@@ -85,17 +83,9 @@ const mapSuggestions = suggestions => {
     return []
 }
 
-const anyMatch = (item, searchTerm) =>
-    Object.getOwnPropertyNames(item)
-        .map(property => item[property])
-        .map(text => matches(text, searchTerm))
-        .reduce((accumulator, currentValue) => accumulator || currentValue, false)
-
 const removeFields = (object, fieldsToRemove) => {
     fieldsToRemove.forEach(field => delete object[field])
     return object
 }
-
-const whenMatched = (text, searchTerm) => matches(text, searchTerm) ? text : null
 
 const areSearchResultsStillRelevant = (state, action) => state.searchTerm.indexOf(action.searchTerm) > -1
