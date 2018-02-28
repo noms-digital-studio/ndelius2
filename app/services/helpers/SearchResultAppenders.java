@@ -45,7 +45,7 @@ public class SearchResultAppenders {
         return Optional.ofNullable(dateOfBirth).map(JsonNode::asText).orElse(null);
     }
 
-    public static  ObjectNode appendHighlightFields(ObjectNode rootNode, String searchTerm, Map<String, HighlightField> highlightFields) {
+    public static ObjectNode appendHighlightFields(ObjectNode rootNode, String searchTerm, Map<String, HighlightField> highlightFields) {
         val highlightNode = JsonNodeFactory.instance.objectNode();
         highlightFields.forEach((key, value) -> {
             val arrayNode = JsonNodeFactory.instance.arrayNode();
