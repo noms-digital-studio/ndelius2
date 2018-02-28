@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Environment;
 import play.Mode;
-import scala.io.Source;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static scala.io.Source.fromInputStream;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ElasticOffenderSearchTest {
@@ -127,6 +127,7 @@ public class ElasticOffenderSearchTest {
         assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
         assertThat(termQueryBuilder.value()).isEqualTo(false);
     }
+
     @Test
     public void unifiedHighlighterIsRequested() {
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
@@ -142,7 +143,6 @@ public class ElasticOffenderSearchTest {
 
     @Test
     public void returnsSearchResults() {
-
         // given
         val totalHits = 1;
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), totalHits, 42));
@@ -156,6 +156,25 @@ public class ElasticOffenderSearchTest {
         assertThat(result.getOffenders().size()).isEqualTo(totalHits);
         assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(123);
         assertThat(result.getOffenders().get(0).get("age").asInt()).isNotEqualTo(0);
+    }
+
+    @Test
+    public void returnsSearchResultsGroupingMatchingNamesAndCurrentOffendersAtTheTop() {
+        // given
+        val totalHits = 4;
+        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithMultipleHits(), totalHits, 42));
+
+        // when
+        val results = elasticOffenderSearch.search("bearer-token","smith", 10, 3);
+
+        // then
+        val result = results.toCompletableFuture().join();
+        assertThat(result.getTotal()).isEqualTo(totalHits);
+        assertThat(result.getOffenders().size()).isEqualTo(totalHits);
+        assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(102);
+        assertThat(result.getOffenders().get(1).get("offenderId").asInt()).isEqualTo(100);
+        assertThat(result.getOffenders().get(2).get("offenderId").asInt()).isEqualTo(103);
+        assertThat(result.getOffenders().get(3).get("offenderId").asInt()).isEqualTo(101);
     }
 
     @Test
@@ -332,7 +351,7 @@ public class ElasticOffenderSearchTest {
     }
 
     @Test
-    public void offendersWhichAreRestructedViewHaveOffenderIdAndCrnInTheClear() {
+    public void offendersWhichAreRestrictedViewHaveOffenderIdAndCrnInTheClear() {
         when(offenderApi.canAccess("bearer-token", 13)).thenReturn(CompletableFuture.completedFuture(false));
 
         // given
@@ -356,6 +375,44 @@ public class ElasticOffenderSearchTest {
         return getSearchHitArray(ImmutableMap.of("offenderId", 123, "crn", "X1224", "currentRestriction", false, "currentExclusion", false));
     }
 
+    private SearchHit[] getSearchHitArrayWithMultipleHits() {
+        return getSearchHitArray(
+            ImmutableMap.<String, Object>builder()
+                .put("offenderId", 100)
+                .put("firstName", "john")
+                .put("surname", "smith")
+                .put("crn", "X0001")
+                .put("currentRestriction", false)
+                .put("currentExclusion", false)
+                .build(),
+            ImmutableMap.<String, Object>builder()
+                .put("offenderId", 101)
+                .put("firstName", "fred")
+                .put("surname", "Jones")
+                .put("crn", "X0002")
+                .put("currentRestriction", false)
+                .put("currentExclusion", false)
+                .build(),
+            ImmutableMap.<String, Object>builder()
+                .put("offenderId", 102)
+                .put("firstName", "JOHN")
+                .put("surname", "smith")
+                .put("crn", "X0003")
+                .put("currentRestriction", false)
+                .put("currentExclusion", false)
+                .put("currentDisposal", "1")
+                .build(),
+            ImmutableMap.<String, Object>builder()
+                .put("offenderId", 103)
+                .put("firstName", "john")
+                .put("surname", "SMITH")
+                .put("crn", "X0003")
+                .put("currentRestriction", false)
+                .put("currentExclusion", false)
+                .build()
+        );
+    }
+
     private List<String> getChildNodeNames(JsonNode node) {
         val iterator = node.fieldNames();
         return  StreamSupport.stream(((Iterable<String>) () -> iterator).spliterator(), false).collect(toList());
@@ -363,19 +420,22 @@ public class ElasticOffenderSearchTest {
 
     @SafeVarargs
     private final SearchHit[] getSearchHitArrayWithHighlights(Map<String, HighlightField> highlightFields, Map<String, Object>... replacements) {
-        return stream(replacements).map((replacement) -> toSearchHit(highlightFields, replacement)).collect(toList()).toArray(new SearchHit[replacements.length]);
+        return stream(replacements).map((replacement) -> toSearchHit(highlightFields, replacement))
+            .collect(toList()).toArray(new SearchHit[replacements.length]);
     }
 
     @SafeVarargs
     private final SearchHit[] getSearchHitArray(Map<String, Object>... replacements) {
-        return stream(replacements).map((replacement) -> toSearchHit(ImmutableMap.of(), replacement)).collect(toList()).toArray(new SearchHit[replacements.length]);
+        return stream(replacements).map((replacement) -> toSearchHit(ImmutableMap.of(), replacement))
+            .collect(toList()).toArray(new SearchHit[replacements.length]);
     }
 
     private SearchHit toSearchHit(Map<String, HighlightField> highlightFields, Map<String, Object> replacementMap) {
         val searchHitMap = new HashMap<String, Object>();
         val environment = new Environment(null, this.getClass().getClassLoader(), Mode.TEST);
 
-        val offenderSearchResultsTemplate = Source.fromInputStream(environment.resourceAsStream("offender-search-result.json.template"), "UTF-8").mkString();
+        val offenderSearchResultsTemplate =
+            fromInputStream(environment.resourceAsStream("offender-search-result.json.template"), "UTF-8").mkString();
 
         val offenderSearchResults =
                 withDefaults(replacementMap).
@@ -393,9 +453,29 @@ public class ElasticOffenderSearchTest {
 
     private Map<String, Object> withDefaults(Map<String, Object> replacementMap) {
         if (!replacementMap.containsKey("dateOfBirth")) {
-            return ImmutableMap.<String, Object>builder().putAll(replacementMap).put("dateOfBirth", "1978-01-16").build();
+            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
+                .put("dateOfBirth", "1978-01-16")
+                .build();
         }
+
+        if (!replacementMap.containsKey("firstName")) {
+            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
+                .put("firstName", "firstName")
+                .build();
+        }
+
+        if (!replacementMap.containsKey("surname")) {
+            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
+                .put("surname", "surname")
+                .build();
+        }
+
+        if (!replacementMap.containsKey("currentDisposal")) {
+            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
+                .put("currentDisposal", "0")
+                .build();
+        }
+
         return replacementMap;
     }
-
 }

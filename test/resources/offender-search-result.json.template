@@ -13,15 +13,15 @@
   },
 
   "title": "string",
-  "firstName": "string",
+  "firstName": "${firstName}",
   "middleNames": ["Fred", "Bill"],
-  "surname": "string",
+  "surname": "${surname}",
   "previousSurnames": [ "string" ],
 
   "dateOfBirth": "${dateOfBirth}",
   "gender": "string",
 
-  "currentDisposal": "something",
+  "currentDisposal": "${currentDisposal}",
   "partitionArea": "some name",
   "currentRestriction": ${currentRestriction},
   "currentExclusion": ${currentExclusion},
