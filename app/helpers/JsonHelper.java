@@ -3,6 +3,9 @@ package helpers;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.val;
 import play.Logger;
 import play.libs.Json;
@@ -77,4 +80,10 @@ public interface JsonHelper {
 
         return Json.fromJson(Json.parse(json), clazz);
     }
+
+    static Boolean toBoolean(ObjectNode rootNode, String nodeName) {
+        return Optional.ofNullable(rootNode.get(nodeName))
+            .map(JsonNode::asBoolean).orElse(false);
+    }
+
 }

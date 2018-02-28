@@ -260,23 +260,6 @@ public class ElasticOffenderSearchTest {
     }
 
     @Test
-    public void calculatesTheCorrectSearchSourceFromValueWhenPageNumberIsZero() {
-
-        // given
-        val searchHits = getSearchHitArray();
-        when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
-        // when
-        val results = elasticOffenderSearch.search("bearer-token","smith", 10, 0);
-
-        // then
-        val result = results.toCompletableFuture().join();
-        assertThat(result.getTotal()).isEqualTo(searchHits.length);
-        assertThat(result.getOffenders().size()).isEqualTo(searchHits.length);
-        assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(123);
-        assertThat(result.getOffenders().get(0).get("age").asInt()).isNotEqualTo(0);
-    }
-
-    @Test
     public void userAccessIsNotCheckedIfNoRecordsAreExcludedOrRestricted() {
         // given
         val searchHits = getSearchHitArray(
