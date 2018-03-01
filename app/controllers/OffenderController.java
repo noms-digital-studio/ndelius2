@@ -63,13 +63,13 @@ public class OffenderController extends Controller {
                 orElseGet(() -> {
 
                     Logger.warn("Invalid OneTimeNomisRef: {}", oneTimeNomisRef);
-                    return CompletableFuture.completedFuture(unauthorized(noPhotoImage(environment)));
+                    return CompletableFuture.completedFuture(ok(noPhotoImage(environment)));
 
                 }).
                 exceptionally(throwable -> {
 
                     Logger.error("Failed to get Nomis Image", throwable);
-                    return internalServerError(noPhotoImage(environment));
+                    return ok(noPhotoImage(environment));
                 });
     }
 }
