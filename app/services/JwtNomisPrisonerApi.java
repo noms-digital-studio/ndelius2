@@ -7,6 +7,7 @@ import interfaces.PrisonerApiToken;
 import lombok.val;
 import pdi.jwt.Jwt;
 import pdi.jwt.JwtAlgorithm;
+import play.Logger;
 
 import javax.inject.Inject;
 import java.time.Instant;
@@ -31,6 +32,11 @@ public class JwtNomisPrisonerApi implements PrisonerApiToken {
                 "token", payloadToken
         );
 
-        return Jwt.encode(JsonHelper.stringify(claim), privateKey, JwtAlgorithm.ES256$.MODULE$);
+        try {
+            return Jwt.encode(JsonHelper.stringify(claim), privateKey, JwtAlgorithm.ES256$.MODULE$);
+        } catch (Exception e) {
+            Logger.error("Failed generate JWT token", e);
+            return null;
+        }
     }
 }

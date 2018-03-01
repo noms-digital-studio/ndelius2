@@ -57,7 +57,7 @@ public class NomisPrisonerApi implements PrisonerApi {
                     if (Strings.isNullOrEmpty(base64)) {
 
                         Logger.warn("Empty Image Base64 text for Nomis Id: {}", nomisId);
-                        return null;
+                        throw new RuntimeException("No NOMIS image retrieved");
                     }
                     else {
                         return  Base64.getDecoder().decode(base64);

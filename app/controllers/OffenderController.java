@@ -6,6 +6,7 @@ import helpers.Encryption;
 import helpers.JsonHelper;
 import interfaces.PrisonerApi;
 import lombok.val;
+import play.Environment;
 import play.Logger;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -19,18 +20,22 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
 import static helpers.JwtHelper.principal;
+import static helpers.StaticImage.noPhotoImage;
 
 public class OffenderController extends Controller {
 
     private final PrisonerApi prisonerApi;
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
+    private final Environment environment;
+
 
     @Inject
-    public OffenderController(Config configuration, PrisonerApi prisonerApi, HttpExecutionContext ec) {
+    public OffenderController(Config configuration, PrisonerApi prisonerApi, HttpExecutionContext ec, Environment environment) {
 
         this.ec = ec;
         this.prisonerApi = prisonerApi;
+        this.environment = environment;
 
         val paramsSecretKey = configuration.getString("params.secret.key");
 
@@ -58,13 +63,13 @@ public class OffenderController extends Controller {
                 orElseGet(() -> {
 
                     Logger.warn("Invalid OneTimeNomisRef: {}", oneTimeNomisRef);
-                    return CompletableFuture.completedFuture(unauthorized());
+                    return CompletableFuture.completedFuture(unauthorized(noPhotoImage(environment)));
 
                 }).
                 exceptionally(throwable -> {
 
                     Logger.error("Failed to get Nomis Image", throwable);
-                    return internalServerError();
+                    return internalServerError(noPhotoImage(environment));
                 });
     }
 }
