@@ -82,8 +82,7 @@ public interface JsonHelper {
     }
 
     static Boolean toBoolean(ObjectNode rootNode, String nodeName) {
-        return Optional.ofNullable(rootNode.get(nodeName))
-            .map(JsonNode::asBoolean).orElse(false);
-    }
 
+        return Optional.ofNullable(rootNode.get(nodeName)).map(JsonNode::asBoolean).orElse(false);
+    }
 }

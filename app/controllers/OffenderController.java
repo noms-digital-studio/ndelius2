@@ -73,5 +73,3 @@ public class OffenderController extends Controller {
                 });
     }
 }
-
-// Just need config in preProd and possibly the local dns of dnt-001/2 etc.

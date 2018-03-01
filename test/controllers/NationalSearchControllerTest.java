@@ -1,9 +1,8 @@
 package controllers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import data.offendersearch.OffenderSearchResult;
 import helpers.Encryption;
-import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
@@ -66,8 +65,13 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Before
     public void setUp() {
+
         when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture("bearerToken"));
-        when(elasticOffenderSearch.search(any(), any(), anyInt(), anyInt())).thenReturn(completedFuture(OffenderSearchResult.builder().build()));
+        when(elasticOffenderSearch.search(any(), any(), anyInt(), anyInt())).thenReturn(completedFuture(ImmutableMap.of(
+                "offenders", ImmutableList.of(),
+                "suggestions", ImmutableList.of(),
+                "total", 0
+        )));
         secretKey = "ThisIsASecretKey";
     }
 
@@ -114,7 +118,7 @@ public class NationalSearchControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertEquals("{\"offenders\":null,\"suggestions\":null,\"total\":0}", contentAsString(result));
+        assertEquals("{\"offenders\":[],\"suggestions\":[],\"total\":0}", contentAsString(result));
     }
 
     @Test
@@ -133,7 +137,7 @@ public class NationalSearchControllerTest extends WithApplication {
 
         assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
         assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("type", "search-results"));
-        assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("total", 0L));
+        assertEquals(0, analyticsEventCaptor.getAllValues().get(1).get("total"));
         assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("correlationId", "999-aaa-888"));
 
     }

@@ -152,10 +152,10 @@ public class ElasticOffenderSearchTest {
 
         // then
         val result = results.toCompletableFuture().join();
-        assertThat(result.getTotal()).isEqualTo(totalHits);
-        assertThat(result.getOffenders().size()).isEqualTo(totalHits);
-        assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(123);
-        assertThat(result.getOffenders().get(0).get("age").asInt()).isNotEqualTo(0);
+        assertThat(Long.valueOf(result.get("total").toString())).isEqualTo(totalHits);
+        assertThat(((List) result.get("offenders")).size()).isEqualTo(totalHits);
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("offenderId").asInt()).isEqualTo(123);
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("age").asInt()).isNotEqualTo(0);
     }
 
     @Test
@@ -169,12 +169,12 @@ public class ElasticOffenderSearchTest {
 
         // then
         val result = results.toCompletableFuture().join();
-        assertThat(result.getTotal()).isEqualTo(totalHits);
-        assertThat(result.getOffenders().size()).isEqualTo(totalHits);
-        assertThat(result.getOffenders().get(0).get("offenderId").asInt()).isEqualTo(102);
-        assertThat(result.getOffenders().get(1).get("offenderId").asInt()).isEqualTo(100);
-        assertThat(result.getOffenders().get(2).get("offenderId").asInt()).isEqualTo(103);
-        assertThat(result.getOffenders().get(3).get("offenderId").asInt()).isEqualTo(101);
+        assertThat(Long.valueOf(result.get("total").toString())).isEqualTo(totalHits);
+        assertThat(((List) result.get("offenders")).size()).isEqualTo(totalHits);
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("offenderId").asInt()).isEqualTo(102);
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(1)).get("offenderId").asInt()).isEqualTo(100);
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(2)).get("offenderId").asInt()).isEqualTo(103);
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(3)).get("offenderId").asInt()).isEqualTo(101);
     }
 
     @Test
@@ -194,12 +194,12 @@ public class ElasticOffenderSearchTest {
 
         // then
         val result = results.toCompletableFuture().join();
-        assertThat(result.getOffenders().get(0).get("highlight")).isNotNull();
-        assertThat(result.getOffenders().get(0).get("highlight").get("forename")).isNotNull();
-        assertThat(result.getOffenders().get(0).get("highlight").get("forename").get(0).asText()).isEqualTo("bob");
-        assertThat(result.getOffenders().get(0).get("highlight").get("surname")).isNotNull();
-        assertThat(result.getOffenders().get(0).get("highlight").get("surname").get(0).asText()).isEqualTo("smith");
-        assertThat(result.getOffenders().get(0).get("highlight").get("surname").get(1).asText()).isEqualTo("smithy");
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight")).isNotNull();
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight").get("forename")).isNotNull();
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight").get("forename").get(0).asText()).isEqualTo("bob");
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight").get("surname")).isNotNull();
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight").get("surname").get(0).asText()).isEqualTo("smith");
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight").get("surname").get(1).asText()).isEqualTo("smithy");
     }
 
     @Test
@@ -216,9 +216,9 @@ public class ElasticOffenderSearchTest {
 
         // then
         val result = results.toCompletableFuture().join();
-        assertThat(result.getOffenders().get(0).get("highlight")).isNotNull();
-        assertThat(result.getOffenders().get(0).get("highlight").get("dateOfBirth")).isNotNull();
-        assertThat(result.getOffenders().get(0).get("highlight").get("dateOfBirth").get(0).asText()).isEqualTo("1965-07-19");
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight")).isNotNull();
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight").get("dateOfBirth")).isNotNull();
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight").get("dateOfBirth").get(0).asText()).isEqualTo("1965-07-19");
     }
 
     @Test
@@ -235,8 +235,8 @@ public class ElasticOffenderSearchTest {
 
         // then
         val result = results.toCompletableFuture().join();
-        assertThat(result.getOffenders().get(0).get("highlight")).isNotNull();
-        assertThat(result.getOffenders().get(0).get("highlight").get("dateOfBirth")).isNull();
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight")).isNotNull();
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight").get("dateOfBirth")).isNull();
     }
 
     @Test
@@ -256,7 +256,7 @@ public class ElasticOffenderSearchTest {
 
         // then
         val result = results.toCompletableFuture().join();
-        assertThat(result.getOffenders().get(0).get("highlight")).isNull();
+        assertThat(((JsonNode) ((List) result.get("offenders")).get(0)).get("highlight")).isNull();
     }
 
     @Test
@@ -307,9 +307,9 @@ public class ElasticOffenderSearchTest {
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
         // when
         val searchResult = elasticOffenderSearch.search("bearer-token", "smith", 10, 0).toCompletableFuture().join();
-        val allowedAccessOffender = searchResult.getOffenders().get(0);
-        val nonRestrictedExcludedOffender = searchResult.getOffenders().get(1);
-        val notAllowedAccessOffender = searchResult.getOffenders().get(2);
+        val allowedAccessOffender = ((JsonNode) ((List) searchResult.get("offenders")).get(0));
+        val nonRestrictedExcludedOffender = ((JsonNode) ((List) searchResult.get("offenders")).get(1));
+        val notAllowedAccessOffender = ((JsonNode) ((List) searchResult.get("offenders")).get(2));
 
         assertThat(accessDenied(allowedAccessOffender)).isFalse();
         assertThat(accessDenied(nonRestrictedExcludedOffender)).isFalse();
@@ -327,7 +327,7 @@ public class ElasticOffenderSearchTest {
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
         // when
         val searchResult = elasticOffenderSearch.search("bearer-token","smith", 10, 0).toCompletableFuture().join();
-        val offender = searchResult.getOffenders().get(0);
+        val offender = ((JsonNode) ((List) searchResult.get("offenders")).get(0));
 
         assertThat(getChildNodeNames(offender)).containsExactlyInAnyOrder("offenderId", "accessDenied", "otherIds");
         assertThat(getChildNodeNames(offender.get("otherIds"))).containsExactlyInAnyOrder("crn");
@@ -344,7 +344,7 @@ public class ElasticOffenderSearchTest {
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
         // when
         val searchResult = elasticOffenderSearch.search("bearer-token", "smith", 10, 0).toCompletableFuture().join();
-        val offender = searchResult.getOffenders().get(0);
+        val offender = ((JsonNode) ((List) searchResult.get("offenders")).get(0));
 
         assertThat(offender.get("offenderId").asLong()).isEqualTo(13);
         assertThat(offender.get("otherIds").get("crn").asText()).isEqualTo("X3");
