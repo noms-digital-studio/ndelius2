@@ -1,5 +1,11 @@
 @import "react";
 @import "measurements";
+@import "conditionals";
+@import "typography";
+@import "colours/palette";
+
+$offender-image-width: 120px;
+$offender-image-height: 150px;
 
 .govuk-box-highlight.blue {
   background: #005ea5;
@@ -20,7 +26,6 @@ a.clickable {
 }
 
 .form-control.padded {
-  width: 100%;
   padding: 10px 20px 10px 20px;
 }
 
@@ -49,24 +54,35 @@ a.clickable {
   background-color: #fff2d3;
 }
 
-.offender-summary {
-  margin-bottom: 40px;
+.offenderDetailsRow {
+  margin-bottom: $gutter;
 }
-.offenderTextBlock {
-  float: left;
+
+.offender-summary {
+  clear: none;
+  padding-top: 0;
+  min-height: $offender-image-height;
 }
 
 .offenderImageContainer {
-  float: right;
-  width: 120px;
-  height: 150px;
-  padding: 10px;
-  border: 1px #0b0c0c solid;
+  margin-right: $gutter;
+  max-width: $offender-image-width;
+}
+
+.offenderImageContainer {
+  @include media(mobile) {
+    display: none;
+  }
 }
 
 .offenderImage {
-  width: 120px;
-  height: 150px;
+  width: $offender-image-width;
+  height: $offender-image-height;
+}
+
+.offender-summary-title {
+  @include bold-27();
+  word-wrap: break-word;
 }
 
 textarea.form-control {
@@ -91,4 +107,9 @@ textarea.form-control {
 
 .phase-banner-boxed {
   border-bottom: none;
+}
+
+.search-results-title {
+  color: $grey-2;
+  font-weight: normal;
 }

@@ -28,7 +28,7 @@ const suggestionsToOrderedMapping = suggestions =>
                                 text: option.text,
                                 score: option.score,
                                 original: suggestion.text})
-    ))))
+    )))).slice(0, 4)
 const replace = (searchTerm, from, to) => searchTerm.replace(new RegExp(from, 'gi'), to)
 const sortByScore = (array) => {
     array.sort(scoreComparator)

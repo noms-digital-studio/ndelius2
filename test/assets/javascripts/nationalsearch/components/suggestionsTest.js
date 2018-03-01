@@ -77,6 +77,72 @@ describe('Suggestions component', () => {
                 expect(suggestions.text()).to.eql('Did you mean smith gary?')
             })
         })
+        context('too many some suggestions are found with different scores', () => {
+            let suggestions
+            beforeEach(() => {
+                const suggestionsData =                         [
+                    {
+                        text: "gery",
+                        options: [
+                            {
+                                "text": "gary1",
+                                "score": 0.8
+                            }
+                        ]
+                    },
+                    {
+                        text: "gery",
+                        options: [
+                            {
+                                "text": "gary2",
+                                "score": 0.7
+                            }
+                        ]
+                    },
+                    {
+                        text: "gery",
+                        options: [
+                            {
+                                "text": "gary3",
+                                "score": 0.6
+                            }
+                        ]
+                    },
+                    {
+                        text: "gery",
+                        options: [
+                            {
+                                "text": "gary4",
+                                "score": 0.5
+                            }
+                        ]
+                    },
+                    {
+                        text: "gery",
+                        options: [
+                            {
+                                "text": "gary5",
+                                "score": 0.4
+                            }
+                        ]
+                    },
+                    {
+                        text: "gery",
+                        options: [
+                            {
+                                "text": "gary6",
+                                "score": 0.3
+                            }
+                        ]
+                    },
+                ]
+                suggestions = shallow(<Suggestions suggestions={suggestionsData} search={search} searchTerm={'Gery Smyth'}/>)
+
+            })
+            it('suggestions are rendered in score order', () => {
+                expect(suggestions.text()).to.eql('Did you mean gary1 gary2 gary3 gary4?')
+            })
+        })
     })
     describe('clicking links', () => {
         it('clicking a suggestion calls search with replaced word', () => {
