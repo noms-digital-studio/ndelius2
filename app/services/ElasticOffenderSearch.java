@@ -64,40 +64,35 @@ public class ElasticOffenderSearch implements OffenderSearch {
     @Override
     public CompletionStage<Map<String, Object>> search(String bearerToken, String searchTerm, int pageSize, int pageNumber) {
 
+        final Function<List<ObjectNode>, CompletableFuture[]> restrictResults = results -> results.stream().map(resultNode -> {
+
+            val offenderId = resultNode.get("offenderId").asLong();
+            val restricted = toBoolean(resultNode, "currentExclusion") || toBoolean(resultNode, "currentRestriction");
+
+            val accessCheck = restricted ? offenderApi.canAccess(bearerToken, offenderId) : CompletableFuture.completedFuture(true);
+
+            return accessCheck.thenApply(canAccess -> canAccess ? resultNode : restrictedView(resultNode));
+
+        }).map(CompletionStage::toCompletableFuture).toArray(CompletableFuture[]::new);
+
         final Function<SearchResponse, CompletionStage<Map<String, Object>>> processResponse = response -> {
 
             logResults(response);
 
-            final List<ObjectNode> embellishedNodes = stream(response.getHits().getHits()).
-                    map(searchHit -> {
+            final List<ObjectNode> embellishedNodes = stream(response.getHits().getHits()).map(searchHit -> {
 
-                        val pipeline = SearchResultPipeline.create(
-                                encrypter,
-                                bearerToken,
-                                searchTerm,
-                                searchHit.getHighlightFields()
-                        );
+                val pipeline = SearchResultPipeline.create(
+                        encrypter,
+                        bearerToken,
+                        searchTerm,
+                        searchHit.getHighlightFields()
+                );
 
-                        return SearchResultPipeline.process((ObjectNode) parse(searchHit.getSourceAsString()), pipeline.values());
+                return SearchResultPipeline.process((ObjectNode) parse(searchHit.getSourceAsString()), pipeline.values());
 
-                    }).collect(Collectors.toList());
+            }).collect(Collectors.toList());
 
-            val sortedNodes = OffenderSorter.groupByNameAndSortByCurrentDisposal(embellishedNodes);
-
-            final CompletableFuture[] processingResults = sortedNodes.stream().
-                    map(resultNode -> {
-
-                        long offenderId = resultNode.get("offenderId").asLong();
-                        boolean restricted = toBoolean(resultNode, "currentExclusion") || toBoolean(resultNode, "currentRestriction");
-
-                        CompletionStage<Boolean> accessCheck = restricted ?
-                                offenderApi.canAccess(bearerToken, offenderId) :
-                                CompletableFuture.completedFuture(true);
-
-                        return accessCheck.thenApply(canAccess -> canAccess ? resultNode : restrictedView(resultNode));
-                    }).
-                    map(CompletionStage::toCompletableFuture).
-                    toArray(CompletableFuture[]::new);
+            val processingResults = restrictResults.apply(OffenderSorter.groupByNameAndSortByCurrentDisposal(embellishedNodes));
 
             return CompletableFuture.allOf(processingResults).thenApply(ignoredVoid -> {
 
