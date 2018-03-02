@@ -7,16 +7,18 @@ import AddContactLink from '../containers/addContactLinkContainer'
 const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
     <li>
         <div className="offenderDetailsRow clearfix">
-            <div className='offenderImageContainer column-one-third'>
+            <div className='offenderImageContainer'>
                 {offenderSummary.oneTimeNomisRef && <img className="offenderImage" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`}/>}
                 {!offenderSummary.oneTimeNomisRef && <img className="offenderImage" src='assets/images/NoPhoto@2x.png'/>}
             </div>
 
-            <div role='group' className='panel panel-border-narrow offender-summary column-two-thirds'>
+            <div role='group' className='panel panel-border-narrow offender-summary'>
                 <div className='offenderTextBlock'>
-                    <OffenderSummaryTitle {...offenderSummary} tabIndex="1"/>
-                    <p className='margin-top'>
-                        <span className='bold margin-right'>
+                    <p>
+                        <OffenderSummaryTitle {...offenderSummary} tabIndex="1"/>
+                    </p>
+                    <p>
+                        <span>
                             <span id='crn-label'className='bold'>CRN:&nbsp;</span>
                             <span className='bold margin-right' aria-labelledby="crn-label"><MT text={offenderSummary.otherIds.crn} highlight={offenderSummary.highlight} highlightFieldName='otherIds.crn'/></span>
                         </span>
@@ -28,25 +30,25 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                         </span>
                     </p>
                     {matchesHighlightedField(offenderSummary.highlight, 'otherIds.pncNumber') &&
-                    <p className='no-margin bottom'>
+                    <p>
                         <span id='pncNumber-label'>PNC:&nbsp;</span>
                         <span id='pncNumber' aria-labelledby="pncNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.pncNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.pncNumber' /></span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'otherIds.nomsNumber') &&
-                    <p className='no-margin bottom'>
+                    <p>
                         <span id='nomsNumber-label'>NOMS:&nbsp;</span>
                         <span id='nomsNumber' aria-labelledby='nomsNumber-label' className='margin-right'><MT text={offenderSummary.otherIds.nomsNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.nomsNumber'/></span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'otherIds.niNumber') &&
-                    <p className='no-margin bottom'>
+                    <p>
                         <span id='niNumber-label'>National Insurance Number:&nbsp;</span>
                         <span id='niNumber' aria-labelledby="niNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.niNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.niNumber'/></span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'otherIds.croNumber') &&
-                    <p className='no-margin bottom'>
+                    <p>
                         <span id='croNumber-label'>CRO:&nbsp;</span>
                         <span id='croNumber' aria-labelledby="croNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.croNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.croNumber'/></span>
                     </p>
@@ -55,7 +57,14 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                         <MiddleNames middleNames={offenderSummary.middleNames} highlight={offenderSummary.highlight} highlightFieldName='middleNames'/>
                     }
                     {matchesAnyHighlightedField(offenderSummary.highlight, ['offenderAliases.surname', 'offenderAliases.firstName']) &&
-                        <AliasList aliases={offenderSummary.aliases} highlight={offenderSummary.highlight} />
+                        offenderSummary.aliases.map( (alias, index) => (
+                            <p key={index}>
+                                <span className='margin-right'>Alias:</span>
+                                <span><MT text={alias.surname} highlight={offenderSummary.highlight} highlightFieldName='offenderAliases.surname'/></span>
+                                <span>,&nbsp;</span>
+                                <span><MT text={alias.firstName} highlight={offenderSummary.highlight} highlightFieldName='offenderAliases.firstName'/></span>
+                            </p>
+                        ))
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'previousSurnames') &&
                         <PreviousSurname name={offenderSummary.previousSurname} highlight={offenderSummary.highlight}/>
@@ -67,7 +76,12 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                             'contactDetails.addresses.town',
                             'contactDetails.addresses.county',
                             'contactDetails.addresses.postcode']) &&
-                        <AddressList addresses={offenderSummary.addresses} highlight={offenderSummary.highlight}/>
+                        offenderSummary.addresses.map( (address, index) => (
+                            <p key={index}>
+                                <span className='margin-right'>Address:</span>
+                                <Address address={address} highlight={offenderSummary.highlight}/>
+                            </p>
+                        ))
                     }
                     <p><AddContactLink tabIndex="1" firstName={offenderSummary.firstName} surname={offenderSummary.surname} offenderId={offenderSummary.offenderId} rankIndex={offenderSummary.rankIndex}/></p>
                 </div>
@@ -130,7 +144,7 @@ const CurrentOffender = ({current}) => {
 }
 
 const MiddleNames = ({middleNames, highlight, highlightFieldName}) => (
-    <div className='no-margin bottom'>
+    <p>
         <span className='margin-right'>Middle Names:</span>
         {middleNames.map( (middleName, index) => (
             <span key={index}>
@@ -138,34 +152,9 @@ const MiddleNames = ({middleNames, highlight, highlightFieldName}) => (
                 <span>&nbsp;</span>
             </span>
         ))}
-    </div>
+    </p>
 )
 
-const AliasList = ({aliases, highlight}) => (
-    <div className='no-margin bottom'>
-        {aliases.map( (alias, index) => (
-            <div key={index}>
-                <span className='margin-right'>Alias:</span>
-                <span><MT text={alias.surname} highlight={highlight} highlightFieldName='offenderAliases.surname'/></span>
-                <span>,&nbsp;</span>
-                <span><MT text={alias.firstName} highlight={highlight} highlightFieldName='offenderAliases.firstName'/></span>
-            </div>
-        ))}
-        </div>
-
-)
-
-const AddressList = ({addresses, highlight}) => (
-    <div className='no-margin bottom'>
-        {addresses.map( (address, index) => (
-            <div key={index}>
-                <span className='margin-right'>Address:</span>
-                <Address address={address} highlight={highlight}/>
-            </div>
-        ))}
-        </div>
-
-)
 
 const Address = ({address, highlight}) => {
     const lines = [
@@ -203,10 +192,10 @@ const firstAddressLine = (number='', street='') => `${number} ${street}`.trim()
 
 const PreviousSurname = ({name, highlight}) => {
     if (name) {
-        return (<div className='no-margin bottom'>
+        return (<p>
             <span className='margin-right'>Previous surname:</span>
             <span><MT text={name} highlight={highlight} highlightFieldName='previousSurnames'/></span>
-        </div>)
+        </p>)
     }
     return (<span/>)
 }

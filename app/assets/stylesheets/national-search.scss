@@ -2,6 +2,7 @@
 @import "measurements";
 @import "conditionals";
 @import "typography";
+@import "grid_layout";
 @import "colours/palette";
 
 $offender-image-width: 120px;
@@ -62,14 +63,20 @@ a.clickable {
   clear: none;
   padding-top: 0;
   min-height: $offender-image-height;
+  margin-bottom: 0;
+  padding-bottom: 0;
+
+  @include media(mobile) {
+    min-height: auto;
+  }
+  @include grid-column( 3/4 );
+
 }
 
 .offenderImageContainer {
-  margin-right: $gutter;
-  max-width: $offender-image-width;
-}
-
-.offenderImageContainer {
+  @include grid-column( 1/4 );
+  max-width: $offender-image-width + $gutter;
+  padding-left: 0;
   @include media(mobile) {
     display: none;
   }
@@ -82,7 +89,6 @@ a.clickable {
 
 .offender-summary-title {
   @include bold-27();
-  word-wrap: break-word;
 }
 
 textarea.form-control {
@@ -97,8 +103,7 @@ textarea.form-control {
 }
 
 .key-content {
-  margin-left: $gutter;
-  margin-right: $gutter;
+  @extend %site-width-container;
 }
 
 .govuk-box-highlight {

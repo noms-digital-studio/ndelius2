@@ -2,9 +2,9 @@ import PropTypes from "prop-types";
 import {flatMap} from '../../helpers/streams'
 import moment from 'moment'
 
-const MarkableText = ({text, searchTerm, isDate, highlight, highlightFieldName}) => {
+const MarkableText = ({text, searchTerm, isDate, highlight, highlightFieldName, allowSingleCharacter = false}) => {
     if (matchesHighlightedField(highlight, highlightFieldName)) {
-        const chunks = toHighlightList(text, searchTerm, isDate);
+        const chunks = toHighlightList(text, searchTerm, isDate, allowSingleCharacter);
         return (
             <span>
             {chunks.map( (chunk, index) => {
@@ -32,9 +32,9 @@ const Text = ({text, highlight}) =>  {
 export const matchesHighlightedField = (highlight, highlightFieldName) => !highlight || Object.getOwnPropertyNames(highlight).indexOf(highlightFieldName) > -1
 export const matchesAnyHighlightedField = (highlight, highlightFieldNames) => highlightFieldNames.reduce((accumulator, currentValue) => accumulator || matchesHighlightedField(highlight, currentValue), false)
 
-const toHighlightList = (text, searchTerm, isDate) => findAll({
+const toHighlightList = (text, searchTerm, isDate, allowSingleCharacter) => findAll({
     autoEscape: true,
-    searchWords: isDate ? expandDateFormats(searchTerm.split(' ')) : searchTerm.split(' '),
+    searchWords: isDate ? expandDateFormats(searchTerm.split(' ')) : searchTerm.split(' ').filter(word => allowSingleCharacter || word.length > 1),
     textToHighlight: text
 })
 
@@ -71,7 +71,8 @@ MarkableText.propTypes = {
     searchTerm: PropTypes.string.isRequired,
     highlight: PropTypes.object.isRequired,
     highlightFieldName: PropTypes.string.isRequired,
-    isDate: PropTypes.bool
+    isDate: PropTypes.bool,
+    allowSingleCharacter: PropTypes.bool
 };
 
 /**

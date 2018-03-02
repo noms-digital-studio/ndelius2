@@ -45,10 +45,15 @@ describe('MarkableText component', () => {
                 expect(markedText.find({text: 'Bobby', highlight: true})).to.have.length(1)
                 expect(markedText.find({text: ' ', highlight: false})).to.have.length(1)
             })
-            it('multiple highlighted elements rendered for tiny search terms', () => {
-                const markedText = shallow(<MarkableText text={'Bobby Beans'} searchTerm={'b'} highlight={{someField: ['text']}} highlightFieldName='someField'/>)
+            it('multiple highlighted elements rendered when single char words allowed for tiny search terms', () => {
+                const markedText = shallow(<MarkableText text={'Bobby Beans'} searchTerm={'b'} highlight={{someField: ['text']}} highlightFieldName='someField' allowSingleCharacter/>)
                 expect(markedText.find({text: 'B', highlight: true})).to.have.length(2)
                 expect(markedText.find({text: 'bb', highlight: true})).to.have.length(1)
+            })
+            it('multiple highlighted elements not rendered for tiny search terms by default', () => {
+                const markedText = shallow(<MarkableText text={'Bobby Beans'} searchTerm={'b'} highlight={{someField: ['text']}} highlightFieldName='someField'/>)
+                expect(markedText.find({text: 'B', highlight: true})).to.have.length(0)
+                expect(markedText.find({text: 'bb', highlight: true})).to.have.length(0)
             })
         })
         context('overlapping multiple matches found with multiple search words', () => {
