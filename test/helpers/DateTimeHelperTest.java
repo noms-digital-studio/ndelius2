@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 import static helpers.DateTimeHelper.calculateAge;
+import static helpers.DateTimeHelper.canBeConvertedToADate;
 import static helpers.DateTimeHelper.covertToCanonicalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -74,5 +75,15 @@ public class DateTimeHelperTest {
         assertThat(covertToCanonicalDate("1992:02:01").isPresent()).isEqualTo(false);
         assertThat(covertToCanonicalDate("1992:Feb:01").isPresent()).isEqualTo(false);
         assertThat(covertToCanonicalDate("foo bar").isPresent()).isEqualTo(false);
+    }
+
+    @Test
+    public void returnsTrueIfInputCanBeConvertedToADate() {
+        assertThat(canBeConvertedToADate("5/9/1977")).isTrue();
+    }
+
+    @Test
+    public void returnsFalseIfInputCanNotBeConvertedToADate() {
+        assertThat(canBeConvertedToADate("john")).isFalse();
     }
 }

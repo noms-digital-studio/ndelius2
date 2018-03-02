@@ -11,10 +11,6 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.text.Text;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.PrefixQueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
@@ -39,7 +35,6 @@ import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static scala.io.Source.fromInputStream;
@@ -69,76 +64,6 @@ public class ElasticOffenderSearchTest {
             listener.onResponse(searchResponse);
             return null;
         }).when(restHighLevelClient).searchAsync(any(), any());
-    }
-
-    @Test
-    public void dateOnlySearchDoesNotAddAPrefixSearch() {
-        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
-
-        elasticOffenderSearch.search("bearer-token", "15-09-1970", 10, 3);
-        verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
-
-        val query = (BoolQueryBuilder) searchRequest.getValue().source().query();
-        assertThat((query.should())).doesNotContain(prefixQuery("firstName", "").boost(11));
-    }
-
-    @Test
-    public void searchesOnlySubsetOfFields() {
-        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
-
-        elasticOffenderSearch.search("bearer-token", "15-09-1970 a smith 1/2/1992", 10, 3);
-
-        verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
-        assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(BoolQueryBuilder.class);
-
-        val query = (BoolQueryBuilder) searchRequest.getValue().source().query();
-        val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
-        assertThat(queryBuilder1.value()).isEqualTo("a smith");
-        assertThat(queryBuilder1.fields()).containsOnlyKeys(
-            "firstName",
-            "surname",
-            "middleNames",
-            "offenderAliases.firstName",
-            "offenderAliases.surname",
-            "contactDetails.addresses.town");
-
-        val queryBuilder2 = (MultiMatchQueryBuilder)query.should().get(1);
-        assertThat(queryBuilder2.value()).isEqualTo("smith");
-        assertThat(queryBuilder2.fields()).containsOnlyKeys(
-            "gender",
-            "otherIds.crn",
-            "otherIds.nomsNumber",
-            "otherIds.niNumber",
-            "otherIds.pncNumber",
-            "otherIds.croNumber",
-            "contactDetails.addresses.streetName",
-            "contactDetails.addresses.county",
-            "contactDetails.addresses.postcode");
-
-        assertThat(((MultiMatchQueryBuilder)query.should().get(2)).value()).isEqualTo("1970-09-15");
-
-        assertThat(((MultiMatchQueryBuilder)query.should().get(3)).value()).isEqualTo("1992-02-01");
-
-        assertThat(((PrefixQueryBuilder)query.should().get(4)).value()).isEqualTo("a");
-
-        assertThat(((PrefixQueryBuilder)query.should().get(5)).value()).isEqualTo("smith");
-
-        TermQueryBuilder termQueryBuilder = (TermQueryBuilder) searchRequest.getValue().source().postFilter();
-        assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
-        assertThat(termQueryBuilder.value()).isEqualTo(false);
-    }
-
-    @Test
-    public void unifiedHighlighterIsRequested() {
-        when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), 1, 42));
-
-        elasticOffenderSearch.search("bearer-token", "15-09-1970 a smith 1/2/1992", 10, 3);
-
-        verify(restHighLevelClient).searchAsync(searchRequest.capture(), any());
-        assertThat(searchRequest.getValue().source().query()).isInstanceOfAny(BoolQueryBuilder.class);
-
-        val highlighter = searchRequest.getValue().source().highlighter();
-        assertThat(highlighter.highlighterType()).isEqualTo("unified");
     }
 
     @Test
@@ -179,7 +104,6 @@ public class ElasticOffenderSearchTest {
 
     @Test
     public void returnsHighlightsInSearchResults() {
-
         // given
         val totalHits = 1;
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithHighlights(
@@ -204,7 +128,6 @@ public class ElasticOffenderSearchTest {
 
     @Test
     public void returnsDateOfBirthHighlightWhenDatesMatch() {
-
         // given
         val totalHits = 1;
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithHighlights(
@@ -223,7 +146,6 @@ public class ElasticOffenderSearchTest {
 
     @Test
     public void doesNotReturnDateOfBirthHighlightWhenDatesDoNotMatch() {
-
         // given
         val totalHits = 1;
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithHighlights(

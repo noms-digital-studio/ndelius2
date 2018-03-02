@@ -1,10 +1,17 @@
 package services.helpers;
 
+import lombok.val;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.PrefixQueryBuilder;
+import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
 
 public class SearchQueryBuilderTest {
 
@@ -50,4 +57,65 @@ public class SearchQueryBuilderTest {
         assertThat(SearchQueryBuilder.aValidPageNumberFor(3)).isEqualTo(2);
         assertThat(SearchQueryBuilder.aValidPageNumberFor(0)).isEqualTo(0);
     }
+
+    @Test
+    public void searchSourceBuilderHasCorrectQueries() {
+        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970 a smith 1/2/1992", 10, 3);
+
+        val query = (BoolQueryBuilder) builder.query();
+        val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
+        assertThat(queryBuilder1.value()).isEqualTo("a smith");
+        assertThat(queryBuilder1.fields()).containsOnlyKeys(
+            "firstName",
+            "surname",
+            "middleNames",
+            "offenderAliases.firstName",
+            "offenderAliases.surname",
+            "contactDetails.addresses.town");
+
+        val queryBuilder2 = (MultiMatchQueryBuilder)query.should().get(1);
+        assertThat(queryBuilder2.value()).isEqualTo("smith");
+        assertThat(queryBuilder2.fields()).containsOnlyKeys(
+            "gender",
+            "otherIds.crn",
+            "otherIds.nomsNumber",
+            "otherIds.niNumber",
+            "otherIds.pncNumber",
+            "otherIds.croNumber",
+            "contactDetails.addresses.streetName",
+            "contactDetails.addresses.county",
+            "contactDetails.addresses.postcode");
+
+        assertThat(((MultiMatchQueryBuilder)query.should().get(2)).value()).isEqualTo("1970-09-15");
+
+        assertThat(((MultiMatchQueryBuilder)query.should().get(3)).value()).isEqualTo("1992-02-01");
+
+        assertThat(((PrefixQueryBuilder)query.should().get(4)).value()).isEqualTo("a");
+
+        assertThat(((PrefixQueryBuilder)query.should().get(5)).value()).isEqualTo("smith");
+
+        TermQueryBuilder termQueryBuilder = (TermQueryBuilder) builder.postFilter();
+        assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
+        assertThat(termQueryBuilder.value()).isEqualTo(false);
+    }
+
+    @Test
+    public void dateOnlySearchDoesNotAddAPrefixSearch() {
+        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970", 10, 3);
+
+        val query = (BoolQueryBuilder) builder.query();
+        System.out.println(query.should());
+        assertThat((query.should())).doesNotContain(prefixQuery("firstName", "").boost(11));
+    }
+
+    @Test
+    public void unifiedHighlighterIsRequested() {
+        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970 a smith 1/2/1992", 10, 3);
+
+        assertThat(builder.query()).isInstanceOfAny(BoolQueryBuilder.class);
+
+        val highlighter = builder.highlighter();
+        assertThat(highlighter.highlighterType()).isEqualTo("unified");
+    }
+
 }
