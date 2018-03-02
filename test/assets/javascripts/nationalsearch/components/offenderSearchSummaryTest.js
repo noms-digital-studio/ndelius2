@@ -8,6 +8,17 @@ describe('OffenderSearchSummary component', () => {
     it('should render offender summary elements', () => {
 
         const offenderSummary = offender({
+            aliases: [{
+                surname: "Marke"
+            }],
+            addresses:[
+                {
+                    streetName: "London Rd",
+                    town: "Leicester",
+                    county: "Leicestershire",
+                    postcode:  "LE2 2PJ"
+                }
+            ],
             highlight: {
                 "middleNames" : [ "Bobby", "Jim" ],
                 "previousSurnames" : [ "Bobby"],
@@ -22,14 +33,25 @@ describe('OffenderSearchSummary component', () => {
 
         expect(summary.find('Connect(OffenderSummaryTitle)').exists()).to.be.true
         expect(summary.find('CurrentOffender').exists()).to.be.true
-        expect(summary.find('AliasList').exists()).to.be.true
+        expect(summary.find({text: 'Marke'}).exists()).to.be.true
         expect(summary.find('PreviousSurname').exists()).to.be.true
-        expect(summary.find('AddressList').exists()).to.be.true
+        expect(summary.find('Address').exists()).to.be.true
         expect(summary.find('Connect(AddContactLink)').exists()).to.be.true
     })
     it('should not render optional offender summary elements when not flagged as highlighted', () => {
 
         const offenderSummary = offender({
+            aliases: [{
+                surname: "Marke"
+            }],
+            addresses:[
+                {
+                    streetName: "London Rd",
+                    town: "Leicester",
+                    county: "Leicestershire",
+                    postcode:  "LE2 2PJ"
+                }
+            ],
             highlight: {
             }
         })
@@ -37,9 +59,9 @@ describe('OffenderSearchSummary component', () => {
 
         expect(summary.find('Connect(OffenderSummaryTitle)').exists()).to.be.true
         expect(summary.find('CurrentOffender').exists()).to.be.true
-        expect(summary.find('AliasList').exists()).to.be.false
+        expect(summary.find({text: 'Marke'}).exists()).to.be.false
         expect(summary.find('PreviousSurname').exists()).to.be.false
-        expect(summary.find('AddressList').exists()).to.be.false
+        expect(summary.find('Address').exists()).to.be.false
         expect(summary.find('Connect(AddContactLink)').exists()).to.be.true
     })
     describe('pnc display', () => {

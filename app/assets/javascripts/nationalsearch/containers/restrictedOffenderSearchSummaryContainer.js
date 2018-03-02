@@ -5,6 +5,6 @@ import restrictedOffenderSearchSummary from '../components/restrictedOffenderSea
 export default connect(
     () => ({}),
     dispatch => ({
-        showOffenderDetails: (offenderId) => dispatch(showOffenderDetails(offenderId))
+        showOffenderDetails: (offenderId, rankIndex, highlight) => dispatch(showOffenderDetails(offenderId, rankIndex, highlight))
     })
 )(restrictedOffenderSearchSummary)

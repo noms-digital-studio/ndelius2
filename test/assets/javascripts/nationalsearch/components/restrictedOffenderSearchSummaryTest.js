@@ -17,7 +17,7 @@ describe('RestrictedOffenderSearchSummary component', () => {
                                         showOffenderDetails={()=>{}}/>)
 
 
-            expect(summary.find({text: 'X12343'})).to.have.length(1)
+            expect(summary.text()).to.contain('X12343')
         })
         it('should render add contact link', () => {
             const summary = shallow(<RestrictedOffenderSearchSummary

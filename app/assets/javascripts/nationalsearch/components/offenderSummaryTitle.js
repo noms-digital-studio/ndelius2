@@ -3,11 +3,11 @@ import MT from '../containers/markableTextContainer'
 import moment from 'moment'
 
 const OffenderSummaryTitle = ({showOffenderDetails, offenderId, rankIndex, firstName, surname, dateOfBirth, highlight, tabIndex}) => (
-    <a tabIndex={tabIndex} href='javascript:' className='clickable heading-large no-underline offender-summary-title' onClick={() => showOffenderDetails(offenderId, rankIndex, highlight)}>
+    <a tabIndex={tabIndex} href='javascript:' className='heading-large no-underline offender-summary-title' onClick={() => showOffenderDetails(offenderId, rankIndex, highlight)}>
         <span><MT text={surname} highlight={highlight} highlightFieldName='surname'/></span>
-        <span>,&nbsp;</span>
-        <span><MT text={firstName} highlight={highlight} highlightFieldName='firstName'/></span>
-        <span>&nbsp;-&nbsp;</span>
+        <span>, </span>
+        <span><MT text={firstName} highlight={highlight} highlightFieldName='firstName' allowSingleCharacter/></span>
+        <span> - </span>
         <span><MT text={moment(dateOfBirth, 'YYYY-MM-DD').format('DD/MM/YYYY')} isDate={true} highlight={highlight} highlightFieldName='dateOfBirth'/></span>
     </a>
 )
