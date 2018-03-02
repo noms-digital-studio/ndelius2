@@ -16,6 +16,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.suggest.Suggest;
 import play.Logger;
 import play.libs.Json;
+import services.helpers.OffenderSorter;
 import services.helpers.SearchResultPipeline;
 
 import javax.inject.Inject;
@@ -24,12 +25,12 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static helpers.JsonHelper.toBoolean;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static play.libs.Json.parse;
-import static services.helpers.SearchHitComparison.searchHitGrouper;
 import static services.helpers.SearchQueryBuilder.searchSourceFor;
 
 public class ElasticOffenderSearch implements OffenderSearch {
@@ -67,8 +68,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
             logResults(response);
 
-            final CompletableFuture[] processingResults = stream(response.getHits().getHits()).
-                    sorted(searchHitGrouper).
+            final List<ObjectNode> embellishedNodes = stream(response.getHits().getHits()).
                     map(searchHit -> {
 
                         val pipeline = SearchResultPipeline.create(
@@ -78,12 +78,19 @@ public class ElasticOffenderSearch implements OffenderSearch {
                                 searchHit.getHighlightFields()
                         );
 
-                        val resultNode = SearchResultPipeline.process((ObjectNode) parse(searchHit.getSourceAsString()), pipeline.values());
+                        return SearchResultPipeline.process((ObjectNode) parse(searchHit.getSourceAsString()), pipeline.values());
 
-                        val offenderId = resultNode.get("offenderId").asLong();
-                        val restricted = toBoolean(resultNode, "currentExclusion") || toBoolean(resultNode, "currentRestriction");
+                    }).collect(Collectors.toList());
 
-                        val accessCheck = restricted ?
+            val sortedNodes = OffenderSorter.groupByNameAndSortByCurrentDisposal(embellishedNodes);
+
+            final CompletableFuture[] processingResults = sortedNodes.stream().
+                    map(resultNode -> {
+
+                        long offenderId = resultNode.get("offenderId").asLong();
+                        boolean restricted = toBoolean(resultNode, "currentExclusion") || toBoolean(resultNode, "currentRestriction");
+
+                        CompletionStage<Boolean> accessCheck = restricted ?
                                 offenderApi.canAccess(bearerToken, offenderId) :
                                 CompletableFuture.completedFuture(true);
 
