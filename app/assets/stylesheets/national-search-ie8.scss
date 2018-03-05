@@ -1,0 +1,13 @@
+@import "grid_layout";
+@import "measurements";
+@import "national-search";
+
+.offender-summary {
+  float: left;
+  width: $site-width - $offender-image-width - $gutter - $gutter
+}
+
+.offenderImageContainer {
+  float: left;
+}
+
