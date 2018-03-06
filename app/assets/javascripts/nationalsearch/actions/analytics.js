@@ -19,7 +19,7 @@ export const fetchingVisitCounts = () => ({type: FETCHING_VISIT_COUNTS})
 const fetchVisitCounts = timeRange => (
     dispatch => {
         dispatch(fetchingVisitCounts())
-        $.getJSON(`nationalSearch/analytics/visitCounts${timeRangeToDateParameters(timeRange)}`, data => {
+        $.getJSON(`analytics/visitCounts${timeRangeToDateParameters(timeRange)}`, data => {
             dispatch(visitCounts(data))
         });
 
