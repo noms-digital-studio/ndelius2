@@ -1,4 +1,4 @@
-package services;
+package services.fakes;
 
 import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;

@@ -4,7 +4,7 @@ import com.typesafe.config.Config;
 import interfaces.OffenderApi;
 import play.inject.Injector;
 import services.DeliusOffenderApi;
-import services.FakeOffenderApi;
+import services.fakes.FakeOffenderApi;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

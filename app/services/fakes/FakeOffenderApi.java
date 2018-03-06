@@ -1,4 +1,4 @@
-package services;
+package services.fakes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;

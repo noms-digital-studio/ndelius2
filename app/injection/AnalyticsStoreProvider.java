@@ -3,7 +3,7 @@ package injection;
 import com.typesafe.config.Config;
 import interfaces.AnalyticsStore;
 import play.inject.Injector;
-import services.InMemoryAnalyticsStore;
+import services.fakes.InMemoryAnalyticsStore;
 import services.MongoDbStore;
 
 import javax.inject.Inject;

@@ -22,11 +22,11 @@ public class Module extends AbstractModule {
     public void configure() {
 
         bind(PdfGenerator.class).to(RestPdfGenerator.class);
-        bind(DocumentStore.class).to(AlfrescoStore.class);
         bind(OffenderSearch.class).to(ElasticOffenderSearch.class);
         bind(PrisonerApi.class).to(NomisPrisonerApi.class);
         bind(PrisonerApiToken.class).to(JwtNomisPrisonerApi.class);
 
+        bind(DocumentStore.class).toProvider(DocumentStoreProvider.class);
         bind(OffenderApi.class).toProvider(OffenderApiProvider.class);
         bind(RestClientBuilder.class).toProvider(RestClientBuilderProvider.class);
         bind(RestHighLevelClient.class).toProvider(RestHighLevelClientProvider.class);
