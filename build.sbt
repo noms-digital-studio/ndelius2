@@ -21,7 +21,7 @@ JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
 MochaKeys.requires += "setup.js"
 
 scalaVersion := "2.12.2"
-
+pipelineStages := Seq(digest)
 libraryDependencies ++= Seq(
   guice,
   filters,
