@@ -5,7 +5,7 @@ export const ADD_NEW_OFFENDER = 'ADD_NEW_OFFENDER'
 
 const recordSearchOutcome = data => {
     $.ajax({
-        url: '/nationalSearch/recordSearchOutcome',
+        url: 'nationalSearch/recordSearchOutcome',
         type: 'POST',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',

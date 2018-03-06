@@ -22,7 +22,7 @@ describe('navigate action', () => {
         })
         it ('calls endpoint with rankIndex, type and fieldMatch', () => {
             expect(global.$.ajax).to.be.calledWith({
-                url: '/nationalSearch/recordSearchOutcome',
+                url: 'nationalSearch/recordSearchOutcome',
                 type: 'POST',
                 data: JSON.stringify({type: 'search-add-contact', rankIndex: 2, fieldMatch: ["firstName", "surname"]}),
                 contentType: 'application/json; charset=utf-8',
@@ -40,7 +40,7 @@ describe('navigate action', () => {
         })
         it ('calls endpoint with type', () => {
             expect(global.$.ajax).to.be.calledWith({
-                url: '/nationalSearch/recordSearchOutcome',
+                url: 'nationalSearch/recordSearchOutcome',
                 type: 'POST',
                 data: JSON.stringify({type: 'search-add-new-offender'}),
                 contentType: 'application/json; charset=utf-8',
@@ -58,7 +58,7 @@ describe('navigate action', () => {
         })
         it ('calls endpoint with rankIndex, type and fieldMatch', () => {
             expect(global.$.ajax).to.be.calledWith({
-                url: '/nationalSearch/recordSearchOutcome',
+                url: 'nationalSearch/recordSearchOutcome',
                 type: 'POST',
                 data: JSON.stringify({type: 'search-offender-details', rankIndex: 2, fieldMatch: ["firstName", "surname"]}),
                 contentType: 'application/json; charset=utf-8',
@@ -76,7 +76,7 @@ describe('navigate action', () => {
         })
         it ('calls endpoint with type', () => {
             expect(global.$.ajax).to.be.calledWith({
-                url: '/nationalSearch/recordSearchOutcome',
+                url: 'nationalSearch/recordSearchOutcome',
                 type: 'POST',
                 data: JSON.stringify({type: 'search-legacy-search'}),
                 contentType: 'application/json; charset=utf-8',
