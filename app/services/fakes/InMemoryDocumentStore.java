@@ -30,7 +30,7 @@ public class InMemoryDocumentStore implements DocumentStore {
             }
         };
 
-        String key = UUID.randomUUID().toString();
+        val key = UUID.randomUUID().toString();
         documentStore.put(key, parameters);
         Logger.debug(String.format("uploadNewPdf: storing %s against key %s", parameters, key));
         return CompletableFuture.completedFuture(ImmutableMap.of("ID", key));
@@ -38,7 +38,7 @@ public class InMemoryDocumentStore implements DocumentStore {
 
     @Override
     public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
-        HashMap<String, Object> parameters = documentStore.get(documentId);
+        val parameters = documentStore.get(documentId);
 
         Logger.debug(String.format("retrieveOriginalData: for key %s", documentId));
         return CompletableFuture.completedFuture((String) parameters.get("originalData"));
@@ -51,8 +51,8 @@ public class InMemoryDocumentStore implements DocumentStore {
 
     @Override
     public CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId) {
-        HashMap<String, Object> parameters = documentStore.get(documentId);
-        String entityId = (String) parameters.get("entityId");
+        val parameters = documentStore.get(documentId);
+        val entityId = (String) parameters.get("entityId");
 
         val newParameters = new HashMap<String, Object>() {
             {
