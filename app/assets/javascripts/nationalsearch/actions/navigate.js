@@ -41,5 +41,11 @@ export const addNewOffender = () => (
     }
 )
 
+export const addFeedback = feedback => (
+    () => {
+        recordSearchOutcome({ type: 'search-feedback', feedback})
+    }
+)
+
 const highlightToFieldMatch = highlight => Object.getOwnPropertyNames(highlight)
 

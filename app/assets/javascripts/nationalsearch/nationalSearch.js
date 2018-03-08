@@ -1,5 +1,5 @@
 import OffenderSearchPage from './containers/offenderSearchPageContainer';
-import FeedbackPage from './components/feedbackPage'
+import FeedbackPage from './containers/feedbackPageContainer'
 import AnalyticsPage from './containers/analyticsPageContainer'
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'

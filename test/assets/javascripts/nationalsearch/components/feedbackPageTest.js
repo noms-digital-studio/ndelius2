@@ -26,12 +26,9 @@ describe('FeedbackPage component', () => {
     describe('submitting form', () => {
         let preventDefault;
         let goBack;
+        let addFeedback;
         beforeEach(() => {
-            global.window = {
-                location: {
-                    href: ''
-                }
-            }
+            addFeedback = stub()
             goBack = stub()
             preventDefault = stub()
             const context = {
@@ -39,22 +36,14 @@ describe('FeedbackPage component', () => {
                     goBack
                 }
             };
-            feedbackPage = shallow(<FeedbackPage/>, {context})
+            feedbackPage = shallow(<FeedbackPage addFeedback={addFeedback}/>, {context})
             feedbackPage.find('#rating_verysatisfied').simulate('change', {target: {value: 'Very satisfied'}})
             feedbackPage.find('#feedback').simulate('change', {target: {value: 'Nothing - it is perfect'}})
             feedbackPage.find('form').simulate('submit', {preventDefault});
         })
 
-        it('sets location protocol to mailto:', () => {
-            expect(global.window.location.href).to.contain("mailto:")
-        })
-
-        it('sets selected rating', () => {
-            expect(decodeURIComponent(global.window.location.href)).to.contain("Very satisfied")
-        })
-
-        it('sets selected feedback', () => {
-            expect(decodeURIComponent(global.window.location.href)).to.contain("Nothing - it is perfect")
+        it('adds feedback outcome', () => {
+            expect(addFeedback).to.be.calledWith({rating: "Very satisfied", feedback: "Nothing - it is perfect"})
         })
 
         it('will prevent default browser submit behaviour', () => {

@@ -89,12 +89,12 @@ class FeedbackPage extends Component {
     }
 
     submitFeedback(event) {
-        const ratingQuestion = encodeURIComponent('Overall, how did you feel about the National Search service you used today?')
-        const feedbackQuestion = encodeURIComponent('If you could change anything what would it be?')
-        const emailAddress = 'nick.gallon@digital.justice.gov.uk'
-        const subject = encodeURIComponent('National Search Feedback')
+        const {addFeedback} = this.props
         event.preventDefault()
-        window.location.href = `mailto:${emailAddress}?subject=${subject}&body=${ratingQuestion}%0D%0A%0D%0A${encodeURIComponent(this.state.rating)}%0D%0A%0D%0A${feedbackQuestion}%0D%0A%0D%0A${encodeURIComponent(this.state.feedback)}`
+        addFeedback({
+            rating: this.state.rating,
+            feedback: this.state.feedback
+        })
         this.context.router.goBack()
     }
 }

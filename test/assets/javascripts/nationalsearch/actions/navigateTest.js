@@ -1,4 +1,4 @@
-import {addContact, addNewOffender, showOffenderDetails, legacySearch} from './navigate'
+import {addContact, addNewOffender, showOffenderDetails, legacySearch, addFeedback} from './navigate'
 import {expect} from 'chai';
 import {stub} from 'sinon';
 
@@ -79,6 +79,21 @@ describe('navigate action', () => {
                 url: 'nationalSearch/recordSearchOutcome',
                 type: 'POST',
                 data: JSON.stringify({type: 'search-legacy-search'}),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: null
+            })
+        })
+    })
+    describe('on addFeedback', () => {
+        beforeEach(() => {
+            addFeedback({anything: "some feedback"})()
+        })
+        it ('calls endpoint with type', () => {
+            expect(global.$.ajax).to.be.calledWith({
+                url: 'nationalSearch/recordSearchOutcome',
+                type: 'POST',
+                data: JSON.stringify({type: 'search-feedback', feedback: {anything: "some feedback"}}),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: null
