@@ -4,7 +4,7 @@ import com.typesafe.config.Config;
 import interfaces.DocumentStore;
 import play.inject.Injector;
 import services.AlfrescoStore;
-import services.fakes.InMemoryDocumentStore;
+import services.fakes.MongoDocumentStore;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -23,7 +23,7 @@ public class DocumentStoreProvider implements Provider<DocumentStore> {
     @Override
     public DocumentStore get() {
         return storeStandAloneOperation ?
-            injector.instanceOf(InMemoryDocumentStore.class) : injector.instanceOf(AlfrescoStore.class);
+            injector.instanceOf(MongoDocumentStore.class) : injector.instanceOf(AlfrescoStore.class);
     }
 
 }
