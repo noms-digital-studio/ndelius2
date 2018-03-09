@@ -342,6 +342,29 @@ public class MongoDbStore implements AnalyticsStore {
         return result;
     }
 
+    @Override
+    public CompletableFuture<List<Map<String, Object>>> feedback() {
+        val result = new CompletableFuture<List<Map<String, Object>>>();
+
+        events.find().
+                projection(new Document(ImmutableMap.of(
+                        "_id", 0,
+                        "dateTime", 1,
+                        "username", 1,
+                        "feedback", 1
+                ))).
+                filter(eq("type", "search-feedback")).
+                sort(new Document("$natural", -1)).
+                limit(1000).
+                toObservable().
+                map(document -> document.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))).
+                toList().
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
+    }
+
     private Bson filterByDate(LocalDateTime from) {
         return gte("dateTime", toDate(from));
     }

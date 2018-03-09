@@ -1,5 +1,6 @@
 package services.fakes;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import lombok.val;
@@ -98,6 +99,12 @@ public class InMemoryAnalyticsStore implements AnalyticsStore {
     public CompletableFuture<Boolean> isUp() {
         return CompletableFuture.completedFuture(Boolean.TRUE);
     }
+
+    @Override
+    public CompletableFuture<List<Map<String, Object>>> feedback() {
+        return CompletableFuture.completedFuture(ImmutableList.of());
+    }
+
 
     public class BoundedStack<T> {
         private final Deque<T> list = new ConcurrentLinkedDeque<>();

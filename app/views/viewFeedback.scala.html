@@ -1,0 +1,68 @@
+@import helpers.CallHelper.relative
+@import org.webjars.play.WebJarsUtil
+@import java.text.SimpleDateFormat
+@this(webJarsUtil: WebJarsUtil)
+
+@(feedbacks: List[Map[String, Object]], usernameExpression: String)
+
+@df = @{new SimpleDateFormat("dd/MM/yyyy hh:mm")}
+
+@display(feedback: Map[String, Object]) = {
+  <tr>
+    <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
+    <td>@usernameExpression.r.findFirstMatchIn(feedback.get("username").toString).map(m => m.group(1)).getOrElse(feedback.get("username"))</td>
+    <td>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("rating")</td>
+    <td width="40%">@feedback.get("feedback").asInstanceOf[Map[String, String]].get("feedback")</td>
+  </tr>
+}
+
+<!DOCTYPE html>
+<!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
+  <head>
+
+    <title>HMPPS - National Search Feedback</title>
+   <!--[if gt IE 8]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge" /><!--<![endif]-->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <!--[if IE 8]><link rel="stylesheet" type="text/css" media="screen" href='@relative(routes.Assets.versioned("stylesheets/govuk-elements-styles-ie8.css"))' /><![endif]-->
+      <!--[if gt IE 8]><!--><link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/govuk-elements-styles.css"))' /><!--<![endif]-->
+    <!--[if IE 8]><link rel="stylesheet" type="text/css" media="all" href='@relative(routes.Assets.versioned("stylesheets/fonts-ie8.css"))' /><![endif]-->
+    <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
+
+    <style>
+      table th, table td {
+        border-bottom: 1px solid #bfc1c3 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="content" style="max-width: 95%; width: 95%">
+
+      <div class="phase-banner">
+        <p><strong class="phase-tag">ALPHA</strong><span>This is a new service – your <a href="javascript:void(0);" class="feedback-link" title="feedback">feedback</a> will help us to improve it.</span></p>
+      </div>
+
+      <h1 class="heading-xlarge">National Search Feedback</h1>
+
+      <table>
+          <caption class="heading-small">Latest feedback</caption>
+        <thead>
+          <tr>
+            <td>Submitted date</td>
+            <td>Username</td>
+            <td>Rating</td>
+            <td>Additional comments</td>
+          </tr>
+        </thead>
+        <tbody>
+        @for(feedback <- feedbacks) {
+          @display(feedback)
+        }
+        </tbody>
+      </table>
+
+    </main>
+  </body>
+  </html>
