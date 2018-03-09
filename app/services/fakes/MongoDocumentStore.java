@@ -27,7 +27,7 @@ public class MongoDocumentStore implements DocumentStore {
 
     @Inject
     public MongoDocumentStore(MongoClient mongoClient) {
-        shortFormatReports = mongoClient.getDatabase("documents").getCollection("shortFormatReports");
+        shortFormatReports = mongoClient.getDatabase("analytics").getCollection("shortFormatReports");
     }
 
     @Override
