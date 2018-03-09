@@ -30,16 +30,13 @@ public class UtilityController extends Controller {
     private final OffenderSearch offenderSearch;
     private final OffenderApi offenderApi;
 
-    private final boolean standaloneOperation;
-
     @Inject
-    public UtilityController(Config configuration, PdfGenerator pdfGenerator,
+    public UtilityController(PdfGenerator pdfGenerator,
                              DocumentStore documentStore,
                              AnalyticsStore analyticsStore,
                              OffenderSearch offenderSearch,
                              OffenderApi offenderApi) {
 
-        standaloneOperation = configuration.getBoolean("standalone.operation");
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
         this.analyticsStore = analyticsStore;
@@ -87,7 +84,7 @@ public class UtilityController extends Controller {
         return JsonHelper.okJson(
             ImmutableMap.builder()
                 .put("status", pdfGeneratorStatus &&
-                               getDocumentStoreStatus(documentStoreStatus) &&
+                               documentStoreStatus &&
                                offenderApiStatus &&
                                searchStatus ? "OK" : "FAILED")
                 .put("dateTime", DateTime.now().toString())
@@ -103,10 +100,6 @@ public class UtilityController extends Controller {
                     .put("offender-api", offenderApiStatus ? "OK" : "FAILED")
                     .build())
                 .build());
-    }
-
-    private Boolean getDocumentStoreStatus(Boolean documentStoreStatus) {
-        return documentStoreStatus || standaloneOperation;
     }
 
     private ImmutableMap<String, ? extends Number> runtimeInfo() {

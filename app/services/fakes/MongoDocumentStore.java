@@ -3,6 +3,8 @@ package services.fakes;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import com.mongodb.rx.client.MongoCollection;
+import com.mongodb.rx.client.MongoDatabase;
+import com.typesafe.config.Config;
 import helpers.Encryption;
 import interfaces.DocumentStore;
 import lombok.val;
@@ -11,6 +13,7 @@ import org.bouncycastle.util.encoders.Base64;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import play.Logger;
+import services.helpers.MongoUtils;
 
 import javax.inject.Inject;
 import java.net.URLEncoder;
@@ -23,11 +26,14 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class MongoDocumentStore implements DocumentStore {
 
+    private final MongoDatabase database;
     private final MongoCollection<Document> shortFormatReports;
 
     @Inject
-    public MongoDocumentStore(MongoClient mongoClient) {
-        shortFormatReports = mongoClient.getDatabase("analytics").getCollection("shortFormatReports");
+    public MongoDocumentStore(Config configuration, MongoClient mongoClient) {
+        val databaseName = configuration.getString("analytics.mongo.database");
+        database = mongoClient.getDatabase(databaseName);
+        shortFormatReports = mongoClient.getDatabase(databaseName).getCollection("shortFormatReports");
     }
 
     @Override
@@ -115,6 +121,5 @@ public class MongoDocumentStore implements DocumentStore {
 
     @Override
     public CompletionStage<Boolean> isHealthy() {
-        return CompletableFuture.completedFuture(true);
-    }
+        return MongoUtils.isHealthy(database);    }
 }

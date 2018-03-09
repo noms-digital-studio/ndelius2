@@ -12,6 +12,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.joda.time.DateTime;
 import play.Logger;
+import services.helpers.MongoUtils;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
@@ -21,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
@@ -331,15 +331,7 @@ public class MongoDbStore implements AnalyticsStore {
 
     @Override
     public CompletableFuture<Boolean> isUp() {
-        val result = new CompletableFuture<Boolean>();
-
-         database.runCommand(new Document("dbStats", 1))
-             .timeout(5000, TimeUnit.MILLISECONDS)
-             .map(document -> document.get("ok").equals(1.0))
-             .onErrorReturn(ignored -> result.complete(false))
-             .subscribe(result::complete);
-
-        return result;
+        return MongoUtils.isHealthy(database);
     }
 
     @Override
