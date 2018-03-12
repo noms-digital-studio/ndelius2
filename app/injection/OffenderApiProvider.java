@@ -11,17 +11,17 @@ import javax.inject.Provider;
 
 public class OffenderApiProvider implements Provider<OffenderApi> {
 
-    private final boolean standAloneOperation;
+    private final boolean offenderApiStandAloneOperation;
     private Injector injector;
 
     @Inject
     public OffenderApiProvider(Config configuration, Injector injector) {
-        this.standAloneOperation = configuration.getBoolean("standalone.operation");
+        this.offenderApiStandAloneOperation = configuration.getBoolean("offender.api.standalone.operation");
         this.injector = injector;
     }
 
     @Override
     public OffenderApi get() {
-        return standAloneOperation ? injector.instanceOf(FakeOffenderApi.class) : injector.instanceOf(DeliusOffenderApi.class);
+        return offenderApiStandAloneOperation ? injector.instanceOf(FakeOffenderApi.class) : injector.instanceOf(DeliusOffenderApi.class);
     }
 }
