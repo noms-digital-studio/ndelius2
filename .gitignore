@@ -5,3 +5,4 @@ logs/
 application.log
 app.log.directory_IS_UNDEFINEDapp.log.name_IS_UNDEFINED
 **/.DS_Store
+run-locally.sh
