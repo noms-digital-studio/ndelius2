@@ -14,82 +14,52 @@ Prerequisites:
 Build command (includes running unit and integration tests):
 - `sbt assembly`
 
-Run locally:
-- `sbt run`
-
-Standalone:
-
-Add the following environment vairable to run in standalone mode
-
-- `STANDALONE_OPERATION=true`
+Running locally:
+`
+PARAMS_USER_TOKEN_VALID_DURATION=2000d \
+STORE_PROVIDER=mongo \
+OFFENDER_API_PROVIDER=stub \
+APPLICATION_SECRET=mySuperSecretKeyThing \
+ELASTIC_SEARCH_HOST=<the hostname of your ES cluster> \
+ELASTIC_SEARCH_PORT=443 \
+NOMIS_API_BASE_URL=<the URL of the NOMIS system> \
+NOMIS_PAYLOAD_TOKEN=<the NOMIS API payload token> \
+NOMIS_PRIVATE_KEY=<the NOMIS API private key> \
+ANALYTICS_MONGO_CONNECTION=<the URL of you MongoDb instance>/analytics \
+sbt -Dlogback.application.level=DEBUG run`
 
 Running deployable fat jar (after building):
 - `APPLICATION_SECRET=abcdefghijk java -jar ndelius2.jar` (in the `target/scala-2.11` directory)
 
-Configuration parameters can be supplied via environment variables, e.g.:
+Configuration parameters can be supplied via environment variables. See `application.conf` for full list of variables. 
 
+e.g.:
 - `STORE_ALFRESCO_URL=http://alfresco/ sbt run`
 - `STORE_ALFRESCO_URL=http://alfresco/ APPLICATION_SECRET=abcdefghijk java -jar ndelius2.jar`
+
 The website endpoint defaults to local port 9000.
 
-All tests:
+Run all tests:
 - sbt clean test
 
-Frontend tests:
+Run frontend tests:
 - sbt mocha
 
 ### Development notes
 
-The [Play Framework](https://www.playframework.com/) provides the [Google Guice](https://github.com/google/guice/wiki/Motivation) Dependency Injection framework as standard, and [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) based webpages are generated via Play Framework [Twirl](https://www.playframework.com/documentation/2.5.x/ScalaTemplates) templates.
-
-Spell Checking validation of appropriate user-entered form fields is achieved via the open-source [LanguageTool](https://www.languagetool.org/) library in British English.
+The [Play Framework](https://www.playframework.com/) provides the [Google Guice](https://github.com/google/guice/wiki/Motivation) Dependency 
+Injection framework as standard, and [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) based 
+Webpages are generated via Play Framework [Twirl](https://www.playframework.com/documentation/2.5.x/ScalaTemplates) templates.
 
 ### Building and running with Docker
 
 - Build Docker Image `./buildDocker.sh`
 - Run Docker Container `docker run -d -p 9000:9000 --name ndelius2 -e APPLICATION_SECRET=abcdef ndelius2`
 
-### Elastic Search
-To configure an 'offenders' index.
-```
-curl -XPUT 'http://localhost:9200/offender?pretty' -H 'Content-Type: application/json' -d'
-{
-    "settings" : {
-        "index" : {
-            "number_of_shards" : 6, 
-            "number_of_replicas" : 1 
-        }
-    },
-    "mappings": {
-      "document": {
-        "properties": {
-          "dateOfBirth": {
-            "type":   "date",
-            "format": "yyyy-MM-dd||yyyy/MM/dd||dd-MM-yy||dd/MM/yy||dd-MM-yyyy||dd/MM/yyyy"
-          }
-        }
-      }
-    }
-}
-'
-```
-
-To insert a document.
-```
-curl -XPUT 'http://localhost:9200/offender/document/4500020000?pretty' -H 'Content-Type: application/json' -d'
-    {
-      "offenderId": 4500020000,
-      ...
-    }
-'
-```
-See `./test/resources/offender-search-result.json` for example data structure.
-
-Bulk insert
-```
-curl -H "Content-Type: application/json" -XPOST 'localhost:9200/offender/_bulk?pretty&refresh' --data-binary "@es-test-data.txt"
-
-```
-
-####
-Use `sbt -Dlogback.application.level=DEBUG run` to turn on ElasticSearch explain feature.
+### Dependencies
+ - Alfresco
+ - Delius Offender API 
+ - Elastic Search
+ - PDF Generator
+ - MongoDb (for Analytics)
+ - NOMIS API

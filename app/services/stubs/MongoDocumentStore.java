@@ -1,4 +1,4 @@
-package services.fakes;
+package services.stubs;
 
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;

@@ -25,13 +25,13 @@ public class Module extends AbstractModule {
         bind(OffenderSearch.class).to(ElasticOffenderSearch.class);
         bind(PrisonerApi.class).to(NomisPrisonerApi.class);
         bind(PrisonerApiToken.class).to(JwtNomisPrisonerApi.class);
+        bind(AnalyticsStore.class).to(MongoDbStore.class);
 
         bind(DocumentStore.class).toProvider(DocumentStoreProvider.class);
         bind(OffenderApi.class).toProvider(OffenderApiProvider.class);
         bind(RestClientBuilder.class).toProvider(RestClientBuilderProvider.class);
         bind(RestHighLevelClient.class).toProvider(RestHighLevelClientProvider.class);
 
-        bind(AnalyticsStore.class).toProvider(AnalyticsStoreProvider.class).asEagerSingleton();
         bind(MongoClient.class).toProvider(MongoClientProvider.class).asEagerSingleton();
     }
 }

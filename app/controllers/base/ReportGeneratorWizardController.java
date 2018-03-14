@@ -38,7 +38,6 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     private final PdfGenerator pdfGenerator;
     private final DocumentStore documentStore;
-    private final boolean standaloneOperation;
 
     protected ReportGeneratorWizardController(HttpExecutionContext ec,
                                               WebJarsUtil webJarsUtil,
@@ -54,8 +53,6 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
-
-        standaloneOperation = configuration.getBoolean("standalone.operation");
     }
 
     public CompletionStage<Result> reportPost() {
@@ -104,9 +101,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     @Override
     protected final CompletionStage<Result> cancelledWizard(T data) {
 
-        return standaloneOperation ?
-                generateReport(data).thenApply(result -> ok(ArrayUtils.toPrimitive(result)).as("application/pdf")) :
-                CompletableFuture.supplyAsync(() -> ok(renderCancelledView()), ec.current());
+        return CompletableFuture.supplyAsync(() -> ok(renderCancelledView()), ec.current());
     }
 
     @Override
@@ -117,9 +112,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                         Optional.ofNullable(stored.get("ID")).filter(not(Strings::isNullOrEmpty)).map(value(result)));
 
         final Function<CompletionStage<Byte[]>, CompletionStage<Optional<Byte[]>>> optionalResult = result ->
-                standaloneOperation ?
-                        result.thenApply(Optional::of) :
-                        result.thenCompose(resultIfStored);
+            result.thenCompose(resultIfStored);
 
         return optionalResult.apply(generateReport(data)).
                 exceptionally(error -> {
@@ -127,11 +120,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                     Logger.error("Completed Wizard: Generation or Storage error - " + data.toString(), error);
                     return Optional.empty();
                 }).
-                thenApplyAsync(result -> result.map(bytes -> {
-                    return standaloneOperation ?
-                            ok(ArrayUtils.toPrimitive(bytes)).as("application/pdf") :
-                            ok(renderCompletedView(bytes));
-                }).orElseGet(() -> {
+                thenApplyAsync(result -> result.map(bytes -> ok(renderCompletedView(bytes))).orElseGet(() -> {
 
                     Logger.warn("Report generator wizard failed");
                     return wizardFailed(data);
@@ -171,7 +160,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
                         val errorMessage = stored.get("message");
 
-                        params.put("errorMessage", Strings.isNullOrEmpty(errorMessage) && !standaloneOperation ? "No Document ID" : errorMessage);
+                        params.put("errorMessage", Strings.isNullOrEmpty(errorMessage) ? "No Document ID" : errorMessage);
                     }
 
                     return params;
@@ -237,9 +226,6 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     private CompletionStage<Map<String, String>> generateAndStoreReport(T data) {
 
-        return generateReport(data).thenCompose(result ->
-                standaloneOperation ?
-                        CompletableFuture.supplyAsync(ImmutableMap::of) :
-                        storeReport(data, result));
+        return generateReport(data).thenCompose(result -> storeReport(data, result));
     }
 }

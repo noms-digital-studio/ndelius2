@@ -4,24 +4,25 @@ import com.typesafe.config.Config;
 import interfaces.OffenderApi;
 import play.inject.Injector;
 import services.DeliusOffenderApi;
-import services.fakes.FakeOffenderApi;
+import services.stubs.StubOffenderApi;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class OffenderApiProvider implements Provider<OffenderApi> {
 
-    private final boolean offenderApiStandAloneOperation;
+    private final String offenderApiProvider;
     private Injector injector;
 
     @Inject
     public OffenderApiProvider(Config configuration, Injector injector) {
-        this.offenderApiStandAloneOperation = configuration.getBoolean("offender.api.standalone.operation");
+        this.offenderApiProvider = configuration.getString("offender.api.provider");
         this.injector = injector;
     }
 
     @Override
     public OffenderApi get() {
-        return offenderApiStandAloneOperation ? injector.instanceOf(FakeOffenderApi.class) : injector.instanceOf(DeliusOffenderApi.class);
+        return "stub".equals(offenderApiProvider) ?
+            injector.instanceOf(StubOffenderApi.class) : injector.instanceOf(DeliusOffenderApi.class);
     }
 }

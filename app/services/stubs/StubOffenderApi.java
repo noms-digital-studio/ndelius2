@@ -1,4 +1,4 @@
-package services.fakes;
+package services.stubs;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
@@ -11,7 +11,7 @@ import java.util.concurrent.CompletionStage;
 
 import static play.libs.Json.toJson;
 
-public class FakeOffenderApi implements OffenderApi {
+public class StubOffenderApi implements OffenderApi {
     @Override
     public CompletionStage<String> logon(String username) {
         // JWT Header/Body is {"alg":"HS512"}{"sub":"cn=fake.user,cn=Users,dc=moj,dc=com","uid":"fake.user","exp":1517631939}
