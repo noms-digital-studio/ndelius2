@@ -54,21 +54,12 @@ jobs:
                 destination: reports
     deploy:
         docker:
-          - image: openjdk:8
+          - image: paulodiovani/aws-eb-cli
         working_directory: ~/ndelius-new-tech
         steps:
         - attach_workspace:
             at: /workspace
         - checkout
-        - run:
-            name: Install AWS EB Tools
-            command: |
-                apt-get update
-                apt-get install -y python3-setuptools
-                easy_install3 pip
-                export PATH=$PATH:~/.local/bin/
-                pip install --upgrade --user awsebcli
-                eb --version
         - run:
             name: Deploy to Elastic Beanstalk
             command: |
