@@ -41,9 +41,48 @@ jobs:
                 command: |
                   mkdir -p ./target/artifacts
                   mv target/scala-2.12/*.jar ./target/artifacts/
+                  cp ./target/artifacts/ndelius2-0*.jar ./target/artifacts/ndelius2.jar
+            - persist_to_workspace:
+                root: ./target/artifacts/
+                paths:
+                  - ./ndelius2.jar
             - store_artifacts:
                 path: target/artifacts
                 destination: jars
             - store_artifacts:
                 path: ./target/test-reports/
                 destination: reports
+    deploy:
+        docker:
+          - image: openjdk:8
+        working_directory: ~/ndelius-new-tech
+        steps:
+        - attach_workspace:
+            at: /workspace
+        - checkout
+        - run:
+            name: Install AWS EB Tools
+            command: |
+                apt-get update
+                apt-get install -y python3-setuptools
+                easy_install3 pip
+                export PATH=$PATH:~/.local/bin/
+                pip install --upgrade --user awsebcli
+                eb --version
+        - run:
+            name: Deploy to Elastic Beanstalk
+            command: |
+                export PATH=$PATH:~/.local/bin/
+                eb deploy --label $CIRCLE_BUILD_NUM
+
+workflows:
+    version: 2
+    build-deploy:
+        jobs:
+            - build
+            - deploy:
+                requires:
+                    - build
+                filters:
+                    branches:
+                      only: master
