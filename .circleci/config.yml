@@ -40,12 +40,15 @@ jobs:
                 name: Save Fat Jar
                 command: |
                   mkdir -p ./target/artifacts
+                  rm target/scala-2.12/ndelius2_*-web-assets.jar
                   mv target/scala-2.12/*.jar ./target/artifacts/
-                  cp ./target/artifacts/ndelius2-0*.jar ./target/artifacts/ndelius2.jar
+                  ls -1 ./target/artifacts/ndelius2-*.jar | sed 's/^.*ndelius2-\(.*\)\.jar.*$/\1/' > ./target/artifacts/version.txt
+                  cp ./target/artifacts/ndelius2*.jar ./target/artifacts/ndelius2.jar
             - persist_to_workspace:
                 root: ./target/artifacts/
                 paths:
                   - ./ndelius2.jar
+                  - ./version.txt
             - store_artifacts:
                 path: target/artifacts
                 destination: jars
@@ -64,7 +67,7 @@ jobs:
             name: Deploy to Elastic Beanstalk
             command: |
                 export PATH=$PATH:~/.local/bin/
-                eb deploy --label $CIRCLE_BUILD_NUM
+                eb deploy --label $(cat /workspace/version.txt)
 
 workflows:
     version: 2
