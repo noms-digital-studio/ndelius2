@@ -5,7 +5,7 @@ import {matchesHighlightedField, matchesAnyHighlightedField} from './markableTex
 import AddContactLink from '../containers/addContactLinkContainer'
 
 const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
-    <li>
+    <li id={`offenderSummary${offenderSummary.offenderId}`}>
         <div className="offenderDetailsRow clearfix">
             <div className='offenderImageContainer'>
                 {offenderSummary.oneTimeNomisRef && <img className="offenderImage" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`}/>}

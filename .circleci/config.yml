@@ -5,32 +5,21 @@ jobs:
     build:
         working_directory: ~/ndelius-new-tech
         docker:
-            - image: openjdk:8
+            - image: circleci/openjdk:8-node-browsers
         steps:
             - checkout
             - restore_cache:
                 keys:
-                  - v1-ndelius-new-tech-{{ checksum "build.sbt" }}
-                  - v1-ndelius-new-tech-
-            - run:
-                name: Install sbt into build container
-                command: |
-                   apt-get update
-                   apt-get install apt-transport-https
-                   apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-                    echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-                   apt-get update
-                   apt-get install  -y sbt
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
             - run:
                 name: Run sbt build
                 command: |
-                  curl -sL https://deb.nodesource.com/setup_8.x | bash -
-                  apt-get install -y nodejs
                   export _JAVA_OPTIONS="-Xms512m -Xmx1024m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sbt assembly
+                  sbt assembly < /dev/null
             - save_cache:
-                key: v1-ndelius-new-tech-{{ checksum "build.sbt" }}
+                key: v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
                   - ~/.ivy2/cache
                   - ~/.sbt

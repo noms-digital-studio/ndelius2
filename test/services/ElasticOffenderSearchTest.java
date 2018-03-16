@@ -6,10 +6,8 @@ import com.typesafe.config.ConfigFactory;
 import helpers.FutureListener;
 import interfaces.OffenderApi;
 import lombok.val;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -18,26 +16,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import play.Environment;
-import play.Mode;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.StreamSupport;
 
-import static java.lang.String.format;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static scala.io.Source.fromInputStream;
+import static utils.data.OffenderESDataFactory.getSearchHitArray;
+import static utils.data.OffenderESDataFactory.getSearchHitArrayWithHighlights;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ElasticOffenderSearchTest {
@@ -50,9 +42,6 @@ public class ElasticOffenderSearchTest {
 
     @Mock
     private OffenderApi offenderApi;
-
-    @Captor
-    private ArgumentCaptor<SearchRequest> searchRequest;
 
     private ElasticOffenderSearch elasticOffenderSearch;
 
@@ -276,11 +265,7 @@ public class ElasticOffenderSearchTest {
         return Optional.ofNullable(offender.get("accessDenied")).map(JsonNode::asBoolean).orElse(false);
     }
 
-    private SearchHit[] getSearchHitArray() {
-        return getSearchHitArray(ImmutableMap.of("offenderId", 123, "crn", "X1224", "currentRestriction", false, "currentExclusion", false));
-    }
-
-    private SearchHit[] getSearchHitArrayWithMultipleHits() {
+    private static SearchHit[] getSearchHitArrayWithMultipleHits() {
         return getSearchHitArray(
             ImmutableMap.<String, Object>builder()
                 .put("offenderId", 100)
@@ -323,64 +308,4 @@ public class ElasticOffenderSearchTest {
         return  StreamSupport.stream(((Iterable<String>) () -> iterator).spliterator(), false).collect(toList());
     }
 
-    @SafeVarargs
-    private final SearchHit[] getSearchHitArrayWithHighlights(Map<String, HighlightField> highlightFields, Map<String, Object>... replacements) {
-        return stream(replacements).map((replacement) -> toSearchHit(highlightFields, replacement))
-            .collect(toList()).toArray(new SearchHit[replacements.length]);
-    }
-
-    @SafeVarargs
-    private final SearchHit[] getSearchHitArray(Map<String, Object>... replacements) {
-        return stream(replacements).map((replacement) -> toSearchHit(ImmutableMap.of(), replacement))
-            .collect(toList()).toArray(new SearchHit[replacements.length]);
-    }
-
-    private SearchHit toSearchHit(Map<String, HighlightField> highlightFields, Map<String, Object> replacementMap) {
-        val searchHitMap = new HashMap<String, Object>();
-        val environment = new Environment(null, this.getClass().getClassLoader(), Mode.TEST);
-
-        val offenderSearchResultsTemplate =
-            fromInputStream(environment.resourceAsStream("offender-search-result.json.template"), "UTF-8").mkString();
-
-        val offenderSearchResults =
-                withDefaults(replacementMap).
-                        keySet().
-                        stream().
-                        reduce(offenderSearchResultsTemplate,
-                                (template, key) -> template.replace(format("${%s}", key), withDefaults(replacementMap).get(key).toString()));
-
-
-        val bytesReference = new BytesArray(offenderSearchResults);
-        searchHitMap.put("_source", bytesReference);
-        searchHitMap.put("highlight", highlightFields);
-        return SearchHit.createFromMap(searchHitMap);
-    }
-
-    private Map<String, Object> withDefaults(Map<String, Object> replacementMap) {
-        if (!replacementMap.containsKey("dateOfBirth")) {
-            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
-                .put("dateOfBirth", "1978-01-16")
-                .build();
-        }
-
-        if (!replacementMap.containsKey("firstName")) {
-            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
-                .put("firstName", "firstName")
-                .build();
-        }
-
-        if (!replacementMap.containsKey("surname")) {
-            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
-                .put("surname", "surname")
-                .build();
-        }
-
-        if (!replacementMap.containsKey("currentDisposal")) {
-            return ImmutableMap.<String, Object>builder().putAll(replacementMap)
-                .put("currentDisposal", "0")
-                .build();
-        }
-
-        return replacementMap;
-    }
 }

@@ -42,7 +42,8 @@ libraryDependencies ++= Seq(
 
   "org.assertj" % "assertj-core" % "3.8.0" % "test",
   "org.mockito" % "mockito-all" % "1.10.19" % "test",
-  "com.github.tomakehurst" % "wiremock" % "2.12.0" % "test"
+  "com.github.tomakehurst" % "wiremock" % "2.12.0" % "test",
+  "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.4.0" % "test"
 )
 
 excludeDependencies ++= Seq(

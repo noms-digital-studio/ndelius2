@@ -3,7 +3,9 @@ package views.pages;
 import org.fluentlenium.core.FluentControl;
 import org.fluentlenium.core.FluentPage;
 
+import static org.openqa.selenium.By.cssSelector;
 import static org.openqa.selenium.By.name;
+import static org.openqa.selenium.By.id;
 
 public class NationalSearchPage extends FluentPage {
 
@@ -18,5 +20,17 @@ public class NationalSearchPage extends FluentPage {
 
     public boolean hasSearchBox() {
         return $(name("searchTerms")).present();
+    }
+
+    public void fillSearchTerm(String searchTerm) {
+        $(name("searchTerms")).fill().with(searchTerm);
+    }
+
+    public boolean hasOffenderResults() {
+        return $(id("offender-results")).present();
+    }
+
+    public String getSummaryTitle(long offenderId) {
+        return $(cssSelector(String.format("#offenderSummary%d", offenderId))).text();
     }
 }
