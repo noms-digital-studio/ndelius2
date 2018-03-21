@@ -5,6 +5,6 @@ import feedbackPage from '../components/feedbackPage'
 export default connect(
     () => ({}),
     dispatch => ({
-        addFeedback: (feedback) => dispatch(addFeedback(feedback))
+        addFeedback: (feedback, router) => dispatch(addFeedback(feedback, router))
     }),
 )(feedbackPage)

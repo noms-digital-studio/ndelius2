@@ -1,6 +1,6 @@
 import {addContact, addNewOffender, showOffenderDetails, legacySearch, addFeedback} from './navigate'
 import {expect} from 'chai';
-import {stub} from 'sinon';
+import {stub, match} from 'sinon';
 
 
 describe('navigate action', () => {
@@ -27,7 +27,7 @@ describe('navigate action', () => {
                 data: JSON.stringify({type: 'search-add-contact', rankIndex: 2, fieldMatch: ["firstName", "surname"]}),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
-                success: null
+                complete: undefined
             })
         })
     })
@@ -45,7 +45,7 @@ describe('navigate action', () => {
                 data: JSON.stringify({type: 'search-add-new-offender'}),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
-                success: null
+                complete: undefined
             })
         })
     })
@@ -63,7 +63,7 @@ describe('navigate action', () => {
                 data: JSON.stringify({type: 'search-offender-details', rankIndex: 2, fieldMatch: ["firstName", "surname"]}),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
-                success: null
+                complete: undefined
             })
         })
     })
@@ -81,23 +81,32 @@ describe('navigate action', () => {
                 data: JSON.stringify({type: 'search-legacy-search'}),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
-                success: null
+                complete: undefined
             })
         })
     })
     describe('on addFeedback', () => {
+        let goBack
         beforeEach(() => {
-            addFeedback({anything: "some feedback"})()
+            goBack = stub()
+            addFeedback({anything: "some feedback"}, {goBack})()
         })
         it ('calls endpoint with type', () => {
-            expect(global.$.ajax).to.be.calledWith({
+            expect(global.$.ajax).to.be.calledWith(match({
                 url: 'nationalSearch/recordSearchOutcome',
                 type: 'POST',
                 data: JSON.stringify({type: 'search-feedback', feedback: {anything: "some feedback"}}),
                 contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: null
+                dataType: 'json'
+            }))
+        })
+        context('when ajax call completes', () => {
+            it ('calls router to goBack', () => {
+                // simulate ajax complete
+                global.$.ajax.getCall(0).args[0].complete()
+                expect(goBack).to.be.called
             })
+
         })
     })
 

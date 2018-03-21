@@ -3,14 +3,14 @@ export const LEGACY_SEARCH = 'LEGACY_SEARCH'
 export const SHOW_OFFENDER_DETAILS = 'SHOW_OFFENDER_DETAILS'
 export const ADD_NEW_OFFENDER = 'ADD_NEW_OFFENDER'
 
-const recordSearchOutcome = data => {
+const recordSearchOutcome = (data, callback) => {
     $.ajax({
         url: 'nationalSearch/recordSearchOutcome',
         type: 'POST',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: null
+        complete: callback
     })
 }
 export const showOffenderDetails = (offenderId, rankIndex, highlight = {}) => (
@@ -41,9 +41,9 @@ export const addNewOffender = () => (
     }
 )
 
-export const addFeedback = feedback => (
+export const addFeedback = (feedback, router) => (
     () => {
-        recordSearchOutcome({ type: 'search-feedback', feedback})
+        recordSearchOutcome({ type: 'search-feedback', feedback}, () => router.goBack())
     }
 )
 

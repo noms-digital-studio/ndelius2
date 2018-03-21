@@ -94,8 +94,7 @@ class FeedbackPage extends Component {
         addFeedback({
             rating: this.state.rating,
             feedback: this.state.feedback
-        })
-        this.context.router.goBack()
+        }, this.context.router)
     }
 }
 

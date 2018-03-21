@@ -27,11 +27,12 @@ describe('FeedbackPage component', () => {
         let preventDefault;
         let goBack;
         let addFeedback;
+        let context;
         beforeEach(() => {
             addFeedback = stub()
             goBack = stub()
             preventDefault = stub()
-            const context = {
+            context = {
                 router: {
                     goBack
                 }
@@ -43,17 +44,12 @@ describe('FeedbackPage component', () => {
         })
 
         it('adds feedback outcome', () => {
-            expect(addFeedback).to.be.calledWith({rating: "Very satisfied", feedback: "Nothing - it is perfect"})
+            expect(addFeedback).to.be.calledWith({rating: "Very satisfied", feedback: "Nothing - it is perfect"}, context.router)
         })
 
         it('will prevent default browser submit behaviour', () => {
             expect(preventDefault).to.be.calledOnce
         })
-
-        it('will ask router to go back a page', () => {
-            expect(goBack).to.be.calledOnce
-        })
-
     })
 })
 
