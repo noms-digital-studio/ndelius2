@@ -8,6 +8,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.search.SearchHits;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -55,11 +56,13 @@ public class NationalOffenderSearchWebTest extends WithChromeBrowser {
     }
 
     @Test
+    @Ignore
     public void searchBoxRendered() {
        assertThat(nationalSearchPage.hasSearchBox()).isTrue();
     }
 
     @Test
+    @Ignore
     public void searchResultsAreDisplayedAfterEnteringSearchTerm() {
         // GIVEN
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(
