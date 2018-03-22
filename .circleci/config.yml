@@ -44,6 +44,48 @@ jobs:
             - store_artifacts:
                 path: ./target/test-reports/
                 destination: reports
+    deploysmoketest:
+        docker:
+          - image: paulodiovani/aws-eb-cli
+        working_directory: ~/ndelius-new-tech
+        steps:
+        - attach_workspace:
+            at: /workspace
+        - checkout
+        - run:
+            name: Deploy to Elastic Beanstalk Smoke Test environment
+            command: |
+                export PATH=$PATH:~/.local/bin/
+                eb deploy delius-new-tech-smoke-test --label $(cat /workspace/version.txt)
+    smoketest:
+        docker:
+            - image: circleci/openjdk:8-node-browsers
+        working_directory: ~/ndelius-new-tech
+        steps:
+        - run:
+            name: Checkout smoke test
+            command: |
+                git clone https://github.com/noms-digital-studio/ndelius-new-tech-smoke-test.git
+        - run:
+            name: Build and run test
+            command: |
+                cd ndelius-new-tech-smoke-test
+                gradle test
+        - store_test_results:
+            path: ./ndelius-new-tech-smoke-test/build/test-results/
+        - store_test_results:
+            path: ./ndelius-new-tech-smoke-test/build/geb-reports/
+        - store_test_results:
+            path: ./ndelius-new-tech-smoke-test/build/reports/
+        - store_artifacts:
+            path: ./ndelius-new-tech-smoke-test/build/test-results/
+            destination: reports
+        - store_artifacts:
+            path: ./ndelius-new-tech-smoke-test/build/geb-reports/
+            destination: reports
+        - store_artifacts:
+            path: ./ndelius-new-tech-smoke-test/build/reports/
+            destination: reports
     deploy:
         docker:
           - image: paulodiovani/aws-eb-cli
@@ -60,9 +102,15 @@ jobs:
 
 workflows:
     version: 2
-    build-deploy:
+    build-deploy-test:
         jobs:
             - build
+            - deploysmoketest:
+                requires:
+                    - build
+            - smoketest:
+                requires:
+                    - deploysmoketest
             - deploy:
                 requires:
                     - build
