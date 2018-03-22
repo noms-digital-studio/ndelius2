@@ -10,6 +10,7 @@ Fully asynchronous and non-blocking from the ground up, with the potential to se
 
 Prerequisites:
 - sbt (Scala Build Tool) http://www.scala-sbt.org/release/docs
+- Chrome
 
 Build command (includes running unit and integration tests):
 - `sbt assembly`
@@ -45,6 +46,24 @@ Run all tests:
 Run frontend tests:
 - sbt mocha
 
+### Circle CI build
+
+#### Branch build
+The build pipeline performs the following steps
+- `sbt assembly`
+- deploy to the new tech smoke test environment
+- run smoke tests using the tests in  [Smoke Tests]
+
+If changes are required to the Smoke Tests which would break a `master` build then just branch the [Smoke Tests] with a branch of the _exact_ name as this branch. CircleCI will attempt to use a matching branch name else will use `master`
+
+#### Master build
+
+The build pipeline performs the following steps
+- sbt assembly
+- deploy to the new tech dev environment
+- deploy to the new tech smoke test environment
+- run smoke tests using the tests in  [Smoke Tests]
+
 ### Development notes
 
 The [Play Framework](https://www.playframework.com/) provides the [Google Guice](https://github.com/google/guice/wiki/Motivation) Dependency 
@@ -63,3 +82,5 @@ Webpages are generated via Play Framework [Twirl](https://www.playframework.com/
  - PDF Generator
  - MongoDb (for Analytics)
  - NOMIS API
+
+[Smoke Tests]: https://github.com/noms-digital-studio/ndelius-new-tech-smoke-test
