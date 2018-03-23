@@ -72,19 +72,19 @@ jobs:
             command: |
                 gradle test
         - store_test_results:
-            path: ./ndelius-new-tech-smoke-test/build/test-results/
+            path: ./build/test-results/
         - store_test_results:
-            path: ./ndelius-new-tech-smoke-test/build/geb-reports/
+            path: ./build/geb-reports/
         - store_test_results:
-            path: ./ndelius-new-tech-smoke-test/build/reports/
+            path: ./build/reports/
         - store_artifacts:
-            path: ./ndelius-new-tech-smoke-test/build/test-results/
+            path: ./build/test-results/
             destination: reports
         - store_artifacts:
-            path: ./ndelius-new-tech-smoke-test/build/geb-reports/
+            path: ./build/geb-reports/
             destination: reports
         - store_artifacts:
-            path: ./ndelius-new-tech-smoke-test/build/reports/
+            path: ./build/reports/
             destination: reports
     deploy:
         docker:
