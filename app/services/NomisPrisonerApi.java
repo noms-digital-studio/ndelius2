@@ -5,6 +5,7 @@ import com.typesafe.config.Config;
 import helpers.JsonHelper;
 import interfaces.PrisonerApi;
 import interfaces.PrisonerApiToken;
+import lombok.val;
 import play.Logger;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
@@ -60,8 +61,32 @@ public class NomisPrisonerApi implements PrisonerApi {
                         throw new RuntimeException("No NOMIS image retrieved");
                     }
                     else {
-                        return  Base64.getDecoder().decode(base64);
+                        return Base64.getDecoder().decode(base64);
                     }
                 });
     }
+
+    @Override
+    public CompletionStage<Boolean> isHealthy() {
+
+        return wsClient.url(apiBaseUrl + "health").
+                addHeader(AUTHORIZATION, "Bearer " + apiToken.get()).
+                get().
+                thenApply(wsResponse -> {
+
+                    val healthy = wsResponse.getStatus() == OK;
+
+                    if (!healthy) {
+                        Logger.warn("NOMIS API Response Status: " + wsResponse.getStatus());
+                    }
+
+
+                    return healthy;
+                }).
+                exceptionally(throwable -> {
+
+                    Logger.error("Error while checking NOMIS API connectivity", throwable);
+                    return false;
+                });
+        }
 }
