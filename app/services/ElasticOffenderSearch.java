@@ -13,7 +13,6 @@ import lombok.val;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.search.suggest.Suggest;
 import play.Logger;
 import play.libs.Json;
 import services.helpers.OffenderSorter;
@@ -102,7 +101,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
                         "offenders", completeResults,
                         "total", response.getHits().getTotalHits(),
-                        "suggestions", Optional.ofNullable(response.getSuggest()).orElse(new Suggest(new ArrayList<>()))
+                        "suggestions", Optional.ofNullable(response.getSuggest()).map(suggest -> parse(suggest.toString())).orElse(parse("{}"))
                 );
             });
         };

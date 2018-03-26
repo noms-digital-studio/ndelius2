@@ -94,6 +94,8 @@ public class SearchQueryBuilderTest {
         TermQueryBuilder termQueryBuilder = (TermQueryBuilder) builder.postFilter();
         assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
         assertThat(termQueryBuilder.value()).isEqualTo(false);
+
+        assertThat(builder.suggest().getSuggestions().keySet()).containsOnly("firstName", "surname");
     }
 
     @Test
