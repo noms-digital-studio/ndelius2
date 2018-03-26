@@ -40,7 +40,11 @@ public class FeedbackControllerTest extends WithApplication {
                                 "username", "cn=fake.user,cn=Users,dc=moj,dc=com",
                                 "feedback", ImmutableMap.of(
                                         "rating", "Very satisfied",
-                                        "feedback", "It is really good")),
+                                        "feedback", "It is really good",
+                                        "role", "Offender Manager in the Community",
+                                        "provider", "CRC",
+                                        "region", "London"
+                                        )),
                         ImmutableMap.of(
                                 "dateTime", new Date(),
                                 "username", "cn=another.user,cn=Users,dc=moj,dc=com",
@@ -78,6 +82,9 @@ public class FeedbackControllerTest extends WithApplication {
 
         assertThat(content).contains("Very satisfied");
         assertThat(content).contains("It is really good");
+        assertThat(content).contains("Offender Manager in the Community");
+        assertThat(content).contains("CRC");
+        assertThat(content).contains("London");
         assertThat(content).contains("fake.user");
         assertThat(content).contains("Dissatisfied");
         assertThat(content).contains("It is rubbish");

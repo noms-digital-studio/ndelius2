@@ -20,10 +20,43 @@ class FeedbackPage extends Component {
                         <h1 className="heading-xlarge">Give feedback</h1>
                         <form onSubmit={event => this.submitFeedback(event)}>
                             <fieldset>
-                                <legend className="margin-bottom medium">
+                                <div className="form-group">
+                                    <label className="form-label" for="role">What is your role?</label>
+                                    <select className="form-control" id="role" name="role" onChange={event => this.handleRoleChange(event)}>
+                                        <option>&nbsp;</option>
+                                        <option>Probation Officer</option>
+                                        <option>Senior Probation Officer</option>
+                                        <option>Case Administrator</option>
+                                        <option>Offender Manager in the Community</option>
+                                        <option>Offender Manager in Prison</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label" for="provider">Who do you work for?</label>
+                                    <select className="form-control" id="provider" name="provider" onChange={event => this.handleProviderChange(event)}>
+                                        <option>&nbsp;</option>
+                                        <option>NPS</option>
+                                        <option>CRC</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label" for="region">Which region do you work in?</label>
+                                    <select className="form-control" id="region" name="region" onChange={event => this.handleRegionChange(event)}>
+                                        <option>&nbsp;</option>
+                                        <option>North East</option>
+                                        <option>North West</option>
+                                        <option>Wales</option>
+                                        <option>Midlands</option>
+                                        <option>South West & South Central</option>
+                                        <option>South East</option>
+                                        <option>London</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
                                     <span className="form-label-bold">Overall, how did you feel about the National Search service you used today?</span>
-                                </legend>
-
+                                </div>
                                 <div className="form-group">
 
                                     <div className="multiple-choice">
@@ -88,12 +121,27 @@ class FeedbackPage extends Component {
         this.setState({rating: event.target.value});
     }
 
+    handleRoleChange(event) {
+        this.setState({role: event.target.value});
+    }
+
+    handleProviderChange(event) {
+        this.setState({provider: event.target.value});
+    }
+
+    handleRegionChange(event) {
+        this.setState({region: event.target.value});
+    }
+
     submitFeedback(event) {
         const {addFeedback} = this.props
         event.preventDefault()
         addFeedback({
             rating: this.state.rating,
-            feedback: this.state.feedback
+            feedback: this.state.feedback,
+            role: this.state.role,
+            provider: this.state.provider,
+            region: this.state.region
         }, this.context.router)
     }
 }
