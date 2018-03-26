@@ -29,10 +29,12 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                             <span aria-label="Age">{offenderSummary.age}</span>
                         </span>
                     </p>
-                    {matchesHighlightedField(offenderSummary.highlight, 'otherIds.pncNumber') &&
+                    {matchesAnyHighlightedField(offenderSummary.highlight, ['otherIds.pncNumberLongYear', 'otherIds.pncNumberShortYear']) &&
                     <p>
                         <span id='pncNumber-label'>PNC:&nbsp;</span>
-                        <span id='pncNumber' aria-labelledby="pncNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.pncNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.pncNumber' /></span>
+                        <span id='pncNumber' aria-labelledby="pncNumber-label" className='margin-right' className="mark">
+                            {offenderSummary.otherIds.pncNumber}
+                        </span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'otherIds.nomsNumber') &&
@@ -47,10 +49,10 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                         <span id='niNumber' aria-labelledby="niNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.niNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.niNumber'/></span>
                     </p>
                     }
-                    {matchesHighlightedField(offenderSummary.highlight, 'otherIds.croNumber') &&
+                    {matchesHighlightedField(offenderSummary.highlight, 'otherIds.croNumberLowercase') &&
                     <p>
                         <span id='croNumber-label'>CRO:&nbsp;</span>
-                        <span id='croNumber' aria-labelledby="croNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.croNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.croNumber'/></span>
+                        <span id='croNumber' aria-labelledby="croNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.croNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.croNumberLowercase'/></span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'middleNames') &&

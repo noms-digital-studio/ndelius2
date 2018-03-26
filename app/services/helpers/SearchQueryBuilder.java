@@ -1,6 +1,7 @@
 package services.helpers;
 
 import helpers.DateTimeHelper;
+import helpers.PncHelper;
 import lombok.val;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -11,48 +12,54 @@ import play.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static helpers.DateTimeHelper.covertToCanonicalDate;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
-import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
-import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
-import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 
 public class SearchQueryBuilder {
     public static SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
+
+        val simpleTerms = simpleTerms(searchTerm);
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutDates(searchTerm))
+        boolQueryBuilder.should().add(multiMatchQuery(simpleTerms)
             .field("firstName", 10)
             .field("surname", 10)
             .field("middleNames", 8)
             .field("offenderAliases.firstName", 8)
             .field("offenderAliases.surname", 8)
             .field("contactDetails.addresses.town")
-            // CROSS_FIELDS Analyzes the query string into individual terms, then looks
-            // for each term in any of the fields, as though they were one big field
             .type(CROSS_FIELDS));
 
-        boolQueryBuilder.should().add(multiMatchQuery(termsWithoutSingleLetters(termsWithoutDates(searchTerm)))
+        boolQueryBuilder.should().add(multiMatchQuery(simpleTerms)
             .field("gender")
             .field("otherIds.crn", 10)
             .field("otherIds.nomsNumber", 10)
             .field("otherIds.niNumber", 10)
-            .field("otherIds.pncNumber", 10)
-            .field("otherIds.croNumber", 10)
             .field("contactDetails.addresses.streetName")
             .field("contactDetails.addresses.county")
             .field("contactDetails.addresses.postcode", 10)
-            // MOST_FIELDS Finds documents which match any field and combines the _score from each field
             .type(MOST_FIELDS));
+
+        boolQueryBuilder.should().add(multiMatchQuery(searchTerm.toLowerCase())
+            .field("otherIds.croNumberLowercase", 10)
+            .analyzer("whitespace"));
+
+        termsThatLookLikePncNumbers(searchTerm).forEach(pnc ->
+            boolQueryBuilder.should().add(multiMatchQuery(pnc)
+                .field("otherIds.pncNumberLongYear", 10)
+                .field("otherIds.pncNumberShortYear", 10)
+                .analyzer("whitespace")));
 
         termsThatLookLikeDates(searchTerm).forEach(dateTerm ->
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
                 .field("dateOfBirth", 11)
                 .lenient(true)));
 
-        Stream.of(termsWithoutDates(searchTerm).split(" "))
+        Stream.of(simpleTermsIncludingSingleLetters(searchTerm).split(" "))
             .filter(term -> !term.isEmpty())
             .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
 
@@ -75,22 +82,34 @@ public class SearchQueryBuilder {
         return searchSource;
     }
 
-    public static List<String> termsThatLookLikeDates(String searchTerm) {
+    private static List<String> termsThatLookLikePncNumbers(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
-            .filter(DateTimeHelper::canBeConvertedToADate)
-            .map(term -> DateTimeHelper.covertToCanonicalDate(term).get())
+            .filter(PncHelper::canBeConvertedToAPnc)
+            .map(PncHelper::covertToCanonicalPnc)
             .collect(toList());
     }
 
-    public static String termsWithoutDates(String searchTerm) {
+    public static List<String> termsThatLookLikeDates(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
-            .filter(term -> !DateTimeHelper.covertToCanonicalDate(term).isPresent())
+            .filter(DateTimeHelper::canBeConvertedToADate)
+            .map(term -> covertToCanonicalDate(term).get())
+            .collect(toList());
+    }
+
+    public static String simpleTerms(String searchTerm) {
+        return Stream.of(searchTerm.split(" "))
+            .filter(term -> term.length() > 1)
+            .filter(term -> !covertToCanonicalDate(term).isPresent())
+            .filter(term -> !term.contains("/"))
+            .map(String::toLowerCase)
             .collect(joining(" "));
     }
 
-    public static String termsWithoutSingleLetters(String searchTerm) {
+    private static String simpleTermsIncludingSingleLetters(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
-            .filter(term -> term.length() > 1)
+            .filter(term -> !covertToCanonicalDate(term).isPresent())
+            .filter(term -> !term.contains("/"))
+            .map(String::toLowerCase)
             .collect(joining(" "));
     }
 

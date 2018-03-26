@@ -28,26 +28,14 @@ public class SearchQueryBuilderTest {
     }
 
     @Test
-    public void termsWithoutDatesAreExtracted() {
-        String terms = SearchQueryBuilder.termsWithoutDates("sna 28/02/2018 foo 2017-Jun-3 bar");
+    public void termsWithoutSingleLettersAreExtracted() {
+        String terms = SearchQueryBuilder.simpleTerms("a sna 28/02/2018 b foo 2017-Jun-3 bar c");
         assertThat(terms).isEqualTo("sna foo bar");
     }
 
     @Test
-    public void termsWithoutDatesReturnsEmptyString() {
-        String terms = SearchQueryBuilder.termsWithoutDates("28/02/2018 2017-Jun-3");
-        assertThat(terms).isEqualTo("");
-    }
-
-    @Test
-    public void termsWithoutSingleLettersAreExtracted() {
-        String terms = SearchQueryBuilder.termsWithoutSingleLetters("a sna 28/02/2018 b foo 2017-Jun-3 bar c");
-        assertThat(terms).isEqualTo("sna 28/02/2018 foo 2017-Jun-3 bar");
-    }
-
-    @Test
     public void termsWithoutSingleLettersReturnsEmptyString() {
-        String terms = SearchQueryBuilder.termsWithoutSingleLetters("a b c");
+        String terms = SearchQueryBuilder.simpleTerms("a b c");
         assertThat(terms).isEqualTo("");
     }
 
@@ -60,11 +48,11 @@ public class SearchQueryBuilderTest {
 
     @Test
     public void searchSourceBuilderHasCorrectQueries() {
-        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970 a smith 1/2/1992", 10, 3);
+        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("2013/0234567A 15-09-1970 a smith 1/2/1992", 10, 3);
 
         val query = (BoolQueryBuilder) builder.query();
         val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
-        assertThat(queryBuilder1.value()).isEqualTo("a smith");
+        assertThat(queryBuilder1.value()).isEqualTo("smith");
         assertThat(queryBuilder1.fields()).containsOnlyKeys(
             "firstName",
             "surname",
@@ -80,19 +68,28 @@ public class SearchQueryBuilderTest {
             "otherIds.crn",
             "otherIds.nomsNumber",
             "otherIds.niNumber",
-            "otherIds.pncNumber",
-            "otherIds.croNumber",
             "contactDetails.addresses.streetName",
             "contactDetails.addresses.county",
             "contactDetails.addresses.postcode");
 
-        assertThat(((MultiMatchQueryBuilder)query.should().get(2)).value()).isEqualTo("1970-09-15");
+        val queryBuilder3 = (MultiMatchQueryBuilder)query.should().get(2);
+        assertThat(queryBuilder3.value()).isEqualTo("2013/0234567a 15-09-1970 a smith 1/2/1992");
+        assertThat(queryBuilder3.fields()).containsOnlyKeys(
+            "otherIds.croNumberLowercase");
 
-        assertThat(((MultiMatchQueryBuilder)query.should().get(3)).value()).isEqualTo("1992-02-01");
+        val queryBuilder4 = (MultiMatchQueryBuilder)query.should().get(3);
+        assertThat(queryBuilder4.value()).isEqualTo("2013/234567a");
+        assertThat(queryBuilder4.fields()).containsOnlyKeys(
+            "otherIds.pncNumberLongYear",
+            "otherIds.pncNumberShortYear");
 
-        assertThat(((PrefixQueryBuilder)query.should().get(4)).value()).isEqualTo("a");
+        assertThat(((MultiMatchQueryBuilder)query.should().get(4)).value()).isEqualTo("1970-09-15");
 
-        assertThat(((PrefixQueryBuilder)query.should().get(5)).value()).isEqualTo("smith");
+        assertThat(((MultiMatchQueryBuilder)query.should().get(5)).value()).isEqualTo("1992-02-01");
+
+        assertThat(((PrefixQueryBuilder)query.should().get(6)).value()).isEqualTo("a");
+
+        assertThat(((PrefixQueryBuilder)query.should().get(7)).value()).isEqualTo("smith");
 
         TermQueryBuilder termQueryBuilder = (TermQueryBuilder) builder.postFilter();
         assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");

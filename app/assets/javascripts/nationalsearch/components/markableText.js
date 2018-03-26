@@ -3,16 +3,15 @@ import {flatMap} from '../../helpers/streams'
 import moment from 'moment'
 
 const MarkableText = ({text, searchTerm, isDate, highlight, highlightFieldName, allowSingleCharacter = false}) => {
+    if (Array.isArray(highlightFieldName)) {
+        if (matchesAnyHighlightedField(highlight, highlightFieldName)) {
+            return drawHighlightedText(text, searchTerm, isDate, allowSingleCharacter);
+        }
+        return <span>{text}</span>
+
+    }
     if (matchesHighlightedField(highlight, highlightFieldName)) {
-        const chunks = toHighlightList(text, searchTerm, isDate, allowSingleCharacter);
-        return (
-            <span>
-            {chunks.map( (chunk, index) => {
-                const fragment = text.substr(chunk.start, chunk.end - chunk.start)
-                return (<Text key={index} text={fragment} highlight={chunk.highlight}/>)
-            })}
-        </span>
-        )
+        return drawHighlightedText(text, searchTerm, isDate, allowSingleCharacter);
     }
     return <span>{text}</span>
 }
@@ -28,6 +27,18 @@ const Text = ({text, highlight}) =>  {
         )
     }
 }
+
+const drawHighlightedText = function (text, searchTerm, isDate, allowSingleCharacter) {
+    const chunks = toHighlightList(text, searchTerm, isDate, allowSingleCharacter);
+    return (
+        <span>
+            {chunks.map((chunk, index) => {
+                const fragment = text.substr(chunk.start, chunk.end - chunk.start)
+                return (<Text key={index} text={fragment} highlight={chunk.highlight}/>)
+            })}
+        </span>
+    )
+};
 
 export const matchesHighlightedField = (highlight, highlightFieldName) => !highlight || Object.getOwnPropertyNames(highlight).indexOf(highlightFieldName) > -1
 export const matchesAnyHighlightedField = (highlight, highlightFieldNames) => highlightFieldNames.reduce((accumulator, currentValue) => accumulator || matchesHighlightedField(highlight, currentValue), false)

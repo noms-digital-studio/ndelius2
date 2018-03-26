@@ -85,7 +85,7 @@ public class GenerateOffenderESFile {
     private static void write(BufferedWriter output, JsonNode node) {
         try {
             System.out.print(".");
-            output.write(String.format("{\"index\":{\"_id\":%d,\"_type\":\"document\"}}", node.get("offenderId").asLong()));
+            output.write(String.format("{\"index\":{\"_id\":%d,\"_type\":\"document\",\"pipeline\":\"pnc-pipeline\"}}", node.get("offenderId").asLong()));
             output.newLine();
             output.write(node.toString());
             output.newLine();
