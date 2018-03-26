@@ -325,6 +325,190 @@ describe('OffenderSearchSummary component', () => {
 
         })
     })
+    describe('offender manager', () => {
+        let summary
+
+        context('no offender manager node', () => {
+            beforeEach(() => {
+                const offenderSummary = offender()
+                delete offenderSummary.offenderManagers
+                summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+            })
+
+            it('renders provider label with no text', () => {
+                expect(summary.find('#provider').text().trim()).to.equal('Provider:')
+            })
+            it('renders officer label with no text', () => {
+                expect(summary.find('#officer').text().trim()).to.equal('Officer name:')
+            })
+        })
+        context('no offender managers', () => {
+            beforeEach(() => {
+                const offenderSummary = offender({offenderManagers: []})
+                summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+            })
+
+            it('renders provider label with no text', () => {
+                expect(summary.find('#provider').text().trim()).to.equal('Provider:')
+            })
+            it('renders officer label with no text', () => {
+                expect(summary.find('#officer').text().trim()).to.equal('Officer name:')
+            })
+        })
+        context('no active offender managers', () => {
+            beforeEach(() => {
+                const offenderSummary = offender({offenderManagers: [
+                        {
+                            "staff": {
+                                "forenames": "Annette",
+                                "surname": "Anld"
+                            },
+                            "probationArea": {
+                                "code": "C16",
+                                "description": "CPA Thames Valley"
+                            },
+                            "fromDate": "2018-02-16",
+                            "active": false
+                        }]})
+                summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+            })
+
+            it('renders provider label with no text', () => {
+                expect(summary.find('#provider').text().trim()).to.equal('Provider:')
+            })
+            it('renders officer label with no text', () => {
+                expect(summary.find('#officer').text().trim()).to.equal('Officer name:')
+            })
+        })
+        context('with active offender managers', () => {
+            beforeEach(() => {
+                const offenderSummary = offender({offenderManagers: [
+                        {
+                            "staff": {
+                                "forenames": "Annette",
+                                "surname": "Anld"
+                            },
+                            "probationArea": {
+                                "code": "C16",
+                                "description": "CPA Thames Valley"
+                            },
+                            "fromDate": "2018-02-16",
+                            "active": true
+                        }]})
+                summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+            })
+
+            it('renders active provider', () => {
+                expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
+            })
+            it('renders active officer', () => {
+                console.log(summary.find('#officer').text().trim())
+                expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
+            })
+        })
+        context('with active and inactive offender managers', () => {
+            beforeEach(() => {
+                const offenderSummary = offender({offenderManagers: [
+                        {
+                            "staff": {
+                                "forenames": "Booby",
+                                "surname": "Boat"
+                            },
+                            "probationArea": {
+                                "code": "C19",
+                                "description": "CPA Birmingham"
+                            },
+                            "fromDate": "2018-02-16",
+                            "active": false
+                        },
+                        {
+                            "staff": {
+                                "forenames": "Annette",
+                                "surname": "Anld"
+                            },
+                            "probationArea": {
+                                "code": "C16",
+                                "description": "CPA Thames Valley"
+                            },
+                            "fromDate": "2018-02-16",
+                            "active": true
+                        },
+                        {
+                            "staff": {
+                                "forenames": "Trevor",
+                                "surname": "Boots"
+                            },
+                            "probationArea": {
+                                "code": "C18",
+                                "description": "CPA Sheffield"
+                            },
+                            "fromDate": "2018-02-16",
+                            "active": false
+                        }
+                    ]})
+                summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+            })
+
+            it('renders active provider', () => {
+                expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
+            })
+            it('renders active officer', () => {
+                console.log(summary.find('#officer').text().trim())
+                expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
+            })
+        })
+        context('with many active offender managers', () => {
+            beforeEach(() => {
+                const offenderSummary = offender({offenderManagers: [
+                        {
+                            "staff": {
+                                "forenames": "Annette",
+                                "surname": "Anld"
+                            },
+                            "probationArea": {
+                                "code": "C16",
+                                "description": "CPA Thames Valley"
+                            },
+                            "fromDate": "2018-02-16",
+                            "active": true
+                        },
+                        {
+                            "staff": {
+                                "forenames": "Booby",
+                                "surname": "Boat"
+                            },
+                            "probationArea": {
+                                "code": "C19",
+                                "description": "CPA Birmingham"
+                            },
+                            "fromDate": "2018-02-16",
+                            "active": true
+                        },
+                        {
+                            "staff": {
+                                "forenames": "Trevor",
+                                "surname": "Boots"
+                            },
+                            "probationArea": {
+                                "code": "C18",
+                                "description": "CPA Sheffield"
+                            },
+                            "fromDate": "2018-02-16",
+                            "active": true
+                        }
+                    ]})
+                summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+            })
+
+            it('renders first active provider', () => {
+                expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
+            })
+            it('renders first active officer', () => {
+                console.log(summary.find('#officer').text().trim())
+                expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
+            })
+        })
+    })
 })
 
 describe('Address component', () => {
