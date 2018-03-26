@@ -34,24 +34,28 @@ public class NationalSearchController extends Controller {
     private static final String SEARCH_ANALYTICS_GROUP_ID = "searchAnalyticsGroupId";
 
     private final views.html.nationalSearch template;
+    private final views.html.nationalSearchMaintenance maintenanceTemplate;
     private final OffenderSearch offenderSearch;
     private final Duration userTokenValidDuration;
     private final OffenderApi offenderApi;
     private final AnalyticsStore analyticsStore;
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
+    private final boolean inMaintenanceMode;
 
     @Inject
     public NationalSearchController(
             HttpExecutionContext ec,
             Config configuration,
             views.html.nationalSearch template,
+            views.html.nationalSearchMaintenance maintenanceTemplate,
             OffenderSearch offenderSearch,
             OffenderApi offenderApi,
             AnalyticsStore analyticsStore) {
 
         this.ec = ec;
         this.template = template;
+        this.maintenanceTemplate = maintenanceTemplate;
         this.offenderSearch = offenderSearch;
         this.offenderApi = offenderApi;
         this.analyticsStore = analyticsStore;
@@ -60,9 +64,13 @@ public class NationalSearchController extends Controller {
 
         val paramsSecretKey = configuration.getString("params.secret.key");
         decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
+        inMaintenanceMode = configuration.getBoolean("maintenance.offender.search");
     }
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
+        if (inMaintenanceMode) {
+            return CompletableFuture.completedFuture(ok(maintenanceTemplate.render()));
+        }
 
         val username = decrypter.apply(encryptedUsername);
 
