@@ -5,12 +5,14 @@ import helpers.JsonHelper;
 import interfaces.*;
 import lombok.Value;
 import lombok.val;
+import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -113,28 +115,37 @@ public class UtilityController extends Controller {
     }
 
     public CompletionStage<Result> searchDb() {
+
         return offenderApi.searchDb(getQueryParams()).thenApply(JsonHelper::okJson);
     }
 
     public CompletionStage<Result> searchLdap() {
+
         return offenderApi.searchLdap(getQueryParams()).thenApply(JsonHelper::okJson);
     }
 
     private Map<String, String> getQueryParams() {
-        return request().queryString().entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
+
+        return request().queryString().entrySet().stream().
+                collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
     }
 
-    private ImmutableMap<String, ? extends Number> runtimeInfo() {
+    private Map<String, Object> runtimeInfo() {
+
+        val processors = getRuntime().availableProcessors();
+        val systemLoad = ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage() * 100 / processors;
+
         return ImmutableMap.of(
-                "processors", getRuntime().availableProcessors(),
-                "freeMemory", getRuntime().freeMemory(),
-                "totalMemory", getRuntime().totalMemory(),
-                "maxMemory", getRuntime().maxMemory()
+                "processors", processors,
+                "freeMemory", FileUtils.byteCountToDisplaySize(getRuntime().freeMemory()),
+                "totalMemory", FileUtils.byteCountToDisplaySize(getRuntime().totalMemory()),
+                "maxMemory", FileUtils.byteCountToDisplaySize(getRuntime().maxMemory()),
+                "systemLoad", String.format("%.2f %%", systemLoad)
         );
     }
 
     private String localhost() {
+
         String localHost;
 
         try {
@@ -148,13 +159,14 @@ public class UtilityController extends Controller {
         return localHost;
     }
 
-    private Stream<Object> fileSystemDetails() {
+    private Iterable<Map<String, String>> fileSystemDetails() {
+
         return Arrays.stream(File.listRoots()).map(root -> ImmutableMap.of(
                     "filePath", root.getAbsolutePath(),
-                    "totalSpace", root.getTotalSpace(),
-                    "freeSpace", root.getFreeSpace(),
-                    "usableSpace", root.getUsableSpace()
-            ));
+                    "totalSpace", FileUtils.byteCountToDisplaySize(root.getTotalSpace()),
+                    "freeSpace", FileUtils.byteCountToDisplaySize(root.getFreeSpace()),
+                    "usableSpace", FileUtils.byteCountToDisplaySize(root.getUsableSpace())
+        )).collect(Collectors.toList());
     }
 
     private String version() {

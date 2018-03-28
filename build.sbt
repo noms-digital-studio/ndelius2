@@ -36,7 +36,9 @@ libraryDependencies ++= Seq(
   "org.webjars" % "jquery-ui" % "1.12.1",
   "org.mongodb" % "mongodb-driver-rx" % "1.4.0",
   "com.pauldijou" %% "jwt-core" % "0.14.1",
-  ("org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "6.0.1").exclude("commons-logging", "commons-logging"),
+  "commons-io" % "commons-io" % "2.6",
+  "org.apache.logging.log4j" % "log4j-to-slf4j" % "2.9.1",
+  "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "6.0.1",
 
   "org.projectlombok" % "lombok" % "1.16.16" % "provided",
 
