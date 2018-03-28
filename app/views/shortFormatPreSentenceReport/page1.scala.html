@@ -11,21 +11,17 @@
 
 @main("Start your report - Short Format Pre Sentence Report") {
 
+    <div class="panel interrupt-panel">
     <h1 class="heading-xlarge">Short Format Pre-sentence Report</h1>
 
-    <h2 class="lede">Never lose your work again</h2>
-
-    <p class="bold-small">This service saves your report as you write</p>
-
-    <p>You can:</p>
-
     <ul class="list-bullet margin-top medium">
-        <li>save drafts or completed reports</li>
-        <li>access guidance to help you fill in the report</li>
+        <li><div class="bold-medium">Save and close your report at any point</div><div class="font-small">You can save and close your report so you don't have to complete the whole thing at once.</div></li>
+        <li><div class="bold-medium">Save as you write</div><div class="normal">Your report will be saved as you write so you'll never lose your work.</div></li>
+        <li><div class="bold-medium">Return to complete your report later</div><div class="font-small">You can finish your report when it suits you.</div></li>
+        <li><div class="bold-medium">Edit your completed report</div><div class="font-small">You can edit your report whenever you want, even after you've finished.</div></li>
     </ul>
 
-    <div class="margin-top large">&nbsp;</div>
-
+    <div class="margin-top large">
     @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
         @CSRF.formField
 
@@ -101,4 +97,7 @@
 
         @pageNumber(1, Some("Start now"))
     }
+    </div>
+    </div>
+
 }

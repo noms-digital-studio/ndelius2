@@ -1,0 +1,21 @@
+@import "colours";
+@import "measurements";
+.interrupt-panel {
+  background-color: $govuk-blue;
+  color: $white;
+  padding: $gutter;
+  .button {
+    background-color: $white;
+    color: $govuk-blue;
+    background-image: none;
+    padding: em(7) em(16) em(4) em(16);
+
+    @include device-pixel-ratio {
+      background-image: none;
+    }
+
+  }
+  li {
+    margin-bottom: $gutter;
+  }
+}
