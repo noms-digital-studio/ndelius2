@@ -69,7 +69,7 @@ public class NomisPrisonerApi implements PrisonerApi {
     @Override
     public CompletionStage<Boolean> isHealthy() {
 
-        return wsClient.url(apiBaseUrl + "elite2api/health").
+        return wsClient.url(apiBaseUrl + "../elite2api/health").
                 addHeader(AUTHORIZATION, "Bearer " + apiToken.get()).
                 get().
                 thenApply(wsResponse -> {
