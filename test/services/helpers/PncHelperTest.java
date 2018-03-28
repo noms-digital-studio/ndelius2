@@ -1,9 +1,9 @@
-package helpers;
+package services.helpers;
 
 import org.junit.Test;
 
-import static helpers.PncHelper.canBeConvertedToAPnc;
-import static helpers.PncHelper.covertToCanonicalPnc;
+import static services.helpers.PncHelper.canBeConvertedToAPnc;
+import static services.helpers.PncHelper.covertToCanonicalPnc;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PncHelperTest {
@@ -31,12 +31,17 @@ public class PncHelperTest {
     public void rejectsNonPncFormattedTerms() {
         assertThat(canBeConvertedToAPnc("2003/A")).isFalse();
         assertThat(canBeConvertedToAPnc("203/1234567A")).isFalse();
+        assertThat(canBeConvertedToAPnc("203/1234567")).isFalse();
         assertThat(canBeConvertedToAPnc("1234567A")).isFalse();
         assertThat(canBeConvertedToAPnc("2013")).isFalse();
         assertThat(canBeConvertedToAPnc("john smith")).isFalse();
+        assertThat(canBeConvertedToAPnc("john/smith")).isFalse();
         assertThat(canBeConvertedToAPnc("16/11/2018")).isFalse();
+        assertThat(canBeConvertedToAPnc("16-11-2018")).isFalse();
         assertThat(canBeConvertedToAPnc("111111/11A")).isFalse();
         assertThat(canBeConvertedToAPnc("SF68/945674U")).isFalse();
+        assertThat(canBeConvertedToAPnc("")).isFalse();
+        assertThat(canBeConvertedToAPnc("2010/BBBBBBBA")).isFalse();
     }
 
     @Test

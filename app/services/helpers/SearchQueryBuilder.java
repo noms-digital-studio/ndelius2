@@ -1,7 +1,6 @@
 package services.helpers;
 
 import helpers.DateTimeHelper;
-import helpers.PncHelper;
 import lombok.val;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static helpers.DateTimeHelper.covertToCanonicalDate;
+import static helpers.FluentHelper.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
@@ -60,7 +60,7 @@ public class SearchQueryBuilder {
                 .lenient(true)));
 
         Stream.of(simpleTermsIncludingSingleLetters(searchTerm).split(" "))
-            .filter(term -> !term.isEmpty())
+            .filter(not(String::isEmpty))
             .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
 
         val highlight = new HighlightBuilder().
@@ -96,19 +96,19 @@ public class SearchQueryBuilder {
             .collect(toList());
     }
 
-    public static String simpleTerms(String searchTerm) {
+    static String simpleTerms(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
             .filter(term -> term.length() > 1)
-            .filter(term -> !covertToCanonicalDate(term).isPresent())
-            .filter(term -> !term.contains("/"))
+            .filter(not(term -> covertToCanonicalDate(term).isPresent()))
+            .filter(not(term -> term.contains("/")))
             .map(String::toLowerCase)
             .collect(joining(" "));
     }
 
-    private static String simpleTermsIncludingSingleLetters(String searchTerm) {
+    static String simpleTermsIncludingSingleLetters(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
-            .filter(term -> !covertToCanonicalDate(term).isPresent())
-            .filter(term -> !term.contains("/"))
+            .filter(not(term -> covertToCanonicalDate(term).isPresent()))
+            .filter(not(term -> term.contains("/")))
             .map(String::toLowerCase)
             .collect(joining(" "));
     }

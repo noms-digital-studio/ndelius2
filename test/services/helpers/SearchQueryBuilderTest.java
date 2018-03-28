@@ -12,6 +12,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
+import static services.helpers.SearchQueryBuilder.simpleTerms;
+import static services.helpers.SearchQueryBuilder.simpleTermsIncludingSingleLetters;
 
 public class SearchQueryBuilderTest {
 
@@ -28,15 +30,27 @@ public class SearchQueryBuilderTest {
     }
 
     @Test
-    public void termsWithoutSingleLettersAreExtracted() {
-        String terms = SearchQueryBuilder.simpleTerms("a sna 28/02/2018 b foo 2017-Jun-3 bar c");
+    public void simpleTermsAreLowercase_and_doNotInclude_singleLetters_dates_termsWithSlashes() {
+        String terms = simpleTerms("a SNA 28/02/2018 b foo SF69/ABC 2017-Jun-3 bar c");
         assertThat(terms).isEqualTo("sna foo bar");
     }
 
     @Test
-    public void termsWithoutSingleLettersReturnsEmptyString() {
-        String terms = SearchQueryBuilder.simpleTerms("a b c");
+    public void simpleTermsAreLowercase_returnsEmptyString_whenThereAreNoSimpleTerms() {
+        String terms = simpleTerms("a b c 28/02/2018 SF69/ABC");
         assertThat(terms).isEqualTo("");
+    }
+
+    @Test
+    public void simpleTermsIncludingSingleLettersAreLowercase_and_doNotInclude_singleLetters_dates_termsWithSlashes() {
+        assertThat(simpleTermsIncludingSingleLetters("a SNA 28/02/2018 b foo SF69/ABC 2017-Jun-3 bar c"))
+            .isEqualTo("a sna b foo bar c");
+    }
+
+    @Test
+    public void simpleTermsIncludingSingleLetters_returnsEmptyString_whenThereAreNoSimpleTermsOrSingleLetters() {
+        assertThat(simpleTermsIncludingSingleLetters("28/02/2018 SF69/ABC"))
+            .isEqualTo("");
     }
 
     @Test
