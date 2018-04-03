@@ -39,6 +39,7 @@ const performSearch = _.debounce((dispatch, searchTerm, pageNumber) => {
 const search = (searchTerm, pageNumber = 1) => (
     dispatch => {
         if (searchTerm === '') {
+            localforage.removeItem("nationalSearch").then(() => { }).catch(err => window.console && console.log(err));
             dispatch(clearResults())
         } else {
             dispatch(requestSearch(searchTerm));
