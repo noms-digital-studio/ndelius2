@@ -42,6 +42,7 @@ public class NationalSearchController extends Controller {
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
     private final boolean inMaintenanceMode;
+    private final int recentSearchMinutes;
 
     @Inject
     public NationalSearchController(
@@ -60,11 +61,12 @@ public class NationalSearchController extends Controller {
         this.offenderApi = offenderApi;
         this.analyticsStore = analyticsStore;
 
+        recentSearchMinutes = configuration.getInt("recent.search.minutes");
+        inMaintenanceMode = configuration.getBoolean("maintenance.offender.search");
         userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
 
         val paramsSecretKey = configuration.getString("params.secret.key");
         decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
-        inMaintenanceMode = configuration.getBoolean("maintenance.offender.search");
     }
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
@@ -82,7 +84,7 @@ public class NationalSearchController extends Controller {
             session(SEARCH_ANALYTICS_GROUP_ID, UUID.randomUUID().toString());
 
             analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-index"));
-            return ok(template.render());
+            return ok(template.render(recentSearchMinutes));
 
         }, ec.current());
 

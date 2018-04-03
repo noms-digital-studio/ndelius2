@@ -6,7 +6,7 @@ describe('OffenderSearchPage component', () => {
     let offenderSearchPage
     context('First time displaying the application', () => {
         beforeEach(() => {
-            offenderSearchPage = shallow(<OffenderSearchPage firstTimeIn={true}/>)
+            offenderSearchPage = shallow(<OffenderSearchPage firstTimeIn={true} reloadRecentSearch={() => {}}/>)
         })
 
         it('displays the search footer', () => {
@@ -20,7 +20,7 @@ describe('OffenderSearchPage component', () => {
 
     context('Once a search has been completed by the user', () => {
         beforeEach(() => {
-            offenderSearchPage = shallow(<OffenderSearchPage firstTimeIn={false}/>)
+            offenderSearchPage = shallow(<OffenderSearchPage firstTimeIn={false} reloadRecentSearch={() => {}}/>)
         })
 
         it('does not display the search footer', () => {

@@ -2,7 +2,7 @@
 @import helpers.CallHelper.relative
 @this(webJarsUtil: WebJarsUtil)
 
-@()
+@(recentSearchMinutes: Int)
 
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
@@ -24,6 +24,10 @@
   </head>
   <body>
     <div id="content"></div>
+
+    <script type="text/javascript">
+      window.recentSearchMinutes = @recentSearchMinutes;
+    </script>
 
     <script type='text/javascript' src='@relative(webJarsUtil.url("es5-shim", "es5-shim.js").get)'></script>
     <script type='text/javascript' src='@relative(webJarsUtil.url("es5-shim", "es5-sham.js").get)'></script>
