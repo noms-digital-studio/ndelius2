@@ -1,7 +1,7 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
 
-const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], total: 0, pageNumber: 1, firstTimeIn: true}, action) => {
+const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
@@ -18,7 +18,8 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
                     results: mapResults(action.results.offenders, state.searchTerm, action.pageNumber),
                     suggestions: mapSuggestions(action.results.suggestions),
                     resultsReceived: true,
-                    firstTimeIn: false
+                    firstTimeIn: false,
+                    showWelcomeBanner: false
                 };
             }
             return state
@@ -33,6 +34,11 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
                 pageNumber: 1,
                 resultsReceived: false
             };
+        case NO_SAVED_SEARCH:
+            return {
+                ...state,
+                showWelcomeBanner: state.firstTimeIn
+            }
         default:
             return state
     }

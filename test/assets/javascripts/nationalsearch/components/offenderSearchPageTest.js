@@ -4,9 +4,23 @@ import {shallow} from 'enzyme';
 
 describe('OffenderSearchPage component', () => {
     let offenderSearchPage
-    context('First time displaying the application', () => {
+    context('First time displaying the application before saved search is checked', () => {
         beforeEach(() => {
-            offenderSearchPage = shallow(<OffenderSearchPage firstTimeIn={true} reloadRecentSearch={() => {}}/>)
+            offenderSearchPage = shallow(<OffenderSearchPage firstTimeIn={true} showWelcomeBanner={false} reloadRecentSearch={() => {}}/>)
+        })
+
+        it('does not display the search footer', () => {
+            expect(offenderSearchPage.find('SearchFooter').exists()).to.be.false
+        })
+
+        it('displays the search results', () => {
+            expect(offenderSearchPage.find('Connect(OffenderSearchResults)').exists()).to.be.true
+        })
+    })
+
+    context('First time displaying the application after saved search is checked', () => {
+        beforeEach(() => {
+            offenderSearchPage = shallow(<OffenderSearchPage firstTimeIn={true} showWelcomeBanner={true} reloadRecentSearch={() => {}}/>)
         })
 
         it('displays the search footer', () => {
@@ -20,7 +34,7 @@ describe('OffenderSearchPage component', () => {
 
     context('Once a search has been completed by the user', () => {
         beforeEach(() => {
-            offenderSearchPage = shallow(<OffenderSearchPage firstTimeIn={false} reloadRecentSearch={() => {}}/>)
+            offenderSearchPage = shallow(<OffenderSearchPage firstTimeIn={false} showWelcomeBanner={false} reloadRecentSearch={() => {}}/>)
         })
 
         it('does not display the search footer', () => {

@@ -7,7 +7,7 @@ import GovUkPhaseBanner from './govukPhaseBanner';
 import SearchFooter from "./searchFooter";
 import PropTypes from "prop-types";
 
-const OffenderSearchPage = ({firstTimeIn, reloadRecentSearch}) => {
+const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}) => {
 
     if (firstTimeIn) {
         reloadRecentSearch();
@@ -27,8 +27,8 @@ const OffenderSearchPage = ({firstTimeIn, reloadRecentSearch}) => {
                                 for? <AddNewOffenderLink tabIndex="1"/></p></div>
                     </div>
                     <div className="padded mobile-pad key-content">
-                        {firstTimeIn && <SearchFooter/>}
-                        {!firstTimeIn && <OffenderSearchResults/>}
+                        {showWelcomeBanner && <SearchFooter/>}
+                        {!showWelcomeBanner && <OffenderSearchResults/>}
                     </div>
                 </main>
             </div>
@@ -38,7 +38,9 @@ const OffenderSearchPage = ({firstTimeIn, reloadRecentSearch}) => {
 };
 
 OffenderSearchPage.propTypes = {
-    firstTimeIn: PropTypes.bool.isRequired
+    firstTimeIn: PropTypes.bool.isRequired,
+    showWelcomeBanner: PropTypes.bool.isRequired,
+    reloadRecentSearch: PropTypes.func.isRequired
 };
 
 export default OffenderSearchPage;

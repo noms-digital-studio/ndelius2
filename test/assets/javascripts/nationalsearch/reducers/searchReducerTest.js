@@ -1,4 +1,4 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, NO_SAVED_SEARCH} from '../actions/search'
 import search from './searchReducer'
 import {expect} from 'chai';
 import {offender} from '../test-helper'
@@ -36,11 +36,14 @@ describe("searchReducer", () => {
         it('firstTimeIn will be true', () => {
             expect(state.firstTimeIn).to.equal(true)
         });
+        it('showWelcomeBanner will be false', () => {
+            expect(state.showWelcomeBanner).to.equal(false)
+        });
     })
     describe("when REQUEST_SEARCH action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: true, suggestions: someSuggestions(), total: 28, pageNumber: 3, firstTimeIn: true}, {
+            state = search({searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: true, suggestions: someSuggestions(), total: 28, pageNumber: 3, firstTimeIn: true, showWelcomeBanner: true}, {
                 type: REQUEST_SEARCH,
                 searchTerm: 'John Smith'
             })
@@ -70,13 +73,16 @@ describe("searchReducer", () => {
         it('firstTimeIn will be true', () => {
             expect(state.firstTimeIn).to.equal(true)
         });
+        it('showWelcomeBanner will be true', () => {
+            expect(state.showWelcomeBanner).to.equal(true)
+        });
     })
     describe("when SEARCH_RESULTS action received", () => {
 
         context('when searchTerm matches from request action', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3, firstTimeIn: true},
+                    {searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3, firstTimeIn: true, firstTimeIn: true},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('results are replaced with new results', () => {
@@ -90,6 +96,9 @@ describe("searchReducer", () => {
             });
             it('firstTimeIn will be false', () => {
                 expect(state.firstTimeIn).to.equal(false)
+            });
+            it('showWelcomeBanner will be false', () => {
+                expect(state.showWelcomeBanner).to.equal(false)
             });
         })
         context('when searchTerm partial matches from request action', () => {
@@ -618,6 +627,28 @@ describe("searchReducer", () => {
         });
     })
 
+    describe("when NO_SAVED_SEARCH action received", () => {
+        context('when first time in', () => {
+            beforeEach(() => {
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true}, {type: NO_SAVED_SEARCH})
+            })
+
+            it('showWelcomeBanner will be true', () => {
+                expect(state.showWelcomeBanner).to.equal(true)
+            });
+
+        })
+        context('when no longer first time in', () => {
+            beforeEach(() => {
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: false}, {type: NO_SAVED_SEARCH})
+            })
+
+            it('showWelcomeBanner will be false', () => {
+                expect(state.showWelcomeBanner).to.equal(false)
+            });
+
+        })
+    })
 })
 
 const someResults = (results = {}) => (
