@@ -28,6 +28,16 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                             <span aria-label="Gender"><MT text={offenderSummary.gender} highlight={offenderSummary.highlight} highlightFieldName='gender'/>,&nbsp;</span>
                             <span aria-label="Age">{offenderSummary.age}</span>
                         </span>
+                        <br/>
+                        <span id='provider'>
+                            <span id='provider-label'>Provider:&nbsp;</span>
+                            <span className='margin-right' aria-labelledby="provider-label">{provider(offenderSummary)}</span>
+                        </span>
+                        <br/>
+                        <span id='officer'>
+                            <span id='officer-label'>Officer name:&nbsp;</span>
+                            <span className='margin-right' aria-labelledby="officer-label">{officer(offenderSummary)}</span>
+                        </span>
                     </p>
                     {matchesAnyHighlightedField(offenderSummary.highlight, ['otherIds.pncNumberLongYear', 'otherIds.pncNumberShortYear']) &&
                     <p>
@@ -126,7 +136,17 @@ OffenderSearchSummary.propTypes = {
                 postcode: PropTypes.string
             })
         ).isRequired,
-        previousSurname: PropTypes.string
+        previousSurname: PropTypes.string,
+        offenderManagers: PropTypes.arrayOf(
+            PropTypes.shape({
+                staff: PropTypes.shape({
+                    forenames: PropTypes.string,
+                    surname: PropTypes.string
+                    }),
+                probationArea: PropTypes.shape({
+                    description: PropTypes.string
+                })
+            }))
         }).isRequired,
     searchTerm: PropTypes.string.isRequired
 };
@@ -212,6 +232,28 @@ const mapRiskColor = (risk = '') => {
             return 'risk-green'
     }
     return ''
+}
+
+const provider = offenderSummary => {
+    const activeManager = activeOffenderManager(offenderSummary)
+    if (activeManager && activeManager.probationArea) {
+        return activeManager.probationArea.description
+    }
+}
+const officer = offenderSummary => {
+    const activeManager = activeOffenderManager(offenderSummary)
+    if (activeManager && activeManager.staff) {
+        return activeManager.staff.forenames + ' ' + activeManager.staff.surname
+    }
+
+}
+const activeOffenderManager = offenderSummary => {
+    if (offenderSummary.offenderManagers) {
+        return offenderSummary
+            .offenderManagers
+            .filter(managers => managers.active === true)
+            .reduce((accumulator, currentValue) => accumulator || currentValue, null)
+    }
 }
 
 export { OffenderSearchSummary as default, Address }
