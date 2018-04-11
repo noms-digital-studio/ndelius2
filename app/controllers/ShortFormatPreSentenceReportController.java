@@ -1,7 +1,6 @@
 package controllers;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
@@ -9,9 +8,11 @@ import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
+import play.data.Form;
 import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
 
@@ -20,8 +21,11 @@ import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
-public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData>
-{
+public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
+
+    private final views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate;
+    private final views.html.shortFormatPreSentenceReport.completed completedTemplate;
+
     @Inject
     public ShortFormatPreSentenceReportController(HttpExecutionContext ec,
                                                   WebJarsUtil webJarsUtil,
@@ -30,9 +34,13 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   AnalyticsStore analyticsStore,
                                                   EncryptedFormFactory formFactory,
                                                   PdfGenerator pdfGenerator,
-                                                  DocumentStore documentStore) {
+                                                  DocumentStore documentStore,
+                                                  views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate,
+                                                  views.html.shortFormatPreSentenceReport.completed completedTemplate) {
 
         super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
+        this.cancelledTemplate = cancelledTemplate;
+        this.completedTemplate = completedTemplate;
     }
 
     @Override
@@ -99,16 +107,21 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     @Override
     protected Content renderCancelledView() {
 
-        return views.html.shortFormatPreSentenceReport.cancelled.render("Draft stored", webJarsUtil);
+        val boundForm = wizardForm.bindFromRequest();
+
+        return cancelledTemplate.render(boundForm, viewEncrypter, "Draft stored", reviewPageNumberFor(boundForm));
     }
 
     @Override
     protected Content renderCompletedView(Byte[] bytes) {
 
-        return views.html.shortFormatPreSentenceReport.completed.render(
-                String.format("PDF Created - %d bytes", bytes.length),
-                webJarsUtil
-        );
+        val boundForm = wizardForm.bindFromRequest();
+
+        return completedTemplate.render(boundForm, viewEncrypter, "Report saved", reviewPageNumberFor(boundForm));
+    }
+
+    private Integer reviewPageNumberFor(Form<ShortFormatPreSentenceReportData> boundForm) {
+        return boundForm.value().map(form -> form.totalPages() - 1).orElse(1);
     }
 
     @Override

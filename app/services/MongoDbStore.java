@@ -335,7 +335,7 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     @Override
-    public CompletableFuture<List<Map<String, Object>>> feedback() {
+    public CompletableFuture<List<Map<String, Object>>> nationalSearchFeedback() {
         val result = new CompletableFuture<List<Map<String, Object>>>();
 
         events.find().
@@ -346,6 +346,28 @@ public class MongoDbStore implements AnalyticsStore {
                         "feedback", 1
                 ))).
                 filter(eq("type", "search-feedback")).
+                sort(new Document("$natural", -1)).
+                limit(1000).
+                toObservable().
+                map(document -> document.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))).
+                toList().
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<List<Map<String, Object>>> sfpsrFeedback() {
+        val result = new CompletableFuture<List<Map<String, Object>>>();
+
+        events.find().
+                projection(new Document(ImmutableMap.of(
+                        "_id", 0,
+                        "dateTime", 1,
+                        "feedback", 1
+                ))).
+                filter( and(_exists("type", false), _notNull("feedback"), _notEmpty("feedback")) ).
                 sort(new Document("$natural", -1)).
                 limit(1000).
                 toObservable().
@@ -390,10 +412,29 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     private Document _exists(String field) {
+        return _exists(field, true);
+    }
+    private Document _exists(String field, boolean exists) {
         return new Document(
                 ImmutableMap.of(
                         field, new Document(
-                                "$exists", true
+                                "$exists", exists
+                        )
+                ));
+    }
+    private Document _notNull(String field) {
+        return new Document(
+                ImmutableMap.of(
+                        field, new Document(
+                                "$ne", null
+                        )
+                ));
+    }
+    private Document _notEmpty(String field) {
+        return new Document(
+                ImmutableMap.of(
+                        field, new Document(
+                                "$ne", ""
                         )
                 ));
     }

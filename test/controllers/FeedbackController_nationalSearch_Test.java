@@ -26,14 +26,14 @@ import static play.inject.Bindings.bind;
 import static play.test.Helpers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FeedbackControllerTest extends WithApplication {
+public class FeedbackController_nationalSearch_Test extends WithApplication {
 
     @Mock
     private AnalyticsStore analyticsStore;
 
     @Before
     public void beforeEach() {
-        when(analyticsStore.feedback())
+        when(analyticsStore.nationalSearchFeedback())
                 .thenReturn(CompletableFuture.completedFuture(ImmutableList.of(
                         ImmutableMap.of(
                                 "dateTime", new Date(),
@@ -66,7 +66,7 @@ public class FeedbackControllerTest extends WithApplication {
         val result = route(app, addCSRFToken(new Http.RequestBuilder()
                 .method(GET)
                 .header("Authorization", String.format("Basic %s", credentials("andymarke", "secret")))
-                .uri("/feedback")));
+                .uri("/feedback/nationalSearch")));
 
         assertThat(result.status()).isEqualTo(OK);
     }
@@ -76,7 +76,7 @@ public class FeedbackControllerTest extends WithApplication {
         val result = route(app, addCSRFToken(new Http.RequestBuilder()
                 .method(GET)
                 .header("Authorization", String.format("Basic %s", credentials("andymarke", "secret")))
-                .uri("/feedback")));
+                .uri("/feedback/nationalSearch")));
 
         val content = Helpers.contentAsString(result);
 
@@ -98,7 +98,7 @@ public class FeedbackControllerTest extends WithApplication {
     public void userIsChallengedForCredentialsWhenNotSupplied() {
         val result = route(app, addCSRFToken(new Http.RequestBuilder()
                 .method(GET)
-                .uri("/feedback")));
+                .uri("/feedback/nationalSearch")));
 
         assertThat(result.status()).isEqualTo(UNAUTHORIZED);
         assertThat(result.header(WWW_AUTHENTICATE).isPresent()).isTrue();
@@ -110,7 +110,7 @@ public class FeedbackControllerTest extends WithApplication {
         val result = route(app, addCSRFToken(new Http.RequestBuilder()
                 .method(GET)
                 .header("Authorization", String.format("Basic %s", credentials("bobby", "secret")))
-                .uri("/feedback")));
+                .uri("/feedback/nationalSearch")));
 
         assertThat(result.status()).isEqualTo(UNAUTHORIZED);
         assertThat(result.header(WWW_AUTHENTICATE).isPresent()).isFalse();
@@ -121,7 +121,7 @@ public class FeedbackControllerTest extends WithApplication {
         val result = route(app, addCSRFToken(new Http.RequestBuilder()
                 .method(GET)
                 .header("Authorization", String.format("Basic %s", credentials("andymarke", "bananas")))
-                .uri("/feedback")));
+                .uri("/feedback/nationalSearch")));
 
         assertThat(result.status()).isEqualTo(UNAUTHORIZED);
         assertThat(result.header(WWW_AUTHENTICATE).isPresent()).isFalse();

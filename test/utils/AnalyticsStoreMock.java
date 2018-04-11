@@ -47,7 +47,10 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
     default CompletableFuture<Map<String, Long>> countGroupingArray(String eventType, String countFieldName, LocalDateTime from) {
         return null;
     }
-    default CompletableFuture<List<Map<String, Object>>> feedback() {
+    default CompletableFuture<List<Map<String, Object>>> nationalSearchFeedback() {
+        return null;
+    }
+    default CompletableFuture<List<Map<String, Object>>> sfpsrFeedback() {
         return null;
     }
 

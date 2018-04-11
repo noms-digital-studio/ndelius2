@@ -79,6 +79,32 @@ public class MongoDocumentStore implements DocumentStore {
     }
 
     @Override
+    public CompletionStage<byte[]> retrieveDocument(String documentId, String onBehalfOfUser) {
+        val result = new CompletableFuture<byte[]>();
+        shortFormatReports
+                .find(eq("_id", new ObjectId(documentId)))
+                .first()
+                .doOnError(result::completeExceptionally)
+                .subscribe(thing -> result.complete(Base64.decode((String)thing.get("document"))));
+
+        Logger.debug(String.format("retrieveDocument: for key %s", documentId));
+        return result;
+    }
+
+    @Override
+    public CompletionStage<String> getDocumentName(String documentId, String onBehalfOfUser) {
+        val result = new CompletableFuture<String>();
+        shortFormatReports
+                .find(eq("_id", new ObjectId(documentId)))
+                .first()
+                .doOnError(result::completeExceptionally)
+                .subscribe(thing -> result.complete((String)thing.get("filename")));
+
+        Logger.debug(String.format("getDocumentName: for key %s", documentId));
+        return result;
+    }
+
+    @Override
     public CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId) {
         return CompletableFuture.completedFuture(500);
     }

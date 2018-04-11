@@ -30,6 +30,15 @@ public interface DocumentStoreMock extends DocumentStore {
         return CompletableFuture.supplyAsync(() -> "{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"" + onBehalfOfUser + "\", \"address\": \"" + documentId + "\", \"pnc\": \"Retrieved From Store\", \"startDate\": \"12/12/2017\", \"crn\": \"1234\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\" } }");
     }
 
+    default CompletionStage<byte[]> retrieveDocument(String documentId, String onBehalfOfUser){
+        return CompletableFuture.supplyAsync(() -> new byte[]{});
+    }
+
+    default CompletionStage<String> getDocumentName(String documentId, String onBehalfOfUser) {
+        return CompletableFuture.supplyAsync(() -> "");
+    }
+
+
     default CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId) {
 
         return CompletableFuture.supplyAsync(() -> 200);

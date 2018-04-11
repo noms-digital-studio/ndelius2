@@ -7,6 +7,7 @@ import static org.openqa.selenium.By.id;
 
 public class OffenderDetailsPage extends FluentPage {
     private final StartPage startPage;
+
     public OffenderDetailsPage(FluentControl control) {
         super(control);
         startPage = new StartPage(control);
@@ -22,4 +23,11 @@ public class OffenderDetailsPage extends FluentPage {
         return this;
     }
 
+    public void populateAddress(String someText) {
+        $(id("address")).fill().with(someText);
+    }
+
+    public String address() {
+        return $(id("address")).value();
+    }
 }

@@ -19,8 +19,9 @@ public class TestableWizardController extends ShortFormatPreSentenceReportContro
                 null,
                 new EncryptedFormFactory(null, null, null),
                 pdfGenerator,
-                documentStore
-        );
+                documentStore,
+                null,
+               null);
     }
 
     public void testStoreReport(ShortFormatPreSentenceReportData data) {

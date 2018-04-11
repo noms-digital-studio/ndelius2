@@ -1,5 +1,6 @@
 @import data._
 @import helper._
+@import hiddenInputs._
 @import play.Environment
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
@@ -30,75 +31,16 @@
             @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
                 @CSRF.formField
 
-                @inputHidden(reportForm("visitedPages"))
-
-                @inputHidden(reportForm("onBehalfOfUser"), encrypter)
-                @inputHidden(reportForm("entityId"), encrypter)
-                @inputHidden(reportForm("documentId"), encrypter)
-
-                @inputHidden(reportForm("name"), encrypter)
-                @inputHidden(reportForm("dateOfBirth"), encrypter)
-                @inputHidden(reportForm("age"), encrypter)
-                @inputHidden(reportForm("address"), encrypter)
-                @inputHidden(reportForm("crn"), encrypter)
-                @inputHidden(reportForm("pnc"), encrypter)
-
-                @inputHidden(reportForm("pncSupplied"))
-                @inputHidden(reportForm("addressSupplied"))
-
-                @inputHidden(reportForm("court"), encrypter)
-                @inputHidden(reportForm("dateOfHearing"), encrypter)
-                @inputHidden(reportForm("localJusticeArea"), encrypter)
-
-                @inputHidden(reportForm("interviewInformationSource"))
-                @inputHidden(reportForm("serviceRecordsInformationSource"))
-                @inputHidden(reportForm("cpsSummaryInformationSource"))
-                @inputHidden(reportForm("oasysAssessmentsInformationSource"))
-                @inputHidden(reportForm("previousConvictionsInformationSource"))
-                @inputHidden(reportForm("victimStatementInformationSource"))
-                @inputHidden(reportForm("childrenServicesInformationSource"))
-                @inputHidden(reportForm("policeInformationSource"))
-                @inputHidden(reportForm("sentencingGuidelinesInformationSource"))
-                @inputHidden(reportForm("otherInformationSource"))
-                @inputHidden(reportForm("otherInformationDetails"))
-
-                @inputHidden(reportForm("mainOffence"))
-                @inputHidden(reportForm("otherOffences"))
-                @inputHidden(reportForm("offenceSummary"))
-
-                @inputHidden(reportForm("offenceAnalysis"))
-                @inputHidden(reportForm("patternOfOffending"))
-
-                @inputHidden(reportForm("issueAccommodation"))
-                @inputHidden(reportForm("issueEmployment"))
-                @inputHidden(reportForm("issueFinance"))
-                @inputHidden(reportForm("issueRelationships"))
-                @inputHidden(reportForm("issueSubstanceMisuse"))
-                @inputHidden(reportForm("issueHealth"))
-                @inputHidden(reportForm("issueBehaviour"))
-                @inputHidden(reportForm("issueOther"))
-                @inputHidden(reportForm("issueAccommodationDetails"))
-                @inputHidden(reportForm("issueEmploymentDetails"))
-                @inputHidden(reportForm("issueFinanceDetails"))
-                @inputHidden(reportForm("issueRelationshipsDetails"))
-                @inputHidden(reportForm("issueSubstanceMisuseDetails"))
-                @inputHidden(reportForm("issueHealthDetails"))
-                @inputHidden(reportForm("issueBehaviourDetails"))
-                @inputHidden(reportForm("issueOtherDetails"))
-
-                @inputHidden(reportForm("likelihoodOfReOffending"))
-                @inputHidden(reportForm("riskOfSeriousHarm"))
-                @inputHidden(reportForm("previousSupervisionResponse"))
-                @inputHidden(reportForm("additionalPreviousSupervision"))
-
-                @inputHidden(reportForm("proposal"))
-
-                @inputHidden(reportForm("reportAuthor"))
-                @inputHidden(reportForm("office"))
-                @inputHidden(reportForm("reportDate"))
-                @inputHidden(reportForm("courtOfficePhoneNumber"))
-                @inputHidden(reportForm("counterSignature"))
-                @inputHidden(reportForm("startDate"), encrypter)
+                @commonFields(reportForm, encrypter)
+                @page2Fields(reportForm, encrypter)
+                @page3Fields(reportForm, encrypter)
+                @page4Fields(reportForm)
+                @page5Fields(reportForm)
+                @page6Fields(reportForm)
+                @page7Fields(reportForm)
+                @page8Fields(reportForm)
+                @page9Fields(reportForm)
+                @page11Fields(reportForm, encrypter)
 
                 <input type="hidden" id="jumpNumber" name="jumpNumber" value="@reportForm("pageNumber").getValue.orElse("")"/>
                 @inputHidden(reportForm("pageNumber"))

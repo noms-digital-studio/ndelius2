@@ -1,0 +1,7 @@
+@import helper._
+
+@(reportForm: Form[_])
+
+@inputHidden(reportForm("mainOffence"))
+@inputHidden(reportForm("otherOffences"))
+@inputHidden(reportForm("offenceSummary"))

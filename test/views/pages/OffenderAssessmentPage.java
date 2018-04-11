@@ -73,4 +73,7 @@ public class OffenderAssessmentPage extends FluentPage {
         return $(xpath(String.format("//span[@class='error-message' and text()='%s']", errorMessage))).count();
     }
 
+    public void saveAsDraft() {
+        $(id("exitLink")).click();
+    }
 }

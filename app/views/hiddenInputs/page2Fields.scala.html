@@ -1,0 +1,11 @@
+@import helper._
+
+@(reportForm: Form[_], encrypter: String => String)
+
+@inputHidden(reportForm("name"), encrypter)
+@inputHidden(reportForm("dateOfBirth"), encrypter)
+@inputHidden(reportForm("age"), encrypter)
+@inputHidden(reportForm("address"), encrypter)
+@inputHidden(reportForm("crn"), encrypter)
+@inputHidden(reportForm("pnc"), encrypter)
+

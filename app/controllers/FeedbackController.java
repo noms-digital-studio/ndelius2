@@ -22,31 +22,45 @@ import java.util.function.Supplier;
 public class FeedbackController extends Controller {
 
     private final AnalyticsStore analyticsStore;
-    private final views.html.viewFeedback viewFeedbackTemplate;
+    private final views.html.viewNationalSearchFeedback viewNationalSearchFeedbackTemplate;
+    private final views.html.viewSfpsrFeedback viewSfpsrFeedbackTemplate;
     private final HttpExecutionContext ec;
     private final Config configuration;
 
     @Inject
-    public FeedbackController(AnalyticsStore analyticsStore, views.html.viewFeedback viewFeedbackTemplate, HttpExecutionContext ec, Config configuration) {
+    public FeedbackController(AnalyticsStore analyticsStore, views.html.viewNationalSearchFeedback viewNationalSearchFeedbackTemplate, views.html.viewSfpsrFeedback viewSfpsrFeedbackTemplate, HttpExecutionContext ec, Config configuration) {
         this.analyticsStore = analyticsStore;
-        this.viewFeedbackTemplate = viewFeedbackTemplate;
+        this.viewNationalSearchFeedbackTemplate = viewNationalSearchFeedbackTemplate;
+        this.viewSfpsrFeedbackTemplate = viewSfpsrFeedbackTemplate;
         this.ec = ec;
         this.configuration = configuration;
     }
 
-    public CompletionStage<Result> viewFeedback() {
+    public CompletionStage<Result> viewNationalSearchFeedback() {
+        return authorizedRender(this::renderNationalSearchFeedbackPage);
+    }
+
+    public CompletionStage<Result> viewSfpsrFeedback() {
+        return authorizedRender(this::renderSfpsrFeedbackPage);
+    }
+
+    private CompletionStage<Result> authorizedRender(Supplier<CompletionStage<Result>> renderPage) {
         return request().header("Authorization")
                 .map(authHeader ->
                         invalidCredentials(getTokenFromHeader(authHeader))
                             .map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result))
-                            .orElseGet(this::renderPage))
+                            .orElseGet(renderPage))
                 .orElseGet(() -> CompletableFuture.completedFuture(unauthorized().withHeader(WWW_AUTHENTICATE, "Basic realm=Feedback")));
     }
 
-    private CompletionStage<Result> renderPage() {
-        return analyticsStore.feedback()
-                .thenApplyAsync(feedback -> ok(viewFeedbackTemplate.render(
+    private CompletionStage<Result> renderNationalSearchFeedbackPage() {
+        return analyticsStore.nationalSearchFeedback()
+                .thenApplyAsync(feedback -> ok(viewNationalSearchFeedbackTemplate.render(
                         feedback, String.format(configuration.getString("ldap.string.format"), "(.*)"))), ec.current());
+    }
+
+    private CompletionStage<Result> renderSfpsrFeedbackPage() {
+        return analyticsStore.sfpsrFeedback().thenApplyAsync(feedback -> ok(viewSfpsrFeedbackTemplate.render(feedback)), ec.current());
     }
 
     private Map<String, String> getTokenFromHeader(String authHeader) {

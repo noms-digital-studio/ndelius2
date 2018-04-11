@@ -9,6 +9,10 @@ public interface DocumentStore {
 
     CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser);
 
+    CompletionStage<byte[]> retrieveDocument(String documentId, String onBehalfOfUser);
+
+    CompletionStage<String> getDocumentName(String documentId, String onBehalfOfUser);
+
     CompletionStage<Integer> lockDocument(String onBehalfOfUser, String documentId);
 
     CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId);

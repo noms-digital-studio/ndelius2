@@ -51,6 +51,35 @@ public class AlfrescoStoreTest {
     }
 
     @Test
+    public void retrieveDocumentFetchesDocumentFromAlfrescoAPI() {
+        val response = new byte[]{'p', 'd', 'f'};
+        wireMock.stubFor(
+            get(urlEqualTo("/alfresco/service/noms-spg/fetch/309db0bf-f8bb-4ac0-b325-5dbc368e2636"))
+                .willReturn(
+                    okForContentType("application/pdf",  new String(response))));
+
+        val result = alfrescoStore.retrieveDocument("309db0bf-f8bb-4ac0-b325-5dbc368e2636",
+                                                           "aUsername").toCompletableFuture().join();
+        assertThat(result).isEqualTo(new byte[]{'p', 'd', 'f'});
+    }
+
+    @Test
+    public void getDocumentNameGetsNameFromAlfrescoAPI() {
+        val response = toJson(
+                ImmutableMap.of("ID", "309db0bf-f8bb-4ac0-b325-5dbc368e2636",
+                        "name", "myReport.pdf")).toString();
+        wireMock.stubFor(
+                get(urlEqualTo("/alfresco/service/noms-spg/details/309db0bf-f8bb-4ac0-b325-5dbc368e2636"))
+                        .willReturn(
+                                okForContentType("application/json",  response)));
+
+        val result = alfrescoStore.getDocumentName("309db0bf-f8bb-4ac0-b325-5dbc368e2636",
+                "aUsername").toCompletableFuture().join();
+        assertThat(result).isEqualTo("myReport.pdf");
+    }
+
+
+    @Test
     public void uploadNewPdfSendsDataToAlfrescoAPI() {
         val response = toJson(ImmutableMap.of("ID", "309db0bf-f8bb-4ac0-b325-5dbc368e2636")).toString();
 

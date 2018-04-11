@@ -1,5 +1,6 @@
 @import "colours";
 @import "measurements";
+@import "typography";
 .interrupt-panel {
   background-color: $govuk-blue;
   color: $white;
@@ -17,5 +18,46 @@
   }
   li {
     margin-bottom: $gutter;
+  }
+}
+
+.highlight-border {
+  border: $turquoise $gutter-one-third solid;
+  padding: 0 2em 1em 2em;
+}
+
+.next-steps {
+  #view-pdf, #edit-pdf, #document-list {
+    padding-left: 4em;
+    background-repeat: no-repeat;
+    background-position-x: 0;
+    background-position-y: center;
+    background-size: 55px 55px;
+  }
+
+  #view-pdf {
+    background-image: url("../images/file-pdf.svg");
+    @include ie-lte(8) {
+      background-image: url("../images/file-pdf.png");
+    }
+  }
+  #edit-pdf {
+    background-image: url("../images/edit.svg");
+    @include ie-lte(8) {
+      background-image: url("../images/edit.png");
+    }
+  }
+  #document-list {
+    background-image: url("../images/list-alt.svg");
+    @include ie-lte(8) {
+      background-image: url("../images/list-alt.png");
+    }
+  }
+  li {
+    margin-bottom: $gutter * 2;
+  }
+
+  .nav-item {
+    @include bold-24()
   }
 }

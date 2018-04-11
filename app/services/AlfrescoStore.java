@@ -115,11 +115,20 @@ public class AlfrescoStore implements DocumentStore {
 
     @Override
     public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
-
-        return makeRequest("details/" + documentId, onBehalfOfUser).get().
-                thenApply(WSResponse::asJson).
-                thenApply(JsonHelper::jsonToMap).
+        return getDocumentMetaData(documentId, onBehalfOfUser).
                 thenApply(result -> result.get("userData"));
+    }
+
+    @Override
+    public CompletionStage<byte[]> retrieveDocument(String documentId, String onBehalfOfUser) {
+        return makeRequest("fetch/" + documentId, onBehalfOfUser).get().
+                thenApply(WSResponse::asByteArray);
+    }
+
+    @Override
+    public CompletionStage<String> getDocumentName(String documentId, String onBehalfOfUser) {
+        return getDocumentMetaData(documentId, onBehalfOfUser).
+                thenApply(result -> result.get("name"));
     }
 
     @Override
@@ -191,6 +200,12 @@ public class AlfrescoStore implements DocumentStore {
         return wsClient.url(alfrescoUrl + "noms-spg/" + operation).
                 addHeader("X-DocRepository-Remote-User", alfrescoUser).
                 addHeader("X-DocRepository-Real-Remote-User", onBehalfOfUser);
+    }
+
+    private CompletionStage<Map<String, String>> getDocumentMetaData(String documentId, String onBehalfOfUser) {
+        return makeRequest("details/" + documentId, onBehalfOfUser).get().
+                thenApply(WSResponse::asJson).
+                thenApply(JsonHelper::jsonToMap);
     }
 
     private CompletionStage<Map<String, String>> postMultiPartForm(String onBehalfOfUser, String operation, List<Part> parts) {

@@ -2,6 +2,7 @@ package views.pages;
 
 import org.fluentlenium.core.FluentControl;
 import org.fluentlenium.core.FluentPage;
+import org.openqa.selenium.By;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.By.id;
@@ -33,5 +34,9 @@ public class CheckYourReportPage extends FluentPage {
 
     public String statusForOffenderAssessment() {
         return $(xpath("//tr[.//a[text()='Offender assessment']]//strong")).text();
+    }
+
+    public void clickOffenderDetailsLink() {
+        $(By.linkText("Offender details")).click();
     }
 }

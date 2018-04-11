@@ -83,7 +83,7 @@ public class SignAndDateReportWebTest extends WithBrowser {
 
     @Test
     public void nextButtonStatesViewDocumentList() {
-        assertThat(signAndDateReportPage.navigateHere().getNextButtonText()).contains("Submit and view your document list");
+        assertThat(signAndDateReportPage.navigateHere().getNextButtonText()).contains("Submit and upload your report");
     }
 
     private String reportDataWithStartDateOf(String startDate) {

@@ -29,6 +29,8 @@ public interface AnalyticsStore {
 
     CompletableFuture<Boolean> isUp();
 
-    CompletableFuture<List<Map<String, Object>>> feedback();
+    CompletableFuture<List<Map<String, Object>>> nationalSearchFeedback();
+
+    CompletableFuture<List<Map<String, Object>>> sfpsrFeedback();
 
 }

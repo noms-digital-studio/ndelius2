@@ -24,11 +24,7 @@ public class CompletionPage extends FluentPage {
         return this;
     }
 
-    public String getAllText() {
-        return $(By.tagName("body")).text().trim();
-    }
-
-    public String getAllContent() {
-        return $(By.tagName("body")).textContent().trim();
+    public void updateReport() {
+        $(By.cssSelector("#edit-pdf a")).click();
     }
 }

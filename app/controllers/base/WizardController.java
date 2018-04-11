@@ -38,11 +38,11 @@ import static helpers.FluentHelper.content;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
 
-    private final Environment environment;
     private final AnalyticsStore analyticsStore;
-    private final Function1<String, String> viewEncrypter;
     private final List<String> encryptedFields;
+    private final Environment environment;
 
+    protected final Function1<String, String> viewEncrypter;
     protected final Form<T> wizardForm;
     protected final WebJarsUtil webJarsUtil;
     protected final Function<String, String> encrypter;

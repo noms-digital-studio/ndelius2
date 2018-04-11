@@ -1,0 +1,8 @@
+@import helper._
+
+@(reportForm: Form[_])
+
+@inputHidden(reportForm("likelihoodOfReOffending"))
+@inputHidden(reportForm("riskOfSeriousHarm"))
+@inputHidden(reportForm("previousSupervisionResponse"))
+@inputHidden(reportForm("additionalPreviousSupervision"))

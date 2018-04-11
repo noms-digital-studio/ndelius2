@@ -63,6 +63,20 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 orElse(CompletableFuture.supplyAsync(() -> badRequestJson(ImmutableMap.of("status", "badRequest")), ec.current()));
     }
 
+    public CompletionStage<Result> getPdf(String documentIdEncrypted, String onBehalfOfUserEncrypted) {
+        val onBehalfOfUser = decrypter.apply(onBehalfOfUserEncrypted);
+        val documentId = decrypter.apply(documentIdEncrypted);
+
+        return documentStore.retrieveDocument(documentId, onBehalfOfUser).
+                thenCombine(
+                        documentStore.getDocumentName(documentId, onBehalfOfUser),
+                        (bytes, filename) -> ok(bytes).
+                                                as("application/pdf").
+                                                withHeader(CONTENT_DISPOSITION, String.format("attachment;filename=%s;", filename)));
+    }
+
+
+
     private Map<String, String> error(T wizardData, Throwable error) {
         Logger.error("Save: Generation or Storage error - " + wizardData.toString(), error);
         return ImmutableMap.of("errorMessage", error.getMessage());
