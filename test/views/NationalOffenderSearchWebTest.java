@@ -22,6 +22,7 @@ import views.pages.NationalSearchPage;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import static helpers.JwtHelperTest.generateToken;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -42,7 +43,7 @@ public class NationalOffenderSearchWebTest extends WithChromeBrowser {
 
     @Before
     public void before() {
-        when(deliusOffenderApi.logon(anyString())).thenReturn(CompletableFuture.completedFuture(JwtHelperTest.FAKE_USER_BEARKER_TOKEN));
+        when(deliusOffenderApi.logon(anyString())).thenReturn(CompletableFuture.completedFuture(generateToken()));
         doAnswer(invocation -> {
             val listener = (FutureListener)invocation.getArguments()[1];
             listener.onResponse(searchResponse);

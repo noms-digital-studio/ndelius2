@@ -30,7 +30,8 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static helpers.JwtHelperTest.FAKE_USER_BEARKER_TOKEN;
+import static helpers.JwtHelperTest.generateToken;
+import static helpers.JwtHelperTest.generateTokenWithSubject;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -38,9 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
@@ -90,7 +89,7 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void analyticsSearchIndexEventRecordedWhenLogonSucceeds() throws UnsupportedEncodingException {
-        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(FAKE_USER_BEARKER_TOKEN));
+        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(generateTokenWithSubject("cn=fake.user,cn=Users,dc=moj,dc=com")));
         route(app, buildIndexPageRequest(59));
 
         verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
@@ -112,7 +111,7 @@ public class NationalSearchControllerTest extends WithApplication {
     @Test
     public void searchTermReturnsResults() {
         val request = new Http.RequestBuilder().
-                session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
+                session("offenderApiBearerToken", generateToken()).
                 session("searchAnalyticsGroupId", "999-aaa-888").
                 method(GET).uri("/searchOffender/smith");
         val result = route(app, request);
@@ -124,7 +123,7 @@ public class NationalSearchControllerTest extends WithApplication {
     @Test
     public void analyticsSearchRequestEventRecordedBeforeAndAfterWhenSearchCalled() {
         val request = new Http.RequestBuilder().
-                session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
+                session("offenderApiBearerToken", generateTokenWithSubject("cn=fake.user,cn=Users,dc=moj,dc=com")).
                 session("searchAnalyticsGroupId", "999-aaa-888").
                 method(GET).uri("/searchOffender/smith");
         route(app, request);
@@ -251,7 +250,7 @@ public class NationalSearchControllerTest extends WithApplication {
         val request = new Http.
                 RequestBuilder().
                 method(POST).
-                session("offenderApiBearerToken", FAKE_USER_BEARKER_TOKEN).
+                session("offenderApiBearerToken", generateTokenWithSubject("cn=fake.user,cn=Users,dc=moj,dc=com")).
                 session("searchAnalyticsGroupId", "999-aaa-888").
                 uri("/nationalSearch/recordSearchOutcome").
                 bodyJson(Json.toJson(ImmutableMap.of("type", "search-offender-details", "rankIndex", 23)));
