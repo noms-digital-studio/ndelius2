@@ -12,6 +12,7 @@ import play.libs.ws.WSResponse;
 
 import javax.inject.Inject;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
@@ -52,7 +53,8 @@ public class NomisPrisonerApi implements PrisonerApi {
                 thenApply(reportNonOKResponse).
                 thenApply(WSResponse::asJson).
                 thenApply(JsonHelper::jsonToMap).
-                thenApply(result -> result != null ? result.get("image") : null).
+                thenApply(Optional::ofNullable).
+                thenApply(result -> result.map(strings -> strings.get("image")).orElse("")).
                 thenApply(base64 -> {
 
                     if (Strings.isNullOrEmpty(base64)) {

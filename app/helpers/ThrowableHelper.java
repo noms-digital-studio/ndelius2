@@ -1,6 +1,7 @@
 package helpers;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.val;
 
@@ -14,10 +15,13 @@ public interface ThrowableHelper {
         errorMessage.append("\n");
         errorMessage.append(String.join("\n", Arrays.stream(error.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList())));
 
-        if (error.getCause() != null) {
-            errorMessage.append("\nCaused by: ");
-            errorMessage.append(toMessageCauseStack(error.getCause()));
-        }
+        Optional.ofNullable(error.getCause()).
+                map(ThrowableHelper::toMessageCauseStack).
+                ifPresent(cause -> {
+
+                    errorMessage.append("\nCaused by: ");
+                    errorMessage.append(cause);
+                });
 
         return errorMessage.toString();
     }

@@ -1,6 +1,5 @@
 package services.helpers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableList;
@@ -26,9 +25,9 @@ public class OffenderSorterTest {
     @Test
     public void offenderListWithoutCurrentOffendersRemainsUnchanged() {
         val offenders = ImmutableList.of(
-                anOffender(1, "john", "Smith", "0"),
-                anOffender(2, "john", "smith", "0"),
-                anOffender(3, "John", "SMITH", "0")
+                anOffender(1, "john", "Smith", "0", "1989-12-31"),
+                anOffender(2, "john", "smith", "0", "1989-12-31"),
+                anOffender(3, "John", "SMITH", "0", "1989-12-31")
         );
 
         val sortedOffenders = OffenderSorter.groupByNameAndSortByCurrentDisposal(offenders);
@@ -43,9 +42,9 @@ public class OffenderSorterTest {
     @Test
     public void sortsCurrentOffendersToTopInAListOfDuplicateNames() {
         val offenders = ImmutableList.of(
-                anOffender(1, "john", "Smith", "0"),
-                anOffender(2, "john", "smith", "0"),
-                anOffender(3, "John", "SMITH", "1")
+                anOffender(1, "john", "Smith", "0", "1989-12-31"),
+                anOffender(2, "john", "smith", "0", "1989-12-31"),
+                anOffender(3, "John", "SMITH", "1", "1989-12-31")
         );
 
         val sortedOffenders = OffenderSorter.groupByNameAndSortByCurrentDisposal(offenders);
@@ -58,14 +57,14 @@ public class OffenderSorterTest {
     }
 
     @Test
-    public void groupsSimilarNamesAndSortCurrentOffendersToTopOfThoseGroups() {
+    public void groupsSimilarNamesAndExactDobsAndSortCurrentOffendersToTopOfThoseGroups() {
         val offenders = ImmutableList.of(
-                anOffender(1, "James", "Smith", "0"),
-                anOffender(2, "john", "Smith", "0"),
-                anOffender(3, "john", "smith", "0"),
-                anOffender(4, "bob", "samuels", "1"),
-                anOffender(5, "John", "SMITH", "1"),
-                anOffender(6, "bob", "samuels", "0")
+                anOffender(1, "James", "Smith", "0", "1989-12-31"),
+                anOffender(2, "john", "Smith", "0", "1989-12-31"),
+                anOffender(3, "john", "smith", "0", "1989-12-31"),
+                anOffender(4, "bob", "samuels", "1", "1989-12-31"),
+                anOffender(5, "John", "SMITH", "1", "1989-12-31"),
+                anOffender(6, "bob", "samuels", "0", "1989-12-31")
         );
 
         val sortedOffenders = OffenderSorter.groupByNameAndSortByCurrentDisposal(offenders);
@@ -77,12 +76,33 @@ public class OffenderSorterTest {
         assertThat(ids).containsExactly(1, 5, 2, 3, 4, 6);
     }
 
-    private ObjectNode anOffender(int id, String firstName, String surname, String currentDisposal) {
+    @Test
+    public void groupsSimilarNamesAndDobsAndSortCurrentOffendersToTopOfThoseGroups() {
+        val offenders = ImmutableList.of(
+                anOffender(1, "James", "Smith", "0", "1989-12-31"),
+                anOffender(2, "john", "Smith", "0", "1989-12-31"),
+                anOffender(3, "john", "smith", "0", "1999-12-31"),
+                anOffender(4, "bob", "samuels", "1", "1989-12-31"),
+                anOffender(5, "John", "SMITH", "1", "1997-02-03"),
+                anOffender(6, "bob", "samuels", "0", "1989-12-31")
+        );
+
+        val sortedOffenders = OffenderSorter.groupByNameAndSortByCurrentDisposal(offenders);
+
+        val ids = sortedOffenders.stream()
+                .map(node -> node.get("offenderId").asInt())
+                .collect(toList());
+
+        assertThat(ids).containsExactly(1, 2, 3, 4, 6, 5);
+    }
+
+    private ObjectNode anOffender(int id, String firstName, String surname, String currentDisposal, String dateOfBirth ) {
         val node = mapper.createObjectNode();
         node.put("offenderId", id);
         node.put("firstName", firstName);
         node.put("surname", surname);
         node.put("currentDisposal", currentDisposal);
+        node.put("dateOfBirth", dateOfBirth);
         return node;
     }
 }

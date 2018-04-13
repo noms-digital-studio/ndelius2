@@ -24,10 +24,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
@@ -59,7 +56,7 @@ public class AlfrescoStore implements DocumentStore {
                 put("CRN", crn);
                 put("author", onBehalfOfUser);
                 put("entityType", "COURTREPORT");
-                put("entityId", entityId != null ? entityId.toString() : "");
+                put("entityId", Optional.ofNullable(entityId).map(Object::toString).orElse(""));
                 put("docType", "DOCUMENT");
                 put("userData", originalData);
             }
@@ -88,7 +85,7 @@ public class AlfrescoStore implements DocumentStore {
                         put("documentName", filename);
                         put("crn", crn);
                         put("tableName", "COURT_REPORT");
-                        put("entityId", entityId != null ? entityId.toString() : "");
+                        put("entityId", Optional.ofNullable(entityId).map(Object::toString).orElse(""));
                     }
                 };
 

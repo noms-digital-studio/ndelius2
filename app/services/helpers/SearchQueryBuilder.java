@@ -9,13 +9,12 @@ import org.elasticsearch.search.suggest.SuggestBuilder;
 import play.Logger;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
-import static helpers.DateTimeHelper.covertToCanonicalDate;
 import static helpers.FluentHelper.not;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
@@ -25,43 +24,41 @@ public class SearchQueryBuilder {
 
         val simpleTerms = simpleTerms(searchTerm);
         val boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.should().add(multiMatchQuery(simpleTerms)
-            .field("firstName", 10)
-            .field("surname", 10)
-            .field("middleNames", 8)
-            .field("offenderAliases.firstName", 8)
-            .field("offenderAliases.surname", 8)
-            .field("contactDetails.addresses.town")
-            .type(CROSS_FIELDS));
 
         boolQueryBuilder.should().add(multiMatchQuery(simpleTerms)
-            .field("gender")
-            .field("otherIds.crn", 10)
-            .field("otherIds.nomsNumber", 10)
-            .field("otherIds.niNumber", 10)
-            .field("contactDetails.addresses.streetName")
-            .field("contactDetails.addresses.county")
-            .field("contactDetails.addresses.postcode", 10)
+            .field("surname", 40)
+            .field("firstName", 25)
+            .field("middleNames", 10)
+            .field("otherIds.crn", 50)
+            .field("otherIds.nomsNumber", 40)
+            .field("otherIds.niNumber", 30)
+            .field("offenderAliases.surname", 3)
+            .field("offenderAliases.firstName", 2)
+            .field("gender", 1)
+            .field("contactDetails.addresses.streetName", 5)
+            .field("contactDetails.addresses.town", 10)
+            .field("contactDetails.addresses.county", 5)
+            .field("contactDetails.addresses.postcode", 20)
             .type(MOST_FIELDS));
 
         boolQueryBuilder.should().add(multiMatchQuery(searchTerm.toLowerCase())
-            .field("otherIds.croNumberLowercase", 10)
+            .field("otherIds.croNumberLowercase", 40)
             .analyzer("whitespace"));
 
         termsThatLookLikePncNumbers(searchTerm).forEach(pnc ->
             boolQueryBuilder.should().add(multiMatchQuery(pnc)
-                .field("otherIds.pncNumberLongYear", 10)
-                .field("otherIds.pncNumberShortYear", 10)
+                .field("otherIds.pncNumberLongYear", 40)
+                .field("otherIds.pncNumberShortYear", 40)
                 .analyzer("whitespace")));
 
         termsThatLookLikeDates(searchTerm).forEach(dateTerm ->
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
-                .field("dateOfBirth", 11)
+                .field("dateOfBirth", 50)
                 .lenient(true)));
 
         Stream.of(simpleTermsIncludingSingleLetters(searchTerm).split(" "))
             .filter(not(String::isEmpty))
-            .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
+            .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(10)));
 
         val highlight = new HighlightBuilder().
             highlighterType("unified").
@@ -91,15 +88,16 @@ public class SearchQueryBuilder {
 
     public static List<String> termsThatLookLikeDates(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
-            .filter(DateTimeHelper::canBeConvertedToADate)
-            .map(term -> covertToCanonicalDate(term).get())
+            .map(DateTimeHelper::covertToCanonicalDate)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .collect(toList());
     }
 
     static String simpleTerms(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
             .filter(term -> term.length() > 1)
-            .filter(not(term -> covertToCanonicalDate(term).isPresent()))
+            .filter(not(DateTimeHelper::canBeConvertedToADate))
             .filter(not(term -> term.contains("/")))
             .map(String::toLowerCase)
             .collect(joining(" "));
@@ -107,7 +105,7 @@ public class SearchQueryBuilder {
 
     static String simpleTermsIncludingSingleLetters(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
-            .filter(not(term -> covertToCanonicalDate(term).isPresent()))
+            .filter(not(DateTimeHelper::canBeConvertedToADate))
             .filter(not(term -> term.contains("/")))
             .map(String::toLowerCase)
             .collect(joining(" "));

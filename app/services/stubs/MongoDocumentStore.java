@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -48,7 +49,7 @@ public class MongoDocumentStore implements DocumentStore {
                 put("filename", filename);
                 put("onBehalfOfUser", onBehalfOfUser);
                 put("originalData", originalData);
-                put("entityId", entityId != null ? entityId.toString() : "");
+                put("entityId", Optional.ofNullable(entityId).map(Object::toString).orElse(""));
                 put("crn", crn);
                 put("_id", key);
             }
@@ -129,7 +130,7 @@ public class MongoDocumentStore implements DocumentStore {
                     put("filename", filename);
                     put("onBehalfOfUser", onBehalfOfUser);
                     put("originalData", updatedData);
-                    put("entityId", entityId != null ? entityId : "");
+                    put("entityId", Optional.ofNullable(entityId).map(Object::toString).orElse(""));
                 }
             };
 
