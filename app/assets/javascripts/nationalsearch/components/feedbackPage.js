@@ -21,40 +21,6 @@ class FeedbackPage extends Component {
                         <form onSubmit={event => this.submitFeedback(event)}>
                             <fieldset>
                                 <div className="form-group">
-                                    <label className="form-label" for="role">What is your role?</label>
-                                    <select className="form-control" id="role" name="role" onChange={event => this.handleRoleChange(event)}>
-                                        <option>&nbsp;</option>
-                                        <option>Probation Officer</option>
-                                        <option>Senior Probation Officer</option>
-                                        <option>Case Administrator</option>
-                                        <option>Offender Manager in the Community</option>
-                                        <option>Offender Manager in Prison</option>
-                                        <option>Other</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label" for="provider">Who do you work for?</label>
-                                    <select className="form-control" id="provider" name="provider" onChange={event => this.handleProviderChange(event)}>
-                                        <option>&nbsp;</option>
-                                        <option>NPS</option>
-                                        <option>CRC</option>
-                                        <option>Other</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label className="form-label" for="region">Which region do you work in?</label>
-                                    <select className="form-control" id="region" name="region" onChange={event => this.handleRegionChange(event)}>
-                                        <option>&nbsp;</option>
-                                        <option>North East</option>
-                                        <option>North West</option>
-                                        <option>Wales</option>
-                                        <option>Midlands</option>
-                                        <option>South West & South Central</option>
-                                        <option>South East</option>
-                                        <option>London</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
                                     <span className="form-label-bold">Overall, how did you feel about the National Search service you used today?</span>
                                 </div>
                                 <div className="form-group">
@@ -103,6 +69,49 @@ class FeedbackPage extends Component {
                                               onChange={event => this.handleFeedbackChange(event)}/>
                                 </div>
                                 <div className="form-group">
+                                    <label className="form-label-bold" htmlFor="email">Email</label>
+                                    <p>We&apos;ll use this to respond to you directly.</p>
+                                    <input className="form-control" id="email" type='email'
+                                           onChange={event => this.handleEmailChange(event)}/>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="role">What is your role?</label>
+                                    <select className="form-control" id="role" name="role"
+                                            onChange={event => this.handleRoleChange(event)}>
+                                        <option>&nbsp;</option>
+                                        <option>Probation Officer</option>
+                                        <option>Senior Probation Officer</option>
+                                        <option>Case Administrator</option>
+                                        <option>Offender Manager in the Community</option>
+                                        <option>Offender Manager in Prison</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="provider">Who do you work for?</label>
+                                    <select className="form-control" id="provider" name="provider"
+                                            onChange={event => this.handleProviderChange(event)}>
+                                        <option>&nbsp;</option>
+                                        <option>NPS</option>
+                                        <option>CRC</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label" htmlFor="region">Which region do you work in?</label>
+                                    <select className="form-control" id="region" name="region"
+                                            onChange={event => this.handleRegionChange(event)}>
+                                        <option>&nbsp;</option>
+                                        <option>North East</option>
+                                        <option>North West</option>
+                                        <option>Wales</option>
+                                        <option>Midlands</option>
+                                        <option>South West & South Central</option>
+                                        <option>South East</option>
+                                        <option>London</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
                                     <input className="button" type="submit" value="Send feedback"/>
                                 </div>
                             </fieldset>
@@ -121,6 +130,10 @@ class FeedbackPage extends Component {
         this.setState({rating: event.target.value});
     }
 
+    handleEmailChange(event) {
+        this.setState({email: event.target.value});
+    }
+
     handleRoleChange(event) {
         this.setState({role: event.target.value});
     }
@@ -137,6 +150,7 @@ class FeedbackPage extends Component {
         const {addFeedback} = this.props
         event.preventDefault()
         addFeedback({
+            email: this.state.email,
             rating: this.state.rating,
             feedback: this.state.feedback,
             role: this.state.role,

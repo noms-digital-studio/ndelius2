@@ -21,6 +21,10 @@ describe('FeedbackPage component', () => {
             expect(feedbackPage.find('form').exists()).to.be.true
         })
 
+        it('contains an email field', () => {
+            expect(feedbackPage.find('#email').exists()).to.be.true
+        })
+
         it('contains a role select field', () => {
             expect(feedbackPage.find('#role').exists()).to.be.true
         })
@@ -52,6 +56,7 @@ describe('FeedbackPage component', () => {
             feedbackPage = shallow(<FeedbackPage addFeedback={addFeedback}/>, {context})
             feedbackPage.find('#rating_verysatisfied').simulate('change', {target: {value: 'Very satisfied'}})
             feedbackPage.find('#feedback').simulate('change', {target: {value: 'Nothing - it is perfect'}})
+            feedbackPage.find('#email').simulate('change', {target: {value: 'foo@bar.com'}})
             feedbackPage.find('#role').simulate('change', {target: {value: 'Offender Manager in the Community'}})
             feedbackPage.find('#provider').simulate('change', {target: {value: 'CRC'}})
             feedbackPage.find('#region').simulate('change', {target: {value: 'London'}})
@@ -60,6 +65,7 @@ describe('FeedbackPage component', () => {
 
         it('adds feedback outcome', () => {
             expect(addFeedback).to.be.calledWith({
+                email: "foo@bar.com",
                 rating: "Very satisfied",
                 feedback: "Nothing - it is perfect",
                 role: "Offender Manager in the Community",

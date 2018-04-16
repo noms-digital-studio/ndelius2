@@ -12,7 +12,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
-import play.test.Helpers;
 import play.test.WithApplication;
 
 import java.util.Base64;
@@ -69,29 +68,6 @@ public class FeedbackController_nationalSearch_Test extends WithApplication {
                 .uri("/feedback/nationalSearch")));
 
         assertThat(result.status()).isEqualTo(OK);
-    }
-
-    @Test
-    public void renderedPageIncludesRowsForEachFeedback() {
-        val result = route(app, addCSRFToken(new Http.RequestBuilder()
-                .method(GET)
-                .header("Authorization", String.format("Basic %s", credentials("andymarke", "secret")))
-                .uri("/feedback/nationalSearch")));
-
-        val content = Helpers.contentAsString(result);
-
-        assertThat(content).contains("Very satisfied");
-        assertThat(content).contains("It is really good");
-        assertThat(content).contains("Offender Manager in the Community");
-        assertThat(content).contains("CRC");
-        assertThat(content).contains("London");
-        assertThat(content).contains("fake.user");
-        assertThat(content).contains("Dissatisfied");
-        assertThat(content).contains("It is rubbish");
-        assertThat(content).contains("another.user");
-        assertThat(content).contains("Neither satisfied or dissatisfied");
-        assertThat(content).contains("Not bothered");
-        assertThat(content).contains("andanother.user");
     }
 
     @Test
