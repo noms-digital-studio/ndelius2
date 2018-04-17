@@ -35,9 +35,9 @@ public class SearchQueryBuilder {
             .field("offenderAliases.surname", 3)
             .field("offenderAliases.firstName", 2)
             .field("gender", 1)
-            .field("contactDetails.addresses.streetName", 5)
-            .field("contactDetails.addresses.town", 10)
-            .field("contactDetails.addresses.county", 5)
+            .field("contactDetails.addresses.streetName", 4)
+            .field("contactDetails.addresses.town", 4)
+            .field("contactDetails.addresses.county", 4)
             .field("contactDetails.addresses.postcode", 20)
             .type(MOST_FIELDS));
 
@@ -53,7 +53,7 @@ public class SearchQueryBuilder {
 
         termsThatLookLikeDates(searchTerm).forEach(dateTerm ->
             boolQueryBuilder.should().add(multiMatchQuery(dateTerm)
-                .field("dateOfBirth", 50)
+                .field("dateOfBirth", 60)
                 .lenient(true)));
 
         Stream.of(simpleTermsIncludingSingleLetters(searchTerm).split(" "))
