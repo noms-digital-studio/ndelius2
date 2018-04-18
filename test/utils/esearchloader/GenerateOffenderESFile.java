@@ -8,7 +8,10 @@ import play.Mode;
 import scala.compat.java8.ScalaStreamSupport;
 import scala.io.Source;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -39,8 +42,10 @@ public class GenerateOffenderESFile {
                 val offender = (ObjectNode) parse(offenderTemplate);
                 offender.replace("offenderId", numberNode(new Random().nextInt(Integer.MAX_VALUE)));
                 offender.replace("title", textNode(randomTitle()));
-                offender.replace("firstName", textNode(element.get("firstName")));
-                offender.replace("surname", textNode(element.get("surname")));
+                val firstName = textNode(element.get("firstName"));
+                offender.replace("firstName", firstName);
+                val surname = textNode(element.get("surname"));
+                offender.replace("surname", surname);
                 offender.replace("middleNames", randomMiddleNames(randomPersonData));
                 offender.replace("dateOfBirth", textNode(randomDateOfBirth()));
                 offender.replace("gender", textNode(randomGender()));
@@ -51,7 +56,7 @@ public class GenerateOffenderESFile {
                 contactDetails.replace("addresses", addresses(element, randomPersonData));
                 contactDetails.replace("emailAddresses", emailAddresses(element));
                 if (chance(30)) {
-                    offender.set("offenderAliases", aliases(element, randomPersonData));
+                    offender.set("offenderAliases", aliases(element, randomPersonData, firstName, surname));
                 }
                 val offenderProfile = (ObjectNode) offender.get("offenderProfile");
                 if (chance(10)) {
@@ -94,10 +99,10 @@ public class GenerateOffenderESFile {
         }
     }
 
-    private static ArrayNode aliases(Map<String, String> element, List<Map<String, String>> randomPersonData) {
+    private static ArrayNode aliases(Map<String, String> element, List<Map<String, String>> randomPersonData, TextNode firstName, TextNode surname) {
         final ArrayNode aliases = JsonNodeFactory.instance.arrayNode();
-        aliases.add(aliase(element, randomPersonData));
-        IntStream.range(0, randomUpTo(2)).forEach(ignoredCount -> aliases.add(randomAliase(randomPersonData)));
+        aliases.add(alias(element, randomPersonData));
+        IntStream.range(0, randomUpTo(5)).forEach(ignoredCount -> aliases.add(randomAlias(randomPersonData, firstName, surname)));
 
         return aliases;
     }
@@ -129,8 +134,13 @@ public class GenerateOffenderESFile {
         return address;
     }
 
-    private static ObjectNode randomAliase(List<Map<String, String>> randomPersonData) {
-        return aliase(randomPersonData.get(randomUpTo(randomPersonData.size())), randomPersonData);
+    private static ObjectNode randomAlias(List<Map<String, String>> randomPersonData, TextNode firstName, TextNode surname) {
+        if (chance(80)) {
+
+            return aliasFromCurrentName(firstName, surname);
+        }
+
+        return alias(randomPersonData.get(randomUpTo(randomPersonData.size())), randomPersonData);
     }
 
     private static ObjectNode address(Map<String, String> element) {
@@ -146,12 +156,22 @@ public class GenerateOffenderESFile {
         return address;
     }
 
-    private static ObjectNode aliase(Map<String, String> element, List<Map<String, String>> randomPersonData) {
+    private static ObjectNode alias(Map<String, String> element, List<Map<String, String>> randomPersonData) {
         val address = JsonNodeFactory.instance.objectNode();
 
         address.put("dateOfBirth", randomDateOfBirth());
         address.put("firstName", randomName(randomPersonData));
         address.put("surname", element.get("surname"));
+        address.put("gender", randomGender());
+        return address;
+    }
+
+    private static ObjectNode aliasFromCurrentName(TextNode firstName, TextNode surname) {
+        val address = JsonNodeFactory.instance.objectNode();
+
+        address.put("dateOfBirth", randomDateOfBirth());
+        address.set("firstName", firstName);
+        address.set("surname", surname);
         address.put("gender", randomGender());
         return address;
     }
