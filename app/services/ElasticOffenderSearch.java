@@ -1,5 +1,6 @@
 package services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -117,13 +118,18 @@ public class ElasticOffenderSearch implements OffenderSearch {
     private ObjectNode restrictedView(ObjectNode rootNode) {
 
         return (ObjectNode) Json.toJson(ImmutableMap.of(
-
-                "accessDenied", true,
-                "offenderId", rootNode.get("offenderId").asLong(),
-                "otherIds", ImmutableMap.of(
-                        "crn", rootNode.get("otherIds").get("crn").asText()
-                )
+            "accessDenied", true,
+            "offenderId", rootNode.get("offenderId").asLong(),
+            "otherIds", ImmutableMap.of("crn", rootNode.get("otherIds").get("crn").asText()),
+            "offenderManagers", offenderManagers(rootNode)
         ));
+    }
+
+    private JsonNode offenderManagers(ObjectNode rootNode) {
+
+        return Optional.ofNullable(rootNode.get("offenderManagers"))
+            .map(offenderManagers -> offenderManagers)
+            .orElse(parse("[]"));
     }
 
     private void logResults(SearchResponse response) {

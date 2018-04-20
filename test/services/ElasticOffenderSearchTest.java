@@ -1,6 +1,7 @@
 package services;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.ConfigFactory;
 import helpers.FutureListener;
@@ -228,7 +229,7 @@ public class ElasticOffenderSearchTest {
     }
 
     @Test
-    public void offendersWhichAreRestrictedViewContainJustPrimaryIds() {
+    public void restrictedViewOffendersContainPrimaryIdsAndOffenderManagersOnly() {
         when(offenderApi.canAccess("bearer-token", 13)).thenReturn(CompletableFuture.completedFuture(false));
 
         // given
@@ -236,29 +237,37 @@ public class ElasticOffenderSearchTest {
                 ImmutableMap.of("offenderId", 13, "crn", "X3", "currentRestriction", false, "currentExclusion", true)
         );
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
+
         // when
         val searchResult = elasticOffenderSearch.search("bearer-token","smith", 10, 0).toCompletableFuture().join();
         val offender = ((JsonNode) ((List) searchResult.get("offenders")).get(0));
 
-        assertThat(getChildNodeNames(offender)).containsExactlyInAnyOrder("offenderId", "accessDenied", "otherIds");
+        assertThat(getChildNodeNames(offender)).containsExactlyInAnyOrder("offenderId", "accessDenied", "otherIds", "offenderManagers");
         assertThat(getChildNodeNames(offender.get("otherIds"))).containsExactlyInAnyOrder("crn");
     }
 
     @Test
-    public void offendersWhichAreRestrictedViewHaveOffenderIdAndCrnInTheClear() {
+    public void offendersWhichAreRestrictedViewHaveOffenderIdCrnAndOffenderManagersInTheClear() {
         when(offenderApi.canAccess("bearer-token", 13)).thenReturn(CompletableFuture.completedFuture(false));
 
         // given
         val searchHits = getSearchHitArray(
-                ImmutableMap.of("offenderId", 13, "crn", "X3", "currentRestriction", false, "currentExclusion", true)
+                ImmutableMap.of("offenderId", 13,
+                    "crn", "X3",
+                    "currentRestriction", false,
+                    "currentExclusion", true,
+                    "offenderManagers", ImmutableList.of())
         );
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
+
         // when
         val searchResult = elasticOffenderSearch.search("bearer-token", "smith", 10, 0).toCompletableFuture().join();
         val offender = ((JsonNode) ((List) searchResult.get("offenders")).get(0));
 
         assertThat(offender.get("offenderId").asLong()).isEqualTo(13);
         assertThat(offender.get("otherIds").get("crn").asText()).isEqualTo("X3");
+        assertThat(offender.get("offenderManagers").get(0).get("trustOfficer").get("surname").asText()).isEqualTo("Dolphin");
+        assertThat(offender.get("offenderManagers").get(1).get("trustOfficer").get("surname").asText()).isEqualTo("Staff");
     }
 
     private boolean accessDenied(JsonNode offender) {

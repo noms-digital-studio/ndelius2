@@ -27,13 +27,13 @@ public class OffenderESDataFactory {
 
     @SafeVarargs
     public static SearchHit[] getSearchHitArrayWithHighlights(Map<String, HighlightField> highlightFields, Map<String, Object>... replacements) {
-        return stream(replacements).map((replacement) -> toSearchHit(highlightFields, replacement))
+        return stream(replacements).map(replacement -> toSearchHit(highlightFields, replacement))
                 .collect(toList()).toArray(new SearchHit[replacements.length]);
     }
 
     @SafeVarargs
     public static SearchHit[] getSearchHitArray(Map<String, Object>... replacements) {
-        return stream(replacements).map((replacement) -> toSearchHit(ImmutableMap.of(), replacement))
+        return stream(replacements).map(replacement -> toSearchHit(ImmutableMap.of(), replacement))
                 .collect(toList()).toArray(new SearchHit[replacements.length]);
     }
 

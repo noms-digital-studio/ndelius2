@@ -55,7 +55,6 @@ public class SearchResultPipelineTest {
         rootNode.set("otherIds", nomsNode);
         ObjectNode newNode = SearchResultPipeline.process(rootNode, ImmutableList.of(pipeline.get("addOneTimeNomisRef")));
         assertThat(newNode.get("oneTimeNomisRef")).isNotNull();
-        System.out.println(newNode.get("oneTimeNomisRef"));
         assertThat(newNode.get("oneTimeNomisRef").asText()
             .startsWith("{\"user\":\"unknown\",\"noms\":\"A123\",\"tick\"")).isTrue();
     }

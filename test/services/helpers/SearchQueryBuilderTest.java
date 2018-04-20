@@ -117,7 +117,6 @@ public class SearchQueryBuilderTest {
         SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970", 10, 3);
 
         val query = (BoolQueryBuilder) builder.query();
-        System.out.println(query.should());
         assertThat((query.should())).doesNotContain(prefixQuery("firstName", "").boost(11));
     }
 

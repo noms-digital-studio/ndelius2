@@ -3,6 +3,7 @@ import OffenderSummaryTitle from '../containers/offenderSummaryTitleContainer'
 import MT from '../containers/markableTextContainer'
 import {matchesHighlightedField, matchesAnyHighlightedField} from './markableText'
 import AddContactLink from '../containers/addContactLinkContainer'
+import {provider, officer} from "../../helpers/offenderManagerHelper";
 
 const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
     <li id={`offenderSummary${offenderSummary.offenderId}`}>
@@ -232,28 +233,6 @@ const mapRiskColor = (risk = '') => {
             return 'risk-green'
     }
     return ''
-}
-
-const provider = offenderSummary => {
-    const activeManager = activeOffenderManager(offenderSummary)
-    if (activeManager && activeManager.probationArea) {
-        return activeManager.probationArea.description
-    }
-}
-const officer = offenderSummary => {
-    const activeManager = activeOffenderManager(offenderSummary)
-    if (activeManager && activeManager.staff) {
-        return activeManager.staff.forenames + ' ' + activeManager.staff.surname
-    }
-
-}
-const activeOffenderManager = offenderSummary => {
-    if (offenderSummary.offenderManagers) {
-        return offenderSummary
-            .offenderManagers
-            .filter(managers => managers.active === true)
-            .reduce((accumulator, currentValue) => accumulator || currentValue, null)
-    }
 }
 
 export { OffenderSearchSummary as default, Address }
