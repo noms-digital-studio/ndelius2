@@ -84,9 +84,17 @@ class FeedbackPage extends Component {
                                         <option>Case Administrator</option>
                                         <option>Offender Manager in the Community</option>
                                         <option>Offender Manager in Prison</option>
+                                        <option>Court Duty Officer</option>
                                         <option>Other</option>
                                     </select>
                                 </div>
+                                {this.state.showOtherRole &&
+                                    <div className="form-group">
+                                        <label className="form-label" htmlFor="role-other">Please specify your role</label>
+                                        <input className="form-control" id="role-other"
+                                               onChange={event => this.handleRoleOtherChanged(event)}/>
+                                    </div>
+                                }
                                 <div className="form-group">
                                     <label className="form-label" htmlFor="provider">Who do you work for?</label>
                                     <select className="form-control" id="provider" name="provider"
@@ -136,6 +144,11 @@ class FeedbackPage extends Component {
 
     handleRoleChange(event) {
         this.setState({role: event.target.value});
+        this.setState({showOtherRole: event.target.value === 'Other'})
+    }
+
+    handleRoleOtherChanged(event) {
+        this.setState({roleOther: event.target.value});
     }
 
     handleProviderChange(event) {
@@ -149,6 +162,11 @@ class FeedbackPage extends Component {
     submitFeedback(event) {
         const {addFeedback} = this.props
         event.preventDefault()
+        if (this.state.role === 'Other' && this.state.roleOther !== undefined) {
+            this.state.role = this.state.roleOther
+        } else if (this.state.role === 'Other' && this.state.roleOther === undefined) {
+            this.state.role = 'Other'
+        }
         addFeedback({
             email: this.state.email,
             rating: this.state.rating,
