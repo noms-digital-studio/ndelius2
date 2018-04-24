@@ -5,3 +5,15 @@
   background: transparent;
   text-align: left;
 }
+
+.govuk-interrupt {
+  margin: 1em 0;
+  padding: 40px;
+  background: $govuk-blue;
+  text-align: left;
+  color: white;
+
+  a {
+    color: white !important;
+  }
+}
