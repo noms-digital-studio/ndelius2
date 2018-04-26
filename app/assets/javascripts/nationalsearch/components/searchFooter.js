@@ -8,7 +8,7 @@ const SearchFooter = () => (
             <li>name and date of birth</li>
             <li>CRN, PNC and National Insurance numbers</li>
             <li>aliases and other recorded dates of birth</li>
-            <li>address and previous addresses</li>
+            <li>towns and postcodes</li>
         </ul>
 
         <div className="margin-top large">
