@@ -192,4 +192,14 @@ function formWithZeroJumpNumber(form) {
 
     });
 
+    /**
+     * Reveal or hide the other role section when 'Other' is chosen in the role drop down
+     */
+    $(document).on('change','#role',function(e){
+        if ($('#role option:selected').text() === 'Other') {
+            $('#roleother-section').removeClass('js-hidden')
+        } else {
+            $('#roleother-section').addClass('js-hidden');
+        }
+    });
 })(window.jQuery);

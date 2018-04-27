@@ -15,11 +15,6 @@ public class ReportGeneratorWizardData extends WizardData {
     @Encrypted
     @RequiredOnPage(1)
     @JsonIgnore
-    private String onBehalfOfUser;
-
-    @Encrypted
-    @RequiredOnPage(1)
-    @JsonIgnore
     private Long entityId;
 
     @Encrypted

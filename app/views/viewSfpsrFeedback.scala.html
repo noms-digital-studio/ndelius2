@@ -8,10 +8,35 @@
 @df = @{new SimpleDateFormat("dd/MM/yyyy HH:mm")}
 
 @display(feedback: Map[String, Object]) = {
-  <tr>
-    <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
-    <td>@feedback.get("feedback")</td>
-  </tr>
+
+  @if(feedback.get("feedback").isInstanceOf[Map[String, Object]]) {
+    @if(feedback.get("feedback").asInstanceOf[Map[String, String]].get("feedback") != null) {
+      <tr>
+        <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
+        <td>
+          <p>@feedback.get("username")</p>
+          <p>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("email")</p>
+        </td>
+        <td>
+          <p>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("role")</p>
+          <p>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("provider")</p>
+          <p>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("region")</p>
+        </td>
+        <td>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("rating")</td>
+        <td width="40%">@feedback.get("feedback").asInstanceOf[Map[String, String]].get("feedback")</td>
+      </tr>
+    }
+  } else {
+    <tr>
+      <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
+      <td>
+        <p>@feedback.get("username")</p>
+      </td>
+      <td></td>
+      <td></td>
+      <td width="40%">@feedback.get("feedback")</td>
+    </tr>
+  }
 }
 
 <!DOCTYPE html>
@@ -45,11 +70,14 @@
       <h1 class="heading-xlarge">Short Format Pre-Sentence Report Feedback</h1>
 
       <table>
-          <caption class="heading-small">Latest feedback</caption>
+        <caption class="heading-small">Latest feedback</caption>
         <thead>
           <tr>
             <td>Submitted date</td>
-            <td>Feedback</td>
+            <td>Username / Email</td>
+            <td>Role / Provider / Region</td>
+            <td>Rating</td>
+            <td>Additional comments</td>
           </tr>
         </thead>
         <tbody>

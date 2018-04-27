@@ -48,7 +48,7 @@
 
       </span>
     } else if(elements.input.body.contains("select id=")) {
-      <select class="form-control auto-complete @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">
+      <select class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">
           @htmlLines.filter(_.startsWith("<option ")).map(Html(_))
       </select>
     } else {

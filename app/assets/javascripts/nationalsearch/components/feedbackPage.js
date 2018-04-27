@@ -42,8 +42,7 @@ class FeedbackPage extends Component {
                                                type="radio"
                                                id="rating_neithersatisfiedordissatisfied"
                                                value="Neither satisfied or dissatisfied"/><label
-                                        htmlFor="rating_neithersatisfiedordissatisfied">Neither satisfied or
-                                        dissatisfied</label>
+                                        htmlFor="rating_neithersatisfiedordissatisfied">Neither satisfied or dissatisfied</label>
                                     </div>
                                     <div className="multiple-choice">
                                         <input name="rating" onChange={event => this.handleRatingChange(event)}
@@ -89,7 +88,7 @@ class FeedbackPage extends Component {
                                     </select>
                                 </div>
                                 {this.state.showOtherRole &&
-                                    <div className="form-group">
+                                    <div className="form-group panel panel-border-narrow">
                                         <label className="form-label" htmlFor="role-other">Please specify your role</label>
                                         <input className="form-control" id="role-other"
                                                onChange={event => this.handleRoleOtherChanged(event)}/>

@@ -7,18 +7,6 @@ import data.viewModel.PageStatus;
 import helpers.Encryption;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import lombok.val;
 import org.joda.time.DateTime;
 import org.webjars.play.WebJarsUtil;
@@ -33,6 +21,19 @@ import play.twirl.api.Content;
 import play.twirl.api.Txt;
 import scala.Function1;
 import scala.compat.java8.functionConverterImpls.FromJavaFunction;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static helpers.FluentHelper.content;
 
@@ -187,10 +188,22 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             session("id", UUID.randomUUID().toString());
         }
 
-        val feedback = wizardData.getFeedback();
+        val feedback = new HashMap<String, Object>()
+        {
+            {
+                put("email", wizardData.getEmail());
+                put("rating", wizardData.getRating());
+                put("feedback", wizardData.getFeedback());
+                put("role", wizardData.getRoleother() == null || wizardData.getRoleother().isEmpty() ? wizardData.getRole() : wizardData.getRoleother());
+                put("provider", wizardData.getProvider());
+                put("region", wizardData.getRegion());
+            }
+        };
+
         val eventData = new HashMap<String, Object>()
         {
             {
+                put("username", wizardData.getOnBehalfOfUser());
                 put("sessionId", session("id"));
                 put("pageNumber", wizardData.getPageNumber());
                 put("dateTime", DateTime.now().toDate());
@@ -199,10 +212,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         };
 
         Logger.info("Session: " + eventData.get("sessionId") + " - Page: " + eventData.get("pageNumber") + " - " + eventData.get("dateTime"));
-
-        if (!Strings.isNullOrEmpty(feedback)) {
-            Logger.info("Feedback: " + feedback);
-        }
 
         analyticsStore.recordEvent(eventData);
     }

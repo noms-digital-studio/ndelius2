@@ -60,7 +60,8 @@ public class FeedbackController extends Controller {
     }
 
     private CompletionStage<Result> renderSfpsrFeedbackPage() {
-        return analyticsStore.sfpsrFeedback().thenApplyAsync(feedback -> ok(viewSfpsrFeedbackTemplate.render(feedback)), ec.current());
+        return analyticsStore.sfpsrFeedback()
+            .thenApplyAsync(feedback -> ok(viewSfpsrFeedbackTemplate.render(feedback)), ec.current());
     }
 
     private Map<String, String> getTokenFromHeader(String authHeader) {

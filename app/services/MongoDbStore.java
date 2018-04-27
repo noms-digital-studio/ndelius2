@@ -365,6 +365,7 @@ public class MongoDbStore implements AnalyticsStore {
                 projection(new Document(ImmutableMap.of(
                         "_id", 0,
                         "dateTime", 1,
+                        "username", 1,
                         "feedback", 1
                 ))).
                 filter( and(_exists("type", false), _notNull("feedback"), _notEmpty("feedback")) ).

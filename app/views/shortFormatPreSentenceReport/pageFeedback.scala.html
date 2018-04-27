@@ -10,9 +10,9 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Start your report - Short Format Pre Sentence Report") {
+@main("Give feedback- Short Format Pre Sentence Report") {
 
-    <h1 class="heading-xlarge">Feedback</h1>
+    <h1 class="heading-xlarge">Give feedback</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -21,12 +21,6 @@
 
         </div>
         <div class="column-two-thirds">
-
-            <p class="lede">Short Format Pre-Sentence Report</p>
-
-            <p>Your feedback will help us to improve this service.</p>
-
-            <p>Once submitted you will be returned to where you left off in the report.</p>
 
             @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
                 @CSRF.formField
@@ -45,9 +39,78 @@
                 <input type="hidden" id="jumpNumber" name="jumpNumber" value="@reportForm("pageNumber").getValue.orElse("")"/>
                 @inputHidden(reportForm("pageNumber"))
 
-                @textarea(reportForm("feedback"), '_label -> "Submit your feedback", 'class -> "wide")
+                <fieldset>
+                    <legend class="margin-bottom medium">
+                        <span class="form-label-bold">Overall, how did you feel about the service you used today?</span>
+                    </legend>
 
-                <input class="button button-start" type="submit" value="Submit your feedback"/>
+                    @inputRadioGroup(
+                        reportForm("rating"),
+                        options(
+                            "Very satisfied" -> "Very satisfied",
+                            "Satisfied" -> "Satisfied",
+                            "Neither satisfied or dissatisfied" -> "Neither satisfied or dissatisfied",
+                            "Dissatisfied" -> "Dissatisfied",
+                            "Very dissatisfied" -> "Very dissatisfied"
+                        )
+                    )
+
+                    @textarea(reportForm("feedback"), '_label -> "If you could change anything what would it be?", 'class -> "classic wide")
+
+                    @inputText(reportForm("email"), '_label -> "Email", '_type -> "email", 'class -> "half-width")
+
+                    @select(
+                        reportForm("role"),
+                                options(
+                                    "" -> "",
+                                    "Probation Officer" -> "Probation Officer",
+                                    "Senior Probation Officer" -> "Senior Probation Officer",
+                                    "Case Administrator" -> "Case Administrator",
+                                    "Offender Manager in the Community" -> "Offender Manager in the Community",
+                                    "Offender Manager in Prison" -> "Offender Manager in Prison",
+                                    "Court Duty Officer" -> "Court Duty Officer",
+                                    "Other" -> "Other"
+                        ),
+                        '_label -> "What is you role"
+                    )
+
+                    <div id='roleother-section' class="panel panel-border-narrow js-hidden">
+                        @inputText(reportForm("roleother"), '_label -> "Please specify your role",
+                            'class -> "half-width")
+                    </div>
+
+                    @select(
+                        reportForm("provider"),
+                                options(
+                                    "" -> "",
+                                    "NPS" -> "NPS",
+                                    "Senior Probation Officer" -> "Senior Probation Officer",
+                                    "CRC" -> "CRC",
+                                    "Other" -> "Other"
+                        ),
+                        '_label -> "Who do you work for"
+                    )
+
+                    @select(
+                        reportForm("region"),
+                                options(
+                                    "" -> "",
+                                    "North East" -> "North East",
+                                    "North West" -> "North West",
+                                    "Wales" -> "Wales",
+                                    "Midlands" -> "Midlands",
+                                    "South West & South Central" -> "South West & South Central",
+                                    "South East" -> "South East",
+                                    "London" -> "London"
+                        ),
+                        '_label -> "Which region do you work in?"
+                    )
+
+                   <input class="button button-start" type="submit" value="Send feedback"/>
+
+                </fieldset>
+
+
             }
 
         </div>
