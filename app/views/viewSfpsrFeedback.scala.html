@@ -9,33 +9,38 @@
 
 @display(feedback: Map[String, Object]) = {
 
-  @if(feedback.get("feedback").isInstanceOf[Map[String, Object]]) {
-    @if(feedback.get("feedback").asInstanceOf[Map[String, String]].get("feedback") != null) {
+  @(Option(feedback.get("feedback")), Option(feedback.get("dateTime"))) match {
+
+    case (Some(detail: Map[String, String]), Some(dateTime: Date)) => {
+
       <tr>
-        <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
+        <td>@df.format(dateTime)</td>
         <td>
           <p>@feedback.get("username")</p>
-          <p>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("email")</p>
+          <p>@detail.get("email")</p>
         </td>
         <td>
-          <p>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("role")</p>
-          <p>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("provider")</p>
-          <p>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("region")</p>
+          <p>@detail.get("role")</p>
+          <p>@detail.get("provider")</p>
+          <p>@detail.get("region")</p>
         </td>
-        <td>@feedback.get("feedback").asInstanceOf[Map[String, String]].get("rating")</td>
-        <td width="40%">@feedback.get("feedback").asInstanceOf[Map[String, String]].get("feedback")</td>
+        <td>@detail.get("rating")</td>
+        <td width="40%">@detail.get("feedback")</td>
       </tr>
     }
-  } else {
-    <tr>
-      <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
-      <td>
-        <p>@feedback.get("username")</p>
-      </td>
-      <td></td>
-      <td></td>
-      <td width="40%">@feedback.get("feedback")</td>
-    </tr>
+
+    case (detail @ _, dateTime: Option[Date]) => {
+
+      <tr>
+        <td>@dateTime.map(df.format).getOrElse("")</td>
+        <td>
+          <p>@feedback.get("username")</p>
+        </td>
+        <td></td>
+        <td></td>
+        <td width="40%">@detail.getOrElse("")</td>
+      </tr>
+    }
   }
 }
 
