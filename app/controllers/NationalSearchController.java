@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
-import helpers.JwtHelper;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
@@ -19,10 +18,7 @@ import play.mvc.Results;
 import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -31,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Predicates.not;
 import static helpers.JwtHelper.principal;
+import static helpers.JwtHelper.probationAreaCodes;
 
 public class NationalSearchController extends Controller {
 
@@ -91,7 +88,7 @@ public class NationalSearchController extends Controller {
             return bearerToken;
 
         }, ec.current())
-        .thenCompose(bearerToken -> offenderApi.probationAreaDescriptions(bearerToken, JwtHelper.probationAreaCodes(bearerToken))
+        .thenCompose(bearerToken -> offenderApi.probationAreaDescriptions(bearerToken, probationAreaCodes(bearerToken))
         .thenApplyAsync(probationAreas -> ok(template.render(recentSearchMinutes, probationAreas)), ec.current()));
 
         Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
@@ -108,15 +105,21 @@ public class NationalSearchController extends Controller {
                 });
     }
 
-    public CompletionStage<Result> searchOffender(String searchTerm, String areasFilter, int pageSize, int pageNumber) {
+    public CompletionStage<Result> searchOffender(String searchTerm, Optional<String> areasFilter, int pageSize, int pageNumber) {
 
         return Optional.ofNullable(session(OFFENDER_API_BEARER_TOKEN)).map(bearerToken -> {
 
             Logger.info("AUDIT:{}: Search performed with term '{}'", principal(bearerToken), searchTerm);
-            analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-request"));
+            analyticsStore.recordEvent(combine(analyticsContext(), ImmutableMap.of(
+                    "type", "search-request",
+                    "filter", ImmutableMap.of(
+                            "myProviderCount", (long)probationAreaCodes(bearerToken).size(),
+                            "myProviderSelectedCount", myProviderCount(probationAreaCodes(bearerToken), toList(areasFilter)),
+                            "otherProviderSelectedCount", otherProviderCount(probationAreaCodes(bearerToken), toList(areasFilter))
+                            ))));
 
             return offenderSearch.search(bearerToken,
-                                            Arrays.stream(areasFilter.split(",")).filter(not(String::isEmpty)).collect(Collectors.toList()),
+                                            toList(areasFilter),
                                             searchTerm,
                                             pageSize,
                                             pageNumber).
@@ -128,6 +131,21 @@ public class NationalSearchController extends Controller {
             Logger.warn("Unauthorized search attempted for search term '{}'. No Offender API bearer token found in session", searchTerm);
             return CompletableFuture.completedFuture(Results.unauthorized());
         });
+    }
+
+    private long myProviderCount(List<String> myProviders, List<String> filter) {
+        return filter.stream().filter(myProviders::contains).count();
+    }
+
+    private long otherProviderCount(List<String> myProviders, List<String> filter) {
+        return filter.stream().filter(not(myProviders::contains)).count();
+    }
+
+    private List<String> toList(Optional<String> areasFilter) {
+        return areasFilter
+                .map(filter -> Arrays.stream(filter.split(",")).filter(not(String::isEmpty)).collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
+
     }
 
     public Result recordSearchOutcome() {

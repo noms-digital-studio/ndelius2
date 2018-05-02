@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static helpers.JwtHelperTest.generateToken;
+import static helpers.JwtHelperTest.generateTokenWithProbationAreaCodes;
 import static helpers.JwtHelperTest.generateTokenWithSubject;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.concurrent.CompletableFuture.completedFuture;
@@ -166,6 +167,38 @@ public class NationalSearchControllerTest extends WithApplication {
         assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("type", "search-results"));
         assertEquals(0, analyticsEventCaptor.getAllValues().get(1).get("total"));
         assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("correlationId", "999-aaa-888"));
+
+    }
+
+    @Test
+    public void zeroFilterCountsRecordedWithSearchRequestAnalyticsEventWhenNoFilterPresent() {
+        val request = new Http.RequestBuilder().
+                session("offenderApiBearerToken", generateTokenWithProbationAreaCodes(ImmutableList.of("N01", "N02"))).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                method(GET).uri("/searchOffender/smith?areasFilter=");
+        route(app, request);
+
+
+        verify(analyticsStore, atLeastOnce()).recordEvent(analyticsEventCaptor.capture());
+
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("filter", ImmutableMap.of("myProviderSelectedCount", 0L, "otherProviderSelectedCount", 0L, "myProviderCount", 2L)));
+
+    }
+
+    @Test
+    public void filterCountsRecordedAgainstProviderCategoriesWithSearchRequestAnalyticsEvent() {
+        val request = new Http.RequestBuilder().
+                session("offenderApiBearerToken", generateTokenWithProbationAreaCodes(ImmutableList.of("N01", "N02"))).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                method(GET).uri("/searchOffender/smith?areasFilter=N01,N02,N03,N04,N05");
+        route(app, request);
+
+
+        verify(analyticsStore, atLeastOnce()).recordEvent(analyticsEventCaptor.capture());
+
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("filter", ImmutableMap.of("myProviderSelectedCount", 2L, "otherProviderSelectedCount", 3L, "myProviderCount", 2L)));
 
     }
 

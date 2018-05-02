@@ -9,7 +9,7 @@
 
 @display(feedback: Map[String, Object]) = {
 
-  @if(feedback.get("feedback").isInstanceOf[Map[String, Object]]) {
+  @if(feedback.get("feedback").isInstanceOf[Map[_, _]]) {
     @if(feedback.get("feedback").asInstanceOf[Map[String, String]].get("feedback") != null) {
       <tr>
         <td>@df.format(feedback.get("dateTime").asInstanceOf[Date])</td>
