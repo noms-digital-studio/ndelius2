@@ -2,51 +2,52 @@ import PropTypes from 'prop-types'
 
 const MAX_PAGES = 10
 
-const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm}) => (
+const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm, probationAreasFilter}) => {
+    const PageLink = ({linkPageNumber, tabIndex}) => {
+        if (pageNumber === linkPageNumber) {
+            return (<span className='margin-right'>{linkPageNumber}</span>)
+        }
+        return (<span className='margin-right'><a  tabIndex={tabIndex} href='#offender-results' aria-label={`Page ${linkPageNumber}`} className='clickable' onClick={() => gotoPage(searchTerm, probationAreasFilter, linkPageNumber)}>{linkPageNumber}</a></span>)
+    }
+
+
+    return (
     <div role='navigation'>
         {shouldDisplay(pageSize, total) &&
         <span>
             {notOnFirstPage(pageNumber) &&
             <span>
-                <a tabIndex="1" href='#offender-results' id='previous-page-link' aria-label='Previous Page' className='clickable margin-right' onClick={() => gotoPage(searchTerm, pageNumber - 1)}>&lt; Previous</a>
+                <a tabIndex="1" href='#offender-results' id='previous-page-link' aria-label='Previous Page' className='clickable margin-right' onClick={() => gotoPage(searchTerm, probationAreasFilter, pageNumber - 1)}>&lt; Previous</a>
                 <span className='margin-right'>-</span>
             </span>
             }
             {range(Math.min(totalPages(pageSize, total), MAX_PAGES))
                 .map(linkPageNumber => <PageLink
                                             key={linkPageNumber}
-                                            pageNumber={pageNumber}
                                             linkPageNumber={linkPageNumber}
-                                            gotoPage={gotoPage}
-                                            searchTerm={searchTerm}
                                             tabIndex="1"/>)
             }
             {notOnLastPage(pageNumber, totalPages(pageSize, total)) &&
             <span>
                 <span className="margin-right">-</span>
-                <a tabIndex="1" href='#offender-results' id='next-page-link' aria-label='Next Page'  className='clickable' onClick={() => gotoPage(searchTerm, pageNumber + 1)}>Next &gt;</a>
+                <a tabIndex="1" href='#offender-results' id='next-page-link' aria-label='Next Page'  className='clickable' onClick={() => gotoPage(searchTerm, probationAreasFilter, pageNumber + 1)}>Next &gt;</a>
             </span>
             }
         </span>
         }
     </div>
-);
+)};
 
 
 PageSelection.propTypes = {
     pageSize: PropTypes.number.isRequired,
     pageNumber: PropTypes.number.isRequired,
     total: PropTypes.number.isRequired,
-    gotoPage: PropTypes.func.isRequired
+    gotoPage: PropTypes.func.isRequired,
+    searchTerm: PropTypes.string.isRequired,
+    probationAreasFilter: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
-
-const PageLink = ({pageNumber, linkPageNumber, gotoPage, searchTerm, tabIndex}) => {
-    if (pageNumber === linkPageNumber) {
-        return (<span className='margin-right'>{linkPageNumber}</span>)
-    }
-    return (<span className='margin-right'><a  tabIndex={tabIndex} href='#offender-results' aria-label={`Page ${linkPageNumber}`} className='clickable' onClick={() => gotoPage(searchTerm, linkPageNumber)}>{linkPageNumber}</a></span>)
-}
 
 
 const shouldDisplay = (pageSize, total) => total > pageSize

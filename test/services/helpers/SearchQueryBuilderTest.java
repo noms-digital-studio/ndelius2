@@ -1,15 +1,14 @@
 package services.helpers;
 
+import com.google.common.collect.ImmutableList;
 import lombok.val;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.PrefixQueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
 import static services.helpers.SearchQueryBuilder.simpleTerms;
@@ -62,7 +61,7 @@ public class SearchQueryBuilderTest {
 
     @Test
     public void searchSourceBuilderHasCorrectQueries() {
-        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("2013/0234567A 15-09-1970 a smith 1/2/1992", 10, 3);
+        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("2013/0234567A 15-09-1970 a smith 1/2/1992", emptyList(), 10, 3);
 
         val query = (BoolQueryBuilder) builder.query();
         val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
@@ -105,16 +104,45 @@ public class SearchQueryBuilderTest {
 
         assertThat(((PrefixQueryBuilder)query.should().get(7)).value()).isEqualTo("smith");
 
-        TermQueryBuilder termQueryBuilder = (TermQueryBuilder) builder.postFilter();
+        TermQueryBuilder termQueryBuilder = (TermQueryBuilder) query.mustNot().get(0);
         assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
-        assertThat(termQueryBuilder.value()).isEqualTo(false);
+        assertThat(termQueryBuilder.value()).isEqualTo(true);
 
         assertThat(builder.suggest().getSuggestions().keySet()).containsOnly("firstName", "surname");
     }
 
     @Test
+    public void emptyProbationAreaFilterWillNotAddAPostFilter() {
+        val builder = SearchQueryBuilder.searchSourceFor("smith", emptyList(), 10, 1);
+
+        assertThat(builder.postFilter()).isNull();
+    }
+
+    @Test
+    public void eachProbationAreaFilterCodeIsAddedToPostFilter() {
+        val probationAreasFilter = ImmutableList.of("N01", "N02", "N03");
+        val builder = SearchQueryBuilder.searchSourceFor("smith", probationAreasFilter, 10, 1);
+
+        assertThat(builder.postFilter()).isNotNull();
+        val query = (BoolQueryBuilder) builder.postFilter();
+
+        assertThat(query.should().size()).isEqualTo(3);
+
+        probationAreasFilter.forEach(probationAreaCode -> {
+            val index = probationAreasFilter.indexOf(probationAreaCode);
+            val mustQuery = ((BoolQueryBuilder) ((NestedQueryBuilder) query.should().get(index)).query()).must();
+            assertThat(mustQuery.size()).isEqualTo(2);
+            assertThat(((TermQueryBuilder)mustQuery.get(0)).fieldName()).isEqualTo("offenderManagers.probationArea.code");
+            assertThat(((TermQueryBuilder)mustQuery.get(0)).value()).isEqualTo(probationAreaCode);
+
+            assertThat(((TermQueryBuilder)mustQuery.get(1)).fieldName()).isEqualTo("offenderManagers.active");
+            assertThat(((TermQueryBuilder)mustQuery.get(1)).value()).isEqualTo(true);
+        });
+    }
+
+    @Test
     public void dateOnlySearchDoesNotAddAPrefixSearch() {
-        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970", 10, 3);
+        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970", emptyList(), 10, 3);
 
         val query = (BoolQueryBuilder) builder.query();
         assertThat((query.should())).doesNotContain(prefixQuery("firstName", "").boost(11));
@@ -122,7 +150,7 @@ public class SearchQueryBuilderTest {
 
     @Test
     public void unifiedHighlighterIsRequested() {
-        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970 a smith 1/2/1992", 10, 3);
+        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970 a smith 1/2/1992",  emptyList(),10, 3);
 
         assertThat(builder.query()).isInstanceOfAny(BoolQueryBuilder.class);
 

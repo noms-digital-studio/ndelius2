@@ -69,8 +69,9 @@ a.clickable {
   @include grid-column(1/4);
   max-width: $offender-image-width + $gutter;
   padding-left: 0;
-  @include media(mobile) {
-    display: none;
+  display: none;
+  @include media(desktop) {
+    display: block;
   }
 }
 
@@ -150,6 +151,79 @@ textarea.form-control {
   font-weight: normal;
 }
 
+div.filter {
+  background-color: $grey-3;
+  margin-bottom: $gutter;
+
+   @include media(desktop){
+     ::-webkit-scrollbar {
+       -webkit-appearance: none;
+       width: 7px;
+     }
+     ::-webkit-scrollbar-thumb {
+       border-radius: 4px;
+       background-color: rgba(0,0,0,.5);
+       -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+     }
+   }
+
+  button {
+    z-index: 100;
+    position: relative;
+    border: none;
+    display: block;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    margin-bottom: -1px;
+    padding: 5px 8px;
+    background: url(../images/accordion-arrow.png) no-repeat right 5px;
+    background-color: $grey-3;
+  }
+
+  button.closed {
+    background-position: right -5px;
+  }
+  button.open {
+    background-position: right -50px;
+  }
+  .filter-container {
+    border: $grey-3 5px solid;
+    background-color: $white;
+    max-height: 20vh;
+
+    @include media(mobile){
+      height: auto;
+      max-height: none;
+    }
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    label {
+      display: block;
+      padding: $gutter-one-quarter $gutter-one-quarter $gutter-one-quarter $gutter;
+      cursor: pointer;
+      border-bottom: 1px $grey-2 solid;
+    }
+
+    label:hover {
+      background-color: $grey-4;
+    }
+
+    .filter-option {
+      float: left;
+      width: 20px;
+      height: 20px;
+      margin-left: -$gutter-two-thirds;
+    }
+
+  }
+
+  .filter-container.closed {
+    display: none;
+  }
+
+}
 .back-link {
   position: relative;
   padding-left: 15px;

@@ -24,9 +24,11 @@ import static play.libs.Json.parse;
 
 public class GenerateOffenderESFile {
     private final static Pattern firstNumberPattern = Pattern.compile("\\d+ ");
-    private static final String CSV_RESOURCE_FILE = "/esearchloader/uk-500.csv";
+    private static final String CSV_RESOURCE_FILE = "/esearchloader/uk-1000000.csv";
     private static long EIGHTEEN_YEARS_IN_DAYS = 18 * 365;
     private static int FIFTY_YEARS_IN_DAYS = 50 * 365;
+    private static List<Map.Entry<String, String>> nationalProbationAreas = nationalProbationAreas();
+    private static List<Map.Entry<String, String>> crcProbationAreas = crcProbationAreas();
 
     public static void main(String[] args) throws IOException {
         System.out.println("Generating source file for offender records...");
@@ -67,6 +69,15 @@ public class GenerateOffenderESFile {
                 offender.replace("currentDisposal", textNode(chance(10) ? "1" : "0"));
                 offender.replace("currentRestriction", booleanNode(chance(1)));
                 offender.replace("currentExclusion", booleanNode(chance(1)));
+
+                val activeOffenderManager = (ObjectNode)offender.get("offenderManagers").get(0);
+                val staff = (ObjectNode)activeOffenderManager.get("staff");
+                staff.replace("surname", textNode(randomSurname(randomPersonData)));
+                staff.replace("forenames", textNode(randomName(randomPersonData)));
+                val probationArea = (ObjectNode)activeOffenderManager.get("probationArea");
+                val areaEntry = randomProbationArea();
+                probationArea.replace("code", textNode(areaEntry.getKey()));
+                probationArea.replace("description", textNode(areaEntry.getValue()));
 
                 write(output, offender);
             });
@@ -254,6 +265,10 @@ public class GenerateOffenderESFile {
         return randomPersonData.get(randomUpTo(randomPersonData.size())).get("firstName");
     }
 
+    private static String randomSurname(List<Map<String, String>> randomPersonData) {
+        return randomPersonData.get(randomUpTo(randomPersonData.size())).get("surname");
+    }
+
     private static int randomUpTo(int bound) {
         return new Random().nextInt(bound);
     }
@@ -296,5 +311,96 @@ public class GenerateOffenderESFile {
     private static String firstNumber(String addressLine) {
         Matcher m = firstNumberPattern.matcher(addressLine);
         return m.find() ? m.group() : null;
+    }
+    
+    private static Map.Entry<String, String> randomProbationArea() {
+        return randomUpTo(2) % 2 == 0 ? nationalProbationAreas.get(randomUpTo(nationalProbationAreas.size())) :
+                crcProbationAreas.get(randomUpTo(crcProbationAreas.size()));
+    }
+    
+    private static List<Map.Entry<String, String>> nationalProbationAreas() {
+        val probationAreas = new LinkedHashMap<String, String>();
+
+        probationAreas.put("N40","Central Projects Team");
+        probationAreas.put("N21","External - NPS London");
+
+        probationAreas.put("N22","External - NPS Midlands");
+
+        probationAreas.put("N23","External - NPS North East");
+
+        probationAreas.put("N24","External - NPS North West");
+
+        probationAreas.put("N25","External - NPS South East & Estn");
+
+        probationAreas.put("N26","External - NPS South West & SC");
+
+        probationAreas.put("N27","External - NPS Wales");
+
+        probationAreas.put("N07","NPS London");
+
+        probationAreas.put("N04","NPS Midlands");
+
+        probationAreas.put("N02","NPS North East");
+
+        probationAreas.put("N01","NPS North West");
+
+        probationAreas.put("N06","NPS South East and Eastern");
+
+        probationAreas.put("N05","NPS South West and South Central");
+
+        probationAreas.put("N03","NPS Wales");
+
+        return new ArrayList<>(probationAreas.entrySet());
+
+    }
+    private static List<Map.Entry<String, String>> crcProbationAreas() {
+        val probationAreas = new LinkedHashMap<String, String>();
+
+        probationAreas.put("C13","CPA BeNCH");
+
+        probationAreas.put("C15","CPA Brist Gloucs Somerset Wilts");
+
+        probationAreas.put("C07","CPA Cheshire and Gtr Manchester");
+
+        probationAreas.put("C02","CPA Cumbria and Lancashire");
+
+        probationAreas.put("C08","CPA Derby Leics Notts Rutland");
+
+        probationAreas.put("C19","CPA Dorset Devon and Cornwall");
+
+        probationAreas.put("C03","CPA Durham Tees Valley");
+
+        probationAreas.put("C18","CPA Essex");
+
+        probationAreas.put("C20","CPA Hampshire and Isle of Wight");
+
+        probationAreas.put("C04","CPA Humber Lincs & N Yorks");
+
+        probationAreas.put("C21","CPA Kent Surrey and Sussex");
+
+        probationAreas.put("C17","CPA London");
+
+        probationAreas.put("C06","CPA Merseyside");
+
+        probationAreas.put("C14","CPA Norfolk and Suffolk");
+
+        probationAreas.put("C01","CPA Northumbria");
+
+        probationAreas.put("C09","CPA South Yorkshire");
+
+        probationAreas.put("C11","CPA Staffs and West Mids");
+
+        probationAreas.put("C16","CPA Thames Valley");
+
+        probationAreas.put("C00","CPA Training");
+
+        probationAreas.put("C10","CPA Wales");
+
+        probationAreas.put("C12","CPA Warwickshire and West Mercia");
+
+        probationAreas.put("C05","CPA West Yorkshire");
+
+        return new ArrayList<>(probationAreas.entrySet());
+
     }
 }

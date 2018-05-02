@@ -8,6 +8,7 @@ Fully asynchronous and non-blocking from the ground up, with the potential to se
 
 ### Building and running
 
+
 Prerequisites:
 - sbt (Scala Build Tool) http://www.scala-sbt.org/release/docs
 - Chrome

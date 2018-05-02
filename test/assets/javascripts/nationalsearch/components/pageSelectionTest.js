@@ -12,32 +12,32 @@ describe('PageSelection component', () => {
 
         context('no results have been found', () => {
             it('no text rendered', () => {
-                const pages = shallow(<PageSelection pageSize={10} pageNumber={0} total={0} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                const pages = shallow(<PageSelection pageSize={10} pageNumber={0} total={0} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={[]}/>)
                 expect(pages.text()).to.equal('')
             })
         })
         context('all results fit on one page', () => {
             it('no text rendered', () => {
-                const pages = shallow(<PageSelection pageSize={10} pageNumber={1} total={10} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                const pages = shallow(<PageSelection pageSize={10} pageNumber={1} total={10} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={[]}/>)
                 expect(pages.text()).to.equal('')
             })
         })
         context('Results don\'t fit on one page', () => {
             it('at least page numbers 1 and 2 rendered', () => {
-                const pages = shallow(<PageSelection pageSize={10} pageNumber={1} total={11} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                const pages = shallow(<PageSelection pageSize={10} pageNumber={1} total={11} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={[]}/>)
 
                 expect(allPageNumbers(pages)).to.contains('1').and.contains('2')
             })
         })
         context('Results span exactly 3 pages', () => {
             it('at least page numbers 1, 2 and 3 rendered', () => {
-                const pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                const pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={[]}/>)
                 expect(allPageNumbers(pages)).to.contains('1').and.contains('2').and.contains('3').and.not.contains('4')
             })
             context('when on first', () => {
                 let pages;
                 beforeEach(() => {
-                    pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                    pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={[]}/>)
                 })
                 it('next link is rendered but not previous', () => {
                     expect(pages.text()).to.contains('Next').and.not.contains('Previous')
@@ -51,7 +51,7 @@ describe('PageSelection component', () => {
             context('when on middle page', () => {
                 let pages;
                 beforeEach(() => {
-                    pages = shallow(<PageSelection pageSize={3} pageNumber={2} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                    pages = shallow(<PageSelection pageSize={3} pageNumber={2} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={[]}/>)
                 })
                 it('next and previous links are both rendered', () => {
                     expect(pages.text()).to.contains('Next').and.contains('Previous')
@@ -65,7 +65,7 @@ describe('PageSelection component', () => {
             context('when on last page', () => {
                 let pages;
                 beforeEach(() => {
-                    pages = shallow(<PageSelection pageSize={3} pageNumber={3} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                    pages = shallow(<PageSelection pageSize={3} pageNumber={3} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={[]}/>)
                 })
                 it('previous link is rendered but not next', () => {
                     expect(pages.text()).to.contains('Previous').and.not.contains('Next')
@@ -79,46 +79,58 @@ describe('PageSelection component', () => {
         })
         context('Results span just over 3 pages', () => {
             it('at least page numbers 1, 2, 3 and 4 rendered', () => {
-                const pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={10} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                const pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={10} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={[]}/>)
                 expect(allPageNumbers(pages)).to.contains('1').and.contains('2').and.contains('3').and.contains('4')
             })
         })
         context('Results span over 10 pages', () => {
             it('only pages up to 10 are displayed', () => {
-                const pages = shallow(<PageSelection pageSize={10} pageNumber={1} total={200} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+                const pages = shallow(<PageSelection pageSize={10} pageNumber={1} total={200} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={[]}/>)
                 expect(allPageNumbers(pages)).to.contains('1').and.contains('10').and.not.contains('11')
             })
         })
     })
     describe('clicking links', () => {
         it('clicking a page link will call gotoPage with page number', () => {
-            const pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+            const pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={['N01']}/>)
 
             clickLinkForPage(pages, 2);
-            expect(gotoPage).to.be.calledWith('Mr Bean', 2)
+            expect(gotoPage.getCall(0).args[0]).to.equal('Mr Bean');
+            expect(gotoPage.getCall(0).args[1]).to.eql(['N01']);
+            expect(gotoPage.getCall(0).args[2]).to.equal(2);
 
             clickLinkForPage(pages, 3);
-            expect(gotoPage).to.be.calledWith('Mr Bean', 3)
+            expect(gotoPage.getCall(1).args[0]).to.equal('Mr Bean');
+            expect(gotoPage.getCall(1).args[1]).to.eql(['N01']);
+            expect(gotoPage.getCall(1).args[2]).to.equal(3);
         })
 
         it('clicking next page link will call gotoPage with current page number + 1', () => {
-            let pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+            let pages = shallow(<PageSelection pageSize={3} pageNumber={1} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={['N01']}/>)
             clickNextLink(pages)
-            expect(gotoPage).to.be.calledWith('Mr Bean', 2)
+            expect(gotoPage.getCall(0).args[0]).to.equal('Mr Bean');
+            expect(gotoPage.getCall(0).args[1]).to.eql(['N01']);
+            expect(gotoPage.getCall(0).args[2]).to.equal(2);
 
-            pages = shallow(<PageSelection pageSize={3} pageNumber={2} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+            pages = shallow(<PageSelection pageSize={3} pageNumber={2} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={['N01']}/>)
             clickNextLink(pages)
-            expect(gotoPage).to.be.calledWith('Mr Bean', 3)
+            expect(gotoPage.getCall(1).args[0]).to.equal('Mr Bean');
+            expect(gotoPage.getCall(1).args[1]).to.eql(['N01']);
+            expect(gotoPage.getCall(1).args[2]).to.equal(3);
         })
 
         it('clicking previous page link will call gotoPage with current page number 1 1', () => {
-            let pages = shallow(<PageSelection pageSize={3} pageNumber={3} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+            let pages = shallow(<PageSelection pageSize={3} pageNumber={3} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={['N01']}/>)
             clickPreviousLink(pages)
-            expect(gotoPage).to.be.calledWith('Mr Bean', 2)
+            expect(gotoPage.getCall(0).args[0]).to.equal('Mr Bean');
+            expect(gotoPage.getCall(0).args[1]).to.eql(['N01']);
+            expect(gotoPage.getCall(0).args[2]).to.equal(2);
 
-            pages = shallow(<PageSelection pageSize={3} pageNumber={2} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'}/>)
+            pages = shallow(<PageSelection pageSize={3} pageNumber={2} total={9} gotoPage={gotoPage} searchTerm={'Mr Bean'} probationAreasFilter={['N01']}/>)
             clickPreviousLink(pages)
-            expect(gotoPage).to.be.calledWith('Mr Bean', 1)
+            expect(gotoPage.getCall(1).args[0]).to.equal('Mr Bean');
+            expect(gotoPage.getCall(1).args[1]).to.eql(['N01']);
+            expect(gotoPage.getCall(1).args[2]).to.equal(1);
         })
     })
 

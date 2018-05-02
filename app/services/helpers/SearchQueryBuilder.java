@@ -2,7 +2,9 @@ package services.helpers;
 
 import helpers.DateTimeHelper;
 import lombok.val;
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
@@ -21,7 +23,10 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 import static org.elasticsearch.search.suggest.SuggestBuilders.termSuggestion;
 
 public class SearchQueryBuilder {
-    public static SearchSourceBuilder searchSourceFor(String searchTerm, int pageSize, int pageNumber) {
+
+    private static final int MAX_PROVIDERS_COUNT = 1000;
+
+    public static SearchSourceBuilder searchSourceFor(String searchTerm, List<String> probationAreasCodes, int pageSize, int pageNumber) {
 
         val simpleTerms = simpleTerms(searchTerm);
         val boolQueryBuilder = QueryBuilders.boolQuery();
@@ -69,14 +74,45 @@ public class SearchQueryBuilder {
             preTags("").
             postTags("");
 
+        boolQueryBuilder.mustNot(termQuery("softDeleted", true));
+
         val searchSource = new SearchSourceBuilder()
             .query(boolQueryBuilder)
             .highlighter(highlight)
-            .postFilter(termQuery("softDeleted", false))
             .explain(Logger.isDebugEnabled())
             .size(pageSize)
             .from(pageSize * aValidPageNumberFor(pageNumber))
             .suggest(suggestionsFor(searchTerm));
+
+        val activeAreaFilter = QueryBuilders.boolQuery();
+        activeAreaFilter.must().add(termQuery("offenderManagers.active", true));
+
+        searchSource.aggregation(
+                AggregationBuilders
+                        .nested("offenderManagers", "offenderManagers")
+                        .subAggregation(AggregationBuilders
+                                .terms("active")
+                                .field("offenderManagers.active").subAggregation(
+                                    AggregationBuilders
+                                            .terms("byProbationAreaCode").size(MAX_PROVIDERS_COUNT)
+                                            .field("offenderManagers.probationArea.code")
+                                )
+                        )
+        );
+
+        if (!probationAreasCodes.isEmpty()) {
+
+            val probationAreaFilter = QueryBuilders.boolQuery();
+
+            probationAreasCodes.stream().map(probationAreaCode -> {
+                val probationAreaCodeFilter = QueryBuilders.boolQuery();
+                probationAreaCodeFilter.must().add(termQuery("offenderManagers.probationArea.code", probationAreaCode));
+                probationAreaCodeFilter.must().add(termQuery("offenderManagers.active", true));
+                return nestedQuery("offenderManagers", probationAreaCodeFilter, ScoreMode.None).ignoreUnmapped(true);
+            }).forEach(probationAreaFilter::should);
+
+            searchSource.postFilter(probationAreaFilter);
+        }
 
         Logger.debug(searchSource.toString());
         return searchSource;

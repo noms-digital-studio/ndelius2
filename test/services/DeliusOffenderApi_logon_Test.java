@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import play.cache.AsyncCacheApi;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
@@ -37,9 +38,13 @@ public class DeliusOffenderApi_logon_Test {
     @Mock
     private WSResponse wsResponse;
 
+    @Mock
+    private AsyncCacheApi cache;
+
+
     @Before
     public void setup() {
-        offenderApi = new DeliusOffenderApi(ConfigFactory.load(), wsClient);
+        offenderApi = new DeliusOffenderApi(ConfigFactory.load(), wsClient, cache);
         when(wsClient.url(any())).thenReturn(wsRequest);
         when(wsRequest.post(anyString())).thenReturn(CompletableFuture.completedFuture(wsResponse));
         when(wsResponse.getStatus()).thenReturn(200);

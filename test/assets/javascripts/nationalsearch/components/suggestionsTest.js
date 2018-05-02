@@ -12,7 +12,7 @@ describe('Suggestions component', () => {
 
         context('no suggestions have been found', () => {
             it('no text rendered', () => {
-                const suggestions = shallow(<Suggestions suggestions={[]} search={search} searchTerm={'Gery Smyth'}/>)
+                const suggestions = shallow(<Suggestions suggestions={[]} search={search} searchTerm={'Gery Smyth'} probationAreasFilter={[]}/>)
                 expect(suggestions.text()).to.equal('')
             })
         })
@@ -39,7 +39,7 @@ describe('Suggestions component', () => {
                         ]
                     }
                 ]
-                suggestions = shallow(<Suggestions suggestions={suggestionsData} search={search} searchTerm={'Gery Smyth'}/>)
+                suggestions = shallow(<Suggestions suggestions={suggestionsData} search={search} searchTerm={'Gery Smyth'} probationAreasFilter={[]}/>)
 
             })
             it('suggestion links are rendered', () => {
@@ -70,7 +70,7 @@ describe('Suggestions component', () => {
                         ]
                     }
                 ]
-                suggestions = shallow(<Suggestions suggestions={suggestionsData} search={search} searchTerm={'Gery Smyth'}/>)
+                suggestions = shallow(<Suggestions suggestions={suggestionsData} search={search} searchTerm={'Gery Smyth'} probationAreasFilter={[]}/>)
 
             })
             it('suggestions are rendered in score order', () => {
@@ -136,7 +136,7 @@ describe('Suggestions component', () => {
                         ]
                     },
                 ]
-                suggestions = shallow(<Suggestions suggestions={suggestionsData} search={search} searchTerm={'Gery Smyth'}/>)
+                suggestions = shallow(<Suggestions suggestions={suggestionsData} search={search} searchTerm={'Gery Smyth'} probationAreasFilter={[]}/>)
 
             })
             it('suggestions are rendered in score order', () => {
@@ -167,13 +167,16 @@ describe('Suggestions component', () => {
                 }
             ]
 
-            const suggestions = shallow(<Suggestions suggestions={suggestionsData} search={search} searchTerm={'Gery Smyth'}/>)
+            const suggestions = shallow(<Suggestions suggestions={suggestionsData} search={search} searchTerm={'Gery Smyth'} probationAreasFilter={['N01']}/>)
 
             clickLink(suggestions, 'gary');
-            expect(search).to.be.calledWith('gary Smyth')
+            expect(search.getCall(0).args[0]).to.equal('gary Smyth');
+            expect(search.getCall(0).args[1]).to.eql(['N01']);
 
             clickLink(suggestions, 'smith');
             expect(search).to.be.calledWith('Gery smith')
+            expect(search.getCall(1).args[0]).to.equal('Gery smith');
+            expect(search.getCall(1).args[1]).to.eql(['N01']);
         })
     })
 

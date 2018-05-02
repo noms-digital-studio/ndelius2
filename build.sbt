@@ -26,6 +26,7 @@ libraryDependencies ++= Seq(
   guice,
   filters,
   javaWs,
+  ehcache,
   "org.webjars" %% "webjars-play" % "2.6.1",
   "org.webjars" % "es5-shim" % "4.5.9",
   "org.webjars.bower" % "react" % "0.14.9", // https://facebook.github.io/react/blog/2016/01/12/discontinuing-ie8-support.html

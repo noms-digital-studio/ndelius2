@@ -1,21 +1,33 @@
 package services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import interfaces.OffenderApi;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.val;
 import play.Logger;
+import play.cache.AsyncCacheApi;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 
 import javax.inject.Inject;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
+import java.util.function.IntFunction;
 
+import static helpers.JsonHelper.readValue;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static play.mvc.Http.HeaderNames.AUTHORIZATION;
 import static play.mvc.Http.Status.FORBIDDEN;
 import static play.mvc.Http.Status.OK;
@@ -25,20 +37,33 @@ public class DeliusOffenderApi implements OffenderApi {
     private final WSClient wsClient;
     private final String ldapStringFormat;
     private final String offenderApiBaseUrl;
+    private final AsyncCacheApi cache;
+    private final int cacheTime;
+
+    @Data
+    @NoArgsConstructor
+    private static class ProbationArea {
+        private String code;
+        private String description;
+    }
+
+    private static TypeReference probationAreaListRef = new TypeReference<List<ProbationArea>>(){};
 
     @Inject
-    public DeliusOffenderApi(Config configuration, WSClient wsClient) {
+    public DeliusOffenderApi(Config configuration, WSClient wsClient, AsyncCacheApi cache) {
         this.wsClient = wsClient;
 
         ldapStringFormat = configuration.getString("ldap.string.format");
         offenderApiBaseUrl = configuration.getString("offender.api.url");
+        cacheTime = configuration.getInt("offender.api.probationAreas.cache.time.seconds");
+        this.cache = cache;
     }
 
     @Override
     public CompletionStage<String> logon(String username) {
         return wsClient.url(offenderApiBaseUrl + "logon")
             .post(format(ldapStringFormat, username))
-            .thenApply(this::assertOkResponse)
+            .thenApply(response ->  assertOkResponse(response, "logon"))
             .thenApply(WSResponse::getBody);
     }
 
@@ -95,12 +120,52 @@ public class DeliusOffenderApi implements OffenderApi {
         return logonAndCallOffenderApi("ldap", queryParams);
     }
 
+    @Override
+    public CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> codes) {
+
+        CompletableFuture<Entry<String, String>> futureAreas[] = codes.stream()
+                .map(probationAreaCode -> cache.getOrElseUpdate(probationAreaCode, () -> lookupDescription(bearerToken, probationAreaCode), cacheTime))
+                .map(CompletionStage::toCompletableFuture)
+                .toArray(toCompletableFutures());
+
+
+        return CompletableFuture.allOf(futureAreas)
+                .thenApply(ignoredVoid ->
+                        Arrays
+                            .stream(futureAreas)
+                            .map(CompletableFuture::join)
+                            .collect(toMap(Entry::getKey, Entry::getValue)));
+
+    }
+
+    private IntFunction<CompletableFuture<Entry<String, String>>[]> toCompletableFutures() {
+        return CompletableFuture[]::new;
+    }
+
+    private CompletionStage<Entry<String, String>> lookupDescription(String bearerToken, String probationAreaCode) {
+        val url = String.format(offenderApiBaseUrl + "probationAreas/code/%s", probationAreaCode);
+        Logger.info("calling " + url);
+        return wsClient.url(url)
+                .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+                .get()
+                .thenApply(response ->  assertOkResponse(response, "probationAreas"))
+                .thenApply(WSResponse::getBody)
+                .thenApply(body -> {
+                    final List<ProbationArea> areas = readValue(body, probationAreaListRef);
+                    return areas
+                            .stream()
+                            .findFirst() // API should return single item in a list
+                            .map(area -> new SimpleEntry<>(probationAreaCode, area.getDescription()))
+                            .orElse(new SimpleEntry<>(probationAreaCode, probationAreaCode));
+                });
+    }
+
     private CompletionStage<JsonNode> logonAndCallOffenderApi(String action, Map<String, String> params) {
 
         val url = offenderApiBaseUrl + action + queryParamsFrom(params);
         return wsClient.url(offenderApiBaseUrl + "logon")
                 .post("NationalUser")
-                .thenApply(this::assertOkResponse)
+                .thenApply(response ->  assertOkResponse(response, "logon"))
                 .thenApply(WSResponse::getBody)
                 .thenCompose(bearerToken -> callOffenderApi(bearerToken, url));
     }
@@ -125,13 +190,13 @@ public class DeliusOffenderApi implements OffenderApi {
     String queryParamsFrom(Map<String, String> params) {
 
         return "?" + String.join("&", params.entrySet().stream().
-                map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue())).collect(Collectors.toList()));
+                map(entry -> String.format("%s=%s", entry.getKey(), entry.getValue())).collect(toList()));
     }
 
-    private WSResponse assertOkResponse(WSResponse response) {
+    private WSResponse assertOkResponse(WSResponse response, String description) {
         if (response.getStatus() != OK) {
-            Logger.error("Logon API bad response {}", response.getStatus());
-            throw new RuntimeException("Unable to call logon. Status = " + response.getStatus());
+            Logger.error("{} API bad response {}", description, response.getStatus());
+            throw new RuntimeException(String.format("Unable to call %s. Status = %d", description, response.getStatus()));
         }
         return response;
     }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
+import helpers.JwtHelper;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
@@ -18,6 +19,7 @@ import play.mvc.Results;
 import javax.inject.Inject;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +27,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
+import static com.google.common.base.Predicates.not;
 import static helpers.JwtHelper.principal;
 
 public class NationalSearchController extends Controller {
@@ -84,9 +88,11 @@ public class NationalSearchController extends Controller {
             session(SEARCH_ANALYTICS_GROUP_ID, UUID.randomUUID().toString());
 
             analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-index"));
-            return ok(template.render(recentSearchMinutes));
+            return bearerToken;
 
-        }, ec.current());
+        }, ec.current())
+        .thenCompose(bearerToken -> offenderApi.probationAreaDescriptions(bearerToken, JwtHelper.probationAreaCodes(bearerToken))
+        .thenApplyAsync(probationAreas -> ok(template.render(recentSearchMinutes, probationAreas)), ec.current()));
 
         Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
 
@@ -102,16 +108,20 @@ public class NationalSearchController extends Controller {
                 });
     }
 
-    public CompletionStage<Result> searchOffender(String searchTerm, int pageSize, int pageNumber) {
+    public CompletionStage<Result> searchOffender(String searchTerm, String areasFilter, int pageSize, int pageNumber) {
 
         return Optional.ofNullable(session(OFFENDER_API_BEARER_TOKEN)).map(bearerToken -> {
 
             Logger.info("AUDIT:{}: Search performed with term '{}'", principal(bearerToken), searchTerm);
             analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-request"));
 
-            return offenderSearch.search(bearerToken, searchTerm, pageSize, pageNumber).
-                    thenApplyAsync(this::recordSearchResultsAnalytics, ec.current()).
-                    thenApply(JsonHelper::okJson);
+            return offenderSearch.search(bearerToken,
+                                            Arrays.stream(areasFilter.split(",")).filter(not(String::isEmpty)).collect(Collectors.toList()),
+                                            searchTerm,
+                                            pageSize,
+                                            pageNumber).
+                                thenApplyAsync(this::recordSearchResultsAnalytics, ec.current()).
+                                thenApply(JsonHelper::okJson);
 
         }).orElseGet(() -> {
 

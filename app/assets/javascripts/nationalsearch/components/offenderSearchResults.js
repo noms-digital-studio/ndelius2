@@ -2,6 +2,8 @@ import OffenderSearchSummary from '../containers/offenderSearchSummaryContainer'
 import RestrictedOffenderSearchSummary from '../containers/restrictedOffenderSearchSummaryContainer'
 import SearchResultsTitle from '../containers/searchResultsTitleContainer';
 import PageSelection from '../containers/pageSelectionContainer';
+import OtherAreasFilter from '../containers/otherAreasFilterContainer';
+import MyAreasFilter from '../containers/myAreasFilterContainer';
 
 import PropTypes from "prop-types";
 
@@ -9,12 +11,20 @@ const OffenderSearchResults = ({results}) => (
     <div className='padded mobile-pad' id='offender-results'>
         <SearchResultsTitle/>
 
-        <ul>
-            {results.map(offenderSummary => (
-                renderSummary(offenderSummary)
-            ))}
-        </ul>
-        <PageSelection/>
+        <div className='grid-row'>
+            <div className='column-one-third'>
+                <MyAreasFilter/>
+                <OtherAreasFilter/>
+            </div>
+            <div className='column-two-thirds'>
+                <ul id='live-offender-results'>
+                    {results.map(offenderSummary => (
+                        renderSummary(offenderSummary)
+                    ))}
+                </ul>
+                <PageSelection/>
+            </div>
+        </div>
     </div>
 );
 

@@ -1,6 +1,5 @@
 package services;
 
-import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValueFactory;
 import interfaces.OffenderApi;
@@ -10,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import play.cache.AsyncCacheApi;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
@@ -37,10 +37,13 @@ public class DeliusOffenderApi_canAccess_Test {
     @Mock
     private WSResponse wsResponse;
 
+    @Mock
+    private AsyncCacheApi cache;
+
     @Before
     public void setup() {
         val config = ConfigFactory.load().withValue("offender.api.url", ConfigValueFactory.fromAnyRef("http://delius-api/api/"));
-        offenderApi = new DeliusOffenderApi(config, wsClient);
+        offenderApi = new DeliusOffenderApi(config, wsClient, cache);
         when(wsClient.url(any())).thenReturn(wsRequest);
         when(wsRequest.addHeader(any(), any())).thenReturn(wsRequest);
         when(wsRequest.get()).thenReturn(CompletableFuture.completedFuture(wsResponse));

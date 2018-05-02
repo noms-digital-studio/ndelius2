@@ -1,4 +1,4 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, NO_SAVED_SEARCH} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER, SAVED_SEARCH} from '../actions/search'
 import search from './searchReducer'
 import {expect} from 'chai';
 import {offender} from '../test-helper'
@@ -9,6 +9,7 @@ describe("searchReducer", () => {
     describe("when in default state", () => {
 
         beforeEach(() => {
+            global.window = {probationAreas: {"N03":"NPS Wales","N02":"NPS North East"}}
             state = search(undefined, {type: '"@@redux/INIT"'})
         })
 
@@ -23,6 +24,15 @@ describe("searchReducer", () => {
         });
         it('suggestions will be empty', () => {
             expect(state.suggestions).to.be.empty
+        });
+        it('byProbationArea will be empty', () => {
+            expect(state.byProbationArea).to.be.empty
+        });
+        it('probationAreasFilter will be empty', () => {
+            expect(state.probationAreasFilter).to.eql({})
+        });
+        it('myProbationAreas will be populated from global window value', () => {
+            expect(state.myProbationAreas).to.eql({"N03":"NPS Wales","N02":"NPS North East"})
         });
         it('total will be 0', () => {
             expect(state.total).to.equal(0)
@@ -43,7 +53,7 @@ describe("searchReducer", () => {
     describe("when REQUEST_SEARCH action received", () => {
 
         beforeEach(() => {
-            state = search({searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: true, suggestions: someSuggestions(), total: 28, pageNumber: 3, firstTimeIn: true, showWelcomeBanner: true}, {
+            state = search({searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: true, suggestions: someSuggestions(), byProbationArea: someByProbationArea(), total: 28, pageNumber: 3, firstTimeIn: true, showWelcomeBanner: true}, {
                 type: REQUEST_SEARCH,
                 searchTerm: 'John Smith'
             })
@@ -60,6 +70,9 @@ describe("searchReducer", () => {
         });
         it('suggestions is kept at existing value', () => {
             expect(state.suggestions).to.eql(someSuggestions())
+        });
+        it('byProbationArea is kept at existing value', () => {
+            expect(state.byProbationArea).to.eql(someByProbationArea())
         });
         it('total is kept at existing value', () => {
             expect(state.total).to.equal(28)
@@ -82,7 +95,7 @@ describe("searchReducer", () => {
         context('when searchTerm matches from request action', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3, firstTimeIn: true, firstTimeIn: true},
+                    {searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3, firstTimeIn: true, firstTimeIn: true, probationAreasFilter: ['N01']},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('results are replaced with new results', () => {
@@ -99,6 +112,9 @@ describe("searchReducer", () => {
             });
             it('showWelcomeBanner will be false', () => {
                 expect(state.showWelcomeBanner).to.equal(false)
+            });
+            it('probationAreasFilter remains unchanged', () => {
+                expect(state.probationAreasFilter).to.eql(['N01'])
             });
         })
         context('when searchTerm partial matches from request action', () => {
@@ -161,7 +177,7 @@ describe("searchReducer", () => {
         describe('search results copying', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean', results: emptyResults(), total: 0, pageNumber: 1},
+                    {searchTerm: 'Mr Bean', results: emptyResults(), byProbationArea:  [], total: 0, pageNumber: 1},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', pageNumber: 3, results: someResults({
                             offenders: [
                                 {
@@ -180,11 +196,17 @@ describe("searchReducer", () => {
                                     offenderAliases: []
                                 }
                             ],
-                            total: 4
+                            total: 4,
+                            aggregations: {
+                                byProbationArea: someByProbationArea()
+                            }
                         })})
             })
             it('pageNumber is copied', () => {
                 expect(state.pageNumber).to.equal(3)
+            })
+            it('byProbationArea is copied', () => {
+                expect(state.byProbationArea).to.eql(someByProbationArea())
             })
             it('total is copied', () => {
                 expect(state.total).to.equal(4)
@@ -649,6 +671,76 @@ describe("searchReducer", () => {
 
         })
     })
+    describe("when SAVED_SEARCH action received", () => {
+        beforeEach(() => {
+            state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: false}, {type: SAVED_SEARCH, searchTerm: 'Mr Bean', probationAreasFilter: {'N01': 'N01 Area'}})
+        })
+
+        it('area filter just contains saved filter', () => {
+            expect(state.probationAreasFilter).to.eql({'N01': 'N01 Area'})
+        });
+        it('searchTerm is set', () => {
+            expect(state.searchTerm).to.equal('Mr Bean')
+        });
+    })
+    describe("when ADD_AREA_FILTER action received", () => {
+        context('when no filter set yet', () => {
+            beforeEach(() => {
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {}}, {type: ADD_AREA_FILTER, probationAreaCode: 'N01', probationAreaDescription: 'N01 Area'})
+            })
+
+            it('area filter just contains new code', () => {
+                expect(state.probationAreasFilter).to.eql({'N01': 'N01 Area'})
+            });
+        })
+        context('when area code already in filter', () => {
+            beforeEach(() => {
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N01': 'N01 Area'}}, {type: ADD_AREA_FILTER, probationAreaCode: 'N01', probationAreaDescription: 'N01 Area'})
+            })
+
+            it('area filter just contains existing code', () => {
+                expect(state.probationAreasFilter).to.eql({'N01': 'N01 Area'})
+            });
+        })
+        context('when filter set with other codes', () => {
+            beforeEach(() => {
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N01': 'N01 Area'}}, {type: ADD_AREA_FILTER, probationAreaCode: 'N02', probationAreaDescription: 'N02 Area'})
+            })
+
+            it('area filter just contains existing code and new code', () => {
+                expect(state.probationAreasFilter).to.eql({'N01': 'N01 Area', 'N02': 'N02 Area'})
+            });
+        })
+    })
+    describe("when REMOVE_AREA_FILTER action received", () => {
+        context('when code to remove not in filter', () => {
+            beforeEach(() => {
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N02': 'N02 Area'}}, {type: REMOVE_AREA_FILTER, probationAreaCode: 'N01'})
+            })
+
+            it('area filter remains unchanged', () => {
+                expect(state.probationAreasFilter).to.eql({'N02': 'N02 Area'})
+            });
+        })
+        context('when area code is only one in filter', () => {
+            beforeEach(() => {
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N01': 'N01 Area'}}, {type: REMOVE_AREA_FILTER, probationAreaCode: 'N01'})
+            })
+
+            it('area filter becomes empty', () => {
+                expect(state.probationAreasFilter).to.eql({})
+            });
+        })
+        context('when area code is amongst others  in filter', () => {
+            beforeEach(() => {
+                state = search({searchTerm: '', resultsReceived: false, resultsSearchTerm: '', results: [], suggestions: someSuggestions(), total: 0, pageNumber: 1, firstTimeIn: true, probationAreasFilter: {'N01': 'N01 Area', 'N02': 'N02 Area'}}, {type: REMOVE_AREA_FILTER, probationAreaCode: 'N01'})
+            })
+
+            it('area filter has all but the one to remove', () => {
+                expect(state.probationAreasFilter).to.eql({'N02': 'N02 Area'})
+            });
+        })
+    })
 })
 
 const someResults = (results = {}) => (
@@ -706,7 +798,10 @@ const someResults = (results = {}) => (
                 ]
             }
         },
-        total: 1
+        total: 1,
+        aggregations: {
+            byProbationArea: someByProbationArea()
+        }
     }, results))
 
 const someResultsWithSuggestions = ({suggestions} = {}) => Object.assign(someResults(), {suggestions})
@@ -744,8 +839,12 @@ const emptyResults = () => ({
                     }
                 ]
             }
+        },
+        aggregations: {
+            byProbationArea: []
         }
-    })
+
+})
 
 const someSingleResultWithAddresses = addresses => {
     const results = someResults();
@@ -787,3 +886,10 @@ const someSuggestions = () =>
             ]
         }
     ]
+const someByProbationArea = () =>
+    [
+        {code:"N02",count:2,description:"NPS North East"},
+        {code:"N01",count:1,description:"NPS North West"},
+        {code:"N03",count:1,description:"NPS Wales"}
+     ]
+

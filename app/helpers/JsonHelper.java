@@ -1,5 +1,6 @@
 package helpers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.util.Map;
@@ -79,6 +80,14 @@ public interface JsonHelper {
     static <T> T readValue(String json, Class<T> clazz) {
 
         return Json.fromJson(Json.parse(json), clazz);
+    }
+
+    static <T> T readValue(String json, TypeReference type) {
+        try {
+            return Json.mapper().readValue(json, type);
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     static Boolean toBoolean(ObjectNode rootNode, String nodeName) {

@@ -1,0 +1,915 @@
+[
+  {
+    "probationAreaId": 1500001001,
+    "code": "N02",
+    "description": "NPS North East",
+    "organisation": {
+      "code": "NPS",
+      "description": "National Probation Service"
+    },
+    "teams": [
+      {
+        "teamId": 2500016362,
+        "code": "N02LCC",
+        "description": "Leeds Crown Court (LCC)",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02LCC",
+          "description": "Leeds Crown Court (LCC)"
+        },
+        "localDeliveryUnit": {
+          "code": "YSW_LDS",
+          "description": "West Yorkshire Leeds"
+        },
+        "district": {
+          "code": "YSW_ALL",
+          "description": "West Yorkshire All Districts"
+        },
+        "borough": {
+          "code": "YSW_ALL",
+          "description": "West Yorkshire All Boroughs"
+        }
+      },
+      {
+        "teamId": 2500023746,
+        "code": "N02DTX",
+        "description": "Default Designated Transfer Team",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02DTX",
+          "description": "Default Designated Transfer Team"
+        },
+        "localDeliveryUnit": {
+          "code": "N02UAT",
+          "description": "Unallocated LDU(N02)"
+        },
+        "district": {
+          "code": "N02UAT",
+          "description": "Unallocated Level 3(N02)"
+        },
+        "borough": {
+          "code": "N02UAT",
+          "description": "Unallocated Level 2(N02)"
+        }
+      },
+      {
+        "teamId": 2500005273,
+        "code": "N02PRC",
+        "description": "CRC Created",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02PRC",
+          "description": "CRC Created"
+        },
+        "localDeliveryUnit": {
+          "code": "N02UAT",
+          "description": "Unallocated LDU(N02)"
+        },
+        "district": {
+          "code": "N02UAT",
+          "description": "Unallocated Level 3(N02)"
+        },
+        "borough": {
+          "code": "N02UAT",
+          "description": "Unallocated Level 2(N02)"
+        }
+      },
+      {
+        "teamId": 2500016360,
+        "code": "N02CRC",
+        "description": "zCRC - YSS Management Team",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02CRC",
+          "description": "zCRC - YSS Management Team"
+        },
+        "localDeliveryUnit": {
+          "code": "YSSCRC",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "YSS_CRC",
+          "description": "YSS Management"
+        },
+        "borough": {
+          "code": "C09ALL",
+          "description": "South Yorkshire CRC"
+        }
+      },
+      {
+        "teamId": 2500016364,
+        "code": "N02N02",
+        "description": "NPS - Bishop Auckland",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02N02",
+          "description": "NPS - Bishop Auckland"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVNPS",
+          "description": "NPS Team DTV"
+        },
+        "district": {
+          "code": "DTV_SOD",
+          "description": "South Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016359,
+        "code": "N02C21",
+        "description": "*CRC - UPW Newton Aycliffe",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C21",
+          "description": "*CRC - UPW Newton Aycliffe"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_SOD",
+          "description": "South Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016356,
+        "code": "N02C18",
+        "description": "*CRC - UPW Darlington",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C18",
+          "description": "*CRC - UPW Darlington"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_SOD",
+          "description": "South Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016353,
+        "code": "N02C15",
+        "description": "*CRC  - UPW Bishop Auckland",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C15",
+          "description": "*CRC  - UPW Bishop Auckland"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_SOD",
+          "description": "South Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016346,
+        "code": "N02C08",
+        "description": "zCRC - Newton Aycliffe",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C08",
+          "description": "zCRC - Newton Aycliffe"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_SOD",
+          "description": "South Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016343,
+        "code": "N02C05",
+        "description": "zCRC - Darlington",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C05",
+          "description": "zCRC - Darlington"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_SOD",
+          "description": "South Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016339,
+        "code": "N02C01",
+        "description": "*CRC - Bishop Auckland",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C01",
+          "description": "*CRC - Bishop Auckland"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_SOD",
+          "description": "South Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016371,
+        "code": "N02XXX",
+        "description": "*Non Supervised",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02XXX",
+          "description": "*Non Supervised"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVOTD",
+          "description": "Other DTV"
+        },
+        "district": {
+          "code": "DTV_ALL",
+          "description": "Durham Tees Valley"
+        },
+        "borough": {
+          "code": "DTV_ALL",
+          "description": "Durham Tees Valley"
+        }
+      },
+      {
+        "teamId": 2500016368,
+        "code": "N02N06",
+        "description": "NPS - Consett",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02N06",
+          "description": "NPS - Consett"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVNPS",
+          "description": "NPS Team DTV"
+        },
+        "district": {
+          "code": "DTV_NOR",
+          "description": "North Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016367,
+        "code": "N02N05",
+        "description": "NPS - Claypath",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02N05",
+          "description": "NPS - Claypath"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVNPS",
+          "description": "NPS Team DTV"
+        },
+        "district": {
+          "code": "DTV_NOR",
+          "description": "North Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016366,
+        "code": "N02N04",
+        "description": "NPS - Chester le Street",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02N04",
+          "description": "NPS - Chester le Street"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVNPS",
+          "description": "NPS Team DTV"
+        },
+        "district": {
+          "code": "DTV_NOR",
+          "description": "North Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016355,
+        "code": "N02C17",
+        "description": "*CRC - UPW Claypath",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C17",
+          "description": "*CRC - UPW Claypath"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_NOR",
+          "description": "North Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016354,
+        "code": "N02C16",
+        "description": "*CRC - UPW Chester le Street",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C16",
+          "description": "*CRC - UPW Chester le Street"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_NOR",
+          "description": "North Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016347,
+        "code": "N02C09",
+        "description": "zCRC - Peterlee",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C09",
+          "description": "zCRC - Peterlee"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_NOR",
+          "description": "North Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016342,
+        "code": "N02C04",
+        "description": "zCRC - Consett",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C04",
+          "description": "zCRC - Consett"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_NOR",
+          "description": "North Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016341,
+        "code": "N02C03",
+        "description": "zCRC - Claypath",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C03",
+          "description": "zCRC - Claypath"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_NOR",
+          "description": "North Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016340,
+        "code": "N02C02",
+        "description": "zCRC - Chester Le Street",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C02",
+          "description": "zCRC - Chester Le Street"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_NOR",
+          "description": "North Durham LDU"
+        },
+        "borough": {
+          "code": "DTV427",
+          "description": "LDU Cluster Durham"
+        }
+      },
+      {
+        "teamId": 2500016352,
+        "code": "N02C14",
+        "description": "zCRC - Volunteers",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C14",
+          "description": "zCRC - Volunteers"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_OTH",
+          "description": "Non-Operational & Support"
+        },
+        "borough": {
+          "code": "DTV428",
+          "description": "LDU Cluster Tees Valley"
+        }
+      },
+      {
+        "teamId": 2500016348,
+        "code": "N02C10",
+        "description": "zCRC - Programmes",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C10",
+          "description": "zCRC - Programmes"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_OTH",
+          "description": "Non-Operational & Support"
+        },
+        "borough": {
+          "code": "DTV428",
+          "description": "LDU Cluster Tees Valley"
+        }
+      },
+      {
+        "teamId": 2500016357,
+        "code": "N02C19",
+        "description": "*CRC - UPW Hartlepool",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C19",
+          "description": "*CRC - UPW Hartlepool"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_HOM",
+          "description": "Hartlepool LDU"
+        },
+        "borough": {
+          "code": "DTV428",
+          "description": "LDU Cluster Tees Valley"
+        }
+      },
+      {
+        "teamId": 2500016344,
+        "code": "N02C06",
+        "description": "zCRC - Hartlepool",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C06",
+          "description": "zCRC - Hartlepool"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_HOM",
+          "description": "Hartlepool LDU"
+        },
+        "borough": {
+          "code": "DTV428",
+          "description": "LDU Cluster Tees Valley"
+        }
+      },
+      {
+        "teamId": 2500002190,
+        "code": "N02000",
+        "description": "Transfer Team",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02000",
+          "description": "Transfer Team"
+        },
+        "localDeliveryUnit": {
+          "code": "N02NPS1",
+          "description": "N02 LDU 1"
+        },
+        "district": {
+          "code": "N02NPSA",
+          "description": "N02 Division"
+        },
+        "borough": {
+          "code": "N02100",
+          "description": "N02 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002183,
+        "code": "N02IAV",
+        "description": "Inactive",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02IAV",
+          "description": "Inactive"
+        },
+        "localDeliveryUnit": {
+          "code": "N02NPS1",
+          "description": "N02 LDU 1"
+        },
+        "district": {
+          "code": "N02NPSA",
+          "description": "N02 Division"
+        },
+        "borough": {
+          "code": "N02100",
+          "description": "N02 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002113,
+        "code": "N02T05",
+        "description": "Diary Team",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02T05",
+          "description": "Diary Team"
+        },
+        "localDeliveryUnit": {
+          "code": "N02NPS1",
+          "description": "N02 LDU 1"
+        },
+        "district": {
+          "code": "N02NPSA",
+          "description": "N02 Division"
+        },
+        "borough": {
+          "code": "N02100",
+          "description": "N02 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002022,
+        "code": "N02T04",
+        "description": "OMU D",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02T04",
+          "description": "OMU D"
+        },
+        "localDeliveryUnit": {
+          "code": "N02NPS1",
+          "description": "N02 LDU 1"
+        },
+        "district": {
+          "code": "N02NPSA",
+          "description": "N02 Division"
+        },
+        "borough": {
+          "code": "N02100",
+          "description": "N02 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002015,
+        "code": "N02T03",
+        "description": "OMU C",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02T03",
+          "description": "OMU C"
+        },
+        "localDeliveryUnit": {
+          "code": "N02NPS1",
+          "description": "N02 LDU 1"
+        },
+        "district": {
+          "code": "N02NPSA",
+          "description": "N02 Division"
+        },
+        "borough": {
+          "code": "N02100",
+          "description": "N02 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002008,
+        "code": "N02T02",
+        "description": "OMU B",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02T02",
+          "description": "OMU B"
+        },
+        "localDeliveryUnit": {
+          "code": "N02NPS1",
+          "description": "N02 LDU 1"
+        },
+        "district": {
+          "code": "N02NPSA",
+          "description": "N02 Division"
+        },
+        "borough": {
+          "code": "N02100",
+          "description": "N02 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002001,
+        "code": "N02T01",
+        "description": "OMU A ",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02T01",
+          "description": "OMU A "
+        },
+        "localDeliveryUnit": {
+          "code": "N02NPS1",
+          "description": "N02 LDU 1"
+        },
+        "district": {
+          "code": "N02NPSA",
+          "description": "N02 Division"
+        },
+        "borough": {
+          "code": "N02100",
+          "description": "N02 Cluster 1"
+        }
+      },
+      {
+        "teamId": 1500119949,
+        "code": "N02UAT",
+        "description": "Unallocated Team(N02)",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02UAT",
+          "description": "Unallocated Team(N02)"
+        },
+        "localDeliveryUnit": {
+          "code": "N02NPS1",
+          "description": "N02 LDU 1"
+        },
+        "district": {
+          "code": "N02NPSA",
+          "description": "N02 Division"
+        },
+        "borough": {
+          "code": "N02100",
+          "description": "N02 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500016369,
+        "code": "N02N07",
+        "description": "*NPS - Crown Courts",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02N07",
+          "description": "*NPS - Crown Courts"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVNPS",
+          "description": "NPS Team DTV"
+        },
+        "district": {
+          "code": "N02NCL",
+          "description": "Non OM Cleveland"
+        },
+        "borough": {
+          "code": "N02CLE",
+          "description": "Cleveland"
+        }
+      },
+      {
+        "teamId": 2500016365,
+        "code": "N02N03",
+        "description": "NPS - Breach Team (Durham & Cleveland)",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02N03",
+          "description": "NPS - Breach Team (Durham & Cleveland)"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVNPS",
+          "description": "NPS Team DTV"
+        },
+        "district": {
+          "code": "N02NCL",
+          "description": "Non OM Cleveland"
+        },
+        "borough": {
+          "code": "N02CLE",
+          "description": "Cleveland"
+        }
+      },
+      {
+        "teamId": 2500016350,
+        "code": "N02C12",
+        "description": "zCRC - South Bank",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C12",
+          "description": "zCRC - South Bank"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_ROM",
+          "description": "Redcar Cleveland LDU"
+        },
+        "borough": {
+          "code": "N02CLE",
+          "description": "Cleveland"
+        }
+      },
+      {
+        "teamId": 2500016349,
+        "code": "N02C11",
+        "description": "zCRC - Redcar",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C11",
+          "description": "zCRC - Redcar"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_ROM",
+          "description": "Redcar Cleveland LDU"
+        },
+        "borough": {
+          "code": "N02CLE",
+          "description": "Cleveland"
+        }
+      },
+      {
+        "teamId": 2500016351,
+        "code": "N02C13",
+        "description": "zCRC - Stockton",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C13",
+          "description": "zCRC - Stockton"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_SOM",
+          "description": "Stockton LDU"
+        },
+        "borough": {
+          "code": "N02CLE",
+          "description": "Cleveland"
+        }
+      },
+      {
+        "teamId": 2500016358,
+        "code": "N02C20",
+        "description": "*CRC - UPW Middlesbrough",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C20",
+          "description": "*CRC - UPW Middlesbrough"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_MOM",
+          "description": "Middlesbrough LDU"
+        },
+        "borough": {
+          "code": "N02CLE",
+          "description": "Cleveland"
+        }
+      },
+      {
+        "teamId": 2500016345,
+        "code": "N02C07",
+        "description": "zCRC - Middlesbrough",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02C07",
+          "description": "zCRC - Middlesbrough"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVCRC ",
+          "description": "CRC Team"
+        },
+        "district": {
+          "code": "DTV_MOM",
+          "description": "Middlesbrough LDU"
+        },
+        "borough": {
+          "code": "N02CLE",
+          "description": "Cleveland"
+        }
+      },
+      {
+        "teamId": 2500016363,
+        "code": "N02N01",
+        "description": "NPS - Cleveland Approved Premises",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N02N01",
+          "description": "NPS - Cleveland Approved Premises"
+        },
+        "localDeliveryUnit": {
+          "code": "DTVNPS",
+          "description": "NPS Team DTV"
+        },
+        "district": {
+          "code": "N02PPU",
+          "description": "Public Protection NE"
+        },
+        "borough": {
+          "code": "N02PPU",
+          "description": "Public Protection NE"
+        }
+      }
+    ]
+  }
+]

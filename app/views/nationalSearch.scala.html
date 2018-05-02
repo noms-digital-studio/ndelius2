@@ -1,8 +1,9 @@
 @import org.webjars.play.WebJarsUtil
 @import helpers.CallHelper.relative
+@import helpers.JsonHelper.stringify
 @this(webJarsUtil: WebJarsUtil)
 
-@(recentSearchMinutes: Int)
+@(recentSearchMinutes: Int, probationAreas: Map[String, String])
 
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
@@ -27,6 +28,7 @@
 
     <script type="text/javascript">
       window.recentSearchMinutes = @recentSearchMinutes;
+      window.probationAreas = @Html(stringify(probationAreas))
     </script>
 
     <script type='text/javascript' src='@relative(webJarsUtil.url("es5-shim", "es5-shim.js").get)'></script>

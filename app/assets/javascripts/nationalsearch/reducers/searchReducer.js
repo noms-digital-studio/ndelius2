@@ -1,7 +1,8 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER, SAVED_SEARCH} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
+import {setIn, removeIn} from '../../helpers/immutable'
 
-const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
+const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: {}, myProbationAreas: myProbationAreas(),  total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
@@ -11,12 +12,14 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
         case SEARCH_RESULTS:
             if (areSearchResultsStillRelevant(state, action)) {
                 return {
+                    ...state,
                     searchTerm: state.searchTerm,
                     resultsSearchTerm: action.searchTerm,
                     pageNumber: action.pageNumber,
                     total: action.results.total,
                     results: mapResults(action.results.offenders, state.searchTerm, action.pageNumber),
                     suggestions: mapSuggestions(action.results.suggestions),
+                    byProbationArea: action.results.aggregations.byProbationArea,
                     resultsReceived: true,
                     firstTimeIn: false,
                     showWelcomeBanner: false
@@ -30,6 +33,7 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
                 resultsSearchTerm: '',
                 results: [],
                 suggestions: [],
+                byProbationArea: [],
                 total: 0,
                 pageNumber: 1,
                 resultsReceived: false
@@ -39,12 +43,32 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
                 ...state,
                 showWelcomeBanner: state.firstTimeIn
             }
+        case SAVED_SEARCH:
+            return {
+                ...state,
+                searchTerm: action.searchTerm,
+                probationAreasFilter: action.probationAreasFilter
+            };
+        case ADD_AREA_FILTER:
+            return {
+                ...state,
+                probationAreasFilter: setIn(state.probationAreasFilter, action.probationAreaCode, action.probationAreaDescription)
+            }
+        case REMOVE_AREA_FILTER:
+            return {
+                ...state,
+                probationAreasFilter: removeIn(state.probationAreasFilter, action.probationAreaCode)
+            }
         default:
             return state
     }
 };
 
 export default searchResults
+
+const myProbationAreas = () => {
+    return window.probationAreas || {}
+}
 
 const mapResults = (results = [], searchTerm, pageNumber) =>
     results.map(

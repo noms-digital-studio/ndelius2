@@ -4,10 +4,15 @@
 
 .offender-summary {
   float: left;
-  width: $site-width - $offender-image-width - $gutter - $gutter
+  width: $site-width - $offender-image-width - $gutter - $gutter - ($site-width/3)
 }
 
 .offenderImageContainer {
   float: left;
+  display: block;
+}
+
+.filter-container {
+  max-height: 300px;
 }
 

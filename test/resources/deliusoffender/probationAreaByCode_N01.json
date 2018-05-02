@@ -1,0 +1,387 @@
+[
+  {
+    "probationAreaId": 1500001000,
+    "code": "N01",
+    "description": "NPS North West",
+    "organisation": {
+      "code": "NPS",
+      "description": "National Probation Service"
+    },
+    "teams": [
+      {
+        "teamId": 2500023876,
+        "code": "N01DTX",
+        "description": "Default Designated Transfer Team",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01DTX",
+          "description": "Default Designated Transfer Team"
+        },
+        "localDeliveryUnit": {
+          "code": "N01UAT",
+          "description": "*Unallocated LDU(N01)"
+        },
+        "district": {
+          "code": "N01UAT",
+          "description": "Unallocated Level 3(N01)"
+        },
+        "borough": {
+          "code": "N01UAT",
+          "description": "Unallocated Level 2(N01)"
+        }
+      },
+      {
+        "teamId": 2500005272,
+        "code": "N01PRC",
+        "description": "CRC Created",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01PRC",
+          "description": "CRC Created"
+        },
+        "localDeliveryUnit": {
+          "code": "N01UAT",
+          "description": "*Unallocated LDU(N01)"
+        },
+        "district": {
+          "code": "N01UAT",
+          "description": "Unallocated Level 3(N01)"
+        },
+        "borough": {
+          "code": "N01UAT",
+          "description": "Unallocated Level 2(N01)"
+        }
+      },
+      {
+        "teamId": 2500016337,
+        "code": "N01XXX",
+        "description": "*Salford(Temp contact only)",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01XXX",
+          "description": "*Salford(Temp contact only)"
+        },
+        "localDeliveryUnit": {
+          "code": "MCGNPS",
+          "description": "*NPS Team"
+        },
+        "district": {
+          "code": "N014374",
+          "description": "NPS Salford"
+        },
+        "borough": {
+          "code": "MCGMST",
+          "description": "Manchester, Salford, Trafford"
+        }
+      },
+      {
+        "teamId": 2500016332,
+        "code": "N01RRR",
+        "description": "_T/Care/Prob Test",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01RRR",
+          "description": "_T/Care/Prob Test"
+        },
+        "localDeliveryUnit": {
+          "code": "MCG_ALL",
+          "description": "*Greater Manchester All LDU"
+        },
+        "district": {
+          "code": "MCG_UKN",
+          "description": "ZZZUnknown"
+        },
+        "borough": {
+          "code": "MCG_ALL",
+          "description": "Gr. Manchester All Boroughs"
+        }
+      },
+      {
+        "teamId": 2500016329,
+        "code": "N01CRC",
+        "description": "CRC Team",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01CRC",
+          "description": "CRC Team"
+        },
+        "localDeliveryUnit": {
+          "code": "MCG_ALL",
+          "description": "*Greater Manchester All LDU"
+        },
+        "district": {
+          "code": "MCG_UKN",
+          "description": "ZZZUnknown"
+        },
+        "borough": {
+          "code": "MCG_ALL",
+          "description": "Gr. Manchester All Boroughs"
+        }
+      },
+      {
+        "teamId": 2500002189,
+        "code": "N01000",
+        "description": "Transfer Team",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01000",
+          "description": "Transfer Team"
+        },
+        "localDeliveryUnit": {
+          "code": "N01NPS1",
+          "description": "N01 LDU 1"
+        },
+        "district": {
+          "code": "N01NPSA",
+          "description": "N01 Division"
+        },
+        "borough": {
+          "code": "N01100",
+          "description": "N01 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002182,
+        "code": "N01IAV",
+        "description": "Inactive",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01IAV",
+          "description": "Inactive"
+        },
+        "localDeliveryUnit": {
+          "code": "N01NPS1",
+          "description": "N01 LDU 1"
+        },
+        "district": {
+          "code": "N01NPSA",
+          "description": "N01 Division"
+        },
+        "borough": {
+          "code": "N01100",
+          "description": "N01 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002112,
+        "code": "N01T05",
+        "description": "Diary Team",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01T05",
+          "description": "Diary Team"
+        },
+        "localDeliveryUnit": {
+          "code": "N01NPS1",
+          "description": "N01 LDU 1"
+        },
+        "district": {
+          "code": "N01NPSA",
+          "description": "N01 Division"
+        },
+        "borough": {
+          "code": "N01100",
+          "description": "N01 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002021,
+        "code": "N01T04",
+        "description": "OMU D",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01T04",
+          "description": "OMU D"
+        },
+        "localDeliveryUnit": {
+          "code": "N01NPS1",
+          "description": "N01 LDU 1"
+        },
+        "district": {
+          "code": "N01NPSA",
+          "description": "N01 Division"
+        },
+        "borough": {
+          "code": "N01100",
+          "description": "N01 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002014,
+        "code": "N01T03",
+        "description": "OMU C",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01T03",
+          "description": "OMU C"
+        },
+        "localDeliveryUnit": {
+          "code": "N01NPS1",
+          "description": "N01 LDU 1"
+        },
+        "district": {
+          "code": "N01NPSA",
+          "description": "N01 Division"
+        },
+        "borough": {
+          "code": "N01100",
+          "description": "N01 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002007,
+        "code": "N01T02",
+        "description": "OMU B",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01T02",
+          "description": "OMU B"
+        },
+        "localDeliveryUnit": {
+          "code": "N01NPS1",
+          "description": "N01 LDU 1"
+        },
+        "district": {
+          "code": "N01NPSA",
+          "description": "N01 Division"
+        },
+        "borough": {
+          "code": "N01100",
+          "description": "N01 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500002000,
+        "code": "N01T01",
+        "description": "OMU A ",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01T01",
+          "description": "OMU A "
+        },
+        "localDeliveryUnit": {
+          "code": "N01NPS1",
+          "description": "N01 LDU 1"
+        },
+        "district": {
+          "code": "N01NPSA",
+          "description": "N01 Division"
+        },
+        "borough": {
+          "code": "N01100",
+          "description": "N01 Cluster 1"
+        }
+      },
+      {
+        "teamId": 1500119935,
+        "code": "N01UAT",
+        "description": "Unallocated Team(N01)",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01UAT",
+          "description": "Unallocated Team(N01)"
+        },
+        "localDeliveryUnit": {
+          "code": "N01NPS1",
+          "description": "N01 LDU 1"
+        },
+        "district": {
+          "code": "N01NPSA",
+          "description": "N01 Division"
+        },
+        "borough": {
+          "code": "N01100",
+          "description": "N01 Cluster 1"
+        }
+      },
+      {
+        "teamId": 2500016328,
+        "code": "N01C03",
+        "description": "Workington Court",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01C03",
+          "description": "Workington Court"
+        },
+        "localDeliveryUnit": {
+          "code": "N01CMB",
+          "description": "Cumbria"
+        },
+        "district": {
+          "code": "N01CMCT",
+          "description": "Cumbria Courts"
+        },
+        "borough": {
+          "code": "N01CMB",
+          "description": "Cumbria"
+        }
+      },
+      {
+        "teamId": 2500016327,
+        "code": "N01C02",
+        "description": "Kendal Court",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01C02",
+          "description": "Kendal Court"
+        },
+        "localDeliveryUnit": {
+          "code": "N01CMB",
+          "description": "Cumbria"
+        },
+        "district": {
+          "code": "N01CMCT",
+          "description": "Cumbria Courts"
+        },
+        "borough": {
+          "code": "N01CMB",
+          "description": "Cumbria"
+        }
+      },
+      {
+        "teamId": 2500016326,
+        "code": "N01C01",
+        "description": "Barrow Court",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01C01",
+          "description": "Barrow Court"
+        },
+        "localDeliveryUnit": {
+          "code": "N01CMB",
+          "description": "Cumbria"
+        },
+        "district": {
+          "code": "N01CMCT",
+          "description": "Cumbria Courts"
+        },
+        "borough": {
+          "code": "N01CMB",
+          "description": "Cumbria"
+        }
+      },
+      {
+        "teamId": 2500016331,
+        "code": "N01N01",
+        "description": "*NPS ORA Lancs NW & Central ",
+        "isPrivate": false,
+        "scProvider": {
+          "code": "N01N01",
+          "description": "*NPS ORA Lancs NW & Central "
+        },
+        "localDeliveryUnit": {
+          "code": "N01LCSN",
+          "description": "Lancashire NW"
+        },
+        "district": {
+          "code": "N01NWLC",
+          "description": "NPS North West Lancashire"
+        },
+        "borough": {
+          "code": "N01LNNW",
+          "description": "Lancashire North West"
+        }
+      }
+    ]
+  }
+]
