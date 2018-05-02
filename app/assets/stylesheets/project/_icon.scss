@@ -16,6 +16,14 @@
   &.lock {
     background: url("../images/icon_lock.svg") no-repeat;
   }
+
+  &.prev-arrow {
+    width: 20px;
+    height: 20px;
+    margin-right: 3px;
+    background: url("../images/icon-prev-arrow.gif") no-repeat bottom;
+    background-size: contain;
+  }
 }
 
 .spinner {

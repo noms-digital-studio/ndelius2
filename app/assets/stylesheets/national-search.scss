@@ -8,10 +8,6 @@
 $offender-image-width: 120px;
 $offender-image-height: 150px;
 
-.govuk-box-highlight.blue {
-  background: #005ea5;
-}
-
 a.white {
   color: #fff;
   text-decoration: underline;
@@ -24,10 +20,6 @@ a.clickable {
 
 .clickable {
   cursor: pointer;
-}
-
-.form-control.padded {
-  padding: 10px 20px 10px 20px;
 }
 
 .risk-icon {
@@ -69,12 +61,12 @@ a.clickable {
   @include media(mobile) {
     min-height: auto;
   }
-  @include grid-column( 3/4 );
+  @include grid-column(3/4);
 
 }
 
 .offenderImageContainer {
-  @include grid-column( 1/4 );
+  @include grid-column(1/4);
   max-width: $offender-image-width + $gutter;
   padding-left: 0;
   @include media(mobile) {
@@ -99,15 +91,54 @@ textarea.form-control {
   max-width: none;
   margin-right: 0;
   margin-left: 0;
-
 }
 
 .key-content {
   @extend %site-width-container;
+  &.search {
+    padding: 20px 0;
+    min-height: 155px;
+    @include media(void, 845px) {
+      min-height: 0;
+    }
+  }
 }
 
 .govuk-box-highlight {
   margin-top: 0;
+  &.blue {
+    background: #005ea5;
+    text-align: left;
+    padding: 0;
+  }
+}
+
+.national-search-help {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: black;
+  padding: 15px 20px 20px 20px;
+  @include media(void, 845px) {
+    position: relative;
+    padding: 15px;
+    display: block;
+    left: -30px;
+    width: 100vw;
+  }
+  @include media(mobile) {
+    left: -20px;
+  }
+}
+
+.national-search-add {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  @include media(void, 845px) {
+    position: relative;
+    top: -10px;
+  }
 }
 
 .phase-banner-boxed {
@@ -117,4 +148,18 @@ textarea.form-control {
 .search-results-title {
   color: $grey-2;
   font-weight: normal;
+}
+
+.back-link {
+  position: relative;
+  padding-left: 15px;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    border-style: solid;
+    border-width: 6px 8px 6px 0;
+    border-color: transparent $govuk-blue transparent transparent;
+  }
 }

@@ -6,7 +6,7 @@ const Suggestions = ({searchTerm, suggestions, search}) => {
         return (<span/>);
     }
     return (
-        <p className='margin-top large'>
+        <p className='margin-top medium no-margin-bottom'>
             <span>Did you mean</span>
             {suggestionsToOrderedMapping(suggestions).map( (suggestion, index) =>
                 <span key={index}>

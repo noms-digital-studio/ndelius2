@@ -1,11 +1,13 @@
+import { Link } from 'react-router'
+
 import OffenderSearchResults from '../containers/offenderSearchResultsContainer';
 import OffenderSearch from '../containers/offenderSearchContainer';
 import FrameNavigation from '../containers/frameNavigationContainer';
 import AddNewOffenderLink from '../containers/addNewOffenderLinkContainer';
 import Suggestions from '../containers/suggestionsContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
-import SearchFooter from "./searchFooter";
-import PropTypes from "prop-types";
+import SearchFooter from './searchFooter';
+import PropTypes from 'prop-types';
 
 const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}) => {
 
@@ -18,15 +20,34 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
             <div id="root">
                 <main id="content">
                     <GovUkPhaseBanner/>
-                    <div>
-                        <div className="govuk-box-highlight blue">
-                            <h1 className="heading-xlarge no-margin-top margin-bottom medium">Search for an offender</h1>
-                            <OffenderSearch/>
-                            <Suggestions/>
-                            <p className="font-medium bold margin-top medium no-margin-bottom">Can't find who you are looking
-                                for? <AddNewOffenderLink tabIndex="1"/></p></div>
+                    <div className="govuk-box-highlight blue">
+                        <div className="key-content search relative">
+
+                            <div className="search">
+
+                                <h1 className="heading-large margin-bottom medium no-margin-top">Search for an offender</h1>
+
+                                <div className="national-search-add">
+                                    <AddNewOffenderLink tabIndex="1"/>
+                                </div>
+
+                                <OffenderSearch/>
+
+                                <div className="grid-row">
+                                    <div className="column-two-thirds">
+                                        <Suggestions/>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div className="national-search-help">
+                                <Link to="help" className="bold clickable white">Tips for getting better results</Link>
+                            </div>
+
+                        </div>
                     </div>
-                    <div className="padded mobile-pad key-content">
+                    <div className="key-content">
                         {showWelcomeBanner && <SearchFooter/>}
                         {!showWelcomeBanner && <OffenderSearchResults/>}
                     </div>

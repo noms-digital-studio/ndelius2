@@ -48,6 +48,12 @@ td {
   float: right;
 }
 
+.no-pull-mobile {
+  @include media(mobile) {
+    float: none;
+  }
+}
+
 .no-margin-top {
   margin-top: 0;
 }
@@ -74,6 +80,20 @@ td {
 
 .no-padding {
   padding: 0;
+}
+
+.padding-top {
+  padding-top: 10px;
+  &.search {
+    padding-top: 2em;
+  }
+}
+
+.padding-bottom {
+  padding-bottom: 10px;
+  &.search {
+    padding-bottom: 2em;
+  }
 }
 
 .content-fixed {
@@ -136,4 +156,8 @@ dd {
 
 .no-underline {
   text-decoration: none;
+}
+
+.relative {
+  position: relative;
 }

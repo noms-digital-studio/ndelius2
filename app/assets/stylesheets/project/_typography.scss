@@ -6,6 +6,10 @@
   @include bold-14();
 }
 
+.underline {
+  text-decoration: underline;
+}
+
 .page-status-tag {
   @include phase-tag();
   margin: 0;
@@ -20,6 +24,10 @@
     width: 135px;
     text-align: center;
   }
+}
+
+.center {
+  text-align: center;
 }
 
 .error-invalid {
