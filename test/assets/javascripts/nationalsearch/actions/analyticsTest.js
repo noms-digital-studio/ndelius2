@@ -16,18 +16,41 @@ describe('fetchVisitCounts action', () => {
     })
 
     describe('on fetch counts', () => {
-        beforeEach(() => {
-            global.$.getJSON.yields({uniqueUserVisits: 10, allVisits: 100})
-            fetchVisitCounts(ALL)(dispatch)
+        context('before responses', () => {
+            beforeEach(() => {
+                global.$.getJSON.yields({})
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches FETCHING_VISIT_COUNTS', () => {
+                expect(dispatch).to.be.calledWith({type: 'FETCHING_VISIT_COUNTS'})
+            })
+            it ('calls endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/visitCounts`)
+            })
+            it ('calls filter endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/filterCounts`)
+            })
         })
-        it ('dispatches FETCHING_VISIT_COUNTS', () => {
-            expect(dispatch).to.be.calledWith({type: 'FETCHING_VISIT_COUNTS'})
+
+        context('response from visitCounts', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/visitCounts').yields({uniqueUserVisits: 10, allVisits: 100})
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches VISIT_COUNTS with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'VISIT_COUNTS', uniqueUserVisits: 10, allVisits: 100})
+            })
+
         })
-        it ('calls endpoint with duration', () => {
-            expect(global.$.getJSON).to.be.calledWith(`analytics/visitCounts`)
-        })
-        it ('dispatches VISIT_COUNTS with count data', () => {
-            expect(dispatch).to.be.calledWith({type: 'VISIT_COUNTS', uniqueUserVisits: 10, allVisits: 100})
+        context('response from filterCounts', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/filterCounts').yields({someAnalytic: 10})
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches FILTER_COUNTS with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'FILTER_COUNTS', filterCounts: {someAnalytic: 10}})
+            })
+
         })
     })
 

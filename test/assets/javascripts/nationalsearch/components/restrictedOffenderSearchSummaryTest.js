@@ -34,7 +34,7 @@ describe('RestrictedOffenderSearchSummary component', () => {
                 beforeEach(() => {
                     const offenderSummary = offender()
                     delete offenderSummary.offenderManagers
-                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'} showOffenderDetails={()=>{}}/>)
                 })
 
                 it('renders provider label with no text', () => {
@@ -47,7 +47,7 @@ describe('RestrictedOffenderSearchSummary component', () => {
             context('no offender managers', () => {
                 beforeEach(() => {
                     const offenderSummary = offender({offenderManagers: []})
-                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'} showOffenderDetails={()=>{}}/>)
                 })
 
                 it('renders provider label with no text', () => {
@@ -72,7 +72,7 @@ describe('RestrictedOffenderSearchSummary component', () => {
                                 "fromDate": "2018-02-16",
                                 "active": false
                             }]})
-                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'} showOffenderDetails={()=>{}}/>)
                 })
 
                 it('renders provider label with no text', () => {
@@ -97,14 +97,13 @@ describe('RestrictedOffenderSearchSummary component', () => {
                                 "fromDate": "2018-02-16",
                                 "active": true
                             }]})
-                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'} showOffenderDetails={()=>{}}/>)
                 })
 
                 it('renders active provider', () => {
                     expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
                 })
                 it('renders active officer', () => {
-                    console.log(summary.find('#officer').text().trim())
                     expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
                 })
             })
@@ -148,14 +147,13 @@ describe('RestrictedOffenderSearchSummary component', () => {
                                 "active": false
                             }
                         ]})
-                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'} showOffenderDetails={()=>{}}/>)
                 })
 
                 it('renders active provider', () => {
                     expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
                 })
                 it('renders active officer', () => {
-                    console.log(summary.find('#officer').text().trim())
                     expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
                 })
             })
@@ -199,14 +197,13 @@ describe('RestrictedOffenderSearchSummary component', () => {
                                 "active": true
                             }
                         ]})
-                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'}/>)
+                    summary = shallow(<RestrictedOffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith Fred'} showOffenderDetails={()=>{}}/>)
                 })
 
                 it('renders first active provider', () => {
                     expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
                 })
                 it('renders first active officer', () => {
-                    console.log(summary.find('#officer').text().trim())
                     expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
                 })
             })

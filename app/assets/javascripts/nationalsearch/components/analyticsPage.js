@@ -7,7 +7,7 @@ import TopPagesRankingChart from '../containers/topPagesRankingChartContainer';
 import PageRankingChart from '../containers/pageRankingChartContainer';
 import SearchOutcomeChart from '../containers/searchOutcomeChartContainer';
 import DurationBetweenStartEndSearchChart from '../containers/durationBetweenStartEndSearchChartContainer';
-import SearchCountChart from '../containers/searchCountChartContainer';
+import FilterCountsChart from '../containers/filterCountsChartContainer';
 import SearchFieldMatchChart from '../containers/searchFieldMatchChartContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
 import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
@@ -44,7 +44,7 @@ class AnalyticsPage extends Component {
                         <SearchOutcomeChart description='Search visit outcome' label='Outcome'/>
                         <DurationBetweenStartEndSearchChart description='Duration to find offender' label='From search to clicking offender' xAxesLabel='Up to minutes' />
                         <SearchFieldMatchChart description='Top field matches' label='Search term'/>
-                        <SearchCountChart description='Count of results returned' label='Result total' xAxesLabel='Totals return (grouped in 10s)' />
+                        <FilterCountsChart description='Final search in session filter' label='Filter usage'/>
                     </div>
                     <div className="column-one-third">
                         <NavigationPanel/>

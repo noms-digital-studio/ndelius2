@@ -192,6 +192,24 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
 
 
+    public void returnsFilterUageCounts() {
+        when(analyticsStore.filterCounts(any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+                "hasUsedMyProvidersFilterCount", 3,
+                "hasUsedOtherProvidersFilterCount", 5,
+                "hasUsedBothProvidersFilterCount", 2,
+                "hasNotUsedFilterCount", 2
+        )));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/filterCounts"));
+
+        final JsonNode body = Json.parse(contentAsString(result));
+        assertThat(body.get("hasUsedMyProvidersFilterCount").asLong()).isEqualTo(3);
+        assertThat(body.get("hasUsedOtherProvidersFilterCount").asLong()).isEqualTo(5);
+        assertThat(body.get("hasUsedBothProvidersFilterCount").asLong()).isEqualTo(2);
+        assertThat(body.get("hasNotUsedFilterCount").asLong()).isEqualTo(2);
+    }
+
+
     @Override
     protected Application provideApplication() {
         return new GuiceApplicationBuilder().

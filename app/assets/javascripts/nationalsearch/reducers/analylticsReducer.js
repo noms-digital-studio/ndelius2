@@ -1,4 +1,4 @@
-import {FETCHING_VISIT_COUNTS, TIME_RANGE, VISIT_COUNTS, TODAY} from '../actions/analytics'
+import {FETCHING_VISIT_COUNTS, TIME_RANGE, VISIT_COUNTS, TODAY, FILTER_COUNTS} from '../actions/analytics'
 
 const analytics = (state = {
     uniqueUserVisits: 0,
@@ -9,6 +9,7 @@ const analytics = (state = {
     durationBetweenStartEndSearch: {},
     searchCount: {},
     searchFieldMatch: {},
+    filterCounts: {},
     fetching: false,
     timeRange: TODAY
 }, action) => {
@@ -31,6 +32,12 @@ const analytics = (state = {
                 ...state,
                 fetching: true
             };
+        case FILTER_COUNTS:
+            return {
+                ...state,
+                filterCounts: action.filterCounts
+            };
+
         case TIME_RANGE:
             return {
                 ...state,

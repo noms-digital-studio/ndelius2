@@ -64,8 +64,8 @@ describe('AnalyticsPage component', () => {
         it('displays duration to search', () => {
             expect(page.find({description: 'Duration to find offender'}).exists()).to.be.true
         })
-        it('displays search counts', () => {
-            expect(page.find({description: 'Count of results returned'}).exists()).to.be.true
+        it('displays filter counts', () => {
+            expect(page.find({description: 'Final search in session filter'}).exists()).to.be.true
         })
         it('displays search field match', () => {
             expect(page.find({description: 'Top field matches'}).exists()).to.be.true

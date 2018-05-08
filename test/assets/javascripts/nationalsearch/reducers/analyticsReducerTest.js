@@ -1,4 +1,4 @@
-import {FETCHING_VISIT_COUNTS, VISIT_COUNTS, TIME_RANGE, TODAY} from '../actions/analytics'
+import {FETCHING_VISIT_COUNTS, VISIT_COUNTS, FILTER_COUNTS, TIME_RANGE, TODAY} from '../actions/analytics'
 import analytics  from './analylticsReducer'
 import {expect} from 'chai';
 
@@ -35,6 +35,9 @@ describe("analyticsReducer", () => {
         it('timeRange is TODAY', () => {
             expect(state.timeRange).to.equal(TODAY)
         });
+        it('filterCounts is set to empty object', () => {
+            expect(state.filterCounts).to.eql({})
+        })
     })
     describe("when FETCHING_VISIT_COUNTS action received", () => {
         beforeEach(() => {
@@ -125,6 +128,28 @@ describe("analyticsReducer", () => {
                     "surname": 6
                 }
             )
+        })
+
+    })
+    describe("when FILTER_COUNTS action received", () => {
+        beforeEach(() => {
+            state = analytics({fetching: true}, {
+                type: FILTER_COUNTS,
+                filterCounts: {
+                "hasUsedMyProvidersFilterCount": 2,
+                "hasUsedOtherProvidersFilterCount": 1,
+                "hasUsedBothProvidersFilterCount": 1,
+                "hasNotUsedFilterCount": 4}}
+            )
+        })
+
+        it('filterCounts is set', () => {
+            expect(state.filterCounts).to.eql({
+                "hasUsedMyProvidersFilterCount": 2,
+                "hasUsedOtherProvidersFilterCount": 1,
+                "hasUsedBothProvidersFilterCount": 1,
+                "hasNotUsedFilterCount": 4})
+
         })
 
     })

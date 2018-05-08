@@ -16,6 +16,7 @@ const offender = (offender = {}) =>
         aliases: [],
         addresses: [],
         age: 19,
+        rankIndex: 1
     }, offender)
 
 const restrictedAccessOffender = (offender = {}) =>

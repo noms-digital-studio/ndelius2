@@ -53,5 +53,8 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
     default CompletableFuture<List<Map<String, Object>>> sfpsrFeedback() {
         return null;
     }
+    default CompletableFuture<Map<String, Integer>> filterCounts(LocalDateTime localDateTime) {
+        return null;
+    }
 
 }

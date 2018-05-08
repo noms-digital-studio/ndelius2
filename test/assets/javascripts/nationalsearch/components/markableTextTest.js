@@ -137,14 +137,12 @@ describe('MarkableText component', () => {
         context('date matches in yyyy/MM/d format', () => {
             it('date is highlighted', () => {
                 const markedText = shallow(<MarkableText text={'1975-07-03'} searchTerm={'1975/07/3 beans'} isDate={true} highlight={{someField: ['text']}} highlightFieldName='someField'/>)
-                console.log(markedText.debug())
                 expect(markedText.find({text: '1975-07-03', highlight: true})).to.have.length(1)
             })
         })
         context('date matches in yyyy/M/dd format', () => {
             it('date is highlighted', () => {
                 const markedText = shallow(<MarkableText text={'1975-07-13'} searchTerm={'1975/7/13 beans'} isDate={true} highlight={{someField: ['text']}} highlightFieldName='someField'/>)
-                console.log(markedText.debug())
                 expect(markedText.find({text: '1975-07-13', highlight: true})).to.have.length(1)
             })
         })

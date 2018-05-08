@@ -33,4 +33,5 @@ public interface AnalyticsStore {
 
     CompletableFuture<List<Map<String, Object>>> sfpsrFeedback();
 
+    CompletableFuture<Map<String, Integer>> filterCounts(LocalDateTime localDateTime);
 }

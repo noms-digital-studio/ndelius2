@@ -9,7 +9,8 @@ describe('OffenderSearchSummary component', () => {
 
         const offenderSummary = offender({
             aliases: [{
-                surname: "Marke"
+                surname: "Marke",
+                firstName: "Bob"
             }],
             addresses:[
                 {
@@ -42,7 +43,8 @@ describe('OffenderSearchSummary component', () => {
 
         const offenderSummary = offender({
             aliases: [{
-                surname: "Marke"
+                surname: "Marke",
+                firstName:"Bob"
             }],
             addresses:[
                 {
@@ -402,7 +404,6 @@ describe('OffenderSearchSummary component', () => {
                 expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
             })
             it('renders active officer', () => {
-                console.log(summary.find('#officer').text().trim())
                 expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
             })
         })
@@ -453,7 +454,6 @@ describe('OffenderSearchSummary component', () => {
                 expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
             })
             it('renders active officer', () => {
-                console.log(summary.find('#officer').text().trim())
                 expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
             })
         })
@@ -504,7 +504,6 @@ describe('OffenderSearchSummary component', () => {
                 expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
             })
             it('renders first active officer', () => {
-                console.log(summary.find('#officer').text().trim())
                 expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
             })
         })

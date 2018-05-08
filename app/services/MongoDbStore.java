@@ -380,6 +380,78 @@ public class MongoDbStore implements AnalyticsStore {
         return result;
     }
 
+    @Override
+    public CompletableFuture<Map<String, Integer>> filterCounts(LocalDateTime from) {
+
+        CompletableFuture<Map<String, Integer>> result = new CompletableFuture<>();
+        val hasCorrelationId = _match(_exists("correlationId"));
+        val dateFilter = _match(_gte("dateTime", from));
+        val match = _match( _eq("type", "search-request"));
+        val hasFilterAnalytics = _match(_exists("filter"));
+
+        val lastFilter = _group(_by(
+                "_id", "$correlationId",
+                "lastFilter", _last("$filter")
+        ));
+        val usedFilters = _project(ImmutableMap.of(
+                "hasUsedMyProvidersFilter",
+                _cond(
+                        _and(_gt("$lastFilter.myProviderSelectedCount", 0), _eq("$lastFilter.otherProviderSelectedCount", 0)),
+                        1,
+                        0),
+                "hasUsedOtherProvidersFilter",
+                _cond(
+                        _and(_gt("$lastFilter.otherProviderSelectedCount", 0), _eq("$lastFilter.myProviderSelectedCount", 0)),
+                        1,
+                        0),
+                "hasUsedBothProvidersFilter",
+                _cond(
+                        _and(_gt("$lastFilter.otherProviderSelectedCount", 0), _gt("$lastFilter.myProviderSelectedCount", 0)),
+                        1,
+                        0),
+                "hasNotUsedFilter",
+                _cond(
+                        _and(_eq("$lastFilter.otherProviderSelectedCount", 0), _eq("$lastFilter.myProviderSelectedCount", 0)),
+                        1,
+                        0)
+                )
+
+        );
+
+        val sum = _group(new Document(
+                ImmutableMap.of(
+                        "_id", "singleton",
+                        "hasUsedMyProvidersFilterCount", _sum("$hasUsedMyProvidersFilter"),
+                        "hasUsedOtherProvidersFilterCount", _sum("$hasUsedOtherProvidersFilter"),
+                        "hasUsedBothProvidersFilterCount", _sum("$hasUsedBothProvidersFilter"),
+                        "hasNotUsedFilterCount", _sum("$hasNotUsedFilter")
+                )));
+
+        val sort = _sort("_id", 1);
+
+        val aggregation = ImmutableList.of(
+                hasCorrelationId,
+                dateFilter,
+                match,
+                hasFilterAnalytics,
+                lastFilter,
+                usedFilters,
+                sum,
+                sort
+                );
+
+        events.aggregate(aggregation).
+                toObservable().
+                map(document ->
+                        document.entrySet().stream()
+                                .filter(entry -> !entry.getKey().equals("_id"))
+                                .collect(Collectors.toMap(Map.Entry::getKey, entry -> Integer.valueOf(entry.getValue().toString())))).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+        return result;
+    }
+
     private Bson filterByDate(LocalDateTime from) {
         return gte("dateTime", toDate(from));
     }
@@ -448,12 +520,25 @@ public class MongoDbStore implements AnalyticsStore {
                 ));
     }
 
+    private Document _eq(String field, int value) {
+        return new Document(
+                ImmutableMap.of(
+                        "$eq", asList(field, value)
+                ));
+    }
+
     private Document _gte(String field, LocalDateTime date) {
         return new Document(
                 ImmutableMap.of(
                         field, new Document(
                                 "$gte", toDate(date)
                         )
+                ));
+    }
+    private Document _gt(String field, long number) {
+        return new Document(
+                ImmutableMap.of(
+                        "$gt", asList(field, number)
                 ));
     }
 
@@ -495,6 +580,18 @@ public class MongoDbStore implements AnalyticsStore {
     private Document _sum() {
         return new Document(
                 ImmutableMap.of("$sum", 1L)
+        );
+    }
+
+    private Document _cond(Document condition, int whenTrue, int whenFalse) {
+        return new Document(
+                ImmutableMap.of("$cond", asList(condition, whenTrue, whenFalse))
+        );
+    }
+
+    private Document _sum(String field) {
+        return new Document(
+                ImmutableMap.of("$sum", field)
         );
     }
 

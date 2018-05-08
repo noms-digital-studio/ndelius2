@@ -57,6 +57,9 @@ public class NationalSearchAnalyticsController extends Controller {
                         )).build()).
                 thenApply(JsonHelper::okJson);
     }
+    public CompletionStage<Result> filterCounts(String from) {
+        return analyticsStore.filterCounts(fromDateTime(from)).thenApply(JsonHelper::okJson);
+    }
 
     private LocalDateTime fromDateTime(String from) {
         return Optional.ofNullable(from).
