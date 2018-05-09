@@ -11,6 +11,7 @@ import play.Logger;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Results;
 
 import javax.inject.Inject;
 import java.time.Instant;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static helpers.JwtHelper.principal;
 import static helpers.StaticImage.noPhotoImage;
@@ -27,19 +29,18 @@ public class OffenderController extends Controller {
     private final PrisonerApi prisonerApi;
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
-    private final Environment environment;
-
+    private final Supplier<Result> noPhotoResult;
 
     @Inject
     public OffenderController(Config configuration, PrisonerApi prisonerApi, HttpExecutionContext ec, Environment environment) {
 
         this.ec = ec;
         this.prisonerApi = prisonerApi;
-        this.environment = environment;
 
         val paramsSecretKey = configuration.getString("params.secret.key");
 
         decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
+        noPhotoResult = () -> Optional.ofNullable(noPhotoImage(environment)).map(Results::ok).orElseGet(Results::badRequest);
     }
 
     public CompletionStage<Result> image(String oneTimeNomisRef) { // Can only be used by the user that generated a search result just now
@@ -63,13 +64,12 @@ public class OffenderController extends Controller {
                 orElseGet(() -> {
 
                     Logger.warn("Invalid OneTimeNomisRef: {}", oneTimeNomisRef);
-                    return CompletableFuture.completedFuture(ok(noPhotoImage(environment)));
-
+                    return CompletableFuture.supplyAsync(noPhotoResult);
                 }).
                 exceptionally(throwable -> {
 
                     Logger.error("Failed to get Nomis Image", throwable);
-                    return ok(noPhotoImage(environment));
+                    return noPhotoResult.get();
                 });
     }
 }
