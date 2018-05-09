@@ -21,24 +21,127 @@ describe('fetchVisitCounts action', () => {
                 global.$.getJSON.yields({})
                 fetchVisitCounts(ALL)(dispatch)
             })
-            it ('dispatches FETCHING_VISIT_COUNTS', () => {
-                expect(dispatch).to.be.calledWith({type: 'FETCHING_VISIT_COUNTS'})
-            })
-            it ('calls endpoint with duration', () => {
-                expect(global.$.getJSON).to.be.calledWith(`analytics/visitCounts`)
-            })
             it ('calls filter endpoint with duration', () => {
                 expect(global.$.getJSON).to.be.calledWith(`analytics/filterCounts`)
             })
+            it ('calls uniqueUserVisits endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/uniqueUserVisits`)
+            })
+            it ('calls allVisits endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/allVisits`)
+            })
+            it ('calls allSearches endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/allSearches`)
+            })
+            it ('calls rankGrouping endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/rankGrouping`)
+            })
+            it ('calls durationBetweenStartEndSearch endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/durationBetweenStartEndSearch`)
+            })
+            it ('calls eventOutcome endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/eventOutcome`)
+            })
+            it ('calls searchFieldMatch endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/searchFieldMatch`)
+            })
         })
 
-        context('response from visitCounts', () => {
+        context('response from uniqueUserVisits', () => {
             beforeEach(() => {
-                global.$.getJSON.withArgs('analytics/visitCounts').yields({uniqueUserVisits: 10, allVisits: 100})
+                global.$.getJSON.withArgs('analytics/uniqueUserVisits').yields(10)
                 fetchVisitCounts(ALL)(dispatch)
             })
-            it ('dispatches VISIT_COUNTS with count data', () => {
-                expect(dispatch).to.be.calledWith({type: 'VISIT_COUNTS', uniqueUserVisits: 10, allVisits: 100})
+            it ('dispatches UNIQUE_USER_VISITS with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'UNIQUE_USER_VISITS', uniqueUserVisits: 10})
+            })
+
+        })
+        context('response from allVisits', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/allVisits').yields(10)
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches ALL_VISITS with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'ALL_VISITS', allVisits: 10})
+            })
+
+        })
+        context('response from allSearches', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/allSearches').yields(10)
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches ALL_SEARCHES with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'ALL_SEARCHES', allSearches: 10})
+            })
+
+        })
+        context('response from rankGrouping', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/rankGrouping').yields({
+                    "1": 10,
+                    "2": 5,
+                    "3": 1})
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches RANK_GROUPING with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'RANK_GROUPING', rankGrouping: {
+                        "1": 10,
+                        "2": 5,
+                        "3": 1}})
+            })
+
+        })
+        context('response from eventOutcome', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/eventOutcome').yields(
+                    {"search-index": 10,
+                    "search-request": 5,
+                    "search-offender-details": 1,
+                    "search-legacy-search": 5})
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches EVENT_OUTCOME with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'EVENT_OUTCOME', eventOutcome: {
+                        "search-index": 10,
+                        "search-request": 5,
+                        "search-offender-details": 1,
+                        "search-legacy-search": 5
+                    }})
+            })
+
+        })
+        context('response from durationBetweenStartEndSearch', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/durationBetweenStartEndSearch').yields({
+                    "1": 10,
+                    "2": 5,
+                    "3": 1})
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches DURATION_BETWEEN_START_END_SEARCH with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'DURATION_BETWEEN_START_END_SEARCH', durationBetweenStartEndSearch: {
+                        "1": 10,
+                        "2": 5,
+                        "3": 1}})
+            })
+
+        })
+        context('response from searchFieldMatch', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/searchFieldMatch').yields(
+                    {"otherIds.crn": 10,
+                        "firstName": 5,
+                        "surname": 1})
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches SEARCH_FIELD_MATCH with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'SEARCH_FIELD_MATCH', searchFieldMatch: {
+                        "otherIds.crn": 10,
+                        "firstName": 5,
+                        "surname": 1
+                    }})
             })
 
         })

@@ -1,4 +1,4 @@
-import {FETCHING_VISIT_COUNTS, VISIT_COUNTS, FILTER_COUNTS, TIME_RANGE, TODAY} from '../actions/analytics'
+import {FILTER_COUNTS, TIME_RANGE, TODAY, UNIQUE_USER_VISITS, ALL_VISITS, ALL_SEARCHES, RANK_GROUPING, EVENT_OUTCOME, DURATION_BETWEEN_START_END_SEARCH, SEARCH_FIELD_MATCH} from '../actions/analytics'
 import analytics  from './analylticsReducer'
 import {expect} from 'chai';
 
@@ -39,64 +39,68 @@ describe("analyticsReducer", () => {
             expect(state.filterCounts).to.eql({})
         })
     })
-    describe("when FETCHING_VISIT_COUNTS action received", () => {
+    describe("when UNIQUE_USER_VISITS action received", () => {
         beforeEach(() => {
-            state = analytics({fetching: false}, {type: FETCHING_VISIT_COUNTS})
+            state = analytics({}, {
+                type: UNIQUE_USER_VISITS,
+                uniqueUserVisits: 12
+            })
         })
-
-        it('fetching is true', () => {
-            expect(state.fetching).to.equal(true)
+        it('uniqueUserVisits is set', () => {
+            expect(state.uniqueUserVisits).to.equal(12)
         });
+
     })
-    describe("when VISIT_COUNTS action received", () => {
+    describe("when ALL_VISITS action received", () => {
         beforeEach(() => {
-            state = analytics({fetching: true}, {
-                type: VISIT_COUNTS,
-                uniqueUserVisits: 12,
-                allVisits: 17,
-                allSearches: 24,
+            state = analytics({}, {
+                type: ALL_VISITS,
+                allVisits: 17
+            })
+        })
+        it('allVisits is set', () => {
+            expect(state.allVisits).to.equal(17)
+        });
+
+    })
+    describe("when ALL_SEARCHES action received", () => {
+        beforeEach(() => {
+            state = analytics({}, {
+                type: ALL_SEARCHES,
+                allSearches: 24
+            })
+        })
+        it('allSearches is set', () => {
+            expect(state.allSearches).to.equal(24)
+        });
+
+    })
+    describe("when RANK_GROUPING action received", () => {
+        beforeEach(() => {
+            state = analytics({}, {
+                type: RANK_GROUPING,
                 rankGrouping: {
                     "1": 10,
                     "2": 5,
-                    "3": 1},
+                    "3": 1}
+            })
+        })
+        it('rankGrouping is set', () => {
+            expect(state.rankGrouping).to.eql({"1": 10, "2": 5, "3": 1})
+        })
+
+    })
+    describe("when EVENT_OUTCOME action received", () => {
+        beforeEach(() => {
+            state = analytics({}, {
+                type: EVENT_OUTCOME,
                 eventOutcome: {
                     "search-add-new-offender": 2,
                     "search-request": 1,
                     "search-offender-details": 1,
                     "search-index": 4,
-                    "search-add-contact": 1},
-                durationBetweenStartEndSearch: {
-                    "1": 100,
-                    "2": 20,
-                    "3": 5
-                },
-                searchCount: {
-                    "134": 100,
-                    "200": 20,
-                    "300": 5
-                },
-                searchFieldMatch: {
-                    "otherIds.crn": 3,
-                    "firstName": 5,
-                    "surname": 6
-                }
+                    "search-add-contact": 1}
             })
-        })
-
-        it('fetching is false', () => {
-            expect(state.fetching).to.equal(false)
-        });
-        it('uniqueUserVisits is set', () => {
-            expect(state.uniqueUserVisits).to.equal(12)
-        });
-        it('allVisits is set', () => {
-            expect(state.allVisits).to.equal(17)
-        });
-        it('allSearches is set', () => {
-            expect(state.allSearches).to.equal(24)
-        });
-        it('rankGrouping is set', () => {
-            expect(state.rankGrouping).to.eql({"1": 10, "2": 5, "3": 1})
         })
         it('eventOutcome is set', () => {
             expect(state.eventOutcome).to.eql({
@@ -107,19 +111,37 @@ describe("analyticsReducer", () => {
                 "search-add-contact": 1}
             )
         })
+
+    })
+    describe("when DURATION_BETWEEN_START_END_SEARCH action received", () => {
+        beforeEach(() => {
+            state = analytics({}, {
+                type: DURATION_BETWEEN_START_END_SEARCH,
+                durationBetweenStartEndSearch: {
+                    "1": 100,
+                    "2": 20,
+                    "3": 5
+                }
+            })
+        })
         it('durationBetweenStartEndSearch is set', () => {
             expect(state.durationBetweenStartEndSearch).to.eql({
                 "1": 100,
                 "2": 20,
                 "3": 5})
         })
-        it('searchCount is set', () => {
-            expect(state.searchCount).to.eql({
-                    "134": 100,
-                    "200": 20,
-                    "300": 5
+
+    })
+    describe("when SEARCH_FIELD_MATCH action received", () => {
+        beforeEach(() => {
+            state = analytics({}, {
+                type: SEARCH_FIELD_MATCH,
+                searchFieldMatch: {
+                    "otherIds.crn": 3,
+                    "firstName": 5,
+                    "surname": 6
                 }
-            )
+            })
         })
         it('searchFieldMatch is set', () => {
             expect(state.searchFieldMatch).to.eql({
@@ -129,7 +151,6 @@ describe("analyticsReducer", () => {
                 }
             )
         })
-
     })
     describe("when FILTER_COUNTS action received", () => {
         beforeEach(() => {

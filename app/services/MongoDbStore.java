@@ -234,6 +234,7 @@ public class MongoDbStore implements AnalyticsStore {
                 hasCorrelationId,
                 dateFilter,
                 eventTypeFilter,
+                sort,
                 firstAndLastDates,
                 firstAndLastMatchingEventType,
                 durationInMills,
@@ -252,50 +253,6 @@ public class MongoDbStore implements AnalyticsStore {
                 subscribe(result::complete);
 
         return result;
-    }
-
-    @Override
-    public CompletableFuture<Map<Integer, Long>> countGrouping(String eventType, String countFieldName, LocalDateTime from, long groupByScale) {
-        val result = new CompletableFuture<Map<Integer, Long>>();
-        val match = _match( _eq("type", eventType));
-        val hasRank = _match( _exists(countFieldName));
-        val dateFilter = _match( _gte("dateTime", from));
-        val scaledDownCount = _project(ImmutableMap.of(
-                "scaledDownCount",
-                _divide("$" + countFieldName, groupByScale))
-        );
-        val roundedCount = _project(ImmutableMap.of(
-                "roundedCount",
-                _ceil("$scaledDownCount"))
-        );
-        val groupedScaleCount = _project(ImmutableMap.of(
-                "groupedScaleCount",
-                _multiply("$roundedCount", groupByScale))
-        );
-        val sum = _group(_by("_id", "$groupedScaleCount", "total", _sum()));
-        val sort = _sort("_id", 1);
-
-        val countGrouping = ImmutableList.of(
-                match,
-                hasRank,
-                dateFilter,
-                scaledDownCount,
-                roundedCount,
-                groupedScaleCount,
-                sum,
-                sort);
-
-        events.aggregate(countGrouping).
-                toObservable().
-                toList().
-                map(documents -> documents.stream().collect(
-                        Collectors.toMap(doc -> doc.getDouble("_id").intValue(), doc -> doc.getLong("total"), firstDuplicate(), LinkedHashMap::new))
-                ).
-                doOnError(result::completeExceptionally).
-                subscribe(result::complete);
-
-        return result;
-
     }
 
     @Override
@@ -434,10 +391,10 @@ public class MongoDbStore implements AnalyticsStore {
                 dateFilter,
                 match,
                 hasFilterAnalytics,
+                sort,
                 lastFilter,
                 usedFilters,
-                sum,
-                sort
+                sum
                 );
 
         events.aggregate(aggregation).
@@ -446,6 +403,7 @@ public class MongoDbStore implements AnalyticsStore {
                         document.entrySet().stream()
                                 .filter(entry -> !entry.getKey().equals("_id"))
                                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> Integer.valueOf(entry.getValue().toString())))).
+                defaultIfEmpty(ImmutableMap.of()).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
 

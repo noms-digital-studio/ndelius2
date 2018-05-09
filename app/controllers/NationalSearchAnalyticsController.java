@@ -1,16 +1,13 @@
 package controllers;
 
-import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
-import lombok.val;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
@@ -32,33 +29,36 @@ public class NationalSearchAnalyticsController extends Controller {
         return ok(template.render());
     }
 
-    public CompletionStage<Result> visitCounts(String from) {
-        val allVisits = analyticsStore.pageVisits("search-index", fromDateTime(from));
-        val allSearches = analyticsStore.pageVisits("search-request", fromDateTime(from));
-        val uniqueUserVisits = analyticsStore.uniquePageVisits("search-index", fromDateTime(from));
-        val rankGrouping = analyticsStore.rankGrouping("search-offender-details", fromDateTime(from));
-        val eventOutcome = analyticsStore.eventOutcome("search-index", fromDateTime(from));
-        val durationBetweenStartEndSearch = analyticsStore.durationBetween("search-request", "search-offender-details", fromDateTime(from), 60);
-        val searchCount = analyticsStore.countGrouping("search-results", "total", fromDateTime(from), 10);
-        val searchFieldMatch = analyticsStore.countGroupingArray("search-offender-details", "fieldMatch", fromDateTime(from));
-
-        return CompletableFuture.allOf(allVisits, allSearches, uniqueUserVisits, rankGrouping, eventOutcome, durationBetweenStartEndSearch, searchCount, searchFieldMatch).
-                thenApply(ignoredVoid -> ImmutableMap.builder().
-                        putAll(ImmutableMap.of(
-                                "uniqueUserVisits", uniqueUserVisits.join(),
-                                "allVisits", allVisits.join(),
-                                "allSearches", allSearches.join(),
-                                "rankGrouping", rankGrouping.join(),
-                                "eventOutcome", eventOutcome.join())).
-                        putAll(ImmutableMap.of(
-                                "durationBetweenStartEndSearch", durationBetweenStartEndSearch.join(),
-                                "searchCount", searchCount.join(),
-                                "searchFieldMatch", searchFieldMatch.join()
-                        )).build()).
-                thenApply(JsonHelper::okJson);
-    }
     public CompletionStage<Result> filterCounts(String from) {
         return analyticsStore.filterCounts(fromDateTime(from)).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> uniqueUserVisits(String from) {
+        return analyticsStore.uniquePageVisits("search-index", fromDateTime(from)).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> allVisits(String from) {
+        return analyticsStore.pageVisits("search-index", fromDateTime(from)).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> allSearches(String from) {
+        return analyticsStore.pageVisits("search-request", fromDateTime(from)).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> rankGrouping(String from) {
+        return analyticsStore.rankGrouping("search-offender-details", fromDateTime(from)).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> durationBetweenStartEndSearch(String from) {
+        return analyticsStore.durationBetween("search-request", "search-offender-details", fromDateTime(from), 60).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> eventOutcome(String from) {
+        return analyticsStore.eventOutcome("search-index", fromDateTime(from)).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> searchFieldMatch(String from) {
+        return analyticsStore.countGroupingArray("search-offender-details", "fieldMatch", fromDateTime(from)).thenApply(JsonHelper::okJson);
     }
 
     private LocalDateTime fromDateTime(String from) {

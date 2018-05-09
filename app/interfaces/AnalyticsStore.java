@@ -23,8 +23,6 @@ public interface AnalyticsStore {
 
     CompletableFuture<Map<Long, Long>> durationBetween(String firstEventType, String secondEventType, LocalDateTime from, long groupBySeconds);
 
-    CompletableFuture<Map<Integer, Long>> countGrouping(String eventType, String countFieldName, LocalDateTime from, long groupByScale);
-
     CompletableFuture<Map<String, Long>> countGroupingArray(String eventType, String countFieldName, LocalDateTime from);
 
     CompletableFuture<Boolean> isUp();

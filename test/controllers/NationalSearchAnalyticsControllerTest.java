@@ -45,13 +45,12 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         when(analyticsStore.rankGrouping(eq("search-offender-details"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
         when(analyticsStore.eventOutcome(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
         when(analyticsStore.durationBetween(eq("search-request"), eq("search-offender-details"), any(), eq(60L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
-        when(analyticsStore.countGrouping(eq("search-results"), eq("total"), any(), eq(10L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
         when(analyticsStore.countGroupingArray(eq("search-offender-details"), eq("fieldMatch"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of()));
 
     }
     @Test
     public void defaultsToBeginningOf2017WhenFromIsMissing() {
-        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts");
+        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/allVisits");
         route(app, request);
 
         verify(analyticsStore).pageVisits(eq("search-index"), fromCaptor.capture());
@@ -61,7 +60,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
     @Test
     public void usesFromParameterWhenPresent() {
-        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts?from=2018-02-03T08:29:59Z");
+        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/allVisits?from=2018-02-03T08:29:59Z");
         route(app, request);
 
         verify(analyticsStore).pageVisits(eq("search-index"), fromCaptor.capture());
@@ -72,7 +71,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
     @Test
     public void returnsOkResponse() {
-        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts");
+        val request = new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/uniqueUserVisits");
         val result = route(app, request);
 
         assertEquals(OK, result.status());
@@ -82,30 +81,30 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
     public void returnsUniqueUserVisits() {
         when(analyticsStore.uniquePageVisits(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(13L));
 
-        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/uniqueUserVisits"));
 
         final JsonNode body = Json.parse(contentAsString(result));
-        assertThat(body.get("uniqueUserVisits").asLong()).isEqualTo(13);
+        assertThat(body.asLong()).isEqualTo(13);
     }
 
     @Test
     public void returnsAllVisits() {
         when(analyticsStore.pageVisits(eq("search-index"), any())).thenReturn(CompletableFuture.completedFuture(14L));
 
-        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/allVisits"));
 
         final JsonNode body = Json.parse(contentAsString(result));
-        assertThat(body.get("allVisits").asLong()).isEqualTo(14);
+        assertThat(body.asLong()).isEqualTo(14);
     }
 
     @Test
     public void returnsAllSearches() {
         when(analyticsStore.pageVisits(eq("search-request"), any())).thenReturn(CompletableFuture.completedFuture(15L));
 
-        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/allSearches"));
 
         final JsonNode body = Json.parse(contentAsString(result));
-        assertThat(body.get("allSearches").asLong()).isEqualTo(15);
+        assertThat(body.asLong()).isEqualTo(15);
     }
 
     @Test
@@ -116,12 +115,12 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
                 3, 30L
         )));
 
-        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/rankGrouping"));
 
         final JsonNode body = Json.parse(contentAsString(result));
-        assertThat(body.get("rankGrouping").get("1").asLong()).isEqualTo(1000L);
-        assertThat(body.get("rankGrouping").get("2").asLong()).isEqualTo(200L);
-        assertThat(body.get("rankGrouping").get("3").asLong()).isEqualTo(30L);
+        assertThat(body.get("1").asLong()).isEqualTo(1000L);
+        assertThat(body.get("2").asLong()).isEqualTo(200L);
+        assertThat(body.get("3").asLong()).isEqualTo(30L);
     }
 
     @Test
@@ -133,13 +132,13 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
                 "search-legacy-search", 4L
         )));
 
-        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/eventOutcome"));
 
         final JsonNode body = Json.parse(contentAsString(result));
-        assertThat(body.get("eventOutcome").get("search-index").asLong()).isEqualTo(1L);
-        assertThat(body.get("eventOutcome").get("search-request").asLong()).isEqualTo(10L);
-        assertThat(body.get("eventOutcome").get("search-offender-details").asLong()).isEqualTo(100L);
-        assertThat(body.get("eventOutcome").get("search-legacy-search").asLong()).isEqualTo(4L);
+        assertThat(body.get("search-index").asLong()).isEqualTo(1L);
+        assertThat(body.get("search-request").asLong()).isEqualTo(10L);
+        assertThat(body.get("search-offender-details").asLong()).isEqualTo(100L);
+        assertThat(body.get("search-legacy-search").asLong()).isEqualTo(4L);
     }
 
     @Test
@@ -150,31 +149,15 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
                 3L, 1L
         )));
 
-        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/durationBetweenStartEndSearch"));
 
         final JsonNode body = Json.parse(contentAsString(result));
-        assertThat(body.get("durationBetweenStartEndSearch").get("1").asLong()).isEqualTo(10L);
-        assertThat(body.get("durationBetweenStartEndSearch").get("2").asLong()).isEqualTo(5L);
-        assertThat(body.get("durationBetweenStartEndSearch").get("3").asLong()).isEqualTo(1L);
+        assertThat(body.get("1").asLong()).isEqualTo(10L);
+        assertThat(body.get("2").asLong()).isEqualTo(5L);
+        assertThat(body.get("3").asLong()).isEqualTo(1L);
     }
 
     @Test
-    public void returnsSearchCount() {
-        when(analyticsStore.countGrouping(eq("search-results"), eq("total"), any(), eq(10L))).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
-                10, 10L,
-                20, 5L,
-                30, 1L
-        )));
-
-        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
-
-        final JsonNode body = Json.parse(contentAsString(result));
-        assertThat(body.get("searchCount").get("10").asLong()).isEqualTo(10L);
-        assertThat(body.get("searchCount").get("20").asLong()).isEqualTo(5L);
-        assertThat(body.get("searchCount").get("30").asLong()).isEqualTo(1L);
-    }
-    @Test
-
     public void returnsSearchFieldMatch() {
         when(analyticsStore.countGroupingArray(eq("search-offender-details"), eq("fieldMatch"), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
                 "otherIds.crn", 3L,
@@ -182,17 +165,18 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
                 "surname", 2L
         )));
 
-        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/visitCounts"));
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/searchFieldMatch"));
 
         final JsonNode body = Json.parse(contentAsString(result));
-        assertThat(body.get("searchFieldMatch").get("otherIds.crn").asLong()).isEqualTo(3L);
-        assertThat(body.get("searchFieldMatch").get("firstName").asLong()).isEqualTo(5L);
-        assertThat(body.get("searchFieldMatch").get("surname").asLong()).isEqualTo(2L);
+        assertThat(body.get("otherIds.crn").asLong()).isEqualTo(3L);
+        assertThat(body.get("firstName").asLong()).isEqualTo(5L);
+        assertThat(body.get("surname").asLong()).isEqualTo(2L);
     }
 
 
 
-    public void returnsFilterUageCounts() {
+    @Test
+    public void returnsFilterUsageCounts() {
         when(analyticsStore.filterCounts(any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
                 "hasUsedMyProvidersFilterCount", 3,
                 "hasUsedOtherProvidersFilterCount", 5,

@@ -1,4 +1,4 @@
-import {FETCHING_VISIT_COUNTS, TIME_RANGE, VISIT_COUNTS, TODAY, FILTER_COUNTS} from '../actions/analytics'
+import {TIME_RANGE, TODAY, FILTER_COUNTS, UNIQUE_USER_VISITS, ALL_VISITS, ALL_SEARCHES, RANK_GROUPING, EVENT_OUTCOME, DURATION_BETWEEN_START_END_SEARCH, SEARCH_FIELD_MATCH} from '../actions/analytics'
 
 const analytics = (state = {
     uniqueUserVisits: 0,
@@ -14,29 +14,53 @@ const analytics = (state = {
     timeRange: TODAY
 }, action) => {
     switch (action.type) {
-        case VISIT_COUNTS:
-            return {
-                ...state,
-                uniqueUserVisits: action.uniqueUserVisits,
-                allVisits: action.allVisits,
-                allSearches: action.allSearches,
-                rankGrouping: action.rankGrouping,
-                eventOutcome: action.eventOutcome,
-                durationBetweenStartEndSearch: action.durationBetweenStartEndSearch,
-                searchCount: action.searchCount,
-                searchFieldMatch: action.searchFieldMatch,
-                fetching: false
-            };
-        case FETCHING_VISIT_COUNTS:
-            return {
-                ...state,
-                fetching: true
-            };
         case FILTER_COUNTS:
             return {
                 ...state,
                 filterCounts: action.filterCounts
-            };
+            }
+
+        case UNIQUE_USER_VISITS:
+            return {
+                ...state,
+                uniqueUserVisits: action.uniqueUserVisits
+            }
+
+        case ALL_VISITS:
+            return {
+                ...state,
+                allVisits: action.allVisits
+            }
+
+        case ALL_SEARCHES:
+            return {
+                ...state,
+                allSearches: action.allSearches
+            }
+
+        case RANK_GROUPING:
+            return {
+                ...state,
+                rankGrouping: action.rankGrouping
+            }
+
+        case EVENT_OUTCOME:
+            return {
+                ...state,
+                eventOutcome: action.eventOutcome
+            }
+
+        case DURATION_BETWEEN_START_END_SEARCH:
+            return {
+                ...state,
+                durationBetweenStartEndSearch: action.durationBetweenStartEndSearch
+            }
+
+        case SEARCH_FIELD_MATCH:
+            return {
+                ...state,
+                searchFieldMatch: action.searchFieldMatch
+            }
 
         case TIME_RANGE:
             return {

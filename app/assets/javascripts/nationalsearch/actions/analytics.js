@@ -1,9 +1,14 @@
 import moment from 'moment'
 
-export const VISIT_COUNTS = 'VISIT_COUNTS'
 export const FILTER_COUNTS = 'FILTER_COUNTS'
-export const FETCHING_VISIT_COUNTS = 'FETCHING_VISIT_COUNTS'
 export const TIME_RANGE = 'TIME_RANGE'
+export const UNIQUE_USER_VISITS = 'UNIQUE_USER_VISITS'
+export const ALL_VISITS = 'ALL_VISITS'
+export const ALL_SEARCHES = 'ALL_SEARCHES'
+export const RANK_GROUPING = 'RANK_GROUPING'
+export const EVENT_OUTCOME = 'EVENT_OUTCOME'
+export const DURATION_BETWEEN_START_END_SEARCH = 'DURATION_BETWEEN_START_END_SEARCH'
+export const SEARCH_FIELD_MATCH = 'SEARCH_FIELD_MATCH'
 
 export const LAST_HOUR = 'LAST_HOUR';
 export const TODAY = 'TODAY';
@@ -13,16 +18,38 @@ export const LAST_THIRTY_DAYS = 'LAST_THIRTY_DAYS';
 export const THIS_YEAR = 'THIS_YEAR';
 export const ALL = 'ALL';
 
-export const visitCounts = data => ({type: VISIT_COUNTS, ...data})
 export const filterCounts = data => ({type: FILTER_COUNTS, filterCounts: {...data}})
+export const uniqueUserVisits = data => ({type: UNIQUE_USER_VISITS, uniqueUserVisits: data})
+export const allVisits = data => ({type: ALL_VISITS, allVisits: data})
+export const allSearches = data => ({type: ALL_SEARCHES, allSearches: data})
+export const rankGrouping = data => ({type: RANK_GROUPING, rankGrouping: {...data}})
+export const eventOutcome = data => ({type: EVENT_OUTCOME, eventOutcome: {...data}})
+export const durationBetweenStartEndSearch = data => ({type: DURATION_BETWEEN_START_END_SEARCH, durationBetweenStartEndSearch: {...data}})
+export const searchFieldMatch = data => ({type: SEARCH_FIELD_MATCH, searchFieldMatch: {...data}})
 export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
-export const fetchingVisitCounts = () => ({type: FETCHING_VISIT_COUNTS})
 
 const fetchVisitCounts = timeRange => (
     dispatch => {
-        dispatch(fetchingVisitCounts())
-        $.getJSON(`analytics/visitCounts${timeRangeToDateParameters(timeRange)}`, data => {
-            dispatch(visitCounts(data))
+        $.getJSON(`analytics/uniqueUserVisits${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(uniqueUserVisits(data))
+        });
+        $.getJSON(`analytics/allVisits${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(allVisits(data))
+        });
+        $.getJSON(`analytics/allSearches${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(allSearches(data))
+        });
+        $.getJSON(`analytics/rankGrouping${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(rankGrouping(data))
+        });
+        $.getJSON(`analytics/eventOutcome${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(eventOutcome(data))
+        });
+        $.getJSON(`analytics/durationBetweenStartEndSearch${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(durationBetweenStartEndSearch(data))
+        });
+        $.getJSON(`analytics/searchFieldMatch${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(searchFieldMatch(data))
         });
         $.getJSON(`analytics/filterCounts${timeRangeToDateParameters(timeRange)}`, data => {
             dispatch(filterCounts(data))
