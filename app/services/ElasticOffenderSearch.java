@@ -118,7 +118,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                                             .map(addDescription(probationAreaDescriptions))
                                             .collect(toList()))
                                     .map(Json::toJson)
-                                    .orElse(Json.newArray()))),
+                                    .orElseGet(Json::newArray))),
 
                     (result, aggregations) -> ImmutableMap
                             .<String, Object>builder()
@@ -126,8 +126,10 @@ public class ElasticOffenderSearch implements OffenderSearch {
                             .put("aggregations", aggregations).build());
         };
 
-        val request = new SearchRequest("offender").source(searchSourceFor(searchTerm, probationAreasFilter, pageSize, pageNumber));
         val listener = new FutureListener<SearchResponse>();
+        val request = new SearchRequest("offender").preference(bearerToken).source(
+                searchSourceFor(searchTerm, probationAreasFilter, pageSize, pageNumber)
+        );
 
         elasticSearchClient.searchAsync(request, listener);
 
@@ -190,9 +192,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
     private JsonNode offenderManagers(ObjectNode rootNode) {
 
-        return Optional.ofNullable(rootNode.get("offenderManagers"))
-            .map(offenderManagers -> offenderManagers)
-            .orElse(Json.newArray());
+        return Optional.ofNullable(rootNode.get("offenderManagers")).orElseGet(Json::newArray);
     }
 
     private void logResults(SearchResponse response) {
