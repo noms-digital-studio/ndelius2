@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.FutureListener;
+import helpers.JwtHelper;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
@@ -30,6 +31,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static helpers.FluentHelper.not;
 import static helpers.JsonHelper.toBoolean;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
@@ -39,6 +41,7 @@ import static services.helpers.SearchQueryBuilder.searchSourceFor;
 
 public class ElasticOffenderSearch implements OffenderSearch {
 
+    private static final String CENTRAL_TEAM_CODE = "N40";
     private final OffenderApi offenderApi;
     private final RestHighLevelClient elasticSearchClient;
     private final Function<String, String> encrypter;
@@ -115,6 +118,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
                                     .map(this::extractProbationAreaCodeToCountMap)
                                     .map(probationAreas -> probationAreas
                                             .stream()
+                                            .filter(not(probationArea -> isCentralProjectsTeam(probationArea) && doesNotHaveCentralProjectsTeamInProfile(bearerToken)))
                                             .map(addDescription(probationAreaDescriptions))
                                             .collect(toList()))
                                     .map(Json::toJson)
@@ -134,6 +138,14 @@ public class ElasticOffenderSearch implements OffenderSearch {
         elasticSearchClient.searchAsync(request, listener);
 
         return listener.stage().thenComposeAsync(processResponse);
+    }
+
+    private boolean doesNotHaveCentralProjectsTeamInProfile(String bearerToken) {
+        return !JwtHelper.probationAreaCodes(bearerToken).contains(CENTRAL_TEAM_CODE);
+    }
+
+    private boolean isCentralProjectsTeam(Map<String, Object> probationArea) {
+        return probationArea.get("code").equals(CENTRAL_TEAM_CODE);
     }
 
     private Function<Map<String, Object>, Map<Object, Object>> addDescription(Map<String, String> probationAreaDescriptions) {

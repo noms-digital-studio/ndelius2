@@ -20,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Environment;
 import play.Mode;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -50,7 +51,8 @@ public class ElasticOffenderSearchIntegrationTest {
         when(offenderApi.probationAreaDescriptions(Mockito.any(), Mockito.any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
                 "N01", "N01 Area",
                 "N02", "N02 Area",
-                "N03", "N03 Area"
+                "N03", "N03 Area",
+                "N40", "N40 Area"
         )));
     }
 
@@ -95,6 +97,89 @@ public class ElasticOffenderSearchIntegrationTest {
 
         assertThat(byProbationAreas.get(2).get("code").asText()).isEqualTo("N03");
         assertThat(byProbationAreas.get(2).get("description").asText()).isEqualTo("N03 Area");
+        assertThat(byProbationAreas.get(2).get("count").asInt()).isEqualTo(1);
+    }
+
+    @Test
+    public void centralTeamIsFilteredFromProbationAreaAggregations() {
+
+        /*
+        /elasticsearchdata/multipleMatches.json has aggregation as:
+        "buckets": [
+                {
+                  "key": "N02",
+                  "doc_count": 2
+                },
+                {
+                  "key": "N01",
+                  "doc_count": 1
+                },
+                {
+                  "key": "N40",
+                  "doc_count": 1
+                }
+              ]
+         */
+        val response = fromInputStream(new Environment(Mode.TEST).resourceAsStream("/elasticsearchdata/multipleMatchesWithN40.json"), "UTF-8").mkString();
+        wireMock.stubFor(
+            get(anyUrl())
+                .willReturn(
+                    okForContentType("application/json",  response)));
+
+        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0).toCompletableFuture().join();
+        val byProbationAreas = byProbationAreasAggregationNodes(result);
+
+        assertThat(byProbationAreas.size()).isEqualTo(2);
+
+        assertThat(byProbationAreas.get(0).get("code").asText()).isEqualTo("N02");
+        assertThat(byProbationAreas.get(0).get("description").asText()).isEqualTo("N02 Area");
+        assertThat(byProbationAreas.get(0).get("count").asInt()).isEqualTo(2);
+
+        assertThat(byProbationAreas.get(1).get("code").asText()).isEqualTo("N01");
+        assertThat(byProbationAreas.get(1).get("description").asText()).isEqualTo("N01 Area");
+        assertThat(byProbationAreas.get(1).get("count").asInt()).isEqualTo(1);
+    }
+    @Test
+    public void centralTeamIsNotFilteredFromProbationAreaAggregationsWhenInProfile() {
+
+        /*
+        /elasticsearchdata/multipleMatches.json has aggregation as:
+        "buckets": [
+                {
+                  "key": "N02",
+                  "doc_count": 2
+                },
+                {
+                  "key": "N01",
+                  "doc_count": 1
+                },
+                {
+                  "key": "N40",
+                  "doc_count": 1
+                }
+              ]
+         */
+        val response = fromInputStream(new Environment(Mode.TEST).resourceAsStream("/elasticsearchdata/multipleMatchesWithN40.json"), "UTF-8").mkString();
+        wireMock.stubFor(
+            get(anyUrl())
+                .willReturn(
+                    okForContentType("application/json",  response)));
+
+        val result = elasticOffenderSearch.search(JwtHelperTest.generateTokenWithProbationAreaCodes(Arrays.asList("N01", "N40")), emptyList(), "john smith", 10, 0).toCompletableFuture().join();
+        val byProbationAreas = byProbationAreasAggregationNodes(result);
+
+        assertThat(byProbationAreas.size()).isEqualTo(3);
+
+        assertThat(byProbationAreas.get(0).get("code").asText()).isEqualTo("N02");
+        assertThat(byProbationAreas.get(0).get("description").asText()).isEqualTo("N02 Area");
+        assertThat(byProbationAreas.get(0).get("count").asInt()).isEqualTo(2);
+
+        assertThat(byProbationAreas.get(1).get("code").asText()).isEqualTo("N01");
+        assertThat(byProbationAreas.get(1).get("description").asText()).isEqualTo("N01 Area");
+        assertThat(byProbationAreas.get(1).get("count").asInt()).isEqualTo(1);
+
+        assertThat(byProbationAreas.get(2).get("code").asText()).isEqualTo("N40");
+        assertThat(byProbationAreas.get(2).get("description").asText()).isEqualTo("N40 Area");
         assertThat(byProbationAreas.get(2).get("count").asInt()).isEqualTo(1);
     }
 
