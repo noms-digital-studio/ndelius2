@@ -1,0 +1,37 @@
+[
+  {
+    "$match":
+    {
+      "type": { "$eq": "search-feedback"}
+    }
+  },
+  {
+    "$group":
+    {
+      "_id": { "week": { "$week": "$dateTime"}, "year": { "$year": "$dateTime" }, "rating": "$feedback.rating"},
+      "count": { "$sum": 1}
+    }
+  },
+  {
+    "$project": {
+      "rating": "$_id.rating",
+      "weeklyCounts": {  "yearAndWeek": { "$concat": [
+        { "$substr": [ "$_id.year", 0, 4 ] },
+        "-",
+        { "$substr": [ "$_id.week", 0, 2 ] }
+      ]}, "count": "$count" },
+
+      "_id": 0
+    }
+  },
+  {
+    "$group": {
+      "_id": "$rating",
+      "weeklyCounts": {
+        "$push": "$weeklyCounts"
+      }
+    }
+  }
+]
+
+

@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import play.mvc.Controller;
@@ -59,6 +60,11 @@ public class NationalSearchAnalyticsController extends Controller {
 
     public CompletionStage<Result> searchFieldMatch(String from) {
         return analyticsStore.countGroupingArray("search-offender-details", "fieldMatch", fromDateTime(from)).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> satisfaction() {
+        return analyticsStore.weeklySatisfactionScores()
+            .thenApply(data -> JsonHelper.okJson(ImmutableMap.of("satisfactionCounts", data)));
     }
 
     private LocalDateTime fromDateTime(String from) {

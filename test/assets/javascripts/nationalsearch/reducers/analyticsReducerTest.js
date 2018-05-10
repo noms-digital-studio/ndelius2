@@ -1,4 +1,4 @@
-import {FILTER_COUNTS, TIME_RANGE, TODAY, UNIQUE_USER_VISITS, ALL_VISITS, ALL_SEARCHES, RANK_GROUPING, EVENT_OUTCOME, DURATION_BETWEEN_START_END_SEARCH, SEARCH_FIELD_MATCH} from '../actions/analytics'
+import {FILTER_COUNTS, TIME_RANGE, TODAY, UNIQUE_USER_VISITS, ALL_VISITS, ALL_SEARCHES, RANK_GROUPING, EVENT_OUTCOME, DURATION_BETWEEN_START_END_SEARCH, SEARCH_FIELD_MATCH, SATISFACTION_COUNTS, CHANGE_YEAR} from '../actions/analytics'
 import analytics  from './analylticsReducer'
 import {expect} from 'chai';
 
@@ -37,6 +37,12 @@ describe("analyticsReducer", () => {
         });
         it('filterCounts is set to empty object', () => {
             expect(state.filterCounts).to.eql({})
+        })
+        it('satisfactionCounts is set to empty object', () => {
+            expect(state.satisfactionCounts).to.eql({})
+        })
+        it('yearNumber starts off at current year', () => {
+            expect(state.yearNumber).to.equal(String(new Date().getFullYear()))
         })
     })
     describe("when UNIQUE_USER_VISITS action received", () => {
@@ -181,6 +187,28 @@ describe("analyticsReducer", () => {
 
         it('updates timeRange', () => {
             expect(state.timeRange).to.equal('LAST_SEVEN_DAYS')
+        });
+    })
+    describe("when SATISFACTION_COUNTS action received", () => {
+        beforeEach(() => {
+            state = analytics({}, {
+                type: SATISFACTION_COUNTS,
+                satisfactionCounts: {foo: 'bar'}
+            })
+        })
+        it('satisfactionCounts is set', () => {
+            expect(state.satisfactionCounts).to.eql({foo: 'bar'})
+        });
+    })
+    describe("when SATISFACTION_COUNTS action received", () => {
+        beforeEach(() => {
+            state = analytics({}, {
+                type: CHANGE_YEAR,
+                yearNumber: '2019'
+            })
+        })
+        it('satisfactionCounts is set', () => {
+            expect(state.yearNumber).to.equal('2019')
         });
     })
 })

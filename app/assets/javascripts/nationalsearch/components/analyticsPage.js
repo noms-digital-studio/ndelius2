@@ -12,6 +12,7 @@ import SearchFieldMatchChart from '../containers/searchFieldMatchChartContainer'
 import GovUkPhaseBanner from './govukPhaseBanner';
 import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router'
 
 class AnalyticsPage extends Component {
     constructor(props) {
@@ -71,6 +72,7 @@ const NavigationPanel = () => (
                 <TimeRangeLink timeRange={LAST_THIRTY_DAYS}>Last 30 days</TimeRangeLink><br/>
                 <TimeRangeLink timeRange={THIS_YEAR}>This year</TimeRangeLink><br/>
                 <TimeRangeLink timeRange={ALL}>All time</TimeRangeLink><br/>
+                <Link to ='/satisfaction' >Satisfaction counts</Link>
             </nav>
         )
 

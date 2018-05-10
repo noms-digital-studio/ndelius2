@@ -11,24 +11,23 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.Helpers;
 import play.test.WithApplication;
-import utils.AnalyticsStoreMock;
 import utils.DocumentStoreMock;
 import utils.PdfGeneratorMock;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 
-public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGeneratorMock, DocumentStoreMock, AnalyticsStoreMock {
+public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGeneratorMock, DocumentStoreMock {
 
     @Test
     public void getSampleReportOK() {
@@ -956,7 +955,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 overrides(
                         bind(PdfGenerator.class).toInstance(this),
                         bind(DocumentStore.class).toInstance(this),
-                        bind(AnalyticsStore.class).toInstance(this)
+                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
                 )
                 .build();
     }
@@ -966,8 +965,4 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         throw new RuntimeException("Not yet implemented");
     }
 
-    @Override
-    public CompletableFuture<Boolean> isUp() {
-        throw new RuntimeException("Not yet implemented");
-    }
 }

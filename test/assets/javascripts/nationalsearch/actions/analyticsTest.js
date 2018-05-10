@@ -1,5 +1,7 @@
-import {fetchVisitCounts, timeRangeToISODateTime,
-    ALL, LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR} from './analytics'
+import {
+    fetchVisitCounts, timeRangeToISODateTime, fetchSatisfactionCounts, changeYear,
+    ALL, LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR
+} from './analytics'
 import {expect} from 'chai';
 import {stub} from 'sinon';
 import moment from 'moment'
@@ -186,3 +188,53 @@ describe('fetchVisitCounts action', () => {
 
 })
 
+describe('fetchSatisfactionCounts action', () => {
+    let dispatch;
+
+    beforeEach(() => {
+        dispatch = stub()
+        global.$ = {
+            getJSON: stub()
+        }
+    })
+
+    describe('on fetch satisfaction counts', () => {
+        beforeEach(() => {
+            global.$.getJSON.yields(
+                {
+                    "satisfactionCounts": {
+                        "Very satisfied": [],
+                        "Satisfied": [],
+                        "Very dissatisfied": [],
+                        "Dissatisfied": [],
+                        "Neither satisfied or dissatisfied": []
+                    }
+                }
+            );
+            fetchSatisfactionCounts()(dispatch)
+        });
+
+        it ('calls endpoint', () => {
+            expect(global.$.getJSON).to.be.calledWith(`analytics/satisfaction`)
+        });
+
+        it ('dispatches SATISFACTION_COUNTS with count data', () => {
+            expect(dispatch).to.be.calledWith({type: 'SATISFACTION_COUNTS',
+                "satisfactionCounts": {
+                "Very satisfied": [],
+                    "Satisfied": [],
+                    "Very dissatisfied": [],
+                    "Dissatisfied": [],
+                    "Neither satisfied or dissatisfied": []}
+            })
+        });
+    })
+
+    describe('change year', () => {
+        it('dispatches CHANGE_YEAR with year number', () => {
+            changeYear('2019')(dispatch);
+            expect(dispatch).to.be.calledWith({ type: "CHANGE_YEAR", yearNumber: "2019" });
+        })
+    })
+
+})

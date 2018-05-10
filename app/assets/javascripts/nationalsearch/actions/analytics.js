@@ -1,6 +1,7 @@
 import moment from 'moment'
 
 export const FILTER_COUNTS = 'FILTER_COUNTS'
+export const SATISFACTION_COUNTS = 'SATISFACTION_COUNTS'
 export const TIME_RANGE = 'TIME_RANGE'
 export const UNIQUE_USER_VISITS = 'UNIQUE_USER_VISITS'
 export const ALL_VISITS = 'ALL_VISITS'
@@ -9,6 +10,7 @@ export const RANK_GROUPING = 'RANK_GROUPING'
 export const EVENT_OUTCOME = 'EVENT_OUTCOME'
 export const DURATION_BETWEEN_START_END_SEARCH = 'DURATION_BETWEEN_START_END_SEARCH'
 export const SEARCH_FIELD_MATCH = 'SEARCH_FIELD_MATCH'
+export const CHANGE_YEAR = 'CHANGE_YEAR'
 
 export const LAST_HOUR = 'LAST_HOUR';
 export const TODAY = 'TODAY';
@@ -26,7 +28,9 @@ export const rankGrouping = data => ({type: RANK_GROUPING, rankGrouping: {...dat
 export const eventOutcome = data => ({type: EVENT_OUTCOME, eventOutcome: {...data}})
 export const durationBetweenStartEndSearch = data => ({type: DURATION_BETWEEN_START_END_SEARCH, durationBetweenStartEndSearch: {...data}})
 export const searchFieldMatch = data => ({type: SEARCH_FIELD_MATCH, searchFieldMatch: {...data}})
+export const satisfactionCounts = data => ({type: SATISFACTION_COUNTS, ...data})
 export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
+export const changingYear = yearNumber => ({type: CHANGE_YEAR, yearNumber})
 
 const fetchVisitCounts = timeRange => (
     dispatch => {
@@ -58,11 +62,24 @@ const fetchVisitCounts = timeRange => (
     }
 )
 
+const fetchSatisfactionCounts = () => (
+    dispatch => {
+        $.getJSON(`analytics/satisfaction`, data => {
+            dispatch(satisfactionCounts(data))
+        });
+    }
+)
+
 const timeRangeToDateParameters = timeRange => {
     const from = timeRangeToISODateTime(moment().utc(), timeRange);
 
     return from ? `?from=${from}` : ''
 }
+
+const changeYear = (year) => (
+    dispatch => dispatch(changingYear(year))
+)
+
 const timeRangeToISODateTime = (now, timeRange) => {
     switch (timeRange) {
         case LAST_HOUR:
@@ -85,3 +102,5 @@ const timeRangeToISODateTime = (now, timeRange) => {
 
 export {timeRangeToISODateTime}  // for testing
 export {fetchVisitCounts}
+export {fetchSatisfactionCounts}
+export {changeYear}

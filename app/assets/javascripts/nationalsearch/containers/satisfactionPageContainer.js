@@ -1,0 +1,16 @@
+import { connect } from 'react-redux'
+import { fetchSatisfactionCounts } from '../actions/analytics'
+import { changeYear } from '../actions/analytics'
+import satisfactionPage from '../components/satisfactionPage'
+
+export default connect(
+    state => ({
+        currentTimeRange: state.analytics.timeRange,
+        satisfactionCounts: state.analytics.satisfactionCounts,
+        yearNumber: state.analytics.yearNumber
+    }),
+    dispatch => ({
+        fetchSatisfactionCounts: () => dispatch(fetchSatisfactionCounts()),
+        changeYear: yearNumber => dispatch(changeYear(yearNumber))
+    }),
+)(satisfactionPage)

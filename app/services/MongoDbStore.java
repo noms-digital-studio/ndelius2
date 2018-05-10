@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.*;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toMap;
 
 public class MongoDbStore implements AnalyticsStore {
 
@@ -68,7 +69,7 @@ public class MongoDbStore implements AnalyticsStore {
                 sort(new Document("$natural", -1)).
                 limit(limit).
                 toObservable().
-                map(document -> document.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> {
+                map(document -> document.entrySet().stream().collect(toMap(Map.Entry::getKey, entry -> {
 
                     val value = entry.getValue();
 
@@ -120,10 +121,113 @@ public class MongoDbStore implements AnalyticsStore {
                 toObservable().
                 toList().
                 map(documents -> documents.stream().collect(
-                        Collectors.toMap(doc -> doc.getInteger("_id"), doc -> doc.getLong("total")))
+                        toMap(doc -> doc.getInteger("_id"), doc -> doc.getLong("total")))
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Map<String, Object>> weeklySatisfactionScores() {
+
+        val result = new CompletableFuture<Map<String, Object>>();
+
+        /*
+        $match:
+	     {
+		 type: { $eq: "search-feedback"}
+		 }
+         */
+        val match = _match( _eq("type", "search-feedback"));
+
+        /*
+            "$group": {
+              "_id": {
+                "week": {
+                  "$week": "$dateTime"
+                },
+                "year": {
+                  "$year": "$dateTime"
+                },
+                "rating": "$feedback.rating"
+              },
+              "count": {
+                "$sum": 1
+              }
+            }
+	     */
+        val group1 = new Document(ImmutableMap.of(
+            "$group", new Document(ImmutableMap.of(
+                "_id", new Document(ImmutableMap.of(
+                    "week", new Document(ImmutableMap.of("$week", "$dateTime")),
+                    "year", new Document(ImmutableMap.of("$year", "$dateTime")),
+                    "rating", "$feedback.rating")),
+                "count", _sum()
+            ))
+        ));
+
+        /*
+            "$project": {
+              "rating": "$_id.rating",
+              "weeklyCounts": {  "yearAndWeek": { "$concat": [
+                { "$substr": [ "$_id.year", 0, 4 ] },
+                "-",
+                { "$substr": [ "$_id.week", 0, 2 ] }
+              ]}, "count": "$count" },
+
+              "_id": 0
+            }
+        */
+        val project = new Document(ImmutableMap.of(
+            "$project", new Document(ImmutableMap.of(
+                "rating", "$_id.rating",
+                "weeklyCounts", new Document(ImmutableMap.of(
+                    "yearAndWeek", new Document(ImmutableMap.of(
+                        "$concat", asList(
+                            new Document(ImmutableMap.of("$substr", asList("$_id.year", 0, 4))),
+                            "-",
+                            new Document(ImmutableMap.of("$substr", asList("$_id.week", 0, 2)))
+                        )
+                    )),
+                    "count", "$count"
+                )),
+                "_id", 0
+            ))
+        ));
+
+        /*
+          "$group": {
+            "_id": "$rating",
+            "weeklyCounts": {
+                "$push": "$weeklyCounts"
+                }
+           }
+         */
+        val group2 = new Document(ImmutableMap.of(
+            "$group", new Document(ImmutableMap.of(
+                "_id", "$rating",
+                "weeklyCounts", new Document(ImmutableMap.of(
+                    "$push", "$weeklyCounts"
+                ))
+            ))
+        ));
+
+        val pipeline = ImmutableList.of(match, group1, project, group2);
+
+        events.aggregate(pipeline).
+            toObservable().
+            toList().
+            map(documents -> documents.stream()
+                .collect(
+                    toMap(document -> document.getString("_id"),
+                          document -> document.get("weeklyCounts")
+                    )
+                )
+            ).
+            doOnError(result::completeExceptionally).
+            subscribe(result::complete);
 
         return result;
     }
@@ -168,7 +272,7 @@ public class MongoDbStore implements AnalyticsStore {
                 toObservable().
                 toList().
                 map(documents -> documents.stream().collect(
-                        Collectors.toMap(doc -> doc.getInteger("_id"), doc -> doc.getLong("total")))
+                        toMap(doc -> doc.getInteger("_id"), doc -> doc.getLong("total")))
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
@@ -192,7 +296,7 @@ public class MongoDbStore implements AnalyticsStore {
                 toObservable().
                 toList().
                 map(documents -> documents.stream().collect(
-                        Collectors.toMap(doc -> doc.getString("_id"), doc -> doc.getLong("total")))
+                        toMap(doc -> doc.getString("_id"), doc -> doc.getLong("total")))
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
@@ -247,7 +351,7 @@ public class MongoDbStore implements AnalyticsStore {
                 toObservable().
                 toList().
                 map(documents -> documents.stream().collect(
-                        Collectors.toMap(doc -> doc.getDouble("_id").longValue(), doc -> doc.getLong("total"), firstDuplicate(), LinkedHashMap::new))
+                        toMap(doc -> doc.getDouble("_id").longValue(), doc -> doc.getLong("total"), firstDuplicate(), LinkedHashMap::new))
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
@@ -277,7 +381,7 @@ public class MongoDbStore implements AnalyticsStore {
                 toObservable().
                 toList().
                 map(documents -> documents.stream().collect(
-                        Collectors.toMap(doc -> doc.getString("_id"), doc -> doc.getLong("total")))
+                        toMap(doc -> doc.getString("_id"), doc -> doc.getLong("total")))
                 ).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
@@ -306,7 +410,7 @@ public class MongoDbStore implements AnalyticsStore {
                 sort(new Document("$natural", -1)).
                 limit(1000).
                 toObservable().
-                map(document -> document.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))).
+                map(document -> document.entrySet().stream().collect(toMap(Map.Entry::getKey, Map.Entry::getValue))).
                 toList().
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
@@ -329,7 +433,7 @@ public class MongoDbStore implements AnalyticsStore {
                 sort(new Document("$natural", -1)).
                 limit(1000).
                 toObservable().
-                map(document -> document.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))).
+                map(document -> document.entrySet().stream().collect(toMap(Map.Entry::getKey, Map.Entry::getValue))).
                 toList().
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);

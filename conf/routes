@@ -23,6 +23,8 @@ GET     /nationalSearch/analytics/rankGrouping                      controllers.
 GET     /nationalSearch/analytics/durationBetweenStartEndSearch     controllers.NationalSearchAnalyticsController.durationBetweenStartEndSearch(from: String ?= null)
 GET     /nationalSearch/analytics/eventOutcome                      controllers.NationalSearchAnalyticsController.eventOutcome(from: String ?= null)
 GET     /nationalSearch/analytics/searchFieldMatch                  controllers.NationalSearchAnalyticsController.searchFieldMatch(from: String ?= null)
+GET     /nationalSearch/satisfaction                controllers.FeedbackController.viewSatisfaction
+GET     /nationalSearch/analytics/satisfaction      controllers.NationalSearchAnalyticsController.satisfaction
 GET     /feedback                                   controllers.FeedbackController.viewNationalSearchFeedback
 GET     /feedback/nationalSearch                    controllers.FeedbackController.viewNationalSearchFeedback
 GET     /feedback/sfpsr                             controllers.FeedbackController.viewSfpsrFeedback
@@ -32,7 +34,7 @@ GET     /offender/oneTimeNomisRef/:reference/image  controllers.OffenderControll
 GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
 POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost
 POST    /report/shortFormatPreSentenceReport/save   controllers.ShortFormatPreSentenceReportController.reportPost
-GET     /report/shortFormatPreSentenceReport/get        controllers.ShortFormatPreSentenceReportController.getPdf(documentId: String, onBehalfOfUser: String)
+GET     /report/shortFormatPreSentenceReport/get    controllers.ShortFormatPreSentenceReportController.getPdf(documentId: String, onBehalfOfUser: String)
 
 POST    /report/shortFormatPreSentenceReport/feedback   controllers.ShortFormatPreSentenceReportController.feedbackPost
 

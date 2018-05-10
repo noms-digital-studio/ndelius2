@@ -19,9 +19,11 @@ describe('AnalyticsPage component', () => {
             const fetchVisitCounts = stub()
             const page = shallow(<AnalyticsPage fetchVisitCounts={fetchVisitCounts}  currentTimeRange={THIS_YEAR}/>)
 
+            fetchVisitCounts.reset()
+
             page.setProps({currentTimeRange: THIS_WEEK})
 
-            expect(fetchVisitCounts).to.be.calledTwice
+            expect(fetchVisitCounts).to.be.calledOnce
         })
     })
 
@@ -30,9 +32,11 @@ describe('AnalyticsPage component', () => {
             const fetchVisitCounts = stub()
             const page = shallow(<AnalyticsPage fetchVisitCounts={fetchVisitCounts} currentTimeRange={THIS_YEAR}/>)
 
+            fetchVisitCounts.reset()
+
             page.find({type: 'button'}).simulate('click')
 
-            expect(fetchVisitCounts).to.be.calledTwice
+            expect(fetchVisitCounts).to.be.calledOnce
         })
     })
 

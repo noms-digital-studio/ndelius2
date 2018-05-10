@@ -1,6 +1,5 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import lombok.val;
@@ -20,14 +19,15 @@ import play.test.WithApplication;
 import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NationalSearchAnalyticsControllerTest extends WithApplication {
@@ -83,7 +83,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
         val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/uniqueUserVisits"));
 
-        final JsonNode body = Json.parse(contentAsString(result));
+        val body = Json.parse(contentAsString(result));
         assertThat(body.asLong()).isEqualTo(13);
     }
 
@@ -93,7 +93,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
         val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/allVisits"));
 
-        final JsonNode body = Json.parse(contentAsString(result));
+        val body = Json.parse(contentAsString(result));
         assertThat(body.asLong()).isEqualTo(14);
     }
 
@@ -103,7 +103,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
         val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/allSearches"));
 
-        final JsonNode body = Json.parse(contentAsString(result));
+        val body = Json.parse(contentAsString(result));
         assertThat(body.asLong()).isEqualTo(15);
     }
 
@@ -117,7 +117,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
         val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/rankGrouping"));
 
-        final JsonNode body = Json.parse(contentAsString(result));
+        val body = Json.parse(contentAsString(result));
         assertThat(body.get("1").asLong()).isEqualTo(1000L);
         assertThat(body.get("2").asLong()).isEqualTo(200L);
         assertThat(body.get("3").asLong()).isEqualTo(30L);
@@ -134,7 +134,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
         val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/eventOutcome"));
 
-        final JsonNode body = Json.parse(contentAsString(result));
+        val body = Json.parse(contentAsString(result));
         assertThat(body.get("search-index").asLong()).isEqualTo(1L);
         assertThat(body.get("search-request").asLong()).isEqualTo(10L);
         assertThat(body.get("search-offender-details").asLong()).isEqualTo(100L);
@@ -151,7 +151,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
         val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/durationBetweenStartEndSearch"));
 
-        final JsonNode body = Json.parse(contentAsString(result));
+        val body = Json.parse(contentAsString(result));
         assertThat(body.get("1").asLong()).isEqualTo(10L);
         assertThat(body.get("2").asLong()).isEqualTo(5L);
         assertThat(body.get("3").asLong()).isEqualTo(1L);
@@ -167,7 +167,7 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
         val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/searchFieldMatch"));
 
-        final JsonNode body = Json.parse(contentAsString(result));
+        val body = Json.parse(contentAsString(result));
         assertThat(body.get("otherIds.crn").asLong()).isEqualTo(3L);
         assertThat(body.get("firstName").asLong()).isEqualTo(5L);
         assertThat(body.get("surname").asLong()).isEqualTo(2L);
@@ -186,13 +186,26 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
 
         val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/filterCounts"));
 
-        final JsonNode body = Json.parse(contentAsString(result));
+        val body = Json.parse(contentAsString(result));
         assertThat(body.get("hasUsedMyProvidersFilterCount").asLong()).isEqualTo(3);
         assertThat(body.get("hasUsedOtherProvidersFilterCount").asLong()).isEqualTo(5);
         assertThat(body.get("hasUsedBothProvidersFilterCount").asLong()).isEqualTo(2);
         assertThat(body.get("hasNotUsedFilterCount").asLong()).isEqualTo(2);
     }
 
+    @Test
+    public void returnsWeeklySatisfactionScores() {
+        when(analyticsStore.weeklySatisfactionScores()).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+            "foo", 1,
+            "bar", 2
+        )));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/satisfaction"));
+
+        val body = Json.parse(contentAsString(result));
+        assertThat(body.get("satisfactionCounts").get("foo").asLong()).isEqualTo(1);
+        assertThat(body.get("satisfactionCounts").get("bar").asLong()).isEqualTo(2);
+    }
 
     @Override
     protected Application provideApplication() {

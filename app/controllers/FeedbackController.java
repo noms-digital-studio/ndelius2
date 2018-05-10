@@ -23,14 +23,21 @@ public class FeedbackController extends Controller {
 
     private final AnalyticsStore analyticsStore;
     private final views.html.viewNationalSearchFeedback viewNationalSearchFeedbackTemplate;
+    private final views.html.viewSatisfactionTemplate viewSatisfactionTemplate;
     private final views.html.viewSfpsrFeedback viewSfpsrFeedbackTemplate;
     private final HttpExecutionContext ec;
     private final Config configuration;
 
     @Inject
-    public FeedbackController(AnalyticsStore analyticsStore, views.html.viewNationalSearchFeedback viewNationalSearchFeedbackTemplate, views.html.viewSfpsrFeedback viewSfpsrFeedbackTemplate, HttpExecutionContext ec, Config configuration) {
+    public FeedbackController(AnalyticsStore analyticsStore,
+                              views.html.viewNationalSearchFeedback viewNationalSearchFeedbackTemplate,
+                              views.html.viewSatisfactionTemplate viewSatisfactionTemplate,
+                              views.html.viewSfpsrFeedback viewSfpsrFeedbackTemplate,
+                              HttpExecutionContext ec, Config configuration) {
+
         this.analyticsStore = analyticsStore;
         this.viewNationalSearchFeedbackTemplate = viewNationalSearchFeedbackTemplate;
+        this.viewSatisfactionTemplate = viewSatisfactionTemplate;
         this.viewSfpsrFeedbackTemplate = viewSfpsrFeedbackTemplate;
         this.ec = ec;
         this.configuration = configuration;
@@ -38,6 +45,10 @@ public class FeedbackController extends Controller {
 
     public CompletionStage<Result> viewNationalSearchFeedback() {
         return authorizedRender(this::renderNationalSearchFeedbackPage);
+    }
+
+    public CompletionStage<Result> viewSatisfaction() {
+        return authorizedRender(this::renderSatisfactionPage);
     }
 
     public CompletionStage<Result> viewSfpsrFeedback() {
@@ -57,6 +68,10 @@ public class FeedbackController extends Controller {
         return analyticsStore.nationalSearchFeedback()
                 .thenApplyAsync(feedback -> ok(viewNationalSearchFeedbackTemplate.render(
                         feedback, String.format(configuration.getString("ldap.string.format"), "(.*)"))), ec.current());
+    }
+
+    private CompletionStage<Result> renderSatisfactionPage() {
+        return CompletableFuture.completedFuture(ok(viewSatisfactionTemplate.render()));
     }
 
     private CompletionStage<Result> renderSfpsrFeedbackPage() {
