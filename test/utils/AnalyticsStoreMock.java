@@ -52,5 +52,9 @@ public interface AnalyticsStoreMock extends AnalyticsStore {
     default CompletableFuture<Map<String, Integer>> filterCounts(LocalDateTime localDateTime) {
         return null;
     }
+    default CompletableFuture<Map<String, Long>> userAgentTypeCounts(String eventType, LocalDateTime from) {
+        return null;
+    }
+
 
 }

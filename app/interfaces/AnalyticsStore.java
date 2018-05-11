@@ -34,4 +34,6 @@ public interface AnalyticsStore {
     CompletableFuture<Map<String, Integer>> filterCounts(LocalDateTime localDateTime);
 
     CompletableFuture<Map<String, Object>> weeklySatisfactionScores();
+
+    CompletableFuture<Map<String, Long>> userAgentTypeCounts(String eventType, LocalDateTime from);
 }

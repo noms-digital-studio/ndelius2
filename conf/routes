@@ -23,6 +23,7 @@ GET     /nationalSearch/analytics/rankGrouping                      controllers.
 GET     /nationalSearch/analytics/durationBetweenStartEndSearch     controllers.NationalSearchAnalyticsController.durationBetweenStartEndSearch(from: String ?= null)
 GET     /nationalSearch/analytics/eventOutcome                      controllers.NationalSearchAnalyticsController.eventOutcome(from: String ?= null)
 GET     /nationalSearch/analytics/searchFieldMatch                  controllers.NationalSearchAnalyticsController.searchFieldMatch(from: String ?= null)
+GET     /nationalSearch/analytics/userAgentTypeCounts               controllers.NationalSearchAnalyticsController.userAgentTypeCounts(from: String ?= null)
 GET     /nationalSearch/satisfaction                controllers.FeedbackController.viewSatisfaction
 GET     /nationalSearch/analytics/satisfaction      controllers.NationalSearchAnalyticsController.satisfaction
 GET     /feedback                                   controllers.FeedbackController.viewNationalSearchFeedback

@@ -74,6 +74,9 @@ describe('AnalyticsPage component', () => {
         it('displays search field match', () => {
             expect(page.find({description: 'Top field matches'}).exists()).to.be.true
         })
+        it('displays browser user agent counts', () => {
+            expect(page.find({description: 'Browser types'}).exists()).to.be.true
+        })
     })
 })
 

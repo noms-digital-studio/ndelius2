@@ -9,6 +9,7 @@ import SearchOutcomeChart from '../containers/searchOutcomeChartContainer';
 import DurationBetweenStartEndSearchChart from '../containers/durationBetweenStartEndSearchChartContainer';
 import FilterCountsChart from '../containers/filterCountsChartContainer';
 import SearchFieldMatchChart from '../containers/searchFieldMatchChartContainer';
+import UserAgentTypeChart from '../containers/userAgentTypeChartContainer';
 import GovUkPhaseBanner from './govukPhaseBanner';
 import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
 import PropTypes from 'prop-types'
@@ -46,6 +47,7 @@ class AnalyticsPage extends Component {
                         <DurationBetweenStartEndSearchChart description='Duration to find offender' label='From search to clicking offender' xAxesLabel='Up to minutes' />
                         <SearchFieldMatchChart description='Top field matches' label='Search term'/>
                         <FilterCountsChart description='Final search in session filter' label='Filter usage'/>
+                        <UserAgentTypeChart description='Browser types' label='Browser'/>
                     </div>
                     <div className="column-one-third">
                         <NavigationPanel/>

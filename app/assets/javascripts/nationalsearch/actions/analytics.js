@@ -10,6 +10,7 @@ export const RANK_GROUPING = 'RANK_GROUPING'
 export const EVENT_OUTCOME = 'EVENT_OUTCOME'
 export const DURATION_BETWEEN_START_END_SEARCH = 'DURATION_BETWEEN_START_END_SEARCH'
 export const SEARCH_FIELD_MATCH = 'SEARCH_FIELD_MATCH'
+export const USER_AGENT_TYPE_COUNTS = 'USER_AGENT_TYPE_COUNTS'
 export const CHANGE_YEAR = 'CHANGE_YEAR'
 
 export const LAST_HOUR = 'LAST_HOUR';
@@ -20,19 +21,21 @@ export const LAST_THIRTY_DAYS = 'LAST_THIRTY_DAYS';
 export const THIS_YEAR = 'THIS_YEAR';
 export const ALL = 'ALL';
 
-export const filterCounts = data => ({type: FILTER_COUNTS, filterCounts: {...data}})
-export const uniqueUserVisits = data => ({type: UNIQUE_USER_VISITS, uniqueUserVisits: data})
-export const allVisits = data => ({type: ALL_VISITS, allVisits: data})
-export const allSearches = data => ({type: ALL_SEARCHES, allSearches: data})
-export const rankGrouping = data => ({type: RANK_GROUPING, rankGrouping: {...data}})
-export const eventOutcome = data => ({type: EVENT_OUTCOME, eventOutcome: {...data}})
-export const durationBetweenStartEndSearch = data => ({type: DURATION_BETWEEN_START_END_SEARCH, durationBetweenStartEndSearch: {...data}})
-export const searchFieldMatch = data => ({type: SEARCH_FIELD_MATCH, searchFieldMatch: {...data}})
-export const satisfactionCounts = data => ({type: SATISFACTION_COUNTS, ...data})
-export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
-export const changingYear = yearNumber => ({type: CHANGE_YEAR, yearNumber})
+const filterCounts = data => ({type: FILTER_COUNTS, filterCounts: {...data}})
+const uniqueUserVisits = data => ({type: UNIQUE_USER_VISITS, uniqueUserVisits: data})
+const allVisits = data => ({type: ALL_VISITS, allVisits: data})
+const allSearches = data => ({type: ALL_SEARCHES, allSearches: data})
+const rankGrouping = data => ({type: RANK_GROUPING, rankGrouping: {...data}})
+const eventOutcome = data => ({type: EVENT_OUTCOME, eventOutcome: {...data}})
+const durationBetweenStartEndSearch = data => ({type: DURATION_BETWEEN_START_END_SEARCH, durationBetweenStartEndSearch: {...data}})
+const searchFieldMatch = data => ({type: SEARCH_FIELD_MATCH, searchFieldMatch: {...data}})
+const satisfactionCounts = data => ({type: SATISFACTION_COUNTS, ...data})
+const changingYear = yearNumber => ({type: CHANGE_YEAR, yearNumber})
+const userAgentTypeCounts = data => ({type: USER_AGENT_TYPE_COUNTS, userAgentTypeCounts: {...data}})
 
-const fetchVisitCounts = timeRange => (
+export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
+
+export const fetchVisitCounts = timeRange => (
     dispatch => {
         $.getJSON(`analytics/uniqueUserVisits${timeRangeToDateParameters(timeRange)}`, data => {
             dispatch(uniqueUserVisits(data))
@@ -58,11 +61,14 @@ const fetchVisitCounts = timeRange => (
         $.getJSON(`analytics/filterCounts${timeRangeToDateParameters(timeRange)}`, data => {
             dispatch(filterCounts(data))
         });
+        $.getJSON(`analytics/userAgentTypeCounts${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(userAgentTypeCounts(data))
+        });
 
     }
 )
 
-const fetchSatisfactionCounts = () => (
+export const fetchSatisfactionCounts = () => (
     dispatch => {
         $.getJSON(`analytics/satisfaction`, data => {
             dispatch(satisfactionCounts(data))
@@ -76,11 +82,11 @@ const timeRangeToDateParameters = timeRange => {
     return from ? `?from=${from}` : ''
 }
 
-const changeYear = (year) => (
+export const changeYear = (year) => (
     dispatch => dispatch(changingYear(year))
 )
 
-const timeRangeToISODateTime = (now, timeRange) => {
+export const timeRangeToISODateTime = (now, timeRange) => {
     switch (timeRange) {
         case LAST_HOUR:
             return now.subtract(1, 'h').format();
@@ -99,8 +105,3 @@ const timeRangeToISODateTime = (now, timeRange) => {
     }
 
 }
-
-export {timeRangeToISODateTime}  // for testing
-export {fetchVisitCounts}
-export {fetchSatisfactionCounts}
-export {changeYear}

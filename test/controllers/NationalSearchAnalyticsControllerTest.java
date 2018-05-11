@@ -207,6 +207,23 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
         assertThat(body.get("satisfactionCounts").get("bar").asLong()).isEqualTo(2);
     }
 
+    @Test
+    public void returnsUserAgentTypeCounts() {
+        when(analyticsStore.userAgentTypeCounts(any(), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of(
+                "Internet Explorer 8", 3L,
+                "Internet Explorer 10", 4L,
+                "Firefox 34", 5L
+        )));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/nationalSearch/analytics/userAgentTypeCounts"));
+
+        val body = Json.parse(contentAsString(result));
+        assertThat(body.get("Internet Explorer 8").asLong()).isEqualTo(3L);
+        assertThat(body.get("Internet Explorer 10").asLong()).isEqualTo(4L);
+        assertThat(body.get("Firefox 34").asLong()).isEqualTo(5L);
+    }
+
+
     @Override
     protected Application provideApplication() {
         return new GuiceApplicationBuilder().

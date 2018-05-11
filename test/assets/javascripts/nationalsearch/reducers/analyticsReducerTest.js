@@ -1,4 +1,17 @@
-import {FILTER_COUNTS, TIME_RANGE, TODAY, UNIQUE_USER_VISITS, ALL_VISITS, ALL_SEARCHES, RANK_GROUPING, EVENT_OUTCOME, DURATION_BETWEEN_START_END_SEARCH, SEARCH_FIELD_MATCH, SATISFACTION_COUNTS, CHANGE_YEAR} from '../actions/analytics'
+import {
+    FILTER_COUNTS,
+    TIME_RANGE,
+    TODAY,
+    UNIQUE_USER_VISITS,
+    ALL_VISITS,
+    ALL_SEARCHES,
+    RANK_GROUPING,
+    EVENT_OUTCOME,
+    DURATION_BETWEEN_START_END_SEARCH,
+    SEARCH_FIELD_MATCH,
+    SATISFACTION_COUNTS,
+    CHANGE_YEAR,
+    USER_AGENT_TYPE_COUNTS} from '../actions/analytics'
 import analytics  from './analylticsReducer'
 import {expect} from 'chai';
 
@@ -43,6 +56,9 @@ describe("analyticsReducer", () => {
         })
         it('yearNumber starts off at current year', () => {
             expect(state.yearNumber).to.equal(String(new Date().getFullYear()))
+        })
+        it('userAgentTypeCounts is set to empty object', () => {
+            expect(state.userAgentTypeCounts).to.eql({})
         })
     })
     describe("when UNIQUE_USER_VISITS action received", () => {
@@ -210,5 +226,23 @@ describe("analyticsReducer", () => {
         it('satisfactionCounts is set', () => {
             expect(state.yearNumber).to.equal('2019')
         });
+    })
+    describe("when USER_AGENT_TYPE_COUNTS action received", () => {
+        beforeEach(() => {
+            state = analytics({}, {
+                type: USER_AGENT_TYPE_COUNTS,
+                userAgentTypeCounts: {
+                    "Internet Explorer 8": 10,
+                    "Internet Explorer 11": 16
+                }
+            })
+        })
+        it('userAgentTypeCounts is set', () => {
+            expect(state.userAgentTypeCounts).to.eql({
+                "Internet Explorer 8": 10,
+                "Internet Explorer 11": 16
+                }
+            )
+        })
     })
 })

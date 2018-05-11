@@ -17,10 +17,7 @@ import services.helpers.MongoUtils;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
@@ -514,6 +511,44 @@ public class MongoDbStore implements AnalyticsStore {
         return result;
     }
 
+    @Override
+    public CompletableFuture<Map<String, Long>> userAgentTypeCounts(String eventType, LocalDateTime from) {
+        val result = new CompletableFuture<Map<String, Long>>();
+        val dateFilter = _match( _gte("dateTime", from));
+        val match = _match( _eq("type", eventType));
+        val matchClient = _match( _exists("client"));
+
+        val project = _project(new Document(ImmutableMap.of(
+                "_id", 0,
+                "browser", _concat("$client.user_agent.family", " ", "$client.user_agent.major")
+        )));
+
+        val sum = _group(_by("_id", "$browser", "total", _sum()));
+        val sort = _sort("_id", 1);
+
+        val countGrouping = ImmutableList.of(
+                dateFilter,
+                match,
+                matchClient,
+                project,
+                sum,
+                sort);
+
+        events.aggregate(countGrouping).
+                toObservable().
+                toList().
+                map(documents -> documents.stream()
+                        .collect(
+                            toMap(doc -> doc.getString("_id"), doc -> doc.getLong("total"), firstDuplicate(), LinkedHashMap::new))
+                ).
+                doOnError(result::completeExceptionally).
+                subscribe(result::complete);
+
+
+        return result;
+    }
+
+
     private Bson filterByDate(LocalDateTime from) {
         return gte("dateTime", toDate(from));
     }
@@ -694,6 +729,10 @@ public class MongoDbStore implements AnalyticsStore {
 
     private BinaryOperator<Long> firstDuplicate() {
         return (key1, key2) -> key1;
+    }
+
+    private Document _concat(String ... elements) {
+        return new Document(ImmutableMap.of("$concat", asList(elements)));
     }
 
 

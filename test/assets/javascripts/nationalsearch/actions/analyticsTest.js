@@ -47,6 +47,9 @@ describe('fetchVisitCounts action', () => {
             it ('calls searchFieldMatch endpoint with duration', () => {
                 expect(global.$.getJSON).to.be.calledWith(`analytics/searchFieldMatch`)
             })
+            it ('calls userAgentTypeCounts endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/userAgentTypeCounts`)
+            })
         })
 
         context('response from uniqueUserVisits', () => {
@@ -154,6 +157,16 @@ describe('fetchVisitCounts action', () => {
             })
             it ('dispatches FILTER_COUNTS with count data', () => {
                 expect(dispatch).to.be.calledWith({type: 'FILTER_COUNTS', filterCounts: {someAnalytic: 10}})
+            })
+
+        })
+        context('response from userAgentTypeCounts', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/userAgentTypeCounts').yields({"Internet Explorer 8": 10})
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches USER_AGENT_TYPE_COUNTS with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'USER_AGENT_TYPE_COUNTS', userAgentTypeCounts: {"Internet Explorer 8": 10}})
             })
 
         })

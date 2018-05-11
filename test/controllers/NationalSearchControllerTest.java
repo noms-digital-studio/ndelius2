@@ -129,6 +129,36 @@ public class NationalSearchControllerTest extends WithApplication {
     }
 
     @Test
+    public void analyticsContainClientAgentData() throws UnsupportedEncodingException {
+        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(generateToken()));
+        route(app, buildIndexPageRequest(59).header(
+                "User-Agent",
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 5_1_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B206 Safari/7534.48.3"));
+
+        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
+
+        assertThat(analyticsEventCaptor.getValue()).containsKey("client");
+        val client = (Map<String, Map<String, String>>)analyticsEventCaptor.getValue().get("client");
+        assertThat(client).containsKeys("device", "os", "user_agent");
+        assertThat(client.get("user_agent")).contains(
+                entry("family", "Mobile Safari"),
+                entry("major", "5"),
+                entry("minor", "1"),
+                entry("patch", "")
+        );
+        assertThat(client.get("device")).contains(
+                entry("family", "iPhone")
+        );
+        assertThat(client.get("os")).contains(
+                entry("family", "iOS"),
+                entry("major", "5"),
+                entry("minor", "1"),
+                entry("patch", "1"),
+                entry("patch_minor", "")
+        );
+    }
+
+    @Test
     public void returnsServerErrorWhenLogonFails() throws UnsupportedEncodingException {
         when(offenderApi.logon(any())).thenReturn(supplyAsync(() -> { throw new RuntimeException("boom"); }));
 
@@ -363,7 +393,7 @@ public class NationalSearchControllerTest extends WithApplication {
         return new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
     }
 
-    private static Map.Entry<String, Object> entry(String key, Object value) {
+    private static <T, V> Map.Entry<T, V> entry(T key, V value) {
         return new SimpleImmutableEntry<>(key, value);
     }
 

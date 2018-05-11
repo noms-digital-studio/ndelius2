@@ -1,5 +1,6 @@
 package controllers;
 
+import com.github.coveo.ua_parser.Parser;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.Encryption;
@@ -12,6 +13,7 @@ import org.joda.time.DateTime;
 import play.Logger;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
 
@@ -84,7 +86,10 @@ public class NationalSearchController extends Controller {
             session(OFFENDER_API_BEARER_TOKEN, bearerToken);
             session(SEARCH_ANALYTICS_GROUP_ID, UUID.randomUUID().toString());
 
-            analyticsStore.recordEvent(combine(analyticsContext(), "type", "search-index"));
+            analyticsStore.recordEvent(ImmutableMap.<String, Object>builder()
+                    .put("type", "search-index")
+                    .putAll(analyticsContext())
+                    .putAll(agentAnalytics(request())).build());
             return bearerToken;
 
         }, ec.current())
@@ -103,6 +108,21 @@ public class NationalSearchController extends Controller {
 
                     return internalServerError();
                 });
+    }
+
+    private Map<String, Object> agentAnalytics(Http.Request request) {
+        return request.getHeaders().get(USER_AGENT).map(userAgent -> {
+            try {
+                Parser uaParser = new Parser();
+                return ImmutableMap.<String, Object>of(
+                        "client",
+                        JsonHelper.jsonToObjectMap(uaParser.parse(userAgent).toString()));
+            } catch (Exception e) {
+                Logger.warn("Unable to parse client agent", e);
+                return ImmutableMap.<String, Object>of();
+            }
+
+        }).orElseGet(ImmutableMap::of);
     }
 
     public CompletionStage<Result> searchOffender(String searchTerm, Optional<String> areasFilter, int pageSize, int pageNumber) {
@@ -193,10 +213,6 @@ public class NationalSearchController extends Controller {
 
         analyticsStore.recordEvent(combine(analyticsContext(), ImmutableMap.of("type", "search-results", "total", results.get("total"))));
         return results;
-    }
-
-    private Map<String, Object> combine(Map<String, Object> map, String key, Object value) {
-        return ImmutableMap.<String, Object>builder().putAll(map).put(key, value).build();
     }
 
     private Map<String, Object> combine(Map<String, Object> map, Map<String, Object> other) {
