@@ -124,7 +124,7 @@ const chartOptions = (satisfactionCounts, yearNumber) => {
                 },
                 {
                     label: 'Neither',
-                    data: ratingData(satisfactionCounts['Neither'], currentWeekNumber, yearNumber),
+                    data: ratingData(satisfactionCounts['Neither satisfied or dissatisfied'], currentWeekNumber, yearNumber),
                     backgroundColor: '#FFCC00',
                     borderColor: '#FFCC00',
                     fill: false,
