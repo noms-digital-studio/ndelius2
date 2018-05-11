@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import {range} from '../../helpers/streams'
 
 const MAX_PAGES = 10
 
@@ -52,7 +53,6 @@ PageSelection.propTypes = {
 
 const shouldDisplay = (pageSize, total) => total > pageSize
 const totalPages = (pageSize, total) => Math.ceil(total / pageSize)
-const range = (count) => [...Array(count)].map((v, i) => i + 1)
 const notOnFirstPage = (currentPageNumber) => currentPageNumber > 1
 const notOnLastPage = (currentPageNumber, totalPages) => currentPageNumber !== totalPages
 
