@@ -22,6 +22,25 @@ describe('areaFilterContainer', () => {
                 expect(removeMyProbationAreas(byProbationArea, myProbationAreas, probationAreasFilter)).to.eql(byProbationArea)
             })
         })
+        context('probation areas are sorted', () => {
+            beforeEach(() => {
+                byProbationArea = [
+                    {code: 'N01', description: 'Z Area for N01', count: 8 },
+                    {code: 'N02', description: 'a Area for N02', count: 9 },
+                    {code: 'N03', description: 'B Area for N03', count: 10 },
+                ]
+                myProbationAreas = {}
+                probationAreasFilter = {}
+            })
+
+            it('byProbationArea are sorted by description', () => {
+                expect(removeMyProbationAreas(byProbationArea, myProbationAreas, probationAreasFilter)).to.eql([
+                    {code: 'N02', description: 'a Area for N02', count: 9 },
+                    {code: 'N03', description: 'B Area for N03', count: 10 },
+                    {code: 'N01', description: 'Z Area for N01', count: 8 }
+                ])
+            })
+        })
         context('aggregation with filters that exist in myProbationAreas', () => {
             beforeEach(() => {
                 byProbationArea = [

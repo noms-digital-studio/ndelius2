@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import areaFilter from '../components/filter'
 import {addAreaFilter, removeAreaFilter, search} from '../actions/search'
+import {alphabeticalOnProperty, sort} from '../../helpers/streams'
 
 export default connect(
     state => ({
@@ -30,5 +31,5 @@ const isNotInAggregation = (code, byProbationArea) =>
     byProbationArea.filter(area => area.code === code).length === 0
 
 export const removeMyProbationAreas = (byProbationArea, myProbationAreas, probationAreasFilter) =>
-    addZeroResultsSelectedAreas(byProbationArea, probationAreasFilter).filter(area => !myProbationAreas[area.code])
+    sort(addZeroResultsSelectedAreas(byProbationArea, probationAreasFilter).filter(area => !myProbationAreas[area.code]), alphabeticalOnProperty('description'))
 
