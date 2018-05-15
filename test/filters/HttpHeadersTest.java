@@ -10,14 +10,15 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.test.WithApplication;
-import utils.SimpleAnalyticsStoreMock;
-import utils.SimpleDocumentStoreMock;
-import utils.SimplePdfGeneratorMock;
 
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.test.Helpers.POST;
@@ -53,12 +54,16 @@ public class HttpHeadersTest extends WithApplication {
 
     @Override
     protected Application provideApplication() {
+        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
+        given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+
+        DocumentStore documentStore = mock(DocumentStore.class);
 
         return new GuiceApplicationBuilder().
             overrides(
-                bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
-                bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                bind(PdfGenerator.class).toInstance(pdfGenerator),
+                bind(DocumentStore.class).toInstance(documentStore),
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
             )
             .build();
     }

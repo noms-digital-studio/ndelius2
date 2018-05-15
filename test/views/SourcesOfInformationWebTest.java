@@ -16,8 +16,6 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import play.test.WithBrowser;
-import utils.SimpleAnalyticsStoreMock;
-import utils.SimplePdfGeneratorMock;
 import views.pages.SourcesOfInformationPage;
 import views.pages.StartPage;
 
@@ -181,13 +179,15 @@ public class SourcesOfInformationWebTest extends WithBrowser {
 
     @Override
     protected Application provideApplication() {
+        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
+        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+
         return new GuiceApplicationBuilder().
                 overrides(
-                        bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
+                        bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                        bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
-                )
-                .build();
+                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
+                ).build();
     }
 
 }

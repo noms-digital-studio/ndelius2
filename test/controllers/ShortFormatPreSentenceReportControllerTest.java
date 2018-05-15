@@ -11,15 +11,15 @@ import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.Helpers;
 import play.test.WithApplication;
-import utils.DocumentStoreMock;
-import utils.PdfGeneratorMock;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.concurrent.CompletionStage;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
@@ -27,14 +27,16 @@ import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 
-public class ShortFormatPreSentenceReportControllerTest extends WithApplication implements PdfGeneratorMock, DocumentStoreMock {
+public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
+
+    private DocumentStore documentStore;
 
     @Test
     public void getSampleReportOK() {
 
-        val request = new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport");
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
-        val result = route(app, request);
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport"));
 
         assertEquals(OK, result.status());
     }
@@ -42,11 +44,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void getSampleReportConsumesDtoQueryStrings() {
 
-        val request = new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D&foobar=xyz987");
-        val result = route(app, request);
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D&foobar=xyz987"));
 
         val content = Helpers.contentAsString(result);
-
         assertEquals(OK, result.status());
         assertTrue(content.contains("i8/p1Ti7JMS/jO+POhHtGA=="));
         assertFalse(content.contains("xyz987"));
@@ -55,17 +57,19 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void getSampleReportWithFailedAlfrescoSave() {
 
-        val request = new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D&onBehalfOfUser=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D");
-        val result = route(app, request);
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("message", "Upload blows up for this user")));
+
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?name=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D&onBehalfOfUser=i8%2Fp1Ti7JMS%2FjO%2BPOhHtGA%3D%3D"));
 
         val content = Helpers.contentAsString(result);
-
         assertEquals(BAD_REQUEST, result.status());
         assertTrue(content.contains("Upload blows up for this user"));
     }
 
     @Test
     public void getSampleReportWithDocumentIdDecryptsAndRetrievesFromStore() {
+
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> "{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"456\", \"pnc\": \"Retrieved From Store\", \"startDate\": \"12/12/2017\", \"crn\": \"1234\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\" } }"));
 
         try {
 
@@ -864,6 +868,8 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage11AllRequiredFieldsReturnsOK() {
 
+        given(documentStore.updateExistingPdf(any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "456")));
+
         Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
 
         val formData = new HashMap<String, String>() {
@@ -927,42 +933,21 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
     }
 
-    private boolean pdfGenerated;
-
-    @Override
-    public void setPdfGenerated(boolean flag) {
-        pdfGenerated = flag;
-    }
-
-    private boolean pdfUploaded;
-
-    @Override
-    public void setPdfUploaded(boolean flag) {
-        pdfUploaded = flag;
-    }
-
-    private boolean pdfUpdated;
-
-    @Override
-    public void setPdfUpdated(boolean flag) {
-        pdfUploaded = flag;
-    }
 
     @Override
     protected Application provideApplication() {
+        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
+        given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+
+        documentStore = mock(DocumentStore.class);
 
         return new GuiceApplicationBuilder().
                 overrides(
-                        bind(PdfGenerator.class).toInstance(this),
-                        bind(DocumentStore.class).toInstance(this),
+                        bind(PdfGenerator.class).toInstance(pdfGenerator),
+                        bind(DocumentStore.class).toInstance(documentStore),
                         bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
                 )
                 .build();
-    }
-
-    @Override
-    public CompletionStage<Boolean> isHealthy() {
-        throw new RuntimeException("Not yet implemented");
     }
 
 }

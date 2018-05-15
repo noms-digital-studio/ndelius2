@@ -1,5 +1,6 @@
 package views;
 
+import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
@@ -10,12 +11,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
-import utils.SimpleAnalyticsStoreMock;
-import utils.SimpleDocumentStoreMock;
-import utils.SimplePdfGeneratorMock;
 import views.pages.CheckYourReportPage;
 import views.pages.CompletionPage;
 
+import java.util.concurrent.CompletableFuture;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,13 +49,20 @@ public class CompletionWebTest extends WithBrowser {
 
     @Override
     protected Application provideApplication() {
+        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
+        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+
+        DocumentStore documentStore = mock(DocumentStore.class);
+        given(documentStore.updateExistingPdf(any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "456")));
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> "{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"456\", \"pnc\": \"Retrieved From Store\", \"startDate\": \"12/12/2017\", \"crn\": \"1234\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\" } }"));
+
         return new GuiceApplicationBuilder().
             overrides(
-                bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
-                bind(DocumentStore.class).toInstance(new SimpleDocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
-            )
-            .build();
+                bind(PdfGenerator.class).toInstance(pdfGenerator),
+                bind(DocumentStore.class).toInstance(documentStore),
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)    )
+            ).build();
     }
 
 }

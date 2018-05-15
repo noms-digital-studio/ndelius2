@@ -1,39 +1,34 @@
 package views;
 
+import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithBrowser;
-import utils.SimpleAnalyticsStoreMock;
-import utils.SimpleDocumentStoreMock;
-import utils.SimplePdfGeneratorMock;
 import views.pages.SignAndDateReportPage;
 import views.pages.StartPage;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static play.inject.Bindings.bind;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SignAndDateReportWebTest extends WithBrowser {
     private SignAndDateReportPage signAndDateReportPage;
     private StartPage startPage;
-
-    @Mock
-    private Supplier<String> mockOriginalReportData;
+    private DocumentStore documentStore;
 
     @Before
     public void before() {
@@ -69,14 +64,14 @@ public class SignAndDateReportWebTest extends WithBrowser {
 
     @Test
     public void startDateFieldIsPopulatedWhenEditingAnExistingReport() {
-        when(mockOriginalReportData.get()).thenReturn(reportDataWithStartDateOf("25/12/2017"));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> reportDataWithStartDateOf("25/12/2017")));
         startPage.navigateWithExistingReport();
         assertThat(signAndDateReportPage.getStartDate()).isEqualTo("25/12/2017");
     }
 
     @Test
     public void startDateFieldIsEmptyWhenEditingALegacyReport() {
-        when(mockOriginalReportData.get()).thenReturn(legacyReportData());
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(this::legacyReportData));
         startPage.navigateHere();
         assertThat(signAndDateReportPage.getStartDate()).isEqualTo(null);
     }
@@ -96,22 +91,22 @@ public class SignAndDateReportWebTest extends WithBrowser {
 
     @Override
     protected Application provideApplication() {
+        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
+        given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+
+        documentStore = mock(DocumentStore.class);
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+
         return new GuiceApplicationBuilder().
             overrides(
-                bind(PdfGenerator.class).toInstance(new SimplePdfGeneratorMock()),
-                bind(DocumentStore.class).toInstance(new DocumentStoreMock()),
-                bind(AnalyticsStore.class).toInstance(new SimpleAnalyticsStoreMock())
+                bind(PdfGenerator.class).toInstance(pdfGenerator),
+                bind(DocumentStore.class).toInstance(documentStore),
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
             )
             .build();
     }
 
     private String todaysDate() {
         return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-    }
-
-    class DocumentStoreMock extends SimpleDocumentStoreMock {
-        public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
-            return CompletableFuture.supplyAsync(mockOriginalReportData);
-        }
     }
 }
