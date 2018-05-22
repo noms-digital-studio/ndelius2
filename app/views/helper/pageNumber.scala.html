@@ -1,6 +1,6 @@
-@(pageNumber: Int, nextText: Option[String] = None)
+@(pageNumber: Int, nextText: Option[String] = None, className: Option[String] = None, jumpNumber: Option[String] = None)
 
-<input type="hidden" id="jumpNumber" name="jumpNumber" />
+<input type="hidden" id="jumpNumber" name="jumpNumber" value="@jumpNumber.getOrElse("")" />
 <input type="hidden" id="pageNumber" name="pageNumber" value="@pageNumber"/>
 
-<input class="button@if(nextText.exists(text => text.contains("Start"))) { button-start}" id="nextButton" type="submit" value='@nextText.getOrElse("Save & continue")'/>
+<input class="button@if(nextText.exists(text => text.contains("now"))) { button-start} @className.getOrElse("")" id="nextButton" type="submit" value='@nextText.getOrElse("Save & continue")'/>

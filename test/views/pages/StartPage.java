@@ -38,7 +38,16 @@ public class StartPage extends FluentPage {
 
     public StartPage gotoNext() {
         $(id("nextButton")).click();
+        window().switchTo("reportpopup");
         return this;
     }
 
+    public StartPage switchToWindow() {
+        window().switchToLast("reportpopup");
+        return this;
+    }
+
+    public String lastUpdatedText() {
+        return $(id("lastUpdated")).text();
+    }
 }

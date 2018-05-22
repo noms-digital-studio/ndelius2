@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
+import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import views.pages.SignAndDateReportPage;
 import views.pages.StartPage;
 
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
@@ -53,8 +55,9 @@ public class SignAndDateReportWebTest extends WithBrowser {
 
     @Test
     public void shouldBePresentedWithReadOnlyStartDateField() {
-        assertThat(signAndDateReportPage.navigateHere().hasStartDateField()).isTrue();
-        assertThat(signAndDateReportPage.navigateHere().isStartDateFieldReadonly()).isTrue();
+        val signAndDateReportPage = this.signAndDateReportPage.navigateHere();
+        assertThat(signAndDateReportPage.hasStartDateField()).isTrue();
+        assertThat(signAndDateReportPage.isStartDateFieldReadonly()).isTrue();
     }
 
     @Test
@@ -64,8 +67,9 @@ public class SignAndDateReportWebTest extends WithBrowser {
 
     @Test
     public void startDateFieldIsPopulatedWhenEditingAnExistingReport() {
-        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> reportDataWithStartDateOf("25/12/2017")));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData(reportDataWithStartDateOf("25/12/2017"), OffsetDateTime.now())));
         startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
         assertThat(signAndDateReportPage.getStartDate()).isEqualTo("25/12/2017");
     }
 
@@ -85,8 +89,8 @@ public class SignAndDateReportWebTest extends WithBrowser {
         return String.format("{\"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"11\", \"name\": \"Smith,John\", \"address\": \"1234\", \"pnc\": \"Retrieved From Store\",  \"startDate\": \"%s\" } }", startDate);
     }
 
-    private String legacyReportData() {
-        return "{\"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"11\", \"name\": \"Smith,John\", \"address\": \"1234\", \"pnc\": \"Retrieved From Store\" } }";
+    private DocumentStore.OriginalData legacyReportData() {
+        return new DocumentStore.OriginalData("{\"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"11\", \"name\": \"Smith,John\", \"address\": \"1234\", \"pnc\": \"Retrieved From Store\" } }", OffsetDateTime.now());
     }
 
     @Override

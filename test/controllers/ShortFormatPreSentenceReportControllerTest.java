@@ -13,6 +13,7 @@ import play.test.Helpers;
 import play.test.WithApplication;
 
 import java.net.URLEncoder;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -69,7 +70,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void getSampleReportWithDocumentIdDecryptsAndRetrievesFromStore() {
 
-        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> "{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"456\", \"pnc\": \"Retrieved From Store\", \"startDate\": \"12/12/2017\", \"crn\": \"1234\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\" } }"));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"456\", \"pnc\": \"Retrieved From Store\", \"startDate\": \"12/12/2017\", \"crn\": \"1234\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\" } }", OffsetDateTime.now())));
 
         try {
 

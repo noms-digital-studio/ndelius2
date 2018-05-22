@@ -6,6 +6,8 @@
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
+@import java.time.OffsetDateTime
+@import java.time.Duration
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
@@ -15,7 +17,10 @@
     <div class="panel interrupt-panel">
     <h1 class="heading-xlarge">Short Format Pre-sentence Report</h1>
 
-    <ul class="list-bullet margin-top medium">
+        <span class="bold-medium">@reportForm("lastUpdated").getValue.map( dateTime => "This draft report was last saved:").orElse("")</span>
+        <span class="font-medium" id="lastUpdated">@reportForm("lastUpdated").getValue.map( dateTime => asDuration(dateTime)).orElse("")</span>
+
+        <ul class="list-bullet margin-top medium">
         <li><div class="bold-medium">Save and close your report at any point</div><div class="font-small">You can save and close your report so you don't have to complete the whole thing at once.</div></li>
         <li><div class="bold-medium">Save as you write</div><div class="normal">Your report will be saved as you write so you'll never lose your work.</div></li>
         <li><div class="bold-medium">Return to complete your report later</div><div class="font-small">You can finish your report when it suits you.</div></li>
@@ -37,9 +42,42 @@
         @page9Fields(reportForm)
         @page11Fields(reportForm, encrypter)
 
-        @pageNumber(1, Some("Start now"))
+        @pageNumber(
+            reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
+            Some(reportForm("originalPageNumber").getValue.fold("Start now")(_ => "Continue now")),
+            Some("popup-launcher"),
+            reportForm("originalPageNumber").getValue)
+        <div class="new-window"><span class="font-xsmall">Launches in a separate window</span></div>
     }
     </div>
     </div>
+    <a class="bold-xsmall clickable back-link" tabindex="1" href="javascript:documentList()">Back to document list</a>
 
+}
+
+
+<script type="text/javascript">
+        function documentList () {
+            parent.postMessage('Report saved', '*');
+        }
+</script>
+
+
+@asDuration(dateTime: String) = @{
+    val duration = Duration.between(OffsetDateTime.parse(dateTime), OffsetDateTime.now())
+
+    val (number, unit) = (duration.toMinutes, duration.toHours, duration.toDays) match {
+
+        case (0, 0, 0) => (duration.toMillis / 1000, "second")
+        case (minutes, 0, 0) => (minutes, "minute")
+        case (_, hours, 0) => (hours, "hour")
+        case (_, _, days) => (days, "day")
+    }
+
+    s"$number $unit${plural(number)} ago"
+}
+
+
+@plural(number: Long) = @{
+    if (number > 1) "s" else ""
 }

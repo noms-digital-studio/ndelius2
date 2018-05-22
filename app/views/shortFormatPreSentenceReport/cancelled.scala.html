@@ -7,7 +7,7 @@
 
 @this(implicit webJarsUtil: WebJarsUtil, environment: Environment)
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, message: String, reviewPage: Int)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, reviewPage: Int)
 
     @implicitField = @{ FieldConstructor(govukElements.f) }
 
@@ -36,9 +36,9 @@
                 </div>
             </li>
             <li>
-                <div id="document-list">
+                <div id="close-report">
                     <div>Close this report</div>
-                    <a class="bold-medium clickable" tabindex="1" href="javascript:documentList()">View your document list</a>
+                    <a class="bold-medium clickable" tabindex="1" href="javascript:closePopup()">Return back to the main Delius window</a>
                 </div>
             </li>
         </ul>
@@ -68,7 +68,7 @@
 }
 
 <script type="text/javascript">
-        function documentList () {
-            parent.postMessage('@message', '*');
+        function closePopup () {
+            window.close()
         }
 </script>

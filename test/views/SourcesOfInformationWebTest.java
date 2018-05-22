@@ -19,6 +19,7 @@ import play.test.WithBrowser;
 import views.pages.SourcesOfInformationPage;
 import views.pages.StartPage;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -113,7 +114,7 @@ public class SourcesOfInformationWebTest extends WithBrowser {
                                 put("otherInformationDetails", "").
                                 build()));
 
-        startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
 
         stream(sources).forEach(informationSource -> assertThat(sourcesOfInformationPage.isTicked(informationSource)).isFalse().describedAs(informationSource));
         assertThat(sourcesOfInformationPage.otherInformationDetails()).isEqualTo("");
@@ -138,13 +139,13 @@ public class SourcesOfInformationWebTest extends WithBrowser {
                                 put("otherInformationDetails", "Other details").
                                 build()));
 
-        startPage.navigateWithExistingReport();
+        startPage.navigateWithExistingReport().gotoNext();
 
         stream(sources).forEach(informationSource -> assertThat(sourcesOfInformationPage.isTicked(informationSource)).isTrue().describedAs(informationSource));
         assertThat(sourcesOfInformationPage.otherInformationDetails()).isEqualTo("Other details");
     }
 
-    private CompletionStage<String> existingReportWith(ImmutableMap<String, Object> values) {
+    private CompletionStage<DocumentStore.OriginalData> existingReportWith(ImmutableMap<String, Object> values) {
         val originalReport = Json.parse(getClass().getResourceAsStream("/alfrescodata/existingReport.json"));
 
         val reportJson = stringify(toJson(merge(
@@ -152,7 +153,7 @@ public class SourcesOfInformationWebTest extends WithBrowser {
                 ImmutableMap.of("values", merge(
                         jsonToMap(originalReport.get("values")),
                         values)))));
-        return CompletableFuture.completedFuture(reportJson);
+        return CompletableFuture.completedFuture(new DocumentStore.OriginalData(reportJson, OffsetDateTime.now()));
     }
 
     private Map<String, Object> merge(Map<String, String> original, Map<String, Object> additions) {

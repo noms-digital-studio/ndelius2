@@ -24,6 +24,8 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -111,9 +113,9 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
+    public CompletionStage<OriginalData> retrieveOriginalData(String documentId, String onBehalfOfUser) {
         return getDocumentMetaData(documentId, onBehalfOfUser).
-                thenApply(result -> result.get("userData"));
+                 thenApply(result -> new OriginalData(result.get("userData"), dateTimeOrNow(result.get("lastModifiedDate"))));
     }
 
     @Override
@@ -249,4 +251,14 @@ public class AlfrescoStore implements DocumentStore {
         tempTile.delete();
         return tempTile;
     }
+
+    private static OffsetDateTime dateTimeOrNow(String dateTime) {
+        try {
+            return OffsetDateTime.parse(dateTime);
+        } catch (DateTimeParseException e) {
+            Logger.error(String.format("Unable to parse dateTime of %s", dateTime), e);
+            return OffsetDateTime.now();
+        }
+    }
+
 }

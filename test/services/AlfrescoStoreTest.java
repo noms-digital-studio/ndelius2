@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import play.test.WSTestClient;
 
+import java.time.OffsetDateTime;
 import java.util.AbstractMap;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -39,7 +40,8 @@ public class AlfrescoStoreTest {
     public void retrieveOriginalDataGetsUserDataFromAlfrescoAPI() {
         val response = toJson(
             ImmutableMap.of("ID", "309db0bf-f8bb-4ac0-b325-5dbc368e2636",
-                            "userData", "some user data")).toString();
+                            "userData", "some user data",
+                            "lastModifiedDate", "2007-12-03T10:15:30+01:00")).toString();
         wireMock.stubFor(
             get(urlEqualTo("/alfresco/service/noms-spg/details/309db0bf-f8bb-4ac0-b325-5dbc368e2636"))
                 .willReturn(
@@ -47,7 +49,8 @@ public class AlfrescoStoreTest {
 
         val result = alfrescoStore.retrieveOriginalData("309db0bf-f8bb-4ac0-b325-5dbc368e2636",
                                                            "aUsername").toCompletableFuture().join();
-        assertThat(result).isEqualTo("some user data");
+        assertThat(result.getUserData()).isEqualTo("some user data");
+        assertThat(result.getLastModifiedDate()).isEqualTo(OffsetDateTime.parse("2007-12-03T10:15:30+01:00"));
     }
 
     @Test

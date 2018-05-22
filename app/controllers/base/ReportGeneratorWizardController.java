@@ -20,6 +20,7 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -28,6 +29,8 @@ import java.util.function.Function;
 import static helpers.FluentHelper.not;
 import static helpers.FluentHelper.value;
 import static helpers.JsonHelper.*;
+import static java.lang.Integer.parseInt;
+import static java.lang.Math.max;
 
 public abstract class ReportGeneratorWizardController<T extends ReportGeneratorWizardData> extends WizardController<T> {
 
@@ -91,9 +94,29 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
+        val queryParams = request().queryString().keySet();
+        val continueFromInterstitial = queryParams.contains("continue");
+        val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
-        return super.initialParams().thenCompose(params -> originalData(params).orElseGet(() -> addPageAndDocumentId(params)));
+        return super.initialParams().thenCompose(params -> originalData(params).orElseGet(() -> addPageAndDocumentId(params))).thenApply(params -> {
+            if (stopAtInterstitial) {
+                params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
+                params.put("pageNumber", "1");
+            }
+            if (continueFromInterstitial) {
+                params.put("jumpNumber", params.get("pageNumber"));
+            }
+
+            return params;
+        });
     }
+
+    private String currentPageButNotInterstitialOrCompletion(String pageNumber) {
+        // never allow jumping from interstitial  to interstitial, which would happen on
+        // saved report that never left the first page or jumping to completion page ("0")
+        return String.valueOf(max(parseInt(pageNumber), 2));
+    }
+
 
     @Override
     protected Integer nextPage(T wizardData) {
@@ -180,7 +203,11 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         return Optional.ofNullable(params.get("documentId")).
                 map(documentId -> documentStore.retrieveOriginalData(documentId, params.get("onBehalfOfUser"))).
-                map(originalJson -> originalJson.thenApply(json -> JsonHelper.jsonToMap(Json.parse(json).get("values")))).
+                map(originalData -> originalData.thenApply(data -> {
+                    val info = JsonHelper.jsonToMap(Json.parse(data.getUserData()).get("values"));
+                    info.put("lastUpdated", data.getLastModifiedDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+                    return info;
+                })).
                 map(originalInfo -> originalInfo.thenApply(info -> {
 
                     info.put("onBehalfOfUser", params.get("onBehalfOfUser"));

@@ -7,6 +7,10 @@ function formWithZeroJumpNumber(form) {
     });
 }
 
+function openPopup(url) {
+    window.open(url, 'reportpopup', 'top=200,height=760,width=820,resizable=yes,scrollbars=yes,location=no,menubar=no,status=yes,toolbar=no').focus();
+}
+
 (function ($) {
 
     'use strict';
@@ -143,7 +147,7 @@ function formWithZeroJumpNumber(form) {
         /**
          * Ensure jumpNumber is cleared if next after clicking browser back button
          */
-        $('#nextButton').click(function () {
+        $('#nextButton:not(.popup-launcher)').click(function () {
             $('#jumpNumber').val('');
         });
 
@@ -156,6 +160,22 @@ function formWithZeroJumpNumber(form) {
             $('form').submit();
         });
 
+        var popupLaunched
+
+        $('.popup-launcher').click(function (e) {
+            e.preventDefault();
+            if (popupLaunched) {
+                var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
+                var documentId = encodeURIComponent($('#documentId').val())
+                var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true';
+                openPopup(url)
+            } else {
+                openPopup('about:blank')
+                $('form').attr("target", "reportpopup")
+                $('form').submit()
+                popupLaunched = true
+            }
+        });
         /**
          *
          */

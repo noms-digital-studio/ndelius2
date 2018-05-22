@@ -44,11 +44,11 @@ public class SaveAsDraftWebTest extends WithBrowser {
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
         when(alfrescoDocumentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        offenderAssessmentPage.navigateHere();
     }
 
     @Test
     public void savingDraftWillStoreAllValues() {
+        offenderAssessmentPage.navigateHere();
         whenSaveAsDraftIsClicked();
 
         verify(alfrescoDocumentStore, atLeastOnce()).updateExistingPdf(any(), any(), any(), any(), any());
@@ -56,6 +56,7 @@ public class SaveAsDraftWebTest extends WithBrowser {
 
     @Test
     public void savingDraftDisplaysConfirmationPage() {
+        offenderAssessmentPage.navigateHere();
         whenSaveAsDraftIsClicked();
 
         draftSavedConfirmationPage.isAt();
@@ -63,6 +64,7 @@ public class SaveAsDraftWebTest extends WithBrowser {
 
     @Test
     public void editReportAfterSavingReportDisplaysCheckYourReportPage() {
+        offenderAssessmentPage.navigateHere();
         whenSaveAsDraftIsClicked();
 
         draftSavedConfirmationPage.updateReport();

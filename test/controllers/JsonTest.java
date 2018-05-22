@@ -58,7 +58,7 @@ public class JsonTest implements PdfGenerator, DocumentStore {
     }
 
     @Override
-    public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
+    public CompletionStage<OriginalData> retrieveOriginalData(String documentId, String onBehalfOfUser) {
         return null;
     }
 

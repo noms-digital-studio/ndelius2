@@ -17,6 +17,8 @@ import services.helpers.MongoUtils;
 
 import javax.inject.Inject;
 import java.net.URLEncoder;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -66,14 +68,14 @@ public class MongoDocumentStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<String> retrieveOriginalData(String documentId, String onBehalfOfUser) {
+    public CompletionStage<OriginalData> retrieveOriginalData(String documentId, String onBehalfOfUser) {
 
-        val result = new CompletableFuture<String>();
+        val result = new CompletableFuture<OriginalData>();
         shortFormatReports
             .find(eq("_id", new ObjectId(documentId)))
             .first()
             .doOnError(result::completeExceptionally)
-            .subscribe(thing -> result.complete((String)thing.get("originalData")));
+            .subscribe(thing -> result.complete(new OriginalData((String)thing.get("originalData"), OffsetDateTime.ofInstant(new ObjectId(documentId).getDate().toInstant(), ZoneId.systemDefault()))));
 
         Logger.debug(String.format("retrieveOriginalData: for key %s", documentId));
         return result;
