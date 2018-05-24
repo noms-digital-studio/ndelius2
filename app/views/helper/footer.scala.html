@@ -1,0 +1,25 @@
+@import helper._
+
+@(page: Int, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true)
+
+<footer class="report-footer">
+    <div class="container">
+        <div id="save_indicator" class="inline margin-top margin-right js-hidden">
+            <div class="font-xxsmall inline">
+                <div class="spinner inline active">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+                <span>Changes saved</span>
+            </div>
+        </div>
+
+
+        @pageNumber(page, nextText)
+        @if(showCloseButton) {
+        <button class="button secondary tooltip" id="exitLink" type="button">
+            Close<span>Save and close your report</span>
+        </button>
+        }
+    </div>
+</footer>

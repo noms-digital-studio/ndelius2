@@ -49,7 +49,7 @@ function openPopup(url) {
          * @param elem
          */
         function startSaveIcon(elem) {
-            var saveIcon = $('#' + elem.attr('id') + '_save'),
+            var saveIcon = $('#save_indicator'),
                 spinner = $('.spinner', saveIcon);
 
             saveIcon.removeClass('js-hidden');
@@ -63,7 +63,7 @@ function openPopup(url) {
          * @param error
          */
         function endSaveIcon(elem, error) {
-            var saveIcon = $('#' + elem.attr('id') + '_save'),
+            var saveIcon = $('#save_indicator'),
                 spinner = $('.spinner', saveIcon),
                 errorMessage = $('#' + elem.attr('id') + '-autosave_error'),
                 formGroup = $(elem).closest('.form-group');

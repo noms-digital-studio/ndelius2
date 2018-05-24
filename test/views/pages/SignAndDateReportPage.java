@@ -53,6 +53,6 @@ public class SignAndDateReportPage extends FluentPage {
     }
 
     public String getNextButtonText() {
-        return $(id("nextButton")).value();
+        return $(id("nextButton")).text();
     }
 }

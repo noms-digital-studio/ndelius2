@@ -36,16 +36,6 @@
             <div class="clearfix"></div>
         }
 
-          <div id="@{elements.id}_save" class="pull-right margin-top js-hidden">
-              <div class="font-xxsmall pull-right">
-                  <span>Changes saved</span>
-              </div>
-              <div class="spinner pull-right active">
-                  <div class="double-bounce1"></div>
-                  <div class="double-bounce2"></div>
-              </div>
-          </div>
-
       </span>
     } else if(elements.input.body.contains("select id=")) {
       <select class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">

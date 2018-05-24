@@ -42,7 +42,7 @@
             @readOnlyField(reportForm("startDate"), "Start date", encrypter)
             @inputText(reportForm("reportDate"), '_label -> "Completion date", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
 
-            @pageNumber(11, Some("Submit and upload your report"))
+            @footer(11, Some(("Submit", Some("Submit and upload your report"))), false)
         }
 
         </div>

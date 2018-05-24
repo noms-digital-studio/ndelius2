@@ -17,7 +17,7 @@
     <div class="panel interrupt-panel">
     <h1 class="heading-xlarge">Short Format Pre-sentence Report</h1>
 
-        <span class="bold-medium">@reportForm("lastUpdated").getValue.map( dateTime => "This draft report was last saved:").orElse("")</span>
+        <span class="bold-medium">@reportForm("lastUpdated").getValue.map( _ => "This draft report was last saved:").orElse("")</span>
         <span class="font-medium" id="lastUpdated">@reportForm("lastUpdated").getValue.map( dateTime => asDuration(dateTime)).orElse("")</span>
 
         <ul class="list-bullet margin-top medium">
@@ -44,7 +44,7 @@
 
         @pageNumber(
             reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
-            Some(reportForm("originalPageNumber").getValue.fold("Start now")(_ => "Continue now")),
+            Some(reportForm("originalPageNumber").getValue.fold(("Start now", None))(_ => ("Continue now", None))),
             Some("popup-launcher"),
             reportForm("originalPageNumber").getValue)
         <div class="new-window"><span class="font-xsmall">Launches in a separate window</span></div>

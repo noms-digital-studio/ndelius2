@@ -1,6 +1,11 @@
-@(pageNumber: Int, nextText: Option[String] = None, className: Option[String] = None, jumpNumber: Option[String] = None)
+@(pageNumber: Int, nextText: Option[(String, Option[String])] = None, className: Option[String] = None, jumpNumber: Option[String] = None)
+@defaultText = @{("Save", Some("Continue your report"))}
+@hintText = @{nextText.getOrElse(defaultText)._2}
 
 <input type="hidden" id="jumpNumber" name="jumpNumber" value="@jumpNumber.getOrElse("")" />
 <input type="hidden" id="pageNumber" name="pageNumber" value="@pageNumber"/>
 
-<input class="button@if(nextText.exists(text => text.contains("now"))) { button-start} @className.getOrElse("")" id="nextButton" type="submit" value='@nextText.getOrElse("Save & continue")'/>
+<button class="tooltip button@if(nextText.exists(_._1.contains("now"))) { button-start} @className.getOrElse("")" id="nextButton" type="submit">
+    @nextText.getOrElse(defaultText)._1
+    @hintText.map(text => Html(s"<span>$text</span>"))
+</button>
