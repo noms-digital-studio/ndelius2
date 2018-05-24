@@ -57,9 +57,26 @@
 
 
 <script type="text/javascript">
-        function documentList () {
-            parent.postMessage('Report saved', '*');
+    var isExistingReport = @reportForm("lastUpdated").getValue.map( _ => "true").orElse("false");
+
+    $('.popup-launcher').click(function (e) {
+        e.preventDefault();
+        if (isExistingReport) {
+            var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
+            var documentId = encodeURIComponent($('#documentId').val())
+            var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true';
+            openPopup(url)
+        } else {
+            openPopup('about:blank')
+            $('form').attr("target", "reportpopup")
+            $('form').submit()
+            isExistingReport = true
         }
+    });
+
+    function documentList () {
+        parent.postMessage('Report saved', '*');
+    }
 </script>
 
 
