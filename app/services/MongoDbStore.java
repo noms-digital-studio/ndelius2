@@ -426,7 +426,13 @@ public class MongoDbStore implements AnalyticsStore {
                         "username", 1,
                         "feedback", 1
                 ))).
-                filter( and(_exists("type", false), _notNull("feedback"), _notEmpty("feedback")) ).
+                filter( and(
+                        _exists("type", false),
+                        _notNull("feedback"),
+                        _notEmpty("feedback"),
+                        _or(
+                            _type("feedback", "string"),
+                            _and(_type("feedback", "object"), _notNull("feedback.feedback")))) ).
                 sort(new Document("$natural", -1)).
                 limit(1000).
                 toObservable().
@@ -561,6 +567,15 @@ public class MongoDbStore implements AnalyticsStore {
         return new Document(
                 ImmutableMap.of("$last", field)
         );
+    }
+
+    private Document _type(String field, String type) {
+        return new Document(
+                ImmutableMap.of(
+                        field, new Document(
+                                "$type", type
+                        )
+                ));
     }
 
     private Document _first(String field) {
