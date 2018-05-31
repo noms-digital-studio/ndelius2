@@ -1,5 +1,5 @@
 @(pageNumber: Int, nextText: Option[(String, Option[String])] = None, className: Option[String] = None, jumpNumber: Option[String] = None)
-@defaultText = @{("Save", Some("Continue your report"))}
+@defaultText = @{("Continue", Some("Continue your report"))}
 @hintText = @{nextText.getOrElse(defaultText)._2}
 
 <input type="hidden" id="jumpNumber" name="jumpNumber" value="@jumpNumber.getOrElse("")" />
