@@ -104,6 +104,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 params.put("pageNumber", "1");
             }
             if (continueFromInterstitial) {
+                params.put("pageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
                 params.put("jumpNumber", params.get("pageNumber"));
             }
 
