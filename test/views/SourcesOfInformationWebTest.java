@@ -15,7 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
-import play.test.WithBrowser;
 import views.pages.SourcesOfInformationPage;
 import views.pages.StartPage;
 
@@ -36,7 +35,7 @@ import static play.inject.Bindings.bind;
 import static play.libs.Json.toJson;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SourcesOfInformationWebTest extends WithBrowser {
+public class SourcesOfInformationWebTest extends WithIE8Browser {
     @Mock
     private DocumentStore alfrescoDocumentStore;
 

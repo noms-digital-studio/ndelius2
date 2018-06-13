@@ -10,10 +10,11 @@
 
         <span class="display-block margin-top"></span>
 
+        <ul>
         @for((entry, index) <- entries.zipWithIndex) {
             @navigationEntry(index + 2, entry, current)
         }
-
+        </ul>
     </nav>
 }
 

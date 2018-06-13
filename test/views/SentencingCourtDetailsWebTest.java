@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
-import play.test.WithBrowser;
 import views.pages.SentencingCourtDetailsPage;
 
 import java.time.OffsetDateTime;
@@ -24,7 +23,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static play.inject.Bindings.bind;
 
-public class SentencingCourtDetailsWebTest extends WithBrowser {
+public class SentencingCourtDetailsWebTest extends WithIE8Browser {
     private SentencingCourtDetailsPage sentencingCourtDetailsPage;
 
     private static final List<String> SORTED_LONDON_LOCALES =

@@ -26,26 +26,26 @@
             <li>
                 <div id="view-pdf">
                     <div>Review and print your draft 'Short Format Pre-sentence Report'</div>
-                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))">View your draft PDF report</a>
+                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your draft PDF report</a>
                 </div>
             </li>
             <li>
                 <div id="edit-pdf">
                     <div>Check or edit your report again</div>
-                    <a class="nav-item bold-medium clickable" tabindex="1" href="javascript:void(0);" data-target="@reviewPage">Select a section to update or change</a>
+                    <a class="nav-item bold-medium clickable" tabindex="1" href="javascript:void(0);" data-target="@reviewPage" aria-label="Update report">Select a section to update or change</a>
                 </div>
             </li>
             <li>
                 <div id="close-report">
                     <div>Close this report</div>
-                    <a class="bold-medium clickable" tabindex="1" href="javascript:closePopup()">Return back to the main Delius window</a>
+                    <a class="bold-medium clickable" tabindex="1" href="javascript:closePopup()" aria-label="Return to Delius">Return back to the main Delius window</a>
                 </div>
             </li>
         </ul>
     </div>
 
     <p class="margin-top large">
-        <a href="javascript:void(0);" class="feedback-link">What did you think of this service?</a><span>&nbsp;(takes 30 seconds)</span>
+        <a href="javascript:void(0);" class="feedback-link" aria-label="Enter feedback">What did you think of this service?</a><span>&nbsp;(takes 30 seconds)</span>
     </p>
 
         @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {

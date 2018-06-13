@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
-import play.test.WithBrowser;
 import views.pages.CheckYourReportPage;
 import views.pages.CompletionPage;
 
@@ -24,7 +23,7 @@ import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompletionWebTest extends WithBrowser {
+public class CompletionWebTest extends WithIE8Browser {
     private CompletionPage completionPage;
     private CheckYourReportPage checkYourReportPage;
 

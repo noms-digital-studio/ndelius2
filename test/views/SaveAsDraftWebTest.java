@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
-import play.test.WithBrowser;
 import views.pages.CheckYourReportPage;
 import views.pages.DraftSavedConfirmationPage;
 import views.pages.OffenderAssessmentPage;
@@ -25,7 +24,7 @@ import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SaveAsDraftWebTest extends WithBrowser {
+public class SaveAsDraftWebTest extends WithIE8Browser {
     @Mock
     private DocumentStore alfrescoDocumentStore;
 

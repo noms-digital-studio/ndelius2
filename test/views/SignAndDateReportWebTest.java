@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
-import play.test.WithBrowser;
 import views.pages.SignAndDateReportPage;
 import views.pages.StartPage;
 
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.mock;
 import static play.inject.Bindings.bind;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SignAndDateReportWebTest extends WithBrowser {
+public class SignAndDateReportWebTest extends WithIE8Browser {
     private SignAndDateReportPage signAndDateReportPage;
     private StartPage startPage;
     private DocumentStore documentStore;

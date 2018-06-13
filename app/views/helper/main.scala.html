@@ -17,6 +17,7 @@
         <!--[if gt IE 8]><!--><link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/govuk-elements-styles.css"))' /><!--<![endif]-->
         <!--[if IE 8]><link rel="stylesheet" type="text/css" media="all" href='@relative(routes.Assets.versioned("stylesheets/fonts-ie8.css"))' /><![endif]-->
         <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
+        <link rel="stylesheet" type="text/css" media="all" href='@relative(routes.Assets.versioned("stylesheets/vendor/quill.snow.css"))' />
 
     </head>
     <body>
@@ -26,8 +27,17 @@
         <script type='text/javascript' src='@relative(webJarsUtil.url("es5-shim", "es5-sham.js").get)'></script>
         <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
         <script type='text/javascript' src='@relative(webJarsUtil.url("jquery", "jquery.js").get)'></script>
+        <script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/jquery/caret/jquery.caret.js"))'></script>
         <!--[if gt IE 8]><!--><script type='text/javascript' src='@relative(webJarsUtil.url("jquery-ui", "jquery-ui.js").get)'></script><!--<![endif]-->
+        <!--[if gt IE 8]><!--><script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/quilljs/quill.js"))'></script><!--<![endif]-->
+        <!--[if gt IE 8]><!-->
+        <style>
+                textarea {
+                    visibility: hidden;
+                }
+        </style>
 
+        <!--<![endif]-->
         <main id="content">
 
             @if(banner) {
@@ -47,6 +57,5 @@
         <script src='@relative(routes.Assets.versioned("javascripts/show-hide-content.js"))' type="text/javascript"></script>
         <script src='@relative(routes.Assets.versioned("javascripts/govuk/accessible-autocomplete/accessible-autocomplete.min.js"))' type="text/javascript"></script>
         <script src='@relative(routes.Assets.versioned("javascripts/application.js"))' type="text/javascript"></script>
-
     </body>
 </html>

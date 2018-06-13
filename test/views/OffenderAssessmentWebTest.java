@@ -14,7 +14,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
-import play.test.WithBrowser;
 import views.pages.CheckYourReportPage;
 import views.pages.OffenderAssessmentPage;
 import views.pages.StartPage;
@@ -32,7 +31,7 @@ import static play.inject.Bindings.bind;
 import static views.helpers.AlfrescoDataHelper.legacyReportWith;
 
 @RunWith(MockitoJUnitRunner.class)
-public class OffenderAssessmentWebTest extends WithBrowser {
+public class OffenderAssessmentWebTest extends WithIE8Browser {
     @Mock
     private DocumentStore alfrescoDocumentStore;
     @Captor
