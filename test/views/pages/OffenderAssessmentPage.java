@@ -23,6 +23,8 @@ public class OffenderAssessmentPage extends FluentPage {
 
     public OffenderAssessmentPage gotoNext() {
         tick("Relationships");
+        $(id("experienceTrauma_no")).click();
+        $(id("caringResponsibilities_no")).click();
         $(id("nextButton")).click();
         return this;
     }
@@ -67,6 +69,12 @@ public class OffenderAssessmentPage extends FluentPage {
         final String checkboxId = checkBoxIdFromLabel(optionLabel);
         final String associatedDetailsId = checkboxId+"Details";
         return $(id(associatedDetailsId)).text();
+    }
+
+    public OffenderAssessmentPage yesWithDetailsFor(String field, String details) {
+        $(id(String.format("%s_yes", field))).click();
+        $(id(String.format("%sDetails", field))).fill().with(details);
+        return this;
     }
 
     public int countErrors(String errorMessage) {

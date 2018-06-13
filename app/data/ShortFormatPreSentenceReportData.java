@@ -216,6 +216,24 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     private String issueOtherDetails;
 
 
+    @RequiredOnPage(7)
+    @JsonProperty("EXPERIENCE_TRAUMA")
+    private String experienceTrauma;
+
+    @OnPage(7)
+    @JsonProperty("EXPERIENCE_TRAUMA_DETAILS")
+    private String experienceTraumaDetails;
+
+
+    @RequiredOnPage(7)
+    @JsonProperty("CARING_RESPONSIBILITIES")
+    private String caringResponsibilities;
+
+    @OnPage(7)
+    @JsonProperty("CARING_RESPONSIBILITIES_DETAILS")
+    private String caringResponsibilitiesDetails;
+
+
     // Page 8
 
     @RequiredOnPage(8)

@@ -72,6 +72,8 @@ public class OffenderAssessmentWebTest extends WithBrowser {
     public void savingDraftWillStoreAllValues() {
         offenderAssessmentPage.navigateHere();
         givenAllIssuesAreTicked();
+        offenderAssessmentPage.yesWithDetailsFor("experienceTrauma", "Some trauma");
+        offenderAssessmentPage.yesWithDetailsFor("caringResponsibilities", "Some caring responsibilities");
 
         whenReportIsSaved();
 
@@ -91,17 +93,22 @@ public class OffenderAssessmentWebTest extends WithBrowser {
                 contains(entry("issueBehaviour", "true")).
                 contains(entry("issueBehaviourDetails", "Thinking & behaviour details")).
                 contains(entry("issueOther", "true")).
-                contains(entry("issueOtherDetails", "Other (Please specify below) details"));
+                contains(entry("issueOtherDetails", "Other (Please specify below) details")).
+                contains(entry("experienceTrauma", "yes")).
+                contains(entry("experienceTraumaDetails", "Some trauma")).
+                contains(entry("caringResponsibilities", "yes")).
+                contains(entry("caringResponsibilitiesDetails", "Some caring responsibilities"));
 
     }
 
     @Test
-    public void noneTickedResultsInSingleErrorMessage() {
+    public void nothingEnteredResultsInSingleErrorMessageForIssuesAndOneForEachQuestion() {
         offenderAssessmentPage.navigateHere();
 
         whenFormIsSubmitted();
 
         assertThat(offenderAssessmentPage.countErrors("Select underlying issues from the options below")).isEqualTo(1);
+        assertThat(offenderAssessmentPage.countErrors("This field is required")).isEqualTo(2);
     }
 
     @Test

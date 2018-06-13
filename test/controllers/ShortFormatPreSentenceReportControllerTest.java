@@ -550,6 +550,10 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("issueHealth", "false");
                 put("issueBehaviour", "false");
                 put("issueOther", "false");
+                put("experienceTrauma", "no");
+                put("experienceTraumaDetails", "");
+                put("caringResponsibilities", "no");
+                put("caringResponsibilitiesDetails", "");
 
                 put("pageNumber", "7");
             }
@@ -911,6 +915,10 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("issueHealth", "true");
                 put("issueBehaviour", "true");
                 put("issueOther", "true");
+                put("experienceTrauma", "no");
+                put("experienceTraumaDetails", "");
+                put("caringResponsibilities", "no");
+                put("caringResponsibilitiesDetails", "");
 
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");

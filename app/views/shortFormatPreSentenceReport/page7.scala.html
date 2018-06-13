@@ -10,6 +10,13 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@traumaGuidance = {
+    <p>Trauma can affect an offender's ability to engage and make decisions. Detail the offender's experience of trauma. How has it affected their offending? Has it affected their engagement with rehabilitative interventions?</p>
+}
+
+@caringResponsibilitiesGuidance = {
+    <p>Detail the offender’s current and past caring responsibilities. Take account of caring for both children and adults. How have those responsibilities affected their offending? Have they affected their engagement with rehabilitative interventions?</p>
+}
 @main("Offender assessment - Short Format Pre Sentence Report") {
 
     <h1 class="heading-xlarge">Offender assessment</h1>
@@ -61,7 +68,7 @@
                 @page5Fields(reportForm)
                 @page6Fields(reportForm)
 
-                <div class="form-group@if(reportForm.hasErrors) { form-group-error}">
+                <div class="form-group@if(reportForm.allErrors.stream.anyMatch(_.key.startsWith("issue"))) { form-group-error}">
                 @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
                 @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment for employment", Some(""))
                 @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment for finance", Some(""))
@@ -71,6 +78,57 @@
                 @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment for behaviour", Some(""))
                 @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues", Some(""))
                 </div>
+
+                <hr />
+
+                <div class="form-group">
+                    <fieldset>
+                        <legend class="margin-bottom medium">
+                            <span class="form-label-bold">Is there evidence of the offender experiencing trauma?</span>
+                        </legend>
+
+                        @inputRadioGroup(
+                            reportForm("experienceTrauma"),
+                            options(
+                                "yes" -> "Yes",
+                                "no" -> "No"
+                            ),
+                            Symbol("data-target") -> "experienceTrauma-details",
+                            Symbol("data-ignore") -> "no"
+                        )
+                    </fieldset>
+
+                    <div class="panel panel-border-narrow js-hidden" id="experienceTrauma-details">
+                    @textarea(reportForm("experienceTraumaDetails"), '_label -> "Experience of trauma", '_hint -> traumaGuidance, 'class -> "wide")
+                    </div>
+                </div>
+
+
+                <hr />
+
+                <div class="form-group">
+                    <fieldset>
+                        <legend class="margin-bottom medium">
+                            <span class="form-label-bold">Does the offender have caring responsibilities for children or adults, or have they ever had caring responsibilities for children or adults?</span>
+                        </legend>
+
+                        @inputRadioGroup(
+                            reportForm("caringResponsibilities"),
+                            options(
+                                "yes" -> "Yes",
+                                "no" -> "No"
+                            ),
+                            Symbol("data-target") -> "caringResponsibilities-details",
+                            Symbol("data-ignore") -> "no"
+                        )
+                    </fieldset>
+
+                    <div class="panel panel-border-narrow js-hidden" id="caringResponsibilities-details">
+                    @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance, 'class -> "wide")
+                    </div>
+                </div>
+
+
 
                 @page8Fields(reportForm)
                 @page9Fields(reportForm)
