@@ -1,6 +1,6 @@
 import {
     fetchVisitCounts, timeRangeToISODateTime, fetchSatisfactionCounts, changeYear,
-    ALL, LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR
+    ALL, LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, SEARCH_TYPE_COUNTS
 } from './analytics'
 import {expect} from 'chai';
 import {stub} from 'sinon';
@@ -49,6 +49,9 @@ describe('fetchVisitCounts action', () => {
             })
             it ('calls userAgentTypeCounts endpoint with duration', () => {
                 expect(global.$.getJSON).to.be.calledWith(`analytics/userAgentTypeCounts`)
+            })
+            it ('calls searchTypeCounts endpoint with duration', () => {
+                expect(global.$.getJSON).to.be.calledWith(`analytics/searchTypeCounts`)
             })
         })
 
@@ -157,6 +160,16 @@ describe('fetchVisitCounts action', () => {
             })
             it ('dispatches FILTER_COUNTS with count data', () => {
                 expect(dispatch).to.be.calledWith({type: 'FILTER_COUNTS', filterCounts: {someAnalytic: 10}})
+            })
+
+        })
+        context('response from searchTypeCounts', () => {
+            beforeEach(() => {
+                global.$.getJSON.withArgs('analytics/searchTypeCounts').yields({someAnalytic: 8})
+                fetchVisitCounts(ALL)(dispatch)
+            })
+            it ('dispatches SEARCH_TYPE_COUNTS with count data', () => {
+                expect(dispatch).to.be.calledWith({type: 'SEARCH_TYPE_COUNTS', searchTypeCounts: {someAnalytic: 8}})
             })
 
         })

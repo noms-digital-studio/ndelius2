@@ -1,8 +1,8 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER, SAVED_SEARCH} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARCH, ADD_AREA_FILTER, REMOVE_AREA_FILTER, SAVED_SEARCH, SEARCH_TYPE_CHANGED} from '../actions/search'
 import {flatMap} from '../../helpers/streams'
 import {setIn, removeIn} from '../../helpers/immutable'
 
-const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: {}, myProbationAreas: myProbationAreas(),  total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false}, action) => {
+const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: {}, myProbationAreas: myProbationAreas(),  total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false, searchType: "broad"}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
@@ -58,6 +58,11 @@ const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsRe
             return {
                 ...state,
                 probationAreasFilter: removeIn(state.probationAreasFilter, action.probationAreaCode)
+            }
+        case SEARCH_TYPE_CHANGED:
+            return {
+                ...state,
+                searchType: action.searchType
             }
         default:
             return state

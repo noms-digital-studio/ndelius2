@@ -9,11 +9,13 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.time.LocalDate.now;
 import static java.time.LocalDate.parse;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 public class DateTimeHelper {
     public static long calculateAge(String dateString, Clock clock) {
@@ -63,5 +65,13 @@ public class DateTimeHelper {
 
     private static DateTimeFormatterBuilder dateTimeBuilderFor(String datePattern) {
         return new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern(datePattern);
+    }
+
+    public static List<String> termsThatLookLikeDates(String searchTerm) {
+        return Stream.of(searchTerm.split(" "))
+            .map(DateTimeHelper::covertToCanonicalDate)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(toList());
     }
 }

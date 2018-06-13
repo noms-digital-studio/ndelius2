@@ -8,9 +8,11 @@ export default connect(
         probationAreasFilter: Object.getOwnPropertyNames(state.search.probationAreasFilter),
         pageSize: PAGE_SIZE,
         total: state.search.total,
-        pageNumber: state.search.pageNumber
+        pageNumber: state.search.pageNumber,
+        searchType: state.search.searchType
     }),
     dispatch => ({
-        gotoPage: (searchTerm, probationAreasFilter, pageNumber) => dispatch(search(searchTerm, probationAreasFilter, pageNumber))
+        gotoPage: (searchTerm, searchType, probationAreasFilter, pageNumber) =>
+            dispatch(search(searchTerm, searchType, probationAreasFilter, pageNumber))
     })
 )(pageSelection)

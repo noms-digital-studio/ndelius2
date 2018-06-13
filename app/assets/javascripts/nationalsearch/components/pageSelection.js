@@ -3,12 +3,16 @@ import {range} from '../../helpers/streams'
 
 const MAX_PAGES = 10
 
-const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm, probationAreasFilter}) => {
+const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm, probationAreasFilter, searchType}) => {
     const PageLink = ({linkPageNumber, tabIndex}) => {
         if (pageNumber === linkPageNumber) {
             return (<span className='margin-right'>{linkPageNumber}</span>)
         }
-        return (<span className='margin-right'><a  tabIndex={tabIndex} href='#offender-results' aria-label={`Page ${linkPageNumber}`} className='clickable' onClick={() => gotoPage(searchTerm, probationAreasFilter, linkPageNumber)}>{linkPageNumber}</a></span>)
+        return (<span className='margin-right'>
+            <a  tabIndex={tabIndex} href='#offender-results'
+                aria-label={`Page ${linkPageNumber}`}
+                className='clickable'
+                onClick={() => gotoPage(searchTerm, searchType, probationAreasFilter, linkPageNumber)}>{linkPageNumber}</a></span>)
     }
 
 
@@ -18,7 +22,9 @@ const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm, proba
         <span>
             {notOnFirstPage(pageNumber) &&
             <span>
-                <a tabIndex="1" href='#offender-results' id='previous-page-link' aria-label='Previous Page' className='clickable margin-right' onClick={() => gotoPage(searchTerm, probationAreasFilter, pageNumber - 1)}>&lt; Previous</a>
+                <a tabIndex="1" href='#offender-results' id='previous-page-link' aria-label='Previous Page'
+                   className='clickable margin-right'
+                   onClick={() => gotoPage(searchTerm, searchType, probationAreasFilter, pageNumber - 1)}>&lt; Previous</a>
                 <span className='margin-right'>-</span>
             </span>
             }
@@ -31,7 +37,9 @@ const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm, proba
             {notOnLastPage(pageNumber, totalPages(pageSize, total)) &&
             <span>
                 <span className="margin-right">-</span>
-                <a tabIndex="1" href='#offender-results' id='next-page-link' aria-label='Next Page'  className='clickable' onClick={() => gotoPage(searchTerm, probationAreasFilter, pageNumber + 1)}>Next &gt;</a>
+                <a tabIndex="1" href='#offender-results' id='next-page-link' aria-label='Next Page'
+                   className='clickable'
+                   onClick={() => gotoPage(searchTerm, searchType, probationAreasFilter, pageNumber + 1)}>Next &gt;</a>
             </span>
             }
         </span>
@@ -46,7 +54,8 @@ PageSelection.propTypes = {
     total: PropTypes.number.isRequired,
     gotoPage: PropTypes.func.isRequired,
     searchTerm: PropTypes.string.isRequired,
-    probationAreasFilter: PropTypes.arrayOf(PropTypes.string).isRequired
+    probationAreasFilter: PropTypes.arrayOf(PropTypes.string).isRequired,
+    searchType: PropTypes.string.isRequired
 };
 
 

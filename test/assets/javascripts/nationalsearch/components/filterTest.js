@@ -166,6 +166,7 @@ describe('Filter component', () => {
                 search={search}
                 name='some-filter'
                 title='Some filter'
+                searchType='broad'
             />)
 
         })
@@ -174,7 +175,8 @@ describe('Filter component', () => {
                 filter.setProps({ currentFilter: ['N01'] });
                 expect(search.calledOnce).to.equal(true);
                 expect(search.getCall(0).args[0]).to.equal('Mr Bean');
-                expect(search.getCall(0).args[1]).to.eql(['N01']);
+                expect(search.getCall(0).args[1]).to.equal('broad');
+                expect(search.getCall(0).args[2]).to.eql(['N01']);
             })
         })
         context('when some thing else changes', () => {

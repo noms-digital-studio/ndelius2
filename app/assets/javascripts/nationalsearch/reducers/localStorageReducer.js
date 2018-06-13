@@ -1,12 +1,12 @@
 import {
     ADD_AREA_FILTER, CLEAR_RESULTS, REMOVE_AREA_FILTER, REQUEST_SEARCH, SAVED_SEARCH,
-    SEARCH_RESULTS
+    SEARCH_RESULTS, SEARCH_TYPE_CHANGED
 } from '../actions/search'
 import localforage from 'localforage'
 import {setIn, removeIn} from '../../helpers/immutable'
 
 
-const localStorage = (state = {searchTerm: '',  probationAreasFilter: {}, pageNumber: 1}, action) => {
+const localStorage = (state = {searchTerm: '',  searchType: 'broad', probationAreasFilter: {}, pageNumber: 1}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return saveToLocalStorage({
@@ -41,6 +41,11 @@ const localStorage = (state = {searchTerm: '',  probationAreasFilter: {}, pageNu
                 ...state,
                 probationAreasFilter: removeIn(state.probationAreasFilter, action.probationAreaCode)
             })
+        case SEARCH_TYPE_CHANGED:
+            return saveToLocalStorage({
+                ...state,
+                searchType: action.searchType
+            });
         default:
             return state
     }
@@ -51,7 +56,8 @@ const saveToLocalStorage = state =>  {
         when: Date.now(),
         what: state.searchTerm,
         page: state.pageNumber,
-        filter: state.probationAreasFilter
+        filter: state.probationAreasFilter,
+        type: state.searchType
     }).then(() => { }).catch(err => window.console && console.log(err))
     return state
 }

@@ -24,6 +24,7 @@ OFFENDER_API_PROVIDER=stub \
 APPLICATION_SECRET=mySuperSecretKeyThing \
 ELASTIC_SEARCH_HOST=<the hostname of your ES cluster> \
 ELASTIC_SEARCH_PORT=443 \
+ELASTIC_SEARCH_SCHEME=https \
 NOMIS_API_BASE_URL=<the URL of the NOMIS system> \
 NOMIS_PAYLOAD_TOKEN=<the NOMIS API payload token> \
 NOMIS_PRIVATE_KEY=<the NOMIS API private key> \

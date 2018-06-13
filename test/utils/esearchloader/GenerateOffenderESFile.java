@@ -211,7 +211,10 @@ public class GenerateOffenderESFile {
     }
 
     private static String randomCro() {
-        return String.format("%c%c%02d/%06d%c", randomCapitalLetter(), randomCapitalLetter(), randomUpTo(99), randomUpTo(999999), randomCapitalLetter());
+        if (chance(50)) {
+            return String.format("%d/%02d%c", randomUpTo(999999), randomUpTo(99), randomCapitalLetter());
+        }
+        return String.format("SF%02d/%d%c", randomUpTo(99), randomUpTo(999999), randomCapitalLetter());
     }
 
     private static String randomYear() {

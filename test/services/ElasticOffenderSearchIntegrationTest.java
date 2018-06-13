@@ -29,6 +29,7 @@ import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static scala.io.Source.fromInputStream;
+import static services.helpers.SearchQueryBuilder.QUERY_TYPE.SHOULD;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ElasticOffenderSearchIntegrationTest {
@@ -82,7 +83,7 @@ public class ElasticOffenderSearchIntegrationTest {
                 .willReturn(
                     okForContentType("application/json",  response)));
 
-        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0).toCompletableFuture().join();
+        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0, SHOULD).toCompletableFuture().join();
         val byProbationAreas = byProbationAreasAggregationNodes(result);
 
         assertThat(byProbationAreas.size()).isEqualTo(3);
@@ -126,7 +127,7 @@ public class ElasticOffenderSearchIntegrationTest {
                 .willReturn(
                     okForContentType("application/json",  response)));
 
-        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0).toCompletableFuture().join();
+        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0, SHOULD).toCompletableFuture().join();
         val byProbationAreas = byProbationAreasAggregationNodes(result);
 
         assertThat(byProbationAreas.size()).isEqualTo(2);
@@ -165,7 +166,7 @@ public class ElasticOffenderSearchIntegrationTest {
                 .willReturn(
                     okForContentType("application/json",  response)));
 
-        val result = elasticOffenderSearch.search(JwtHelperTest.generateTokenWithProbationAreaCodes(Arrays.asList("N01", "N40")), emptyList(), "john smith", 10, 0).toCompletableFuture().join();
+        val result = elasticOffenderSearch.search(JwtHelperTest.generateTokenWithProbationAreaCodes(Arrays.asList("N01", "N40")), emptyList(), "john smith", 10, 0, SHOULD).toCompletableFuture().join();
         val byProbationAreas = byProbationAreasAggregationNodes(result);
 
         assertThat(byProbationAreas.size()).isEqualTo(3);
@@ -195,7 +196,7 @@ public class ElasticOffenderSearchIntegrationTest {
                 .willReturn(
                     okForContentType("application/json",  response)));
 
-        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0).toCompletableFuture().join();
+        val result = elasticOffenderSearch.search(JwtHelperTest.generateToken(), emptyList(), "john smith", 10, 0, SHOULD).toCompletableFuture().join();
         val byProbationAreas = byProbationAreasAggregationNodes(result);
 
         assertThat(byProbationAreas.size()).isEqualTo(0);

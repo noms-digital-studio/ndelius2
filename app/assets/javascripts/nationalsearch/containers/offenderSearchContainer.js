@@ -5,9 +5,11 @@ import offenderSearch from '../components/offenderSearch'
 export default connect(
     state => ({
         searchTerm: state.search.searchTerm,
-        probationAreasFilter: Object.getOwnPropertyNames(state.search.probationAreasFilter)
+        probationAreasFilter: Object.getOwnPropertyNames(state.search.probationAreasFilter),
+        searchType: state.search.searchType
     }),
     dispatch => ({
-        search: (searchTerm, probationAreasFilter) => dispatch(search(searchTerm, probationAreasFilter))
+        search: (searchTerm, searchType, probationAreasFilter) =>
+            dispatch(search(searchTerm, searchType, probationAreasFilter))
     })
 )(offenderSearch)

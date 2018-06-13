@@ -1,4 +1,4 @@
-import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, ADD_AREA_FILTER, REMOVE_AREA_FILTER, SAVED_SEARCH} from '../actions/search'
+import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, ADD_AREA_FILTER, REMOVE_AREA_FILTER, SAVED_SEARCH, SEARCH_TYPE_CHANGED} from '../actions/search'
 import localStorageReducer from './localStorageReducer'
 import {expect} from 'chai';
 
@@ -20,6 +20,9 @@ describe("localStorageReducer", () => {
         });
         it('pageNumber will be 1', () => {
             expect(state.pageNumber).to.equal(1)
+        });
+        it('searchType will be `broad`', () => {
+            expect(state.searchType).to.equal('broad')
         });
     })
     describe("when REQUEST_SEARCH action received", () => {
@@ -135,4 +138,24 @@ describe("localStorageReducer", () => {
             });
         })
     })
+
+    describe("when SEARCH_TYPE_CHANGED action received", () => {
+
+        it('searchType will be changed to `exact`', () => {
+            state = localStorageReducer({searchTerm: 'Mr Bean', searchType: 'broad',
+                    probationAreasFilter: {"N01": "N01 Area"}, pageNumber: 3},
+                {type: SEARCH_TYPE_CHANGED, searchType: 'exact'})
+
+            expect(state.searchType).to.equal('exact')
+        });
+
+        it('searchType will be changed to `broad`', () => {
+            state = localStorageReducer({searchTerm: 'Mr Bean', searchType: 'exact',
+                    probationAreasFilter: {"N01": "N01 Area"}, pageNumber: 3},
+                {type: SEARCH_TYPE_CHANGED, searchType: 'broad'})
+
+            expect(state.searchType).to.equal('broad')
+        });
+    })
+
 })

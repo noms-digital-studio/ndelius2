@@ -12,6 +12,10 @@ const SearchFooter = () => (
         </ul>
 
         <div className="margin-top large">
+            <span>You can refine or expand your search by selecting yes or no to ‘Match all terms’</span>
+        </div>
+
+        <div className="margin-top large">
             <span>You can still access the <LegacySearchLink tabIndex="1">previous version of search</LegacySearchLink>.</span>
         </div>
     </div>);

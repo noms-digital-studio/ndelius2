@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static helpers.DateTimeHelper.calculateAge;
 import static java.time.Clock.systemUTC;
-import static services.helpers.SearchQueryBuilder.termsThatLookLikeDates;
+import static helpers.DateTimeHelper.termsThatLookLikeDates;
 
 public interface SearchResultPipeline {
 

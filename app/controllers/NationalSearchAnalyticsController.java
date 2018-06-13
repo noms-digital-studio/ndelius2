@@ -66,6 +66,10 @@ public class NationalSearchAnalyticsController extends Controller {
         return analyticsStore.userAgentTypeCounts("search-index", fromDateTime(from)).thenApply(JsonHelper::okJson);
     }
 
+    public CompletionStage<Result> searchTypeCounts(String from) {
+        return analyticsStore.searchTypeCounts(fromDateTime(from)).thenApply(JsonHelper::okJson);
+    }
+
     public CompletionStage<Result> satisfaction() {
         return analyticsStore.weeklySatisfactionScores()
             .thenApply(data -> JsonHelper.okJson(ImmutableMap.of("satisfactionCounts", data)));

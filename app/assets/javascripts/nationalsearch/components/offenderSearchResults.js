@@ -4,6 +4,7 @@ import SearchResultsTitle from '../containers/searchResultsTitleContainer';
 import PageSelection from '../containers/pageSelectionContainer';
 import OtherAreasFilter from '../containers/otherAreasFilterContainer';
 import MyAreasFilter from '../containers/myAreasFilterContainer';
+import SearchTypeSelector from '../containers/searchTypeSelectorContainer';
 
 import PropTypes from "prop-types";
 
@@ -13,6 +14,7 @@ const OffenderSearchResults = ({results}) => (
 
         <div className='grid-row'>
             <div className='column-one-third'>
+                <SearchTypeSelector/>
                 <MyAreasFilter/>
                 <OtherAreasFilter/>
             </div>

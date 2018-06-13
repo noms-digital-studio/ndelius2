@@ -6,9 +6,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 
-import static helpers.DateTimeHelper.calculateAge;
-import static helpers.DateTimeHelper.canBeConvertedToADate;
-import static helpers.DateTimeHelper.covertToCanonicalDate;
+import static helpers.DateTimeHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DateTimeHelperTest {
@@ -86,4 +84,16 @@ public class DateTimeHelperTest {
     public void returnsFalseIfInputCanNotBeConvertedToADate() {
         assertThat(canBeConvertedToADate("john")).isFalse();
     }
+
+    @Test
+    public void termsThatLookLikeDatesAreExtractedAndNormalised() {
+        assertThat(termsThatLookLikeDates("sna 28/02/2018 foo 2017-Jun-3 bar"))
+            .containsExactly("2018-02-28", "2017-06-03");
+    }
+
+    @Test
+    public void termsThatLookLikeDatesReturnsEmptyArray() {
+        assertThat(termsThatLookLikeDates("sna foo bar")).isEmpty();
+    }
+
 }

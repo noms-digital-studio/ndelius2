@@ -11,7 +11,8 @@ import {
     SEARCH_FIELD_MATCH,
     SATISFACTION_COUNTS,
     CHANGE_YEAR,
-    USER_AGENT_TYPE_COUNTS} from '../actions/analytics'
+    USER_AGENT_TYPE_COUNTS,
+    SEARCH_TYPE_COUNTS} from '../actions/analytics'
 import analytics  from './analylticsReducer'
 import {expect} from 'chai';
 
@@ -59,6 +60,9 @@ describe("analyticsReducer", () => {
         })
         it('userAgentTypeCounts is set to empty object', () => {
             expect(state.userAgentTypeCounts).to.eql({})
+        })
+        it('searchTypeCounts is set to empty object', () => {
+            expect(state.searchTypeCounts).to.eql({})
         })
     })
     describe("when UNIQUE_USER_VISITS action received", () => {
@@ -193,6 +197,23 @@ describe("analyticsReducer", () => {
                 "hasUsedBothProvidersFilterCount": 1,
                 "hasNotUsedFilterCount": 4})
 
+        })
+
+    })
+    describe("when SEARCH_TYPE_COUNTS action received", () => {
+        beforeEach(() => {
+            state = analytics({fetching: true}, {
+                type: SEARCH_TYPE_COUNTS,
+                searchTypeCounts: {
+                "broad": 2,
+                "exact": 1}}
+                )
+        })
+
+        it('searchTypeCounts is set', () => {
+            expect(state.searchTypeCounts).to.eql({
+                "broad": 2,
+                "exact": 1})
         })
 
     })

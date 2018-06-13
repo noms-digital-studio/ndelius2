@@ -31,6 +31,7 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static services.helpers.SearchQueryBuilder.QUERY_TYPE.SHOULD;
 import static utils.data.OffenderESDataFactory.getSearchHitArray;
 import static utils.data.OffenderESDataFactory.getSearchHitArrayWithHighlights;
 
@@ -70,7 +71,7 @@ public class ElasticOffenderSearchTest {
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArray(), totalHits, 42));
 
         // when
-        val results = elasticOffenderSearch.search("bearer-token", emptyList(), "smith", 10, 3);
+        val results = elasticOffenderSearch.search("bearer-token", emptyList(), "smith", 10, 3, SHOULD);
 
         // then
         val result = results.toCompletableFuture().join();
@@ -87,7 +88,7 @@ public class ElasticOffenderSearchTest {
         when(searchResponse.getHits()).thenReturn(new SearchHits(getSearchHitArrayWithMultipleHits(), totalHits, 42));
 
         // when
-        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 3);
+        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 3, SHOULD);
 
         // then
         val result = results.toCompletableFuture().join();
@@ -111,7 +112,7 @@ public class ElasticOffenderSearchTest {
                 ImmutableMap.of("offenderId", 1, "crn", "X1", "currentRestriction", false, "currentExclusion", false)), totalHits, 42));
 
         // when
-        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 3);
+        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 3, SHOULD);
 
         // then
         val result = results.toCompletableFuture().join();
@@ -132,7 +133,7 @@ public class ElasticOffenderSearchTest {
                 ImmutableMap.of("offenderId", 1, "crn", "X1", "currentRestriction", false, "currentExclusion", false, "dateOfBirth", "1965-07-19")), totalHits, 42));
 
         // when
-        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"19/7/1965", 10, 3);
+        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"19/7/1965", 10, 3, SHOULD);
 
         // then
         val result = results.toCompletableFuture().join();
@@ -150,7 +151,7 @@ public class ElasticOffenderSearchTest {
                 ImmutableMap.of("offenderId", 1, "crn", "X1", "currentRestriction", false, "currentExclusion", false, "dateOfBirth", "1965-07-19")), totalHits, 42));
 
         // when
-        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"3/11/1999", 10, 3);
+        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"3/11/1999", 10, 3, SHOULD);
 
         // then
         val result = results.toCompletableFuture().join();
@@ -171,7 +172,7 @@ public class ElasticOffenderSearchTest {
                 ImmutableMap.of("offenderId", 1, "crn", "X1", "currentRestriction", true, "currentExclusion", true)), totalHits, 42));
 
         // when
-        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 3);
+        val results = elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 3, SHOULD);
 
         // then
         val result = results.toCompletableFuture().join();
@@ -188,7 +189,7 @@ public class ElasticOffenderSearchTest {
         );
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
         // when
-        elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 0).toCompletableFuture().join();
+        elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 0, SHOULD).toCompletableFuture().join();
 
         verify(offenderApi, never()).canAccess(anyString(), anyInt());
     }
@@ -205,7 +206,7 @@ public class ElasticOffenderSearchTest {
         );
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
         // when
-        elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 0).toCompletableFuture().join();
+        elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 0, SHOULD).toCompletableFuture().join();
 
         ArgumentCaptor<Long> offenderIds = ArgumentCaptor.forClass(Long.class);
         verify(offenderApi, times(2)).canAccess(eq("bearer-token"), offenderIds.capture());
@@ -225,7 +226,7 @@ public class ElasticOffenderSearchTest {
         );
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
         // when
-        val searchResult = elasticOffenderSearch.search("bearer-token", emptyList(), "smith", 10, 0).toCompletableFuture().join();
+        val searchResult = elasticOffenderSearch.search("bearer-token", emptyList(), "smith", 10, 0, SHOULD).toCompletableFuture().join();
         val allowedAccessOffender = ((JsonNode) ((List) searchResult.get("offenders")).get(0));
         val nonRestrictedExcludedOffender = ((JsonNode) ((List) searchResult.get("offenders")).get(1));
         val notAllowedAccessOffender = ((JsonNode) ((List) searchResult.get("offenders")).get(2));
@@ -246,7 +247,7 @@ public class ElasticOffenderSearchTest {
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
 
         // when
-        val searchResult = elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 0).toCompletableFuture().join();
+        val searchResult = elasticOffenderSearch.search("bearer-token", emptyList(),"smith", 10, 0, SHOULD).toCompletableFuture().join();
         val offender = ((JsonNode) ((List) searchResult.get("offenders")).get(0));
 
         assertThat(getChildNodeNames(offender)).containsExactlyInAnyOrder("offenderId", "accessDenied", "otherIds", "offenderManagers");
@@ -268,7 +269,7 @@ public class ElasticOffenderSearchTest {
         when(searchResponse.getHits()).thenReturn(new SearchHits(searchHits, searchHits.length, 42));
 
         // when
-        val searchResult = elasticOffenderSearch.search("bearer-token", emptyList(), "smith", 10, 0).toCompletableFuture().join();
+        val searchResult = elasticOffenderSearch.search("bearer-token", emptyList(), "smith", 10, 0, SHOULD).toCompletableFuture().join();
         val offender = ((JsonNode) ((List) searchResult.get("offenders")).get(0));
 
         assertThat(offender.get("offenderId").asLong()).isEqualTo(13);

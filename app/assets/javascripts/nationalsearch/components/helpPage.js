@@ -18,9 +18,23 @@ const HelpPage = () => {
 
                     <ul>
                         <li className="list-bullet">
-                            <h2 className="heading-medium no-margin-bottom">Search by name and date of birth at the same
+                            <h2 className="heading-medium no-margin-bottom no-margin-top">Refine the results by selecting ‘Yes’ to ‘Match all terms’</h2>
+                            <p className="margin-top">This will search on all of the information you enter.</p>
+                        </li>
+                    </ul>
+
+                    <ul>
+                        <li className="list-bullet">
+                            <h2 className="heading-medium no-margin-bottom no-margin-top">Expand the results by selecting ‘No’ to ‘Match all terms’</h2>
+                            <p className="margin-top">This will search on any of the information you enter.</p>
+                        </li>
+                    </ul>
+
+                    <ul>
+                        <li className="list-bullet">
+                            <h2 className="heading-medium no-margin-bottom no-margin-top">Search by name and date of birth at the same
                                 time</h2>
-                            <p className="margin-top">For example, <strong>"John Smith 23/06/1986"</strong> - the
+                            <p className="margin-top no-margin-bottom">For example, <strong>"John Smith 23/06/1986"</strong> - the
                                 results will be based on all those search terms.</p>
 
                             <SearchHintBox hint="John Smith 23/06/1986"/>

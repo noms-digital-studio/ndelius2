@@ -5,6 +5,7 @@ import org.junit.Test;
 import static services.helpers.PncHelper.canBeConvertedToAPnc;
 import static services.helpers.PncHelper.covertToCanonicalPnc;
 import static org.assertj.core.api.Assertions.assertThat;
+import static services.helpers.PncHelper.termsThatLookLikePncNumbers;
 
 public class PncHelperTest {
 
@@ -64,4 +65,9 @@ public class PncHelperTest {
         assertThat(covertToCanonicalPnc("03/0000000A")).isEqualTo("03/0a");
     }
 
+    @Test
+    public void findsTermsThatLookLikePncNumbers() {
+        assertThat(termsThatLookLikePncNumbers("john smith 2003/1234567A 15/1234567Z"))
+            .containsExactly("2003/1234567a", "15/1234567z");
+    }
 }

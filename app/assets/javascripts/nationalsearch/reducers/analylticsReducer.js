@@ -11,7 +11,8 @@ import {
     DURATION_BETWEEN_START_END_SEARCH, 
     SEARCH_FIELD_MATCH, 
     CHANGE_YEAR,
-    USER_AGENT_TYPE_COUNTS
+    USER_AGENT_TYPE_COUNTS,
+    SEARCH_TYPE_COUNTS
 } from '../actions/analytics'
 const analytics = (state = {
     uniqueUserVisits: 0,
@@ -27,7 +28,8 @@ const analytics = (state = {
     timeRange: TODAY,
     satisfactionCounts: {},
     yearNumber: String(new Date().getFullYear()),
-    userAgentTypeCounts: {}
+    userAgentTypeCounts: {},
+    searchTypeCounts: {}
 }, action) => {
     switch (action.type) {
         case FILTER_COUNTS:
@@ -101,7 +103,13 @@ const analytics = (state = {
                 ...state,
                 userAgentTypeCounts: action.userAgentTypeCounts,
             }
-            
+
+        case SEARCH_TYPE_COUNTS:
+            return {
+                ...state,
+                searchTypeCounts: action.searchTypeCounts,
+            }
+
         default:
             return state
     }

@@ -9,12 +9,14 @@ export default connect(
         filterValues: extractMyProbationAreas(state.search.byProbationArea, state.search.myProbationAreas),
         currentFilter: Object.getOwnPropertyNames(state.search.probationAreasFilter),
         name: 'my-providers',
-        title: 'My providers'
+        title: 'My providers',
+        searchType: state.search.searchType
     }),
     dispatch => ({
         addToFilter: (probationAreaCode, probationAreaDescription)  => dispatch(addAreaFilter(probationAreaCode, probationAreaDescription)),
         removeFromFilter: probationAreaCode => dispatch(removeAreaFilter(probationAreaCode)),
-        search: (searchTerm, probationAreasFilter) => dispatch(search(searchTerm, probationAreasFilter))
+        search: (searchTerm, searchType, probationAreasFilter) =>
+            dispatch(search(searchTerm, searchType, probationAreasFilter))
     })
 )(areaFilter)
 

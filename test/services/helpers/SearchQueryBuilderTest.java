@@ -6,27 +6,15 @@ import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.Test;
 
-import java.util.List;
-
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
+import static services.helpers.SearchQueryBuilder.QUERY_TYPE.MUST;
+import static services.helpers.SearchQueryBuilder.QUERY_TYPE.SHOULD;
 import static services.helpers.SearchQueryBuilder.simpleTerms;
 import static services.helpers.SearchQueryBuilder.simpleTermsIncludingSingleLetters;
 
 public class SearchQueryBuilderTest {
-
-    @Test
-    public void termsThatLookLikeDatesAreExtractedAndNormalised() {
-        List<String> dateTerms = SearchQueryBuilder.termsThatLookLikeDates("sna 28/02/2018 foo 2017-Jun-3 bar");
-        assertThat(dateTerms).containsExactly("2018-02-28", "2017-06-03");
-    }
-
-    @Test
-    public void termsThatLookLikeDatesReturnsEmptyArray() {
-        List<String> dateTerms = SearchQueryBuilder.termsThatLookLikeDates("sna foo bar");
-        assertThat(dateTerms).isEmpty();
-    }
 
     @Test
     public void simpleTermsAreLowercase_and_doNotInclude_singleLetters_dates_termsWithSlashes() {
@@ -60,8 +48,14 @@ public class SearchQueryBuilderTest {
     }
 
     @Test
-    public void searchSourceBuilderHasCorrectQueries() {
-        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("2013/0234567A 15-09-1970 a smith 1/2/1992", emptyList(), 10, 3);
+    public void searchSourceBuilderHasCorrectQueries_forShouldTypeSearches() {
+        SearchSourceBuilder builder =
+            SearchQueryBuilder.searchSourceFor(
+                "2013/0234567A 15-09-1970 a smith 1/2/1992",
+                emptyList(),
+                10,
+                3,
+                SHOULD);
 
         val query = (BoolQueryBuilder) builder.query();
         val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
@@ -112,8 +106,63 @@ public class SearchQueryBuilderTest {
     }
 
     @Test
+    public void searchSourceBuilderHasCorrectQueries_forMustTypeSearches() {
+        SearchSourceBuilder builder =
+            SearchQueryBuilder.searchSourceFor(
+                "123456/15D 2013/0234567A 15-09-1970 smith 1/2/1992",
+                emptyList(),
+                10,
+                3,
+                MUST);
+
+        val query = (BoolQueryBuilder) builder.query();
+        val queryBuilder1 = (MultiMatchQueryBuilder)query.must().get(0);
+        assertThat(queryBuilder1.value()).isEqualTo("smith");
+        assertThat(queryBuilder1.fields()).containsOnlyKeys(
+            "firstName",
+            "surname",
+            "middleNames",
+            "offenderAliases.firstName",
+            "offenderAliases.surname",
+            "contactDetails.addresses.town",
+            "gender",
+            "contactDetails.addresses.streetName",
+            "contactDetails.addresses.county",
+            "contactDetails.addresses.postcode",
+            "otherIds.crn",
+            "otherIds.nomsNumber",
+            "otherIds.niNumber");
+
+        val queryBuilder2 = (MultiMatchQueryBuilder)query.must().get(1);
+        assertThat(queryBuilder2.value()).isEqualTo("123456/15d");
+        assertThat(queryBuilder2.fields()).containsOnlyKeys(
+            "otherIds.croNumberLowercase");
+
+        val queryBuilder4 = (MultiMatchQueryBuilder)query.must().get(2);
+        assertThat(queryBuilder4.value()).isEqualTo("2013/234567a");
+        assertThat(queryBuilder4.fields()).containsOnlyKeys(
+            "otherIds.pncNumberLongYear",
+            "otherIds.pncNumberShortYear");
+
+        assertThat(((MultiMatchQueryBuilder)query.must().get(3)).value()).isEqualTo("1970-09-15");
+
+        assertThat(((MultiMatchQueryBuilder)query.must().get(4)).value()).isEqualTo("1992-02-01");
+
+        TermQueryBuilder termQueryBuilder = (TermQueryBuilder) query.mustNot().get(0);
+        assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");
+        assertThat(termQueryBuilder.value()).isEqualTo(true);
+
+        assertThat(builder.suggest().getSuggestions().keySet()).containsOnly("firstName", "surname");
+    }
+
+    @Test
     public void emptyProbationAreaFilterWillNotAddAPostFilter() {
-        val builder = SearchQueryBuilder.searchSourceFor("smith", emptyList(), 10, 1);
+        val builder = SearchQueryBuilder.searchSourceFor(
+            "smith",
+            emptyList(),
+            10,
+            1,
+            SHOULD);
 
         assertThat(builder.postFilter()).isNull();
     }
@@ -121,7 +170,12 @@ public class SearchQueryBuilderTest {
     @Test
     public void eachProbationAreaFilterCodeIsAddedToPostFilter() {
         val probationAreasFilter = ImmutableList.of("N01", "N02", "N03");
-        val builder = SearchQueryBuilder.searchSourceFor("smith", probationAreasFilter, 10, 1);
+        val builder = SearchQueryBuilder.searchSourceFor(
+            "smith",
+            probationAreasFilter,
+            10,
+            1,
+            SHOULD);
 
         assertThat(builder.postFilter()).isNotNull();
         val query = (BoolQueryBuilder) builder.postFilter();
@@ -142,7 +196,12 @@ public class SearchQueryBuilderTest {
 
     @Test
     public void dateOnlySearchDoesNotAddAPrefixSearch() {
-        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970", emptyList(), 10, 3);
+        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor(
+            "15-09-1970",
+            emptyList(),
+            10,
+            3,
+            SHOULD);
 
         val query = (BoolQueryBuilder) builder.query();
         assertThat((query.should())).doesNotContain(prefixQuery("firstName", "").boost(11));
@@ -150,7 +209,12 @@ public class SearchQueryBuilderTest {
 
     @Test
     public void unifiedHighlighterIsRequested() {
-        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor("15-09-1970 a smith 1/2/1992",  emptyList(),10, 3);
+        SearchSourceBuilder builder = SearchQueryBuilder.searchSourceFor(
+            "15-09-1970 a smith 1/2/1992",
+            emptyList(),
+            10,
+            3,
+            SHOULD);
 
         assertThat(builder.query()).isInstanceOfAny(BoolQueryBuilder.class);
 

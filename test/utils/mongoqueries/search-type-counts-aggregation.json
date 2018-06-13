@@ -1,0 +1,30 @@
+[
+  {
+    "$match":
+    {
+      "type": { "$eq": "search-request"}
+    }
+  },
+  {
+    "$group":
+    {
+      "_id": { "correlationId": "$correlationId"},
+      "lastSearchType": { "$last": "$searchType"}
+    }
+  },
+  {
+    "$group":
+    {
+      "_id": { "searchType": "$lastSearchType"},
+      "count": { "$sum": 1}
+    }
+  },
+  {
+    "$project": {
+      "searchType": "$_id.searchType",
+      "count": "$count",
+      "_id": 0
+    }
+  }
+]
+

@@ -49,6 +49,9 @@ describe("searchReducer", () => {
         it('showWelcomeBanner will be false', () => {
             expect(state.showWelcomeBanner).to.equal(false)
         });
+        it('searchType will be `broad`', () => {
+            expect(state.searchType).to.equal('broad')
+        });
     })
     describe("when REQUEST_SEARCH action received", () => {
 

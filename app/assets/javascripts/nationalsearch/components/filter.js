@@ -12,7 +12,7 @@ class Filter extends Component {
         const {search, searchTerm, currentFilter} = this.props
 
         if (!equal(currentFilter, nextProps.currentFilter)) {
-            search(searchTerm, nextProps.currentFilter)
+            search(searchTerm, nextProps.searchType, nextProps.currentFilter)
         }
     }
     toggleExpanded() {

@@ -17,7 +17,10 @@ import services.helpers.MongoUtils;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
@@ -513,6 +516,57 @@ public class MongoDbStore implements AnalyticsStore {
                 defaultIfEmpty(ImmutableMap.of()).
                 doOnError(result::completeExceptionally).
                 subscribe(result::complete);
+
+        return result;
+    }
+
+    @Override
+    public CompletableFuture<Map<String, Long>> searchTypeCounts(LocalDateTime from) {
+
+        CompletableFuture<Map<String, Long>> result = new CompletableFuture<>();
+
+        val hasCorrelationId = _match(_exists("correlationId"));
+        val dateFilter = _match(_gte("dateTime", from));
+        val match = _match( _eq("type", "search-request"));
+        val hasSearchTypeAnalytics = _match(_exists("searchType"));
+
+        val lastSearchType = _group(_by(
+            "_id", "$correlationId",
+            "lastSearchType", _last("$searchType")
+        ));
+
+        val sum = _group(new Document(
+                ImmutableMap.of(
+                        "_id", ImmutableMap.of("searchType", "$lastSearchType"),
+                        "count", _sum()
+                )));
+
+        val project = new Document(ImmutableMap.of(
+            "$project", new Document(ImmutableMap.of(
+                "searchType", "$_id.searchType",
+                "count", "$count",
+                "_id", 0
+            ))
+        ));
+
+        val aggregation = ImmutableList.of(
+                hasCorrelationId,
+                dateFilter,
+                match,
+                hasSearchTypeAnalytics,
+                lastSearchType,
+                sum,
+                project
+                );
+
+        events.aggregate(aggregation).
+            toObservable().
+            toList().
+            map(documents -> documents.stream().collect(
+                toMap(doc -> doc.getString("searchType"), doc -> doc.getLong("count")))
+            ).
+            doOnError(result::completeExceptionally).
+            subscribe(result::complete);
 
         return result;
     }

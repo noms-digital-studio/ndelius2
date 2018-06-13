@@ -11,6 +11,7 @@ export const EVENT_OUTCOME = 'EVENT_OUTCOME'
 export const DURATION_BETWEEN_START_END_SEARCH = 'DURATION_BETWEEN_START_END_SEARCH'
 export const SEARCH_FIELD_MATCH = 'SEARCH_FIELD_MATCH'
 export const USER_AGENT_TYPE_COUNTS = 'USER_AGENT_TYPE_COUNTS'
+export const SEARCH_TYPE_COUNTS = 'SEARCH_TYPE_COUNTS'
 export const CHANGE_YEAR = 'CHANGE_YEAR'
 
 export const LAST_HOUR = 'LAST_HOUR';
@@ -32,6 +33,7 @@ const searchFieldMatch = data => ({type: SEARCH_FIELD_MATCH, searchFieldMatch: {
 const satisfactionCounts = data => ({type: SATISFACTION_COUNTS, ...data})
 const changingYear = yearNumber => ({type: CHANGE_YEAR, yearNumber})
 const userAgentTypeCounts = data => ({type: USER_AGENT_TYPE_COUNTS, userAgentTypeCounts: {...data}})
+const searchTypeCounts = data => ({type: SEARCH_TYPE_COUNTS, searchTypeCounts: {...data}})
 
 export const changeTimeRange = timeRange => ({type: TIME_RANGE, timeRange})
 
@@ -63,6 +65,9 @@ export const fetchVisitCounts = timeRange => (
         });
         $.getJSON(`analytics/userAgentTypeCounts${timeRangeToDateParameters(timeRange)}`, data => {
             dispatch(userAgentTypeCounts(data))
+        });
+        $.getJSON(`analytics/searchTypeCounts${timeRangeToDateParameters(timeRange)}`, data => {
+            dispatch(searchTypeCounts(data))
         });
 
     }

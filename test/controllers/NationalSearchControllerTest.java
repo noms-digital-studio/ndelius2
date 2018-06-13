@@ -21,6 +21,7 @@ import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import play.mvc.Http;
 import play.test.WithApplication;
+import services.helpers.SearchQueryBuilder.QUERY_TYPE;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -33,9 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static helpers.JwtHelperTest.generateToken;
-import static helpers.JwtHelperTest.generateTokenWithProbationAreaCodes;
-import static helpers.JwtHelperTest.generateTokenWithSubject;
+import static helpers.JwtHelperTest.*;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -77,7 +76,7 @@ public class NationalSearchControllerTest extends WithApplication {
 
         when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         when(offenderApi.probationAreaDescriptions(any(), any())).thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("N01", "N01 Area", "N02", "N02 Area")));
-        when(elasticOffenderSearch.search(any(), any(),  any(), anyInt(), anyInt())).thenReturn(completedFuture(ImmutableMap.of(
+        when(elasticOffenderSearch.search(any(), any(),  any(), anyInt(), anyInt(), any(QUERY_TYPE.class))).thenReturn(completedFuture(ImmutableMap.of(
                 "offenders", ImmutableList.of(),
                 "suggestions", ImmutableList.of(),
                 "total", 0
@@ -172,7 +171,7 @@ public class NationalSearchControllerTest extends WithApplication {
         val request = new Http.RequestBuilder().
                 session("offenderApiBearerToken", generateToken()).
                 session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith");
+                method(GET).uri("/searchOffender/smith?searchType=broad");
         val result = route(app, request);
 
         assertEquals(OK, result.status());
@@ -184,13 +183,14 @@ public class NationalSearchControllerTest extends WithApplication {
         val request = new Http.RequestBuilder().
                 session("offenderApiBearerToken", generateTokenWithSubject("cn=fake.user,cn=Users,dc=moj,dc=com")).
                 session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith");
+                method(GET).uri("/searchOffender/smith?searchType=exact");
         route(app, request);
 
         verify(analyticsStore, times(2)).recordEvent(analyticsEventCaptor.capture());
 
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("searchType", "exact"));
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("correlationId", "999-aaa-888"));
 
         assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
@@ -205,13 +205,14 @@ public class NationalSearchControllerTest extends WithApplication {
         val request = new Http.RequestBuilder().
                 session("offenderApiBearerToken", generateTokenWithProbationAreaCodes(ImmutableList.of("N01", "N02"))).
                 session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith?areasFilter=");
+                method(GET).uri("/searchOffender/smith?searchType=broad&areasFilter=");
         route(app, request);
 
 
         verify(analyticsStore, atLeastOnce()).recordEvent(analyticsEventCaptor.capture());
 
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("searchType", "broad"));
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("filter", ImmutableMap.of("myProviderSelectedCount", 0L, "otherProviderSelectedCount", 0L, "myProviderCount", 2L)));
 
     }
@@ -221,20 +222,21 @@ public class NationalSearchControllerTest extends WithApplication {
         val request = new Http.RequestBuilder().
                 session("offenderApiBearerToken", generateTokenWithProbationAreaCodes(ImmutableList.of("N01", "N02"))).
                 session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith?areasFilter=N01,N02,N03,N04,N05");
+                method(GET).uri("/searchOffender/smith?searchType=broad&areasFilter=N01,N02,N03,N04,N05");
         route(app, request);
 
 
         verify(analyticsStore, atLeastOnce()).recordEvent(analyticsEventCaptor.capture());
 
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
+        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("searchType", "broad"));
         assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("filter", ImmutableMap.of("myProviderSelectedCount", 2L, "otherProviderSelectedCount", 3L, "myProviderCount", 2L)));
 
     }
 
     @Test
     public void searchingWithoutABearerTokenReturns401() {
-        val request = new Http.RequestBuilder().method(GET).uri("/searchOffender/smith");
+        val request = new Http.RequestBuilder().method(GET).uri("/searchOffender/smith?searchType=broad");
         val result = route(app, request);
 
         assertEquals(UNAUTHORIZED, result.status());
@@ -364,10 +366,10 @@ public class NationalSearchControllerTest extends WithApplication {
         val request = new Http.RequestBuilder().
                 session("offenderApiBearerToken", generateToken()).
                 session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith?areasFilter=N01,N02,N03");
+                method(GET).uri("/searchOffender/smith?searchType=broad&areasFilter=N01,N02,N03");
         val result = route(app, request);
 
-        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt());
+        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt(), any(QUERY_TYPE.class));
 
         assertThat(probationAreasFilter.getValue()).containsExactlyInAnyOrder("N01", "N02", "N03");
     }
@@ -377,10 +379,10 @@ public class NationalSearchControllerTest extends WithApplication {
         val request = new Http.RequestBuilder().
                 session("offenderApiBearerToken", generateToken()).
                 session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith");
+                method(GET).uri("/searchOffender/smith?searchType=broad");
         val result = route(app, request);
 
-        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt());
+        verify(elasticOffenderSearch).search(anyString(), probationAreasFilter.capture(), anyString(), anyInt(), anyInt(), any(QUERY_TYPE.class));
 
         assertThat(probationAreasFilter.getValue()).isEmpty();
     }

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import {flatMap} from '../../helpers/streams'
 
-const Suggestions = ({searchTerm, probationAreasFilter, suggestions, search}) => {
+const Suggestions = ({searchTerm, searchType, probationAreasFilter, suggestions, search}) => {
     if (suggestions.length === 0) {
         return (<span/>);
     }
@@ -11,7 +11,9 @@ const Suggestions = ({searchTerm, probationAreasFilter, suggestions, search}) =>
             {suggestionsToOrderedMapping(suggestions).map( (suggestion, index) =>
                 <span key={index}>
                     &nbsp;
-                    <a className='white' tabIndex="1" href='javascript:' aria-label={`Search again using ${suggestion.text}`} onClick={() => search(replace(searchTerm, suggestion.original, suggestion.text), probationAreasFilter)}>
+                    <a className='white' tabIndex="1" href='javascript:'
+                       aria-label={`Search again using ${suggestion.text}`}
+                       onClick={() => search(replace(searchTerm, suggestion.original, suggestion.text), searchType, probationAreasFilter)}>
                      {suggestion.text}
                      </a>
                 </span>)}
@@ -51,6 +53,7 @@ Suggestions.propTypes = {
     searchTerm: PropTypes.string.isRequired,
     probationAreasFilter: PropTypes.arrayOf(PropTypes.string).isRequired,
     search: PropTypes.func.isRequired,
+    searchType: PropTypes.string.isRequired
 };
 
 
