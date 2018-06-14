@@ -793,6 +793,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("additionalPreviousSupervision", "Some previous supervision response");
 
                 put("proposal", "Some proposal");
+                put("consideredQualityDiversity", "no");
 
                 put("pageNumber", "9");
             }
@@ -925,6 +926,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("previousSupervisionResponse", "Good");
                 put("additionalPreviousSupervision", "Some previous supervision response");
                 put("proposal", "Some proposal");
+                put("consideredQualityDiversity", "yes");
 
                 put("reportAuthor", "Arthur Author");
                 put("office", "Sheffield probation office");

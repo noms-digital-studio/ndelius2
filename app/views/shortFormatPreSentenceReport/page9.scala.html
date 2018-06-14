@@ -47,6 +47,25 @@
             @page8Fields(reportForm)
 
             @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_hint -> proposalHint, 'class -> "wide", Symbol("data-limit") -> "3000", 'required -> "true", '_error -> "Enter your conclusion")
+            <hr />
+
+            <div class="form-group">
+                <fieldset>
+                    <legend class="margin-bottom medium">
+                        <span class="form-label-bold">Have you considered what equality and diversity issues are present?</span>
+                    </legend>
+
+                    @inputRadioGroup(
+                        reportForm("consideredQualityDiversity"),
+                        options(
+                            "yes" -> "Yes",
+                            "no" -> "No"
+                        )
+                    )
+                </fieldset>
+            </div>
+
+
 
             @page11Fields(reportForm, encrypter)
 
