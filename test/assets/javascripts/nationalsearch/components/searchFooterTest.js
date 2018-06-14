@@ -10,8 +10,8 @@ describe('SearchFooter component', () => {
             searchFooter = shallow(<SearchFooter/>)
         })
 
-        it('contains a LegacySearchLink', () => {
-            expect(searchFooter.find('Connect(LegacySearchLink)').exists()).to.be.true
+        it('contains a initial help text', () => {
+            expect(searchFooter.find('.background-box')).to.have.length(1);
         })
 
     })

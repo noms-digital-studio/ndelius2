@@ -1,4 +1,4 @@
-import { Link } from 'react-router'
+import {Link} from 'react-router'
 
 import OffenderSearchResults from '../containers/offenderSearchResultsContainer';
 import OffenderSearch from '../containers/offenderSearchContainer';
@@ -47,7 +47,7 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
 
                         </div>
                     </div>
-                    <div className="key-content">
+                    <div>
                         {showWelcomeBanner && <SearchFooter/>}
                         {!showWelcomeBanner && <OffenderSearchResults/>}
                     </div>

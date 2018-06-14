@@ -9,22 +9,24 @@ import SearchTypeSelector from '../containers/searchTypeSelectorContainer';
 import PropTypes from "prop-types";
 
 const OffenderSearchResults = ({results}) => (
-    <div className='padded mobile-pad' id='offender-results'>
-        <SearchResultsTitle/>
+    <div className="key-content">
+        <div className='padded mobile-pad' id='offender-results'>
+            <SearchResultsTitle/>
 
-        <div className='grid-row'>
-            <div className='column-one-third'>
-                <SearchTypeSelector/>
-                <MyAreasFilter/>
-                <OtherAreasFilter/>
-            </div>
-            <div className='column-two-thirds'>
-                <ul id='live-offender-results'>
-                    {results.map(offenderSummary => (
-                        renderSummary(offenderSummary)
-                    ))}
-                </ul>
-                <PageSelection/>
+            <div className='grid-row'>
+                <div className='column-one-third'>
+                    <SearchTypeSelector/>
+                    <MyAreasFilter/>
+                    <OtherAreasFilter/>
+                </div>
+                <div className='column-two-thirds'>
+                    <ul id='live-offender-results'>
+                        {results.map(offenderSummary => (
+                            renderSummary(offenderSummary)
+                        ))}
+                    </ul>
+                    <PageSelection/>
+                </div>
             </div>
         </div>
     </div>
