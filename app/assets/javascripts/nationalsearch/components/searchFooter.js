@@ -14,9 +14,9 @@ const SearchFooter = () => (
             </h3>
             <ul className="list-bullet margin-top medium">
                 <li>name and date of birth</li>
-                <li>address and previous addresses</li>
                 <li>CRN, PNC and National Insurance numbers</li>
                 <li>aliases and other recorded dates of birth</li>
+                <li>towns and postcodes</li>
             </ul>
         </div>
 
