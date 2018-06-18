@@ -2,6 +2,7 @@ package services;
 
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
+import interfaces.HealthCheckResult;
 import interfaces.PdfGenerator;
 import lombok.val;
 import play.Logger;
@@ -11,6 +12,8 @@ import play.libs.ws.WSResponse;
 
 import javax.inject.Inject;
 import java.util.concurrent.CompletionStage;
+
+import static interfaces.HealthCheckResult.unhealthy;
 
 public class RestPdfGenerator implements PdfGenerator {
 
@@ -40,15 +43,14 @@ public class RestPdfGenerator implements PdfGenerator {
     }
 
     @Override
-    public CompletionStage<Boolean> isHealthy() {
+    public CompletionStage<HealthCheckResult> isHealthy() {
         return wsClient.url(pdfGeneratorUrl + "healthcheck")
             .get()
             .thenApply(WSResponse::asJson)
-            .thenApply(json -> json.get("status").asText())
-            .thenApply("OK"::equals)
+            .thenApply(json -> new HealthCheckResult("OK".equals(json.get("status").asText()), json))
             .exceptionally(ex -> {
                 Logger.warn("Error calling PDF Generator's healthcheck", ex);
-                return false;
+                return unhealthy(ex.getLocalizedMessage());
             });
     }
 }

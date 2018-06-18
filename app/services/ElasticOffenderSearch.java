@@ -9,6 +9,7 @@ import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.FutureListener;
 import helpers.JwtHelper;
+import interfaces.HealthCheckResult;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
@@ -21,7 +22,6 @@ import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import play.Logger;
 import play.libs.Json;
 import services.helpers.OffenderSorter;
-import services.helpers.SearchQueryBuilder;
 import services.helpers.SearchQueryBuilder.QUERY_TYPE;
 import services.helpers.SearchResultPipeline;
 
@@ -59,13 +59,13 @@ public class ElasticOffenderSearch implements OffenderSearch {
     }
 
     @Override
-    public CompletionStage<Boolean> isHealthy() {
+    public CompletionStage<HealthCheckResult> isHealthy() {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                return elasticSearchClient.ping();
+                return new HealthCheckResult(elasticSearchClient.ping());
             } catch (IOException e) {
                 Logger.error("Got an error calling ElasticSearch health endpoint", e);
-                return false;
+                return HealthCheckResult.unhealthy(e.getLocalizedMessage());
             }
         });
     }

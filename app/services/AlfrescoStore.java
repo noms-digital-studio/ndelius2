@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.JsonHelper;
 import interfaces.DocumentStore;
+import interfaces.HealthCheckResult;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import play.Logger;
@@ -31,6 +32,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
+import static interfaces.HealthCheckResult.healthy;
+import static interfaces.HealthCheckResult.unhealthy;
 import static play.mvc.Http.Status.OK;
 
 public class AlfrescoStore implements DocumentStore {
@@ -177,20 +180,20 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<Boolean> isHealthy() {
+    public CompletionStage<HealthCheckResult> isHealthy() {
         return wsClient.url(alfrescoUrl + "noms-spg/notificationStatus")
             .addHeader("X-DocRepository-Remote-User", alfrescoUser)
             .get()
             .thenApply(wsResponse -> {
                 if (wsResponse.getStatus() != OK) {
                     Logger.warn("Error calling Alfresco. Status {}", wsResponse.getStatus());
-                    return false;
+                    return unhealthy(String.format("status %d", wsResponse.getStatus()));
                 }
-                return true;
+                return healthy();
             })
             .exceptionally(throwable -> {
                 Logger.warn("Error calling Alfresco", throwable);
-                return false;
+                return unhealthy(throwable.getLocalizedMessage());
             });
     }
 

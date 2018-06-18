@@ -7,6 +7,7 @@ import com.mongodb.rx.client.MongoCollection;
 import com.mongodb.rx.client.MongoDatabase;
 import com.typesafe.config.Config;
 import interfaces.AnalyticsStore;
+import interfaces.HealthCheckResult;
 import lombok.val;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -391,7 +392,7 @@ public class MongoDbStore implements AnalyticsStore {
     }
 
     @Override
-    public CompletableFuture<Boolean> isUp() {
+    public CompletableFuture<HealthCheckResult> isUp() {
         return MongoUtils.isHealthy(database);
     }
 

@@ -3,6 +3,7 @@ package services;
 import com.google.common.base.Strings;
 import com.typesafe.config.Config;
 import helpers.JsonHelper;
+import interfaces.HealthCheckResult;
 import interfaces.PrisonerApi;
 import interfaces.PrisonerApiToken;
 import lombok.val;
@@ -16,6 +17,8 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
+import static interfaces.HealthCheckResult.healthy;
+import static interfaces.HealthCheckResult.unhealthy;
 import static play.mvc.Http.HeaderNames.AUTHORIZATION;
 import static play.mvc.Http.Status.OK;
 
@@ -69,7 +72,7 @@ public class NomisPrisonerApi implements PrisonerApi {
     }
 
     @Override
-    public CompletionStage<Boolean> isHealthy() {
+    public CompletionStage<HealthCheckResult> isHealthy() {
 
         return wsClient.url(apiBaseUrl + "../elite2api/health").
                 addHeader(AUTHORIZATION, "Bearer " + apiToken.get()).
@@ -80,14 +83,15 @@ public class NomisPrisonerApi implements PrisonerApi {
 
                     if (!healthy) {
                         Logger.warn("NOMIS API Response Status: " + wsResponse.getStatus());
+                        return unhealthy(String.format("Status %d", wsResponse.getStatus()));
                     }
 
-                    return healthy;
+                    return healthy(wsResponse.asJson());
                 }).
                 exceptionally(throwable -> {
 
                     Logger.error("Error while checking NOMIS API connectivity", throwable);
-                    return false;
+                    return unhealthy(throwable.getLocalizedMessage());
                 });
         }
 }

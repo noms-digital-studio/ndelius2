@@ -3,6 +3,7 @@ package controllers;
 import com.google.common.collect.ImmutableMap;
 import data.ShortFormatPreSentenceReportData;
 import interfaces.DocumentStore;
+import interfaces.HealthCheckResult;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class JsonTest implements PdfGenerator, DocumentStore {
     }
 
     @Override
-    public CompletionStage<Boolean> isHealthy() {
+    public CompletionStage<HealthCheckResult> isHealthy() {
         throw new RuntimeException("Not yet implemented");
     }
 

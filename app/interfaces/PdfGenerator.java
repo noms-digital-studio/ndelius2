@@ -6,5 +6,5 @@ public interface PdfGenerator {
 
     <T> CompletionStage<Byte[]> generate(String templateName, T values);
 
-    CompletionStage<Boolean> isHealthy();
+    CompletionStage<HealthCheckResult> isHealthy();
 }

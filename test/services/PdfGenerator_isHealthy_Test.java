@@ -49,21 +49,21 @@ public class PdfGenerator_isHealthy_Test {
         when(wsResponse.getStatus()).thenReturn(200);
         when(wsResponse.asJson()).thenReturn(mapper.readTree("{\"status\": \"OK\"}"));
 
-        assertThat(pdfGenerator.isHealthy().toCompletableFuture().join()).isEqualTo(true);
+        assertThat(pdfGenerator.isHealthy().toCompletableFuture().join().isHealthy()).isEqualTo(true);
     }
 
     @Test
     public void returnsUnhealthyWhenPdfGeneratorReturnsNon200Response() {
         when(wsResponse.getStatus()).thenReturn(404);
 
-        assertThat(pdfGenerator.isHealthy().toCompletableFuture().join()).isEqualTo(false);
+        assertThat(pdfGenerator.isHealthy().toCompletableFuture().join().isHealthy()).isEqualTo(false);
     }
 
     @Test
     public void returnsUnHealthyWhenPdfGeneratorCallThrowsException() {
         when(wsRequest.get()).thenReturn(supplyAsync(() -> { throw new RuntimeException("Boom!"); }));
 
-        assertThat(pdfGenerator.isHealthy().toCompletableFuture().join()).isEqualTo(false);
+        assertThat(pdfGenerator.isHealthy().toCompletableFuture().join().isHealthy()).isEqualTo(false);
     }
 
 }

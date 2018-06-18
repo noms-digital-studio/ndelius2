@@ -2,6 +2,7 @@ package services.stubs;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
+import interfaces.HealthCheckResult;
 import interfaces.OffenderApi;
 import lombok.val;
 import play.libs.Json;
@@ -14,6 +15,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static interfaces.HealthCheckResult.healthy;
 import static play.libs.Json.toJson;
 
 public class StubOffenderApi implements OffenderApi {
@@ -29,8 +31,8 @@ public class StubOffenderApi implements OffenderApi {
     }
 
     @Override
-    public CompletionStage<Boolean> isHealthy() {
-        return CompletableFuture.completedFuture(true);
+    public CompletionStage<HealthCheckResult> isHealthy() {
+        return CompletableFuture.completedFuture(healthy());
     }
 
     @Override

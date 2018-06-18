@@ -7,6 +7,7 @@ import com.mongodb.rx.client.MongoDatabase;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import interfaces.DocumentStore;
+import interfaces.HealthCheckResult;
 import lombok.val;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bouncycastle.util.encoders.Base64;
@@ -149,6 +150,6 @@ public class MongoDocumentStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<Boolean> isHealthy() {
+    public CompletionStage<HealthCheckResult> isHealthy() {
         return MongoUtils.isHealthy(database);    }
 }

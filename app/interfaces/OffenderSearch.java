@@ -10,5 +10,5 @@ public interface OffenderSearch {
 
     CompletionStage<Map<String, Object>> search(String bearerToken, List<String> probationAreasFilter, String searchTerm, int pageSize, int pageNumber, QUERY_TYPE queryType);
 
-    CompletionStage<Boolean> isHealthy();
+    CompletionStage<HealthCheckResult> isHealthy();
 }

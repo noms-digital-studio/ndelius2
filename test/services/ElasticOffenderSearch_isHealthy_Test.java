@@ -34,21 +34,21 @@ public class ElasticOffenderSearch_isHealthy_Test {
     public void returnsHealthyWhenElasticSearchClientPingReturnsTrue() throws IOException {
         when(elasticSearchClient.ping()).thenReturn(true);
 
-        assertThat(elasticOffenderSearch.isHealthy().toCompletableFuture().join()).isEqualTo(true);
+        assertThat(elasticOffenderSearch.isHealthy().toCompletableFuture().join().isHealthy()).isEqualTo(true);
     }
 
     @Test
     public void returnsUnhealthyWhenElasticSearchClientPingReturnsFalse() throws IOException {
         when(elasticSearchClient.ping()).thenReturn(false);
 
-        assertThat(elasticOffenderSearch.isHealthy().toCompletableFuture().join()).isEqualTo(false);
+        assertThat(elasticOffenderSearch.isHealthy().toCompletableFuture().join().isHealthy()).isEqualTo(false);
     }
 
     @Test
     public void returnsUnHealthyWhenElasticSearchClientPingThrowsException() throws IOException {
         when(elasticSearchClient.ping()).thenThrow(new IOException("Boom!"));
 
-        assertThat(elasticOffenderSearch.isHealthy().toCompletableFuture().join()).isEqualTo(false);
+        assertThat(elasticOffenderSearch.isHealthy().toCompletableFuture().join().isHealthy()).isEqualTo(false);
     }
 
 }

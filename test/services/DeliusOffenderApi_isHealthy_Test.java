@@ -48,21 +48,21 @@ public class DeliusOffenderApi_isHealthy_Test {
     public void returnsHealthyWhenAlfrescoReturns200Response() {
         when(wsResponse.getStatus()).thenReturn(200);
 
-        assertThat(deliusOffenderApi.isHealthy().toCompletableFuture().join()).isEqualTo(true);
+        assertThat(deliusOffenderApi.isHealthy().toCompletableFuture().join().isHealthy()).isEqualTo(true);
     }
 
     @Test
     public void returnsUnhealthyWhenAlfrescoReturnsNon200Response() {
         when(wsResponse.getStatus()).thenReturn(404);
 
-        assertThat(deliusOffenderApi.isHealthy().toCompletableFuture().join()).isEqualTo(false);
+        assertThat(deliusOffenderApi.isHealthy().toCompletableFuture().join().isHealthy()).isEqualTo(false);
     }
 
     @Test
     public void returnsUnHealthyWhenAlfrescoCallThrowsException() {
         when(wsRequest.get()).thenReturn(supplyAsync(() -> { throw new RuntimeException("Boom!"); }));
 
-        assertThat(deliusOffenderApi.isHealthy().toCompletableFuture().join()).isEqualTo(false);
+        assertThat(deliusOffenderApi.isHealthy().toCompletableFuture().join().isHealthy()).isEqualTo(false);
     }
 
 }

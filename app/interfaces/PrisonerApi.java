@@ -6,5 +6,5 @@ public interface PrisonerApi {
 
     CompletionStage<byte[]> getImage(String nomisId);
 
-    CompletionStage<Boolean> isHealthy();
+    CompletionStage<HealthCheckResult> isHealthy();
 }

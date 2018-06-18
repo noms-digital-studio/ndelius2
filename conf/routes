@@ -2,7 +2,7 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /healthcheck                                controllers.UtilityController.healthcheck
+GET     /healthcheck                                controllers.UtilityController.healthcheck(detail: Boolean ?= false)
 GET     /utility/searchDb                           controllers.UtilityController.searchDb
 GET     /utility/searchLdap                         controllers.UtilityController.searchLdap
 

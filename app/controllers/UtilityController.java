@@ -23,7 +23,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.lang.Runtime.getRuntime;
 
@@ -39,7 +38,7 @@ public class UtilityController extends Controller {
         return new Definition(name, aggregate);
     }
 
-    private final Map<Definition, Supplier<CompletableFuture<Boolean>>> healthChecks;
+    private final Map<Definition, Supplier<CompletableFuture<HealthCheckResult>>> healthChecks;
 
     private final OffenderApi offenderApi; // Used by searchDb and searchLdap
 
@@ -53,7 +52,7 @@ public class UtilityController extends Controller {
 
         this.offenderApi = offenderApi; // Used by searchDb and searchLdap, so stored directly for later, others are closed over below
 
-        healthChecks = ImmutableMap.<Definition, Supplier<CompletableFuture<Boolean>>>builder().
+        healthChecks = ImmutableMap.<Definition, Supplier<CompletableFuture<HealthCheckResult>>>builder().
                 put(definition("pdf-generator", true), () -> pdfGenerator.isHealthy().toCompletableFuture()).
                 put(definition("document-store", true), () -> documentStore.isHealthy().toCompletableFuture()).
                 put(definition("analytics-store", false), analyticsStore::isUp).
@@ -63,7 +62,10 @@ public class UtilityController extends Controller {
                 build();
     }
 
-    public CompletionStage<Result> healthcheck() {
+    public CompletionStage<Result> healthcheck(boolean details) {
+        final Function<HealthCheckResult, Object> statusMapper = details ?
+                healthCheckResult -> healthCheckResult
+                : healthCheckResult -> toStatus(healthCheckResult.isHealthy());
 
         val definedFutures = healthChecks.entrySet().stream().collect(
                 Collectors.toMap(
@@ -72,7 +74,7 @@ public class UtilityController extends Controller {
                 )
         );
 
-        final Function<Void, Map<Definition, Boolean>> buildStatuses = ignored ->
+        final Function<Void, Map<Definition, HealthCheckResult>> buildStatuses = ignored ->
                 definedFutures.entrySet().stream().collect(
                         Collectors.toMap(
                                 Map.Entry::getKey,
@@ -84,19 +86,19 @@ public class UtilityController extends Controller {
 
         return allHealthFutures.
                 thenApply(buildStatuses).
-                thenApply(this::buildResult).
+                thenApply(statuses -> buildResult(statuses, statusMapper)).
                 thenApply(JsonHelper::okJson);
     }
 
-    private Map<String, Object> buildResult(Map<Definition, Boolean> statuses) {
+    private Map<String, Object> buildResult(Map<Definition, HealthCheckResult> statuses, Function<HealthCheckResult, Object> statusMapper) {
 
         val overallStatus = statuses.entrySet().stream().
                 filter(entry -> entry.getKey().isAggregate()).
                 map(Map.Entry::getValue).
-                reduce(true, (x, y) -> x && y);
+                allMatch(HealthCheckResult::isHealthy);
 
         val dependencies = statuses.entrySet().stream().
-                collect(Collectors.toMap(entry -> entry.getKey().getName(), entry -> toStatus(entry.getValue())));
+                collect(Collectors.toMap(entry -> entry.getKey().getName(), entry -> statusMapper.apply(entry.getValue())));
 
         return ImmutableMap.<String, Object>builder().
                 put("status", toStatus(overallStatus)).

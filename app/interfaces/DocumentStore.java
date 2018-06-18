@@ -26,5 +26,5 @@ public interface DocumentStore {
 
     CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId);
 
-    CompletionStage<Boolean> isHealthy();
+    CompletionStage<HealthCheckResult> isHealthy();
 }

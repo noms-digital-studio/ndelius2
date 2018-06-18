@@ -12,7 +12,7 @@ public interface OffenderApi {
 
     CompletionStage<Boolean> canAccess(String bearerToken, long offenderId);
 
-    CompletionStage<Boolean> isHealthy();
+    CompletionStage<HealthCheckResult> isHealthy();
 
     CompletionStage<JsonNode> searchDb(Map<String, String> queryParams);
 

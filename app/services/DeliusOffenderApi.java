@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
+import interfaces.HealthCheckResult;
 import interfaces.OffenderApi;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,8 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.IntFunction;
 
 import static helpers.JsonHelper.readValue;
+import static interfaces.HealthCheckResult.healthy;
+import static interfaces.HealthCheckResult.unhealthy;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -91,20 +94,20 @@ public class DeliusOffenderApi implements OffenderApi {
     }
 
     @Override
-    public CompletionStage<Boolean> isHealthy() {
+    public CompletionStage<HealthCheckResult> isHealthy() {
         String url = offenderApiBaseUrl + "health";
         return wsClient.url(url)
             .get()
             .thenApply(wsResponse -> {
                 if (wsResponse.getStatus() != OK) {
                     Logger.warn("Bad response calling Delius Offender API {}. Status {}", url, wsResponse.getStatus());
-                    return false;
+                    return unhealthy(String.format("Status: %d", wsResponse.getStatus()));
                 }
-                return true;
+                return healthy(wsResponse.asJson());
             })
             .exceptionally(throwable -> {
                 Logger.error("Got an error calling Delius Offender API health endpoint", throwable);
-                return false;
+                return unhealthy(throwable.getLocalizedMessage());
             });
     }
 

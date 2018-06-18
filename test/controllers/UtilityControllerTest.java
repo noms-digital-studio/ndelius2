@@ -2,8 +2,10 @@ package controllers;
 
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
+import interfaces.HealthCheckResult;
 import interfaces.OffenderSearch;
 import interfaces.PrisonerApi;
 import lombok.val;
@@ -50,11 +52,11 @@ public class UtilityControllerTest extends WithApplication {
     @Before
     public void setup() {
         stubPdfGeneratorWithStatus("OK");
-        stubDocumentStoreToReturn(ok());
-        stubOffenderApiToReturn(ok());
-        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> true));
-        when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
-        when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> true));
+        stubDocumentStoreToReturn(ok("{}"));
+        stubOffenderApiToReturn(ok("{}"));
+        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
+        when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
+        when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
     }
 
     @Test
@@ -76,7 +78,6 @@ public class UtilityControllerTest extends WithApplication {
             "dependencies");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesOkWhenPdfGeneratorIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
@@ -84,11 +85,26 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("pdf-generator", "OK"));
+        assertThat(dependencies(result)).contains(entry("pdf-generator", "OK"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
-    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesOkWithDetailWhenPdfGeneratorIsHealthy() {
+        stubPdfGeneratorWithStatus("OK");
+
+        val request = new RequestBuilder().method(GET).uri("/healthcheck?detail=true");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependenciesWithDetail(result))
+                .contains(entry(
+                        "pdf-generator",
+                        ImmutableMap.of("healthy", Boolean.TRUE, "detail", ImmutableMap.of("status", "OK"))));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
     @Test
     public void healthEndpointIndicatesFailedWhenPdfGeneratorIsUnhealthy() {
         stubPdfGeneratorWithStatus("FAILED");
@@ -97,11 +113,10 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("pdf-generator", "FAILED"));
+        assertThat(dependencies(result)).contains(entry("pdf-generator", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesOkWhenDocumentStoreIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
@@ -109,11 +124,26 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("document-store", "OK"));
+        assertThat(dependencies(result)).contains(entry("document-store", "OK"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
-    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesOkWithDetailWhenDocumentStoreIsHealthy() {
+        stubDocumentStoreToReturn(ok("detail is ignored"));
+
+        val request = new RequestBuilder().method(GET).uri("/healthcheck?detail=true");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependenciesWithDetail(result))
+                .contains(entry(
+                        "document-store",
+                        ImmutableMap.of("healthy", Boolean.TRUE, "detail", "none")));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
     @Test
     public void healthEndpointIndicatesFailedWhenDocumentStoreIsUnhealthy() {
         stubDocumentStoreToReturn(serverError());
@@ -122,11 +152,10 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("document-store", "FAILED"));
+        assertThat(dependencies(result)).contains(entry("document-store", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesOkWhenAnalyticsStoreIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
@@ -134,24 +163,37 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("analytics-store", "OK"));
+        assertThat(dependencies(result)).contains(entry("analytics-store", "OK"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
-    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesOkWithDetailWhenAnalyticsStoreIsHealthy() {
+        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> HealthCheckResult.healthy("some detail")));
+        val request = new RequestBuilder().method(GET).uri("/healthcheck?detail=true");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependenciesWithDetail(result))
+                .contains(entry(
+                        "analytics-store",
+                        ImmutableMap.of("healthy", Boolean.TRUE, "detail", "some detail")));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
     @Test
     public void healthEndpointIndicatesOkWhenAnalyticsStoreIsUnhealthy() {
-        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> false));
+        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::unhealthy));
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("analytics-store", "FAILED"));
+        assertThat(dependencies(result)).contains(entry("analytics-store", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesOkWhenElasticSearchIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
@@ -159,25 +201,38 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("offender-search", "OK"));
+        assertThat(dependencies(result)).contains(entry("offender-search", "OK"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
-    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesOkWithDetailWhenElasticSearchIsHealthy() {
+        when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> HealthCheckResult.healthy("some detail")));
+        val request = new RequestBuilder().method(GET).uri("/healthcheck?detail=true");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependenciesWithDetail(result))
+                .contains(entry(
+                        "offender-search",
+                        ImmutableMap.of("healthy", Boolean.TRUE, "detail", "some detail")));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
     @Test
     public void healthEndpointIndicatesFailedWhenElasticSearchIsUnhealthy() {
-        when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> false));
+        when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::unhealthy));
 
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("offender-search", "FAILED"));
+        assertThat(dependencies(result)).contains(entry("offender-search", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesOkWhenPrisonerApiIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
@@ -185,25 +240,38 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("prisoner-api", "OK"));
+        assertThat(dependencies(result)).contains(entry("prisoner-api", "OK"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
-    @SuppressWarnings("unchecked")
+    @Test
+    public void healthEndpointIndicatesOkWithDetailWhenPrisonerApiIsHealthy() {
+        when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> HealthCheckResult.healthy("some detail")));
+        val request = new RequestBuilder().method(GET).uri("/healthcheck?detail=true");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependenciesWithDetail(result))
+                .contains(entry(
+                        "prisoner-api",
+                        ImmutableMap.of("healthy", Boolean.TRUE, "detail", "some detail")));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
     @Test
     public void healthEndpointIndicatesFailedWhenPrisonerApiIsUnhealthy() {
-        when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> false));
+        when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::unhealthy));
 
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("prisoner-api", "FAILED"));
+        assertThat(dependencies(result)).contains(entry("prisoner-api", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesOkWhenOffenderApiIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
@@ -211,11 +279,10 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("offender-api", "OK"));
+        assertThat(dependencies(result)).contains(entry("offender-api", "OK"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void healthEndpointIndicatesFailedWhenOffenderApiIsUnhealthy() {
         stubOffenderApiToReturn(serverError());
@@ -225,7 +292,7 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat((Map<String, Object>) convertToJson(result).get("dependencies")).contains(entry("offender-api", "FAILED"));
+        assertThat(dependencies(result)).contains(entry("offender-api", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 
@@ -263,5 +330,16 @@ public class UtilityControllerTest extends WithApplication {
             )
             .build();
     }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Map<String, Object>> dependenciesWithDetail(Result result) {
+        return (Map<String, Map<String, Object>>) convertToJson(result).get("dependencies");
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> dependencies(Result result) {
+        return (Map<String, Object>) convertToJson(result).get("dependencies");
+    }
+
 
 }
