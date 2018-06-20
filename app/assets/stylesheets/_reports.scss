@@ -104,6 +104,10 @@ footer {
       float: right;
       padding-right: $gutter;
     }
+    .preview-container {
+      float: left;
+      padding-left: $gutter;
+    }
   }
 }
 

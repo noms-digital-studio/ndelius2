@@ -1,8 +1,16 @@
 @import helper._
+@import helpers.CallHelper.relative
+@import data._
 
-@(page: Int, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true)
+@(page: Int, reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true)
 
 <footer class="report-footer">
+    <div class="preview-container">
+        <button class="button secondary" id="draftReport" type="button" data-target="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))">
+            View draft report
+        </button>
+
+    </div>
     <div class="container">
         <div id="save_indicator" class="inline margin-top margin-right js-hidden">
             <div class="font-xxsmall inline">
@@ -17,7 +25,7 @@
 
         @pageNumber(page, nextText)
         @if(showCloseButton) {
-        <button class="button secondary tooltip" id="exitLink" type="button" aria-label="Close">
+        <button class="button secondary tooltip" id="exitLink" type="button" aria-label="Close" >
             Close<span>Save and close your report</span>
         </button>
         }

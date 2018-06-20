@@ -140,6 +140,19 @@ function openPopup(url) {
             }
         });
 
+        $('#draftReport').click(function (e) {
+            var target = $(this).data('target')
+            var form = $('form')
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action') + '/save',
+                data: formWithZeroJumpNumber(form),
+                complete: function(response) {
+                    window.location = target
+                }
+            });
+        });
+
         /**
          * Feedback link - change form action and submit
          */
