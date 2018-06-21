@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.not;
 import static helpers.JwtHelper.principal;
 import static helpers.JwtHelper.probationAreaCodes;
@@ -35,7 +36,6 @@ import static services.helpers.SearchQueryBuilder.QUERY_TYPE.SHOULD;
 
 public class NationalSearchController extends Controller {
 
-    private static final String OFFENDER_API_BEARER_TOKEN = "offenderApiBearerToken";
     private static final String SEARCH_ANALYTICS_GROUP_ID = "searchAnalyticsGroupId";
 
     private final views.html.nationalSearch template;
