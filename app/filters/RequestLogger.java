@@ -18,7 +18,7 @@ import static play.mvc.Http.MimeTypes.HTML;
 import static play.mvc.Http.MimeTypes.JSON;
 
 class RequestLogger {
-    private static List<String> loggableContent = ImmutableList.of(HTML, JSON);
+    private static List<String> loggableContent = ImmutableList.of(HTML, JSON, "application/pdf");
 
     static Optional<String> requestLogLine(long startTime, Http.RequestHeader requestHeader, Result result) {
         val session = session(requestHeader);
