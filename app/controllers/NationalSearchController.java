@@ -18,8 +18,6 @@ import play.mvc.Result;
 import play.mvc.Results;
 
 import javax.inject.Inject;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -41,13 +39,13 @@ public class NationalSearchController extends Controller {
     private final views.html.nationalSearch template;
     private final views.html.nationalSearchMaintenance maintenanceTemplate;
     private final OffenderSearch offenderSearch;
-    private final Duration userTokenValidDuration;
     private final OffenderApi offenderApi;
     private final AnalyticsStore analyticsStore;
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
     private final boolean inMaintenanceMode;
     private final int recentSearchMinutes;
+    private final ParamsValidator paramsValidator;
 
     @Inject
     public NationalSearchController(
@@ -57,7 +55,8 @@ public class NationalSearchController extends Controller {
             views.html.nationalSearchMaintenance maintenanceTemplate,
             OffenderSearch offenderSearch,
             OffenderApi offenderApi,
-            AnalyticsStore analyticsStore) {
+            AnalyticsStore analyticsStore,
+            ParamsValidator paramsValidator) {
 
         this.ec = ec;
         this.template = template;
@@ -65,13 +64,13 @@ public class NationalSearchController extends Controller {
         this.offenderSearch = offenderSearch;
         this.offenderApi = offenderApi;
         this.analyticsStore = analyticsStore;
+        this.paramsValidator = paramsValidator;
 
         recentSearchMinutes = configuration.getInt("recent.search.minutes");
         inMaintenanceMode = configuration.getBoolean("maintenance.offender.search");
-        userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
 
         val paramsSecretKey = configuration.getString("params.secret.key");
-        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey);
+        decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey).orElse("");
     }
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
@@ -80,6 +79,7 @@ public class NationalSearchController extends Controller {
         }
 
         val username = decrypter.apply(encryptedUsername);
+        val epochRequestTime = decrypter.apply(encryptedEpochRequestTimeMills);
 
         final Supplier<CompletionStage<Result>> renderedPage = () -> offenderApi.logon(username).thenApplyAsync(bearerToken -> {
 
@@ -100,7 +100,8 @@ public class NationalSearchController extends Controller {
 
         Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
 
-        return invalidCredentials(encryptedUsername, encryptedEpochRequestTimeMills, username).
+        final Runnable errorReporter = () -> Logger.error(String.format("National search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
+        return paramsValidator.invalidCredentials(username, epochRequestTime, errorReporter).
                 map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result)).
                 orElseGet(renderedPage).
                 exceptionally(throwable -> {
@@ -176,31 +177,6 @@ public class NationalSearchController extends Controller {
 
         analyticsStore.recordEvent(combine(analyticsContext(), JsonHelper.jsonToObjectMap(request().body().asJson())));
         return created();
-    }
-
-    private Optional<Result> invalidCredentials(String encryptedUsername, String encryptedEpochRequestTimeMills, String username) {
-
-        val epochRequestTime = decrypter.apply(encryptedEpochRequestTimeMills);
-
-        if (username == null || epochRequestTime == null) {
-
-            Logger.error(String.format("Request did not receive user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
-            return Optional.of(badRequest("one or both of 'user' or 't' not supplied"));
-        }
-
-        val timeNowInstant = Instant.now();
-        val epochRequestInstant = Instant.ofEpochMilli(Long.valueOf(epochRequestTime));
-
-        if (Math.abs(timeNowInstant.toEpochMilli() - epochRequestInstant.toEpochMilli()) > userTokenValidDuration.toMillis()) {
-            Logger.warn(String.format(
-                    "Request not authorised because time currently is %s but token time %s",
-                    timeNowInstant.toString(),
-                    epochRequestInstant.toString()));
-
-            return Optional.of(Results.unauthorized());
-        }
-
-        return Optional.empty();
     }
 
     private Map<String, Object> analyticsContext() {

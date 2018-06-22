@@ -38,7 +38,7 @@ import static play.test.Helpers.*;
 public class ReportGeneratorWizardController_AutoSave_Test extends WithApplication {
 
     private static final Byte[] SOME_PDF_DATA = new Byte[]{'p', 'd', 'f'};
-    private Function<String, String> encryptor = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+    private Function<String, String> encryptor = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
     @Mock
     private DocumentStore alfrescoDocumentStore;

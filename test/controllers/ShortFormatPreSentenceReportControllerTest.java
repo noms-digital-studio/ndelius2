@@ -78,15 +78,15 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
             val clearDocumentId = "12345";
             val clearUserName = "John Smith";
 
-            val documentId = URLEncoder.encode(Encryption.encrypt(clearDocumentId, secretKey), "UTF-8");
-            val onBehalfOfUser = URLEncoder.encode(Encryption.encrypt(clearUserName, secretKey), "UTF-8");
+            val documentId = URLEncoder.encode(Encryption.encrypt(clearDocumentId, secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
+            val onBehalfOfUser = URLEncoder.encode(Encryption.encrypt(clearUserName, secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
 
             val request = new RequestBuilder().method(GET).
                     uri("/report/shortFormatPreSentenceReport?documentId=" + documentId + "&onBehalfOfUser=" + onBehalfOfUser);
 
             val content = Helpers.contentAsString(route(app, request));
 
-            assertTrue(content.contains(Encryption.encrypt("Retrieved From Store", secretKey)));   // Returned from Mock retrieveOriginalData
+            assertTrue(content.contains(Encryption.encrypt("Retrieved From Store", secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed"))));   // Returned from Mock retrieveOriginalData
 
         } catch (Exception ex) {
 
@@ -111,7 +111,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage2AllFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -138,7 +138,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage3SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -167,7 +167,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage3AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -198,7 +198,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage4SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -230,7 +230,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage4AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -272,7 +272,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage5SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -316,7 +316,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage5AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -361,7 +361,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage6SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -407,7 +407,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage6AllFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -454,7 +454,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage7SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -509,7 +509,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage7AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -568,7 +568,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage8SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -627,7 +627,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage8AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -687,7 +687,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage9SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -746,7 +746,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage9AllRequiredFieldsReturnsOK() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -810,7 +810,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void postSampleReportPage11SomeFieldsMissingReturnsBadRequest() {
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {
@@ -876,7 +876,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         given(documentStore.updateExistingPdf(any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "456")));
 
-        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+        Function<String, String> encrypter = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
         val formData = new HashMap<String, String>() {
             {

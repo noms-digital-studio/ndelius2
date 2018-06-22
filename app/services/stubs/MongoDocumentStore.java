@@ -64,7 +64,7 @@ public class MongoDocumentStore implements DocumentStore {
         );
 
         Logger.debug(String.format("uploadNewPdf: storing pdf against key %s", key.toString()));
-        Logger.debug(String.format("URL encoded encrypted key %s", URLEncoder.encode(Encryption.encrypt(key.toString(), "ThisIsASecretKey"))));
+        Logger.debug(String.format("URL encoded encrypted key %s", URLEncoder.encode(Encryption.encrypt(key.toString(), "ThisIsASecretKey").orElse("could not encrypt key"))));
         return CompletableFuture.completedFuture(ImmutableMap.of("ID", key.toString()));
     }
 

@@ -37,7 +37,7 @@ import static play.test.Helpers.*;
 public class ReportGeneratorWizardController_GetPdf_Test extends WithApplication {
 
     private static final byte[] SOME_PDF_DATA = new byte[]{'p', 'd', 'f'};
-    private Function<String, String> encryptor = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+    private Function<String, String> encryptor = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
     @Mock
     private DocumentStore alfrescoDocumentStore;
@@ -99,7 +99,7 @@ public class ReportGeneratorWizardController_GetPdf_Test extends WithApplication
 
     private String encrypt(String s)  {
         try {
-            return URLEncoder.encode(Encryption.encrypt(s, "ThisIsASecretKey"), "UTF-8");
+            return URLEncoder.encode(Encryption.encrypt(s, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

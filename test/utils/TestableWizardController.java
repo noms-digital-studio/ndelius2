@@ -21,7 +21,8 @@ public class TestableWizardController extends ShortFormatPreSentenceReportContro
                 pdfGenerator,
                 documentStore,
                 null,
-               null);
+               null,
+            null);
     }
 
     public void testStoreReport(ShortFormatPreSentenceReportData data) {

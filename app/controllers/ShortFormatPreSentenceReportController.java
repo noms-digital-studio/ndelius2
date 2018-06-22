@@ -36,9 +36,10 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   PdfGenerator pdfGenerator,
                                                   DocumentStore documentStore,
                                                   views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate,
-                                                  views.html.shortFormatPreSentenceReport.completed completedTemplate) {
+                                                  views.html.shortFormatPreSentenceReport.completed completedTemplate,
+                                                  ParamsValidator paramsValidator) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, paramsValidator);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
     }

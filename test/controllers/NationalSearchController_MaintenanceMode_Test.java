@@ -33,8 +33,8 @@ public class NationalSearchController_MaintenanceMode_Test extends WithApplicati
 
 
     private Http.RequestBuilder buildIndexPageRequest() throws UnsupportedEncodingException {
-        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", "ThisIsASecretKey"), "UTF-8");
-        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(Instant.now().toEpochMilli()), "ThisIsASecretKey"), "UTF-8");
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(Instant.now().toEpochMilli()), "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
 
         return new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
     }

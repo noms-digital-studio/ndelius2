@@ -1,5 +1,7 @@
 package helpers;
 
+import lombok.val;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -11,7 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
-import lombok.val;
+import java.util.Optional;
 
 public interface Encryption {
 
@@ -19,30 +21,30 @@ public interface Encryption {
     // val encrypted = Encryption.encrypt("Some Plain Text", "ThisIsASecretKey");
     // val plainText = Encryption.decrypt(encrypted, "ThisIsASecretKey");
 
-    static String encrypt(String plainText, String secret) {
+    static Optional<String> encrypt(String plainText, String secret) {
 
         try {
 
             val cipher = cipherFromSecret(Cipher.ENCRYPT_MODE, secret);
 
-            return cipher != null ? Base64.getEncoder().encodeToString(cipher.doFinal(plainText.getBytes())) : null;
+            return cipher != null && plainText != null ? Optional.of(Base64.getEncoder().encodeToString(cipher.doFinal(plainText.getBytes()))) : Optional.empty();
 
         } catch (IllegalBlockSizeException | BadPaddingException ex) {
 
-            return null;
+            return Optional.empty();
         }
     }
 
-    static String decrypt(String encrypted, String secret) {
+    static Optional<String> decrypt(String encrypted, String secret) {
 
         try {
             val cipher = cipherFromSecret(Cipher.DECRYPT_MODE, secret);
 
-            return cipher != null ? new String(cipher.doFinal(Base64.getDecoder().decode(encrypted))) : null;
+            return cipher != null && encrypted != null ? Optional.of(new String(cipher.doFinal(Base64.getDecoder().decode(encrypted)))) : Optional.empty();
 
         } catch (IllegalBlockSizeException | BadPaddingException ex) {
 
-            return null;
+            return Optional.empty();
         }
     }
 

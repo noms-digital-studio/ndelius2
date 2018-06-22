@@ -261,8 +261,8 @@ public class NationalSearchControllerTest extends WithApplication {
     @Test
     public void validUserAndTimeTokenReturns200Response() throws UnsupportedEncodingException {
 
-        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
-        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(Instant.now().toEpochMilli()), secretKey), "UTF-8");
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(Instant.now().toEpochMilli()), secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
 
         val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
         val result = route(app, request);
@@ -312,9 +312,9 @@ public class NationalSearchControllerTest extends WithApplication {
 
     @Test
     public void validUserAndOldTimeTokenReturns401Response() throws UnsupportedEncodingException {
-        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
         val overAnHourAgo = String.valueOf(Instant.now().minus(61, MINUTES).toEpochMilli());
-        val encryptedTime = URLEncoder.encode(Encryption.encrypt(overAnHourAgo, secretKey), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(overAnHourAgo, secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
 
         val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
         val result = route(app, request);
@@ -328,9 +328,9 @@ public class NationalSearchControllerTest extends WithApplication {
         stopPlay();
         startPlay();
 
-        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
         val overAnHourAgo = String.valueOf(LocalDateTime.now().minusDays(100).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        val encryptedTime = URLEncoder.encode(Encryption.encrypt(overAnHourAgo, secretKey), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(overAnHourAgo, secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
 
         val request = new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
         val result = route(app, request);
@@ -389,8 +389,8 @@ public class NationalSearchControllerTest extends WithApplication {
 
     private Http.RequestBuilder buildIndexPageRequest(int minutesDrift) throws UnsupportedEncodingException {
 
-        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey), "UTF-8");
-        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(Instant.now().toEpochMilli() + (1000 * 60 * minutesDrift)), secretKey), "UTF-8");
+        val encryptedUser = URLEncoder.encode(Encryption.encrypt("roger.bobby", secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
+        val encryptedTime = URLEncoder.encode(Encryption.encrypt(String.valueOf(Instant.now().toEpochMilli() + (1000 * 60 * minutesDrift)), secretKey).orElseThrow(() -> new RuntimeException("Encrypt failed")), "UTF-8");
 
         return new Http.RequestBuilder().method(GET).uri(String.format("/nationalSearch?user=%s&t=%s", encryptedUser, encryptedTime));
     }

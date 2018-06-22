@@ -42,7 +42,7 @@ public class SentencingCourtDetailsTest extends WithApplication {
             .add("East London")
             .build();
 
-    private Function<String, String> encryptor = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey");
+    private Function<String, String> encryptor = plainText -> Encryption.encrypt(plainText, "ThisIsASecretKey").orElseThrow(() -> new RuntimeException("Encrypt failed"));
 
     @Test
     public void localJusticeAreaDropDownContainsLondonLocales() {

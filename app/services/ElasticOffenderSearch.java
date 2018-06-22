@@ -55,7 +55,7 @@ public class ElasticOffenderSearch implements OffenderSearch {
 
         val paramsSecretKey = configuration.getString("params.secret.key");
 
-        encrypter = plainText -> Encryption.encrypt(plainText, paramsSecretKey);
+        encrypter = plainText -> Encryption.encrypt(plainText, paramsSecretKey).orElseThrow(() -> new RuntimeException("Encrypt failed"));
     }
 
     @Override

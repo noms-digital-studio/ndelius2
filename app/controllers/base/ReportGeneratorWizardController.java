@@ -3,6 +3,7 @@ package controllers.base;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
+import controllers.ParamsValidator;
 import data.base.ReportGeneratorWizardData;
 import helpers.JsonHelper;
 import helpers.ThrowableHelper;
@@ -45,9 +46,10 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                                               EncryptedFormFactory formFactory,
                                               Class<T> wizardType,
                                               PdfGenerator pdfGenerator,
-                                              DocumentStore documentStore) {
+                                              DocumentStore documentStore,
+                                              ParamsValidator paramsValidator) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType, paramsValidator);
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
