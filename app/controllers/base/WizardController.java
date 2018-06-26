@@ -9,6 +9,7 @@ import helpers.Encryption;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
@@ -106,7 +107,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     public final CompletionStage<Result> wizardPost() {
 
-        val boundForm = wizardForm.bindFromRequest();
+        val boundForm = withSessionCheck(wizardForm.bindFromRequest());
         val thisPage = boundForm.value().map(WizardData::getPageNumber).orElse(1);
         val visitedPages = new StringBuilder();
         val pageStatuses = getPageStatuses(boundForm.value(), thisPage, visitedPages);
@@ -123,7 +124,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
             return CompletableFuture.supplyAsync(() -> {
                 Logger.debug("Bad data posted to wizard: " + boundForm.allErrors());
-                return badRequest(renderPage(errorPage, wizardForm.bind(errorData), pageStatuses));
+                return badRequest(renderPage(errorPage, withSessionCheck(wizardForm.bind(errorData)), pageStatuses));
             }, ec.current());
 
         } else {
@@ -145,6 +146,25 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                             cancelledWizard(wizardData) :
                     completedWizard(wizardData);
         }
+    }
+
+    Form<T> withSessionCheck(Form<T> boundForm ) {
+        return boundForm.value()
+                .filter(this::hasSessionMismatch)
+                .map(form -> boundForm.withGlobalError("session.window.mismatch"))
+                .orElse(boundForm);
+    }
+
+    boolean hasSessionMismatch(T form ) {
+        return StringUtils.isNotBlank(session("sessionToken")) &&
+                StringUtils.isNotBlank(form.getSessionToken()) &&
+                !session("sessionToken").equals(form.getSessionToken());
+    }
+
+    void startNewSession(Map<String, String> params) {
+        val sessionToken = UUID.randomUUID().toString();
+        params.put("sessionToken", sessionToken);
+        session("sessionToken", sessionToken);
     }
 
     public final CompletionStage<Result> feedbackPost() {

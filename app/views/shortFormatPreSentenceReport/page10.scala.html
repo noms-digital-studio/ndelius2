@@ -26,6 +26,7 @@
     <div class="margin-top medium">&nbsp;</div>
 
     @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+        @govukGlobalErrors(reportForm)
         @CSRF.formField
 
         @commonFields(reportForm, encrypter)

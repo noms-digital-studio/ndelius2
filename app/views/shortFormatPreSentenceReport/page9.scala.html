@@ -35,6 +35,7 @@
         <div class="column-two-thirds">
 
         @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+            @govukGlobalErrors(reportForm)
             @CSRF.formField
 
             @commonFields(reportForm, encrypter)

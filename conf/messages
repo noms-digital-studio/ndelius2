@@ -1,0 +1,1 @@
+session.window.mismatch=<h2 class="heading-medium error-summary-heading">This report has been amended in another window</h2><p>Please navigate to the other popup window and check this has your latest changes and then <a href='javascript:window.close();'>close this window</a></p>

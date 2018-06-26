@@ -28,6 +28,7 @@
 
         </div>
         <div class="column-two-thirds">
+            @govukGlobalErrors(reportForm)
             @if(!reportForm.errors("issueAccommodation").isEmpty) {
                 <div class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
 

@@ -57,6 +57,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     public CompletionStage<Result> reportPost() {
         return wizardForm.bindFromRequest().value().
+                filter(not(this::hasSessionMismatch)).
                 map(wizardData -> generateAndStoreReport(wizardData).
                     exceptionally(error -> error(wizardData, error)).
                     thenApply(this::toJsonResult)).
@@ -99,8 +100,9 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         val queryParams = request().queryString().keySet();
         val continueFromInterstitial = queryParams.contains("continue");
         val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
+        val brandNewDocument = !stopAtInterstitial && !continueFromInterstitial;
 
-        return super.initialParams().thenCompose(params -> originalData(params).orElseGet(() -> addPageAndDocumentId(params))).thenApply(params -> {
+        return super.initialParams().thenCompose(params -> originalData(params).orElseGet(() -> addPageAndDocumentId(params))).thenApplyAsync(params -> {
             if (stopAtInterstitial) {
                 params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
                 params.put("pageNumber", "1");
@@ -109,9 +111,12 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                 params.put("pageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
                 params.put("jumpNumber", params.get("pageNumber"));
             }
+            if (continueFromInterstitial || brandNewDocument) {
+                startNewSession(params);
+            }
 
             return params;
-        });
+        }, ec.current());
     }
 
     private String currentPageButNotInterstitialOrCompletion(String pageNumber) {
@@ -215,6 +220,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
                     info.put("onBehalfOfUser", params.get("onBehalfOfUser"));
                     info.put("documentId", params.get("documentId"));
+                    info.put("sessionToken", params.get("sessionToken"));
 
                     return info;
                 }));
