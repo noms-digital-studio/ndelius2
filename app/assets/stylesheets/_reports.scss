@@ -142,6 +142,11 @@ footer {
     width: 100%;
   }
 
+  .ql-editor {
+    .ql-align-justify {
+      white-space: normal;
+    }
+  }
 }
 
 .small-margin-bottom {
