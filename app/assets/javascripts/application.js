@@ -306,9 +306,7 @@ function openPopup(url) {
 
 
             editor.on('text-change', function(delta, oldDelta, source) {
-                if (source === 'user') {
-                    transferValueToInput()
-                }
+                transferValueToInput()
             })
 
             transferValueToInput()
