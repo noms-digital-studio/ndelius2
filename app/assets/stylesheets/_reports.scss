@@ -147,6 +147,11 @@ footer {
       white-space: normal;
     }
   }
+  .ql-editor:focus {
+    .ql-align-justify {
+      white-space: inherit;
+    }
+  }
 }
 
 .small-margin-bottom {
