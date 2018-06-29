@@ -147,9 +147,14 @@ footer {
       white-space: normal;
     }
   }
-  .ql-editor:focus {
-    .ql-align-justify {
-      white-space: inherit;
+}
+
+@-moz-document url-prefix() {
+  .form-group {
+    .ql-editor:focus {
+      .ql-align-justify {
+        white-space: inherit
+      }
     }
   }
 }
