@@ -166,3 +166,12 @@ footer {
 .small-margin-top {
   margin-top: $gutter-one-third;
 }
+
+.notice {
+  background-color: $light-blue-25;
+  padding: $gutter-one-third;
+
+  .icon {
+    left: $gutter-one-third;
+  }
+}
