@@ -115,4 +115,4 @@ browserifyTask := {
 sourceGenerators in Assets +=  browserifyTask.taskValue
 resourceDirectories in Assets += browserifyOutputDir.value
 unmanagedResourceDirectories in IntegrationTest += baseDirectory.value  / "target/web/public/test"
-unmanagedResourceDirectories in Test <+= baseDirectory ( _ /"target/web/public/test" )
+unmanagedResourceDirectories in Test += baseDirectory.value  / "target/web/public/test"
