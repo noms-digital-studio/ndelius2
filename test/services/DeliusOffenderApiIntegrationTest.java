@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import com.google.common.collect.ImmutableList;
 import interfaces.OffenderApi;
+import interfaces.OffenderApi.Offender;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,6 +35,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
     public void beforeEach() {
         val n01 = loadResource("/deliusoffender/probationAreaByCode_N01.json");
         val n02 = loadResource("/deliusoffender/probationAreaByCode_N02.json");
+        val offender = loadResource("/deliusoffender/offender.json");
 
         wireMock.stubFor(
                 get(urlEqualTo("/probationAreas/code/N01"))
@@ -44,6 +46,11 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                 get(urlEqualTo("/probationAreas/code/N02"))
                         .willReturn(
                                 okForContentType("application/json",  n02)));
+
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/crn/X12345"))
+                        .willReturn(
+                                okForContentType("application/json",  offender)));
 
         offenderApi = instanceOf(OffenderApi.class);
     }
@@ -110,6 +117,15 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(probationAreaCodeToDescriptionMap)
                 .contains(entry("N01", "NPS North West"))
                 .contains(entry("N02", "NPS North East"));
+    }
+
+    @Test
+    public void getsOffenderByCrn() {
+        Offender offender = offenderApi.getOffenderByCrn("ABC", "X12345").toCompletableFuture().join();
+
+        assertThat(offender.getFirstName()).isEqualTo("John");
+        assertThat(offender.getSurname()).isEqualTo("Smith");
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345")));
     }
 
     private static Map.Entry<String, String> entry(String code, String description) {

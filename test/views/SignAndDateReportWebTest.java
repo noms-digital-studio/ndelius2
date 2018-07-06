@@ -1,8 +1,10 @@
 package views;
 
 import com.google.common.collect.ImmutableMap;
+import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Before;
@@ -24,6 +26,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static play.inject.Bindings.bind;
+import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SignAndDateReportWebTest extends WithIE8Browser {
@@ -100,12 +103,17 @@ public class SignAndDateReportWebTest extends WithIE8Browser {
         documentStore = mock(DocumentStore.class);
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
+        OffenderApi offenderApi = mock(OffenderApi.class);
+        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+
         return new GuiceApplicationBuilder().
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(documentStore),
-                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
-            )
+                bind(OffenderApi.class).toInstance(offenderApi),
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)))
+            .configure("params.user.token.valid.duration", "100000d")
             .build();
     }
 

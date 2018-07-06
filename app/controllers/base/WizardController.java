@@ -2,10 +2,10 @@ package controllers.base;
 
 import com.google.common.base.Strings;
 import com.typesafe.config.Config;
-import controllers.ParamsValidator;
 import data.base.WizardData;
 import data.viewModel.PageStatus;
 import helpers.Encryption;
+import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import lombok.val;
@@ -26,9 +26,9 @@ import scala.compat.java8.functionConverterImpls.FromJavaFunction;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static helpers.FluentHelper.content;
 
 public abstract class WizardController<T extends WizardData> extends Controller {
@@ -51,8 +52,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected final Function<String, String> encrypter;
     protected final Function<String, String> decrypter;
     protected final HttpExecutionContext ec;
-    protected final Duration userTokenValidDuration;
-    protected final ParamsValidator paramsValidator;
 
     protected WizardController(HttpExecutionContext ec,
                                WebJarsUtil webJarsUtil,
@@ -60,14 +59,12 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                                Environment environment,
                                AnalyticsStore analyticsStore,
                                EncryptedFormFactory formFactory,
-                               Class<T> wizardType,
-                               ParamsValidator paramsValidator) {
+                               Class<T> wizardType) {
 
         this.ec = ec;
         this.webJarsUtil = webJarsUtil;
         this.environment = environment;
         this.analyticsStore = analyticsStore;
-        this.paramsValidator = paramsValidator;
 
         wizardForm = formFactory.form(wizardType, this::decryptParams);
         encryptedFields = newWizardData().encryptedFields().map(Field::getName).collect(Collectors.toList());
@@ -78,8 +75,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey).orElse("");
 
         viewEncrypter = new FromJavaFunction(encrypter); // Use Scala functions in the view.scala.html markup
-
-        userTokenValidDuration = configuration.getDuration("params.user.token.valid.duration");
     }
 
     public final CompletionStage<Result> wizardGet() {
@@ -101,7 +96,19 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                 return badRequest(renderErrorMessage(errorMessage));
             }
 
-        }, ec.current());
+        }, ec.current()).
+            exceptionally(throwable -> {
+
+                Logger.error("Wizard Get failure", throwable);
+
+                if (throwable instanceof CompletionException &&
+                    throwable.getCause() instanceof InvalidCredentialsException) {
+
+                    return ((InvalidCredentialsException) throwable.getCause()).getErrorResult();
+                }
+
+                return internalServerError();
+            });
     }
 
     public final CompletionStage<Result> wizardPost() {
@@ -192,7 +199,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     protected void renderingData(T wizardData) {
 
-        if (Strings.isNullOrEmpty(session("id"))) {
+        if (isNullOrEmpty(session("id"))) {
             session("id", UUID.randomUUID().toString());
         }
 
@@ -272,7 +279,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         ).orElseGet(Stream::empty).collect(Collectors.toList());
 
         val previouslyVisited = (List<Integer>)JsonHelper.readValue(boundForm.map(WizardData::getVisitedPages).
-                        flatMap(value -> Strings.isNullOrEmpty(value) ? Optional.empty() : Optional.of(value)).
+                        flatMap(value -> isNullOrEmpty(value) ? Optional.empty() : Optional.of(value)).
                         orElse("[]"),
                 List.class);
 

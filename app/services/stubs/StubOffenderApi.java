@@ -1,6 +1,7 @@
 package services.stubs;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import interfaces.HealthCheckResult;
 import interfaces.OffenderApi;
@@ -16,6 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static interfaces.HealthCheckResult.healthy;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static play.libs.Json.toJson;
 
 public class StubOffenderApi implements OffenderApi {
@@ -48,6 +50,47 @@ public class StubOffenderApi implements OffenderApi {
     @Override
     public CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> probationAreaCodes) {
         return CompletableFuture.completedFuture(probationAreaCodes.stream().collect(Collectors.toMap(Function.identity(), this::probationAreaDescription)));
+    }
+
+    @Override
+    public CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn) {
+        if (isBlank(crn)) {
+            throw new RuntimeException("getOffenderByCrn called with blank CRN");
+        }
+
+        val offender = new Offender(
+            "Sam",
+            "Jones",
+            ImmutableList.of("Henry", "James"),
+            "2000-06-22",
+            otherIds(),
+            new ContactDetails(addresses())
+            );
+
+        return CompletableFuture.completedFuture(offender);
+    }
+
+    private ImmutableMap<String, String> otherIds() {
+        return ImmutableMap.of("pncNumber", "2018/123456N");
+    }
+
+    private ImmutableList<OffenderAddress> addresses() {
+        return ImmutableList.of(anAddress());
+    }
+
+    private OffenderAddress anAddress() {
+        val offenderAddress = new OffenderAddress(
+            "Big Building",
+            "7",
+            "High Street",
+            "Nether Edge",
+            "Sheffield",
+            "Yorkshire",
+            "S7 1AB",
+            "2010-06-22",
+            null
+        );
+        return offenderAddress;
     }
 
     private String probationAreaDescription(String code) {

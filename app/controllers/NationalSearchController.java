@@ -32,7 +32,7 @@ import static helpers.JwtHelper.probationAreaCodes;
 import static services.helpers.SearchQueryBuilder.QUERY_TYPE.MUST;
 import static services.helpers.SearchQueryBuilder.QUERY_TYPE.SHOULD;
 
-public class NationalSearchController extends Controller {
+public class NationalSearchController extends Controller implements ParamsValidator {
 
     private static final String SEARCH_ANALYTICS_GROUP_ID = "searchAnalyticsGroupId";
 
@@ -45,7 +45,8 @@ public class NationalSearchController extends Controller {
     private final Function<String, String> decrypter;
     private final boolean inMaintenanceMode;
     private final int recentSearchMinutes;
-    private final ParamsValidator paramsValidator;
+    private final Config configuration;
+
 
     @Inject
     public NationalSearchController(
@@ -55,8 +56,7 @@ public class NationalSearchController extends Controller {
             views.html.nationalSearchMaintenance maintenanceTemplate,
             OffenderSearch offenderSearch,
             OffenderApi offenderApi,
-            AnalyticsStore analyticsStore,
-            ParamsValidator paramsValidator) {
+            AnalyticsStore analyticsStore) {
 
         this.ec = ec;
         this.template = template;
@@ -64,13 +64,18 @@ public class NationalSearchController extends Controller {
         this.offenderSearch = offenderSearch;
         this.offenderApi = offenderApi;
         this.analyticsStore = analyticsStore;
-        this.paramsValidator = paramsValidator;
+        this.configuration = configuration;
 
         recentSearchMinutes = configuration.getInt("recent.search.minutes");
         inMaintenanceMode = configuration.getBoolean("maintenance.offender.search");
 
         val paramsSecretKey = configuration.getString("params.secret.key");
         decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey).orElse("");
+    }
+
+    @Override
+    public Config getConfiguration() {
+        return configuration;
     }
 
     public CompletionStage<Result> index(String encryptedUsername, String encryptedEpochRequestTimeMills) {
@@ -101,7 +106,7 @@ public class NationalSearchController extends Controller {
         Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
 
         final Runnable errorReporter = () -> Logger.error(String.format("National search request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
-        return paramsValidator.invalidCredentials(username, epochRequestTime, errorReporter).
+        return invalidCredentials(username, epochRequestTime, errorReporter).
                 map(result -> (CompletionStage<Result>) CompletableFuture.completedFuture(result)).
                 orElseGet(renderedPage).
                 exceptionally(throwable -> {

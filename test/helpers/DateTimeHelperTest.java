@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 
 import static helpers.DateTimeHelper.*;
@@ -95,5 +96,16 @@ public class DateTimeHelperTest {
     public void termsThatLookLikeDatesReturnsEmptyArray() {
         assertThat(termsThatLookLikeDates("sna foo bar")).isEmpty();
     }
+
+    @Test
+    public void formatsADateCorrectly() {
+        assertThat(format("2018-06-29")).isEqualTo("29/06/2018");
+    }
+
+    @Test
+    public void convertsADateCorrectly() {
+        assertThat(convert("2018-06-29")).isEqualTo(LocalDate.of(2018, 6,29));
+    }
+
 
 }

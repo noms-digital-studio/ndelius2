@@ -141,6 +141,17 @@ public class DeliusOffenderApi implements OffenderApi {
 
     }
 
+    @Override
+    public CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn) {
+        val url = String.format(offenderApiBaseUrl + "offenders/crn/%s", crn);
+        return wsClient.url(url)
+            .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+            .get()
+            .thenApply(response -> assertOkResponse(response, "getOffenderByCrn"))
+            .thenApply(WSResponse::getBody)
+            .thenApply(body -> readValue(body, Offender.class));
+    }
+
     private IntFunction<CompletableFuture<Entry<String, String>>[]> toCompletableFutures() {
         return CompletableFuture[]::new;
     }

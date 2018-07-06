@@ -3,8 +3,10 @@ package views;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.Encryption;
+import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Test;
@@ -26,6 +28,7 @@ import static org.mockito.Mockito.mock;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.test.Helpers.*;
+import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 public class SentencingCourtDetailsTest extends WithApplication {
 
@@ -87,11 +90,17 @@ public class SentencingCourtDetailsTest extends WithApplication {
         DocumentStore documentStore = mock(DocumentStore.class);
         given(documentStore.updateExistingPdf(any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "456")));
 
+        OffenderApi offenderApi = mock(OffenderApi.class);
+        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+
         return new GuiceApplicationBuilder().
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(documentStore),
-                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
-            ).build();
+                bind(OffenderApi.class).toInstance(offenderApi),
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)))
+            .configure("params.user.token.valid.duration", "100000d")
+            .build();
     }
 }

@@ -4,6 +4,7 @@ import lombok.val;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
@@ -54,6 +55,23 @@ public class DateTimeHelper {
                 .findFirst();
     }
 
+    public static List<String> termsThatLookLikeDates(String searchTerm) {
+        return Stream.of(searchTerm.split(" "))
+            .map(DateTimeHelper::covertToCanonicalDate)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .collect(toList());
+    }
+
+    public static String format(String dateString) {
+        val date = parse(dateString, ISO_LOCAL_DATE);
+        return date.format(DateTimeFormatter.ofPattern("dd/MM/YYYY"));
+    }
+
+    public static LocalDate convert(String dateString) {
+        return parse(dateString, ISO_LOCAL_DATE);
+    }
+
     private static boolean canParse(String dateString, String pattern) {
         try {
             parse(dateString, dateTimeBuilderFor(pattern).toFormatter());
@@ -65,13 +83,5 @@ public class DateTimeHelper {
 
     private static DateTimeFormatterBuilder dateTimeBuilderFor(String datePattern) {
         return new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern(datePattern);
-    }
-
-    public static List<String> termsThatLookLikeDates(String searchTerm) {
-        return Stream.of(searchTerm.split(" "))
-            .map(DateTimeHelper::covertToCanonicalDate)
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .collect(toList());
     }
 }

@@ -1,0 +1,123 @@
+{
+  "contactDetails": {
+    "addresses": [
+      {
+        "addressNumber": "5",
+        "buildingName": "Sea View",
+        "county": "Yorkshire",
+        "district": "Nether Edge",
+        "from": "2018-06-22",
+        "noFixedAbode": false,
+        "notes": "string",
+        "postcode": "S10 1EQ",
+        "streetName": "High Street",
+        "telephoneNumber": "",
+        "town": "Sheffield"
+      }
+    ],
+    "allowSMS": true,
+    "emailAddresses": [
+      "string"
+    ],
+    "phoneNumbers": [
+      {
+        "number": "string",
+        "type": "TELEPHONE"
+      }
+    ]
+  },
+  "currentDisposal": "string",
+  "currentExclusion": false,
+  "currentRestriction": false,
+  "dateOfBirth": "1998-06-22",
+  "firstName": "John",
+  "gender": "string",
+  "middleNames": [
+    "string"
+  ],
+  "offenderAliases": [
+    {
+      "firstName": "string",
+      "gender": "string",
+      "middleNames": [
+        "string"
+      ],
+      "surname": "string"
+    }
+  ],
+  "offenderId": 0,
+  "offenderManagers": [
+    {
+      "active": true,
+      "fromDate": "2018-06-22",
+      "partitionArea": "string",
+      "probationArea": {
+        "code": "string",
+        "description": "string"
+      },
+      "providerEmployee": {
+        "forenames": "string",
+        "surname": "string"
+      },
+      "softDeleted": false,
+      "staff": {
+        "forenames": "string",
+        "surname": "string"
+      },
+      "team": {
+        "borough": {
+          "code": "string",
+          "description": "string"
+        },
+        "description": "string",
+        "district": {
+          "code": "string",
+          "description": "string"
+        },
+        "telephone": "string"
+      },
+      "toDate": "2018-06-22",
+      "trustOfficer": {
+        "forenames": "string",
+        "surname": "string"
+      }
+    }
+  ],
+  "offenderProfile": {
+    "ethnicity": "string",
+    "immigrationStatus": "string",
+    "nationality": "string",
+    "notes": "string",
+    "offenderDetails": {},
+    "offenderLanguages": {
+      "languageConcerns": "string",
+      "otherLanguages": [
+        "string"
+      ],
+      "primaryLanguage": "string",
+      "requiresInterpreter": true
+    },
+    "previousConviction": {
+      "detail": {}
+    },
+    "religion": "string",
+    "remandStatus": "string",
+    "riskColour": "string",
+    "secondaryNationality": "string",
+    "sexualOrientation": "string"
+  },
+  "otherIds": {
+    "crn": "X12345",
+    "croNumber": "string",
+    "immigrationNumber": "string",
+    "mostRecentPrisonerNumber": "string",
+    "niNumber": "string",
+    "nomsNumber": "string",
+    "pncNumber": "2018/123456P"
+  },
+  "partitionArea": "string",
+  "previousSurname": "string",
+  "softDeleted": false,
+  "surname": "Smith",
+  "title": "string"
+}

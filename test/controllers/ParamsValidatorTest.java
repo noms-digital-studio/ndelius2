@@ -17,9 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ParamsValidatorTest {
-
-    private ParamsValidator paramsValidator;
+public class ParamsValidatorTest implements ParamsValidator {
 
     @Mock
     private Config configuration;
@@ -31,12 +29,11 @@ public class ParamsValidatorTest {
     public void setup() {
         when(configuration.getString("params.secret.key")).thenReturn("ThisIsASecretKey");
         when(configuration.getDuration("params.user.token.valid.duration")).thenReturn(Duration.ofHours(1));
-        paramsValidator = new ParamsValidator(configuration);
     }
 
     @Test
     public void returns400WhenUsernameIsBlank() {
-        val result = paramsValidator.invalidCredentials(
+        val result = invalidCredentials(
             "",
             timePlusMinutesDrift(0),
             errorReporter);
@@ -46,7 +43,7 @@ public class ParamsValidatorTest {
 
     @Test
     public void returns400WhenUsernameIsNull() {
-        val result = paramsValidator.invalidCredentials(
+        val result = invalidCredentials(
             null,
             timePlusMinutesDrift(0),
             errorReporter);
@@ -56,7 +53,7 @@ public class ParamsValidatorTest {
 
     @Test
     public void returns400WhenTimeIsBlank() {
-        Optional<Result> result = paramsValidator.invalidCredentials(
+        Optional<Result> result = invalidCredentials(
             "john.smith",
             "",
             errorReporter);
@@ -66,7 +63,7 @@ public class ParamsValidatorTest {
 
     @Test
     public void returns400WhenTimeIsNull() {
-        Optional<Result> result = paramsValidator.invalidCredentials(
+        Optional<Result> result = invalidCredentials(
             "john.smith",
             null,
             errorReporter);
@@ -76,7 +73,7 @@ public class ParamsValidatorTest {
 
     @Test
     public void returns401WhenTimeDriftIsGreaterThanExpected() {
-        Optional<Result> result = paramsValidator.invalidCredentials(
+        Optional<Result> result = invalidCredentials(
             "john.smith",
             timePlusMinutesDrift(61),
             errorReporter);
@@ -86,7 +83,7 @@ public class ParamsValidatorTest {
 
     @Test
     public void returns401WhenTimeDriftIsLessThanExpected() {
-        Optional<Result> result = paramsValidator.invalidCredentials(
+        Optional<Result> result = invalidCredentials(
             "john.smith",
             timePlusMinutesDrift(-61),
             errorReporter);
@@ -96,7 +93,7 @@ public class ParamsValidatorTest {
 
     @Test
     public void returnsAnEmptyOptionalWhenCredsAreValid() {
-        Optional<Result> result = paramsValidator.invalidCredentials(
+        Optional<Result> result = invalidCredentials(
             "john.smith",
             timePlusMinutesDrift(0),
             errorReporter);
@@ -106,5 +103,10 @@ public class ParamsValidatorTest {
 
     private String timePlusMinutesDrift(int driftInMinutes) {
         return String.valueOf(Instant.now().toEpochMilli() + (1000 * 60 * driftInMinutes));
+    }
+
+    @Override
+    public Config getConfiguration() {
+        return configuration;
     }
 }

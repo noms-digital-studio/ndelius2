@@ -7,11 +7,13 @@ import controllers.base.ReportGeneratorWizardController;
 import data.ShortFormatPreSentenceReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
+import play.Logger;
 import play.data.Form;
 import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
@@ -21,10 +23,18 @@ import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
+import static helpers.DateTimeHelper.calculateAge;
+import static helpers.DateTimeHelper.format;
+import static helpers.JwtHelper.principal;
+import static java.time.Clock.systemUTC;
+import static java.util.Optional.ofNullable;
+
 public class ShortFormatPreSentenceReportController extends ReportGeneratorWizardController<ShortFormatPreSentenceReportData> {
 
     private final views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate;
     private final views.html.shortFormatPreSentenceReport.completed completedTemplate;
+    protected final OffenderApi offenderApi;
+
 
     @Inject
     public ShortFormatPreSentenceReportController(HttpExecutionContext ec,
@@ -37,11 +47,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   DocumentStore documentStore,
                                                   views.html.shortFormatPreSentenceReport.cancelled cancelledTemplate,
                                                   views.html.shortFormatPreSentenceReport.completed completedTemplate,
-                                                  ParamsValidator paramsValidator) {
+                                                  OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, paramsValidator);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
+        this.offenderApi = offenderApi;
     }
 
     @Override
@@ -51,14 +62,56 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     }
 
     @Override
+    protected CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> origParams) {
+
+        return super.addPageAndDocumentId(origParams).thenCompose(params -> {
+
+            val username = decrypter.apply(params.get("user"));
+            val crn = params.get("crn");
+
+            return offenderApi.logon(username)
+                .thenApplyAsync(bearerToken -> {
+                    Logger.info("AUDIT:{}: ShortFormatPreSentenceReportController: Successful logon for user {}", principal(bearerToken), username);
+                    return bearerToken;
+
+                }, ec.current())
+                .thenCompose(bearerToken -> offenderApi.getOffenderByCrn(bearerToken, crn))
+                .thenApply(offender -> {
+
+                    params.put("name", offender.displayName());
+
+                    ofNullable(offender.getDateOfBirth()).ifPresent(dob -> {
+                        params.put("dateOfBirth", format(dob));
+                        params.put("age", String.format("%d", calculateAge(dob, systemUTC())));
+                    });
+
+                    ofNullable(offender.getOtherIds())
+                        .filter(otherIds -> otherIds.containsKey("pncNumber"))
+                        .map(otherIds -> otherIds.get("pncNumber"))
+                        .ifPresent(pnc -> params.put("pnc", pnc));
+
+                    ofNullable(offender.getContactDetails())
+                        .flatMap(OffenderApi.ContactDetails::currentAddress)
+                        .map(OffenderApi.OffenderAddress::render)
+                        .ifPresent(address -> params.put("address", address));
+
+                    Logger.info("Creating report. Params: " + params);
+
+                    return params;
+                });
+
+        });
+    }
+
+    @Override
     protected CompletionStage<Map<String, String>> initialParams() {
         return super.initialParams().thenApply(params -> {
-
             params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
             params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
             return migrateLegacyReport(params);
         });
     }
+
 
     private Map<String, String> migrateLegacyReport(Map<String, String> params) {
         return migrateLegacyOffenderAssessmentIssues(params);

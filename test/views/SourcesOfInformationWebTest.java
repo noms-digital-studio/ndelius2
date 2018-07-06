@@ -1,8 +1,10 @@
 package views;
 
 import com.google.common.collect.ImmutableMap;
+import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Before;
@@ -29,10 +31,12 @@ import static helpers.JsonHelper.stringify;
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
 import static play.libs.Json.toJson;
+import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SourcesOfInformationWebTest extends WithIE8Browser {
@@ -182,12 +186,18 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
         PdfGenerator pdfGenerator = mock(PdfGenerator.class);
         when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
 
+        OffenderApi offenderApi = mock(OffenderApi.class);
+        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+
         return new GuiceApplicationBuilder().
                 overrides(
                         bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
-                ).build();
+                        bind(OffenderApi.class).toInstance(offenderApi),
+                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)))
+            .configure("params.user.token.valid.duration", "100000d")
+            .build();
     }
 
 }
