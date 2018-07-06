@@ -1,21 +1,21 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
+@import paroleParom1Report.hiddenInputs._
 @import play.Environment
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
 @this(implicit webJarsUtil: WebJarsUtil, environment: Environment)
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, reviewPage: Int)
+@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, reviewPage: Int)
 
     @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Draft report saved - Short Format Pre Sentence Report") {
+@main("Report saved") {
 
     <div class="govuk-box-highlight margin-top medium">
 
-        <h1 class="heading-large">Draft report saved</h1>
+        <h1 class="heading-large">Report saved</h1>
 
         <p class="font-medium">Your report has been saved and uploaded to Delius</p>
 
@@ -25,8 +25,8 @@
         <ul class="next-steps">
             <li>
                 <div id="view-pdf">
-                    <div>Review and print your draft 'Short Format Pre-sentence Report'</div>
-                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your draft PDF report</a>
+                    <div>Review and print your 'Parole Report - Parom 1'</div>
+                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ParoleParom1ReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your completed PDF report</a>
                 </div>
             </li>
             <li>
@@ -55,20 +55,11 @@
             <input type="hidden" name="pageNumber" id="pageNumber" value="@reviewPage"/>
 
             @commonFields(reportForm, encrypter)
-            @page2Fields(reportForm, encrypter)
-            @page3Fields(reportForm, encrypter)
-            @page4Fields(reportForm)
-            @page5Fields(reportForm)
-            @page6Fields(reportForm)
-            @page7Fields(reportForm)
-            @page8Fields(reportForm)
-            @page9Fields(reportForm)
-            @page11Fields(reportForm, encrypter)
         }
 }
 
 <script type="text/javascript">
-        function closePopup () {
-            window.close()
-        }
+    function closePopup () {
+        window.close()
+    }
 </script>

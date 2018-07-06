@@ -1,6 +1,6 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
+@import paroleParom1Report.hiddenInputs._
 @import play.Environment
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
@@ -8,39 +8,29 @@
 
 @import java.time.OffsetDateTime
 @import java.time.Duration
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Start your report - Short Format Pre Sentence Report") {
+@main("Start a PAROM1") {
 
     <div class="panel interrupt-panel">
-    <h1 class="heading-xlarge">Short Format Pre-sentence Report</h1>
+    <h1 class="heading-xlarge">Start a PAROM 1</h1>
 
         <span class="bold-medium">@reportForm("lastUpdated").getValue.map( _ => "This draft report was last saved:").orElse("")</span>
         <span class="font-medium" id="lastUpdated">@reportForm("lastUpdated").getValue.map( dateTime => asDuration(dateTime)).orElse("")</span>
 
         <ul class="list-bullet margin-top medium">
-        <li><div class="bold-medium">Save and close your report at any point</div><div class="font-small">You can save and close your report so you don't have to complete the whole thing at once.</div></li>
-        <li><div class="bold-medium">Save as you write</div><div class="normal">Your report will be saved as you write so you'll never lose your work.</div></li>
-        <li><div class="bold-medium">Return to complete your report later</div><div class="font-small">You can finish your report when it suits you.</div></li>
-        <li><div class="bold-medium">Edit your completed report</div><div class="font-small">You can edit your report whenever you want, even after you've finished.</div></li>
+        <li><div class="bold-medium">complete the report in your preferred order</div></li>
+        <li><div class="bold-medium">save and close the report at any point - it also saves as you write</div></li>
+        <li><div class="bold-medium">check the overall progress of the report</div></li>
     </ul>
 
     <div class="margin-top large">
-    @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+    @helper.form(action = relative(routes.ParoleParom1ReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
         @CSRF.formField
 
         @commonFields(reportForm, encrypter)
-        @page2Fields(reportForm, encrypter)
-        @page3Fields(reportForm, encrypter)
-        @page4Fields(reportForm)
-        @page5Fields(reportForm)
-        @page6Fields(reportForm)
-        @page7Fields(reportForm)
-        @page8Fields(reportForm)
-        @page9Fields(reportForm)
-        @page11Fields(reportForm, encrypter)
 
         @pageNumber(
             reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
@@ -64,14 +54,7 @@
         if (isExistingReport) {
             var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
             var documentId = encodeURIComponent($('#documentId').val())
-            var user = encodeURIComponent($('#user').val())
-            var t = encodeURIComponent($('#t').val())
-
-            var url = $('form').attr('action') + '?documentId=' + documentId +
-                '&onBehalfOfUser=' + onBehalfOfUser
-                + '&continue=true'
-                + '&user=' + user
-                + '&t=' + t;
+            var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true';
             openPopup(url)
         } else {
             openPopup('about:blank')

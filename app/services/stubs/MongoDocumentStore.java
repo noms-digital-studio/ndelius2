@@ -31,13 +31,13 @@ import static com.mongodb.client.model.Filters.eq;
 public class MongoDocumentStore implements DocumentStore {
 
     private final MongoDatabase database;
-    private final MongoCollection<Document> shortFormatReports;
+    private final MongoCollection<Document> reports;
 
     @Inject
     public MongoDocumentStore(Config configuration, MongoClient mongoClient) {
         val databaseName = configuration.getString("analytics.mongo.database");
         database = mongoClient.getDatabase(databaseName);
-        shortFormatReports = mongoClient.getDatabase(databaseName).getCollection("shortFormatReports");
+        reports = mongoClient.getDatabase(databaseName).getCollection("reports");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class MongoDocumentStore implements DocumentStore {
             }
         };
 
-        shortFormatReports.insertOne(new Document(parameters)).subscribe(
+        reports.insertOne(new Document(parameters)).subscribe(
             success -> { },
             error -> Logger.error("uploadNewPdf insert error", error)
         );
@@ -72,7 +72,7 @@ public class MongoDocumentStore implements DocumentStore {
     public CompletionStage<OriginalData> retrieveOriginalData(String documentId, String onBehalfOfUser) {
 
         val result = new CompletableFuture<OriginalData>();
-        shortFormatReports
+        reports
             .find(eq("_id", new ObjectId(documentId)))
             .first()
             .doOnError(result::completeExceptionally)
@@ -85,7 +85,7 @@ public class MongoDocumentStore implements DocumentStore {
     @Override
     public CompletionStage<byte[]> retrieveDocument(String documentId, String onBehalfOfUser) {
         val result = new CompletableFuture<byte[]>();
-        shortFormatReports
+        reports
                 .find(eq("_id", new ObjectId(documentId)))
                 .first()
                 .doOnError(result::completeExceptionally)
@@ -98,7 +98,7 @@ public class MongoDocumentStore implements DocumentStore {
     @Override
     public CompletionStage<String> getDocumentName(String documentId, String onBehalfOfUser) {
         val result = new CompletableFuture<String>();
-        shortFormatReports
+        reports
                 .find(eq("_id", new ObjectId(documentId)))
                 .first()
                 .doOnError(result::completeExceptionally)
@@ -116,7 +116,7 @@ public class MongoDocumentStore implements DocumentStore {
     @Override
     public CompletionStage<Map<String, String>> updateExistingPdf(Byte[] document, String filename, String onBehalfOfUser, String updatedData, String documentId) {
         val findResult = new CompletableFuture<Map<String, Object>>();
-        shortFormatReports
+        reports
             .find(eq("_id", new ObjectId(documentId)))
             .first()
             .doOnError(findResult::completeExceptionally)
@@ -137,7 +137,7 @@ public class MongoDocumentStore implements DocumentStore {
                 }
             };
 
-            shortFormatReports
+            reports
                 .updateOne(eq("_id", new ObjectId(documentId)), new Document("$set",new Document(newParameters)))
                 .subscribe(
                     success -> { },

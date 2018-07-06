@@ -1,17 +1,17 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
+@import paroleParom1Report.hiddenInputs._
 @import play.Environment
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
 @this(implicit webJarsUtil: WebJarsUtil, environment: Environment)
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, reviewPage: Int)
+@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, reviewPage: Int)
 
     @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Draft report saved - Short Format Pre Sentence Report") {
+@main("Draft report saved") {
 
     <div class="govuk-box-highlight margin-top medium">
 
@@ -25,8 +25,8 @@
         <ul class="next-steps">
             <li>
                 <div id="view-pdf">
-                    <div>Review and print your draft 'Short Format Pre-sentence Report'</div>
-                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your draft PDF report</a>
+                    <div>Review and print your draft 'Parole Report - Parom 1'</div>
+                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ParoleParom1ReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your draft PDF report</a>
                 </div>
             </li>
             <li>
@@ -44,10 +44,6 @@
         </ul>
     </div>
 
-    <p class="margin-top large">
-        <a href="javascript:void(0);" class="feedback-link" aria-label="Enter feedback">What did you think of this service?</a><span>&nbsp;(takes 30 seconds)</span>
-    </p>
-
         @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
             @CSRF.formField
 
@@ -55,15 +51,6 @@
             <input type="hidden" name="pageNumber" id="pageNumber" value="@reviewPage"/>
 
             @commonFields(reportForm, encrypter)
-            @page2Fields(reportForm, encrypter)
-            @page3Fields(reportForm, encrypter)
-            @page4Fields(reportForm)
-            @page5Fields(reportForm)
-            @page6Fields(reportForm)
-            @page7Fields(reportForm)
-            @page8Fields(reportForm)
-            @page9Fields(reportForm)
-            @page11Fields(reportForm, encrypter)
         }
 }
 
