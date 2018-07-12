@@ -12,6 +12,7 @@ import org.webjars.play.WebJarsUtil;
 import play.Environment;
 import play.data.Form;
 import play.libs.concurrent.HttpExecutionContext;
+import play.mvc.Result;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
@@ -20,6 +21,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
 
     private final views.html.paroleParom1Report.cancelled cancelledTemplate;
     private final views.html.paroleParom1Report.completed completedTemplate;
+    private final views.html.paroleParom1Report.tester analyticsTesterTemplate;
 
     @Inject
     public ParoleParom1ReportController(HttpExecutionContext ec,
@@ -31,11 +33,13 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                                         PdfGenerator pdfGenerator,
                                         DocumentStore documentStore,
                                         views.html.paroleParom1Report.cancelled cancelledTemplate,
-                                        views.html.paroleParom1Report.completed completedTemplate) {
+                                        views.html.paroleParom1Report.completed completedTemplate,
+                                        views.html.paroleParom1Report.tester analyticsTesterTemplate) {
 
         super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
+        this.analyticsTesterTemplate = analyticsTesterTemplate;
     }
 
     @Override
@@ -63,5 +67,10 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     private Integer reviewPageNumberFor(Form<ParoleParom1ReportData> boundForm) {
         return boundForm.value().map(form -> form.totalPages() - 1).orElse(1);
     }
+
+    public Result analyticsTester() {
+        return ok(analyticsTesterTemplate.render());
+    }
+
 
 }

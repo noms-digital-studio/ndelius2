@@ -1,0 +1,22 @@
+@import helper._
+@import play.Environment
+@import org.webjars.play.WebJarsUtil
+
+@import java.time.OffsetDateTime
+@import java.time.Duration
+
+@this(implicit webJarsUtil: WebJarsUtil, environment: Environment)
+
+@()
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@mainV2("Analytics") {
+
+    <div class="moj-interrupt ">
+        <p>Analytics tester</p>
+    </div>
+
+}
+
+
