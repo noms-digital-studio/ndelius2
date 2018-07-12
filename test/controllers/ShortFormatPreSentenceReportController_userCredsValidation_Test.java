@@ -126,6 +126,7 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
                         bind(DocumentStore.class).toInstance(documentStore),
                         bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(OffenderApi.class).toInstance(offenderApi))
+                .configure("params.user.token.valid.duration", "60m")
                 .build();
     }
 

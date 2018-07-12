@@ -19,10 +19,12 @@
     "sinon-chai": "^2.14.0"
   },
   "dependencies": {
+    "@mojdigital/pattern-library": "0.0.1-alpha.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-es2015-loose": "^8.0.0",
+    "govuk-frontend": "^1.0.0",
     "history": "^2.0.0",
     "localforage": "^1.7.1",
-    "babel-preset-es2015-loose": "^8.0.0",
-    "babel-plugin-add-module-exports": "^0.2.1",
     "moment": "^2.20.1",
     "prop-types": "^15.6.0",
     "react": "^0.14.9",

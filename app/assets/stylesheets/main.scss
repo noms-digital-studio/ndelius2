@@ -1,0 +1,21 @@
+@import "../../../node_modules/govuk-frontend/all";
+@import "../../../node_modules/@mojdigital/pattern-library/all";
+
+.new-window {
+  span {
+    background-image: url("../images/new-window.png");
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+    padding-right: 20px;
+  }
+}
+
+.govuk-width-container {
+  // Left align since we are in an iframe within Delius
+  @include govuk-media-query($and: "(min-width: #{($govuk-page-width + $govuk-gutter * 2)})") {
+    margin: 0 $govuk-gutter;
+  }
+}
+#content {
+  padding-top: $govuk-gutter-half;
+}

@@ -18,13 +18,15 @@ function openPopup(url) {
 
     $(function () {
 
-        // Show/hide content
-        var showHideContent = new GOVUK.ShowHideContent();
+        if (window.hasOwnProperty('GOVUK')) {
+            // Show/hide content
+            var showHideContent = new GOVUK.ShowHideContent();
 
-        showHideContent.init();
+            showHideContent.init();
 
-        // Stick at top when scrolling
-        GOVUK.stickAtTopWhenScrolling.init();
+            // Stick at top when scrolling
+            GOVUK.stickAtTopWhenScrolling.init();
+        }
 
         /**
          *

@@ -1,0 +1,64 @@
+@import org.webjars.play.WebJarsUtil
+@import helpers.CallHelper.relative
+
+@(title: String, banner: Boolean = true)(content: Html)(implicit webJarsUtil: WebJarsUtil)
+
+<!DOCTYPE html>
+<html lang="en" class="govuk-template ">
+    <head>
+
+        <title>@title</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="x-ua-compatible" content="IE=edge" >
+
+        <link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/main.css"))' />
+        <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
+        <link rel="stylesheet" type="text/css" media="all" href='@relative(routes.Assets.versioned("stylesheets/vendor/quill.snow.css"))' />
+
+    </head>
+    <body class="govuk-template__body">
+        <script>
+            document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+        </script>
+
+        <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
+        <script type='text/javascript' src='@relative(webJarsUtil.url("jquery", "jquery.js").get)'></script>
+        <script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/jquery/caret/jquery.caret.js"))'></script>
+        <script type='text/javascript' src='@relative(webJarsUtil.url("jquery-ui", "jquery-ui.js").get)'></script>
+        <script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/quilljs/quill.js"))'></script>
+        <style>
+                textarea {
+                    visibility: hidden;
+                }
+        </style>
+
+
+        <div class="govuk-width-container">
+            <main id="content" class="govuk-main-wrapper" role="main">
+
+                @if(banner) {
+                    <div class="govuk-phase-banner">
+                        <p class="govuk-phase-banner__content"><strong class="govuk-tag govuk-phase-banner__content__tag ">
+                            alpha
+                        </strong>
+                            <span class="govuk-phase-banner__text">
+                                This is a new service – your <a class="govuk-link feedback-link" href="javascript:void(0);">feedback</a> will help us to improve it.
+                            </span>
+                        </p>
+                    </div>
+                }
+
+                @content
+
+            </main>
+        </div>
+
+
+
+        <script src='@relative(routes.Assets.versioned("javascripts/vendor/jquery/autosize.min.js"))' type="text/javascript"></script>
+        <script src='@relative(routes.Assets.versioned("javascripts/vendor/govuk/govuk-frontend-1.0.0.min.js"))' type="text/javascript"></script>
+        <script>window.GOVUKFrontend.initAll()</script>
+        <script src='@relative(routes.Assets.versioned("javascripts/application.js"))' type="text/javascript"></script>
+    </body>
+</html>

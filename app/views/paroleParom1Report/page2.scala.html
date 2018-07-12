@@ -1,0 +1,36 @@
+@import data._
+@import helper._
+@import shortFormatPreSentenceReport.hiddenInputs._
+@import play.Environment
+@import data.viewModel.PageStatus
+@import helpers.CallHelper.relative
+@import org.webjars.play.WebJarsUtil
+
+@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@mainV2("Prisoner details") {
+
+    <h1 class="govuk-heading-xl">Prisoner details</h1>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+
+        @navigation(2)
+
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+
+        @helper.form(action = relative(routes.ParoleParom1ReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+            @CSRF.formField
+
+            @commonFields(reportForm, encrypter)
+
+            @readOnlyField(reportForm("fullname"), "Full name", encrypter)
+        }
+
+        </div>
+    </div>
+
+}

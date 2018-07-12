@@ -47,7 +47,10 @@ libraryDependencies ++= Seq(
   "org.assertj" % "assertj-core" % "3.8.0" % "test",
   "org.mockito" % "mockito-all" % "1.10.19" % "test",
   "com.github.tomakehurst" % "wiremock" % "2.12.0" % "test",
-  "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.4.0" % "test"
+  "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.4.0" % "test",
+  "info.cukes" % "cucumber-guice" % "1.1.5" % "test",
+  "info.cukes" % "cucumber-java" % "1.1.5" % "test",
+  "info.cukes" % "cucumber-junit" % "1.1.5" % "test"
 )
 
 excludeDependencies ++= Seq(
@@ -115,4 +118,7 @@ browserifyTask := {
 sourceGenerators in Assets +=  browserifyTask.taskValue
 resourceDirectories in Assets += browserifyOutputDir.value
 unmanagedResourceDirectories in IntegrationTest += baseDirectory.value  / "target/web/public/test"
-unmanagedResourceDirectories in Test += baseDirectory.value  / "target/web/public/test"
+unmanagedResourceDirectories in Test += baseDirectory.value / "target/web/public/test"
+unmanagedResourceDirectories in Test += baseDirectory.value / "features"
+
+assembly := (assembly dependsOn ( npmNodeModules in Assets )).value
