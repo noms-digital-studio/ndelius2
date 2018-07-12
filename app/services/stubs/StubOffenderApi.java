@@ -58,16 +58,20 @@ public class StubOffenderApi implements OffenderApi {
             throw new RuntimeException("getOffenderByCrn called with blank CRN");
         }
 
-        val offender = new Offender(
-            "Sam",
-            "Jones",
-            ImmutableList.of("Henry", "James"),
-            "2000-06-22",
-            otherIds(),
-            new ContactDetails(addresses())
-            );
+        val offender = Offender.builder()
+            .firstName("Sam")
+            .surname("Jones")
+            .middleNames(ImmutableList.of("Henry", "James"))
+            .dateOfBirth("2000-06-22")
+            .otherIds(otherIds())
+            .contactDetails(contactDetails())
+            .build();
 
         return CompletableFuture.completedFuture(offender);
+    }
+
+    private ContactDetails contactDetails() {
+        return ContactDetails.builder().addresses(addresses()).build();
     }
 
     private ImmutableMap<String, String> otherIds() {
@@ -75,22 +79,41 @@ public class StubOffenderApi implements OffenderApi {
     }
 
     private ImmutableList<OffenderAddress> addresses() {
-        return ImmutableList.of(anAddress());
+        return ImmutableList.of(anAddress(), anOtherAddress());
     }
 
     private OffenderAddress anAddress() {
-        val offenderAddress = new OffenderAddress(
-            "Big Building",
-            "7",
-            "High Street",
-            "Nether Edge",
-            "Sheffield",
-            "Yorkshire",
-            "S7 1AB",
-            "2010-06-22",
-            null
-        );
-        return offenderAddress;
+        return OffenderAddress.builder()
+            .buildingName("Main address Building")
+            .addressNumber("7")
+            .streetName("High Street")
+            .district("Nether Edge")
+            .town("Sheffield")
+            .county("Yorkshire")
+            .postcode("S7 1AB")
+            .from("2010-06-22")
+            .status(AddressStatus.builder()
+                .code("M")
+                .description("Main")
+                .build())
+            .build();
+    }
+
+    private OffenderAddress anOtherAddress() {
+        return OffenderAddress.builder()
+            .buildingName("Previous address Building")
+            .addressNumber("14")
+            .streetName("Low Street")
+            .district("East Field")
+            .town("Dover")
+            .county("Kent")
+            .postcode("K23 9QW")
+            .from("2010-11-19")
+            .status(AddressStatus.builder()
+                .code("B")
+                .description("Bail")
+                .build())
+            .build();
     }
 
     private String probationAreaDescription(String code) {

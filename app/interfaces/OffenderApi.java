@@ -1,6 +1,7 @@
 package interfaces;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Builder;
 import lombok.Value;
 import lombok.val;
 
@@ -10,7 +11,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 import static java.util.Arrays.asList;
-import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.toList;
 public interface OffenderApi {
 
     @Value
+    @Builder(toBuilder = true)
     class Offender {
         private String firstName;
         private String surname;
@@ -34,20 +35,21 @@ public interface OffenderApi {
     }
 
     @Value
+    @Builder(toBuilder = true)
     class ContactDetails {
         private List<OffenderAddress> addresses;
 
-        public Optional<OffenderAddress> currentAddress() {
+        public Optional<OffenderAddress> mainAddress() {
             return ofNullable(addresses)
-                .flatMap(offenderAddresses ->
-                    offenderAddresses.stream()
-                        .filter(address -> ofNullable(address.getFrom()).isPresent())
-                        .max(comparing(OffenderAddress::getFrom)));
+                .flatMap(offenderAddresses -> offenderAddresses.stream()
+                    .filter(address -> ofNullable(address.getStatus()).isPresent())
+                    .filter(address -> "M".equals(address.getStatus().getCode().toUpperCase()))
+                    .findFirst());
         }
-
     }
 
     @Value
+    @Builder(toBuilder = true)
     class OffenderAddress {
         private String buildingName;
         private String addressNumber;
@@ -58,6 +60,7 @@ public interface OffenderApi {
         private String postcode;
         private String from;
         private String to;
+        private AddressStatus status;
 
         public String render() {
 
@@ -71,6 +74,13 @@ public interface OffenderApi {
 
             return joinList("\n", address);
         }
+    }
+
+    @Value
+    @Builder(toBuilder = true)
+    class AddressStatus {
+        private String code;
+        private String description;
     }
 
     static String joinList(String delimiter, List<String> list) {

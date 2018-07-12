@@ -91,9 +91,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                         .ifPresent(pnc -> params.put("pnc", pnc));
 
                     ofNullable(offender.getContactDetails())
-                        .flatMap(OffenderApi.ContactDetails::currentAddress)
+                        .flatMap(OffenderApi.ContactDetails::mainAddress)
                         .map(OffenderApi.OffenderAddress::render)
-                        .ifPresent(address -> params.put("address", address));
+                        .ifPresent(address -> {
+                            Logger.info("Using the main address obtained from the API");
+                            params.put("address", address);
+                        });
 
                     Logger.info("Creating report. Params: " + params);
 

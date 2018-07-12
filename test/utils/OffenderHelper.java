@@ -1,133 +1,126 @@
 package utils;
 
 import com.google.common.collect.ImmutableList;
+import interfaces.OffenderApi.AddressStatus;
 import interfaces.OffenderApi.ContactDetails;
 import interfaces.OffenderApi.Offender;
 import interfaces.OffenderApi.OffenderAddress;
+import lombok.val;
 
 import java.util.ArrayList;
 
 public class OffenderHelper {
     public static Offender anOffenderWithNoContactDetails() {
-        return new Offender(
-            "Jimmy",
-            "Fizz",
-            ImmutableList.of("Jammy", "Fred"),
-            null,
-            null,
-            null
-        );
+        return aBasicOffender();
     }
 
     public static Offender anOffenderWithEmptyContactDetails() {
-        return new Offender(
-            "Jimmy",
-            "Fizz",
-            ImmutableList.of("Jammy", "Fred"),
-            null,
-            null,
-            emptyContactDetails());
+        return aBasicOffender().toBuilder()
+                .contactDetails(emptyContactDetails())
+                .build();
     }
 
     public static Offender anOffenderWithEmptyAddressList() {
-        return new Offender(
-            "Jimmy",
-            "Fizz",
-            ImmutableList.of("Jammy", "Fred"),
-            null,
-            null,
-            contactDetailsWithEmptyAddressList());
+        return aBasicOffender().toBuilder()
+                .contactDetails(contactDetailsWithEmptyAddressList())
+                .build();
     }
 
     public static Offender anOffenderWithMultipleAddresses() {
-        return new Offender(
-            "Jimmy",
-            "Fizz",
-            ImmutableList.of("Jammy", "Fred"),
-            null,
-            null,
-            contactDetailsWithMultipleAddresses()
-            );
+        return aBasicOffender().toBuilder()
+                .contactDetails(contactDetailsWithMultipleAddresses())
+                .build();
     }
 
-    public static Offender anOffenderWithAddressListWithNoFromDate() {
-        return new Offender(
-            "Jimmy",
-            "Fizz",
-            ImmutableList.of("Jammy", "Fred"),
-            null,
-            null,
-            contactDetailsAddressesHaveNoFromDates()
-            );
+    public static Offender anOffenderWithNoMainAddress() {
+        return aBasicOffender().toBuilder()
+                .contactDetails(contactDetailsAddressesNonOfWhichHAveAMainStatus())
+                .build();
     }
 
     public static ContactDetails emptyContactDetails() {
-        return new ContactDetails(null);
-    }
-
-    public static ContactDetails contactDetailsAddressesHaveNoFromDates() {
-        OffenderAddress address1 = new OffenderAddress(
-            "Big Building",
-            "7",
-            "High Street",
-            "Nether Edge",
-            "Sheffield",
-            "Yorkshire",
-            "S10 1LE",
-            null,
-            null
-        );
-
-        return new ContactDetails(ImmutableList.of(address1));
-    }
-
-    public static ContactDetails contactDetailsPartialAddresses() {
-        OffenderAddress address1 = new OffenderAddress(
-            null,
-            null,
-            "High Street",
-            null,
-            "Sheffield",
-            "Yorkshire",
-            "S10 1LE",
-            "2000-11-12",
-            null
-        );
-
-        return new ContactDetails(ImmutableList.of(address1));
+        return ContactDetails.builder().build();
     }
 
     public static ContactDetails contactDetailsWithMultipleAddresses() {
-        OffenderAddress address1 = new OffenderAddress(
-            "Big Building",
-            "7",
-            "High Street",
-            "Nether Edge",
-            "Sheffield",
-            "Yorkshire",
-            "S10 1LE",
-            "2000-11-12",
-            null
-        );
-
-        OffenderAddress address2 = new OffenderAddress(
-            "Small Building",
-            "14",
-            "Low Street",
-            "East Field",
-            "Dover",
-            "Kent",
-            "S10 1LE",
-            "2000-02-11",
-            "2000-02-12"
-        );
-
-
-        return new ContactDetails(ImmutableList.of(address2, address1));
+        return ContactDetails.builder().addresses(
+            ImmutableList.of(aPreviousAddress(), aMainAddress(), aBailAddress())).build();
     }
 
     public static ContactDetails contactDetailsWithEmptyAddressList() {
-        return new ContactDetails(new ArrayList<>());
+        return ContactDetails.builder().addresses(new ArrayList<>()).build();
+    }
+
+    public static ContactDetails contactDetailsAddressesNonOfWhichHAveAMainStatus() {
+        return ContactDetails.builder().addresses(ImmutableList.of(aPreviousAddress(), aBailAddress())).build();
+    }
+
+    public static ContactDetails contactDetailsHaveOneAddressWithNullStatus() {
+        val addressWithNullStatus = aMainAddress().toBuilder()
+            .status(null)
+            .build();
+
+        return ContactDetails.builder().addresses(ImmutableList.of(addressWithNullStatus)).build();
+    }
+
+    private static Offender aBasicOffender() {
+        return Offender.builder()
+            .firstName("Jimmy")
+            .surname("Fizz")
+            .middleNames(ImmutableList.of("Jammy", "Fred"))
+            .build();
+    }
+
+    private static OffenderAddress aMainAddress() {
+        return OffenderAddress.builder()
+            .buildingName("Main address Building")
+            .addressNumber("7")
+            .streetName("High Street")
+            .district("Nether Edge")
+            .town("Sheffield")
+            .county("Yorkshire")
+            .postcode("S10 1LE")
+            .from("2000-02-11")
+            .status(AddressStatus.builder()
+                .code("M")
+                .description("Main")
+                .build())
+            .build();
+    }
+
+    private static OffenderAddress aPreviousAddress() {
+        return OffenderAddress.builder()
+            .buildingName("Previous address Building")
+            .addressNumber("14")
+            .streetName("Low Street")
+            .district("East Field")
+            .town("Dover")
+            .county("Kent")
+            .postcode("K6 9SH")
+            .from("1998-10-23")
+            .to("2000-02-11")
+            .status(AddressStatus.builder()
+                .code("P")
+                .description("Previous")
+                .build())
+            .build();
+    }
+
+    private static OffenderAddress aBailAddress() {
+        return OffenderAddress.builder()
+            .buildingName("Bail address building")
+            .addressNumber("7")
+            .streetName("High Street")
+            .district("Nether Edge")
+            .town("Sheffield")
+            .county("Yorkshire")
+            .postcode("S10 1LE")
+            .from("2005-05-24")
+            .status(AddressStatus.builder()
+                .code("B")
+                .description("Bail")
+                .build())
+            .build();
     }
 
 }

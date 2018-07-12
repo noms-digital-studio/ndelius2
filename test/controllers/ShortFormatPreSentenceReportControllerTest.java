@@ -84,11 +84,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void createNewReport_noAddressWithAFromDate() throws UnsupportedEncodingException {
+    public void createNewReport_offenderHasNoMainAddress() throws UnsupportedEncodingException {
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
-            .willReturn(CompletableFuture.completedFuture(anOffenderWithAddressListWithNoFromDate()));
+            .willReturn(CompletableFuture.completedFuture(anOffenderWithNoMainAddress()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn));
@@ -99,7 +99,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void createNewReport_currentAddressIsUsed() throws UnsupportedEncodingException {
+    public void createNewReport_mainAddressIsUsed() throws UnsupportedEncodingException {
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
@@ -111,7 +111,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
-        assertTrue(content.contains(encryptor.apply("Big Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
+        assertTrue(content.contains(encryptor.apply("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
     }
 
     @Test

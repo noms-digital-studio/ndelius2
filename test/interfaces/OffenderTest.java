@@ -6,120 +6,95 @@ import lombok.val;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static utils.OffenderHelper.*;
+import static utils.OffenderHelper.contactDetailsAddressesNonOfWhichHAveAMainStatus;
+import static utils.OffenderHelper.contactDetailsHaveOneAddressWithNullStatus;
+import static utils.OffenderHelper.contactDetailsWithEmptyAddressList;
+import static utils.OffenderHelper.contactDetailsWithMultipleAddresses;
+import static utils.OffenderHelper.emptyContactDetails;
 
 public class OffenderTest {
 
     @Test
     public void displayNameCorrectForFirstNameSurnameOnly() {
-        val offender = new Offender(
-            "Sam",
-            "Jones",
-            null,
-            null,
-            null,
-            null
-        );
+        val offender = Offender.builder()
+            .firstName("Sam")
+            .surname("Jones")
+            .build();
 
         assertThat(offender.displayName()).isEqualTo("Sam Jones");
     }
 
     @Test
     public void displayNameCorrectForFirstNameSurnameOnlyWithEmptyMiddleNameArray() {
-        val offender = new Offender(
-            "Sam",
-            "Jones",
-            ImmutableList.of(),
-            null,
-            null,
-            null
-        );
+        val offender = Offender.builder()
+            .firstName("Sam")
+            .surname("Jones")
+            .middleNames(ImmutableList.of())
+            .build();
 
         assertThat(offender.displayName()).isEqualTo("Sam Jones");
     }
 
     @Test
     public void displayNameCorrectForFirstNameSurnameAndMiddleName() {
-        val offender = new Offender(
-            "Sam",
-            "Jones",
-            ImmutableList.of("Ping", "Pong"),
-            null,
-            null,
-            null
-        );
+        val offender = Offender.builder()
+            .firstName("Sam")
+            .surname("Jones")
+            .middleNames(ImmutableList.of("Ping", "Pong"))
+            .build();
 
         assertThat(offender.displayName()).isEqualTo("Sam Ping Jones");
     }
 
     @Test
     public void displayNameCorrectForMissingFirstName() {
-        val offender = new Offender(
-            null,
-            "Jones",
-            ImmutableList.of("Ping", "Pong"),
-            null,
-            null,
-            null
-        );
+        val offender = Offender.builder()
+            .surname("Jones")
+            .middleNames(ImmutableList.of("Ping", "Pong"))
+            .build();
+
         assertThat(offender.displayName()).isEqualTo("Ping Jones");
     }
 
     @Test
     public void displayNameCorrectForMissingSurname() {
-        val offender = new Offender(
-            "Sam",
-            null,
-            ImmutableList.of("Ping", "Pong"),
-            null,
-            null,
-            null
-        );
+        val offender = Offender.builder()
+            .firstName("Sam")
+            .middleNames(ImmutableList.of("Ping", "Pong"))
+            .build();
+
         assertThat(offender.displayName()).isEqualTo("Sam Ping");
     }
 
     @Test
     public void displayNameCorrectForMissingEverything() {
-        val offender = new Offender(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-        assertThat(offender.displayName()).isEqualTo("");
+        assertThat(Offender.builder().build().displayName()).isEqualTo("");
     }
 
     @Test
-    public void noAddressWhenContactDetailsAreEmpty() {
-        val contactDetails = emptyContactDetails();
-        assertThat(contactDetails.currentAddress().isPresent()).isFalse();
+    public void noMainAddressWhenContactDetailsAreEmpty() {
+        assertThat(emptyContactDetails().mainAddress().isPresent()).isFalse();
     }
 
     @Test
-    public void noAddressWhenContactDetailsHaveNoFromDates() {
-        val contactDetails = contactDetailsAddressesHaveNoFromDates();
-        assertThat(contactDetails.currentAddress().isPresent()).isFalse();
+    public void noMainAddressWhenContactDetailsHaveEmptyAddressList() {
+        assertThat(contactDetailsWithEmptyAddressList().mainAddress().isPresent()).isFalse();
     }
 
     @Test
-    public void noAddressWhenContactDetailsHaveEmptyAddressList() {
-        val contactDetails = contactDetailsWithEmptyAddressList();
-        assertThat(contactDetails.currentAddress().isPresent()).isFalse();
+    public void noMainAddressWhenContactDetailsHaveNoAddressesWithAMainStatus() {
+        assertThat(contactDetailsAddressesNonOfWhichHAveAMainStatus().mainAddress().isPresent()).isFalse();
     }
 
     @Test
-    public void addressCorrectWhenContactDetailsHasMultipleAddress() {
-        val contactDetails = contactDetailsWithMultipleAddresses();
-        assertThat(contactDetails.currentAddress().get().render())
-            .isEqualTo("Big Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE");
+    public void noMainAddressWhenContactDetailsHaveOneAddressWithNullStatus() {
+        assertThat(contactDetailsHaveOneAddressWithNullStatus().mainAddress().isPresent()).isFalse();
     }
 
     @Test
-    public void addressCorrectWhenContactDetailsPartialAddress() {
-        val contactDetails = contactDetailsPartialAddresses();
-        assertThat(contactDetails.currentAddress().get().render())
-            .isEqualTo("High Street\nSheffield\nYorkshire\nS10 1LE");
+    public void selectsTheMainAddressFromMultipleAddresses() {
+        assertThat(contactDetailsWithMultipleAddresses().mainAddress().get().render())
+            .isEqualTo("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE");
     }
+
 }

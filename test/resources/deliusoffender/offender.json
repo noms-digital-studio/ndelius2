@@ -8,11 +8,32 @@
         "district": "Nether Edge",
         "from": "2018-06-22",
         "noFixedAbode": false,
-        "notes": "string",
+        "notes": "",
         "postcode": "S10 1EQ",
         "streetName": "High Street",
         "telephoneNumber": "",
-        "town": "Sheffield"
+        "town": "Sheffield",
+        "status": {
+          "code": "M",
+          "description": "Main"
+        }
+      },
+      {
+        "addressNumber": "2",
+        "buildingName": "",
+        "county": "Kent",
+        "district": "East Field",
+        "from": "2016-02-04",
+        "noFixedAbode": false,
+        "notes": "",
+        "postcode": "K44 8SJ",
+        "streetName": "Low Street",
+        "telephoneNumber": "",
+        "town": "Dover",
+        "status": {
+          "code": "B",
+          "description": "Bail"
+        }
       }
     ],
     "allowSMS": true,
