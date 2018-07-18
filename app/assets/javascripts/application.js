@@ -402,8 +402,11 @@ function openPopup(url) {
 
         // disable back button as a browser back button else report data can easily be lost
         $(window).keydown(function(event) {
-            if (event.which == '8' && event.target.type != 'text'
-                && event.target.type != 'file' && event.target.tagName != 'TEXTAREA') {
+            if (event.which == '8'
+                && event.target.type != 'text'
+                && event.target.type != 'file'
+                && event.target.tagName != 'TEXTAREA'
+                && event.target.className != 'ql-editor') {
                 event.preventDefault();
                 return false;
             }
