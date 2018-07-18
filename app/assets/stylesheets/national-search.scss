@@ -103,6 +103,9 @@ textarea.form-control {
       min-height: 0;
     }
   }
+  .padded {
+    padding-top: 20px;
+  }
 }
 
 .govuk-box-highlight {
@@ -123,7 +126,8 @@ textarea.form-control {
   padding: 15px 20px 20px 20px;
   @include media(void, 845px) {
     position: relative;
-    padding: 15px;
+    top: 20px;
+    padding: 15px 15px 15px 30px;
     display: block;
     left: -30px;
     width: 100vw;
