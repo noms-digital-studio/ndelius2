@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.client.WireMock.okForContentType;
 import static play.libs.Json.toJson;
 
 public class AlfrescoStoreMock {
@@ -40,6 +39,14 @@ public class AlfrescoStoreMock {
                         .willReturn(okForContentType("application/json", toJson(ImmutableMap.of("ID", "309db0bf-f8bb-4ac0-b325-5dbc368e2636")).toString())));
 
 
+        return this;
+    }
+
+    public AlfrescoStoreMock stubExistingDocument(String documentId, String document) {
+        alfrescofWireMock.stubFor(
+                get(urlEqualTo(String.format("/noms-spg/details/%s", documentId)))
+                        .willReturn(
+                                okForContentType("application/json",  document)));
         return this;
     }
 }

@@ -1,0 +1,40 @@
+@import data._
+@import helper._
+@import views.html.paroleParom1Report.menu.navigation
+@import paroleParom1Report.hiddenInputs._
+@import play.Environment
+@import data.viewModel.PageStatus
+@import helpers.CallHelper.relative
+@import org.webjars.play.WebJarsUtil
+
+@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, header: String, pageNumber: Int)(content: Html)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@mainV2(header) {
+
+    <h1 class="govuk-heading-xl govuk-!-margin-top-6">@header</h1>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+
+        @navigation(pageNumber)
+
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+
+        @helper.form(action = relative(routes.ParoleParom1ReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+            @CSRF.formField
+
+            @commonFields(reportForm, encrypter)
+
+            @content
+
+            @footer(pageNumber, reportForm, encrypter)
+
+        }
+
+        </div>
+    </div>
+
+}

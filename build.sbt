@@ -49,8 +49,8 @@ libraryDependencies ++= Seq(
   "com.github.tomakehurst" % "wiremock" % "2.12.0" % "test",
   "org.seleniumhq.selenium" % "selenium-chrome-driver" % "3.4.0" % "test",
   "info.cukes" % "cucumber-guice" % "1.1.5" % "test",
-  "info.cukes" % "cucumber-java" % "1.1.5" % "test",
-  "info.cukes" % "cucumber-junit" % "1.1.5" % "test"
+  "info.cukes" % "cucumber-java" % "1.2.2" % "test",
+  "info.cukes" % "cucumber-junit" % "1.2.2" % "test"
 )
 
 excludeDependencies ++= Seq(

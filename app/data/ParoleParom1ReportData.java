@@ -1,8 +1,6 @@
 package data;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import data.annotations.Encrypted;
-import data.annotations.RequiredOnPage;
+import data.annotations.OnPage;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,11 +9,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class ParoleParom1ReportData extends ReportGeneratorWizardData {
 
-    // Page 2
-
-    @Encrypted
-    @RequiredOnPage(2)
-    @JsonProperty("FULLNAME")
-    private String fullname;
+    // Page 23
+    @OnPage(23)
+    private String dummy23;
 
 }

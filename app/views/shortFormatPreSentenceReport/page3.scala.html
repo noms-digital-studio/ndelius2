@@ -6,6 +6,8 @@
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 @import scala.io.Source
+@import menu._
+@import fragment._
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
 

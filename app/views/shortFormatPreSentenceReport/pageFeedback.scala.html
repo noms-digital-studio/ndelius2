@@ -5,6 +5,7 @@
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
+@import menu._
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
 

@@ -1,11 +1,13 @@
 package views.pages.paroleparom1report;
 
 import org.fluentlenium.core.FluentPage;
+import org.openqa.selenium.By;
 import play.test.TestBrowser;
 
 import javax.inject.Inject;
+import java.time.Instant;
 
-import static org.openqa.selenium.By.id;
+import static views.pages.ParameterEncrypt.encrypt;
 
 public class LandingPage extends FluentPage {
     @Inject
@@ -14,13 +16,34 @@ public class LandingPage extends FluentPage {
     }
 
     public LandingPage navigateHere() {
-        goTo("/report/paroleParom1Report?onBehalfOfUser=92Q036CvVIRT%2Fi428X3zpg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=RRioaTyIHLGnja2CBw8hqg%3D%3D&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
+        goTo(String.format("/report/paroleParom1Report?onBehalfOfUser=%s&user=%s&t=%s&crn=%s&entityId=%s",
+                encrypt("Smith,John"),
+                encrypt("john.smith"),
+                encrypt(String.format("%d", Instant.now().toEpochMilli())),
+                encrypt("X12345"),
+                encrypt("12345")
+        ));
         return this;
     }
 
-    public LandingPage gotoNext() {
-        $(id("nextButton")).click();
+    public LandingPage navigateWithExistingReport(String documentId) {
+        goTo(String.format("/report/paroleParom1Report?documentId=%s&onBehalfOfUser=%s&user=%s&t=%s",
+                encrypt(documentId),
+                encrypt("Smith,John"),
+                encrypt("john.smith"),
+                encrypt(String.format("%d", Instant.now().toEpochMilli()))
+        ));
+        return this;
+    }
+
+
+    public LandingPage clickButton(String button) {
+        $(By.xpath(String.format("//button[contains(text(),'%s')]", button))).click();
         window().switchTo("reportpopup");
         return this;
+    }
+
+    public String lastUpdatedText() {
+        return $(By.id("lastUpdated")).text();
     }
 }

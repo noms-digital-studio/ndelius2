@@ -62,7 +62,14 @@
         if (isExistingReport) {
             var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
             var documentId = encodeURIComponent($('#documentId').val())
-            var url = $('form').attr('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true';
+            var user = encodeURIComponent($('#user').val())
+            var t = encodeURIComponent($('#t').val())
+
+            var url = $('form').attr('action') + '?documentId=' + documentId +
+                '&onBehalfOfUser=' + onBehalfOfUser
+                + '&continue=true'
+                + '&user=' + user
+                + '&t=' + t;
             openPopup(url)
         } else {
             openPopup('about:blank')
