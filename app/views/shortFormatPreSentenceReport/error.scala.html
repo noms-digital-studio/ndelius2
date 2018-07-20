@@ -1,7 +1,7 @@
 @import helper._
 @import org.webjars.play.WebJarsUtil
 
-@(message: String, error: String)(implicit webJarsUtil: WebJarsUtil)
+@(error: String)(implicit webJarsUtil: WebJarsUtil)
 
 <style type="text/css">
         body, html {
@@ -20,7 +20,7 @@
     <script type="text/javascript">
         $(function () {
             $('input').click(function () {
-                parent.postMessage('@message', '*');
+                parent.postMessage(JSON.stringify({ action: 'documentList', data: null }), '*')
             });
         });
     </script>
