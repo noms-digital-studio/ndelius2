@@ -23,6 +23,7 @@ public class AlfrescoDocumentBuilder {
         builder.document.put("ID", "309db0bf-f8bb-4ac0-b325-5dbc368e2636");
         builder.document.put("lastModifiedDate", "2007-12-03T10:15:30+01:00");
         builder.values.put("pageNumber", "2");
+        builder.values.put("crn", "X12345");
         return builder;
     }
 

@@ -69,9 +69,7 @@
 
             var url = $('form').attr('action') + '?documentId=' + documentId +
                 '&onBehalfOfUser=' + onBehalfOfUser
-                + '&continue=true'
-                + '&user=' + user
-                + '&t=' + t;
+                + '&continue=true';
             openPopup(url)
         } else {
             openPopup('about:blank')

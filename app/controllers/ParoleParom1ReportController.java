@@ -6,6 +6,7 @@ import controllers.base.ReportGeneratorWizardController;
 import data.ParoleParom1ReportData;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.webjars.play.WebJarsUtil;
@@ -16,6 +17,7 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
+import java.util.Map;
 
 public class ParoleParom1ReportController extends ReportGeneratorWizardController<ParoleParom1ReportData> {
 
@@ -34,12 +36,18 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                                         DocumentStore documentStore,
                                         views.html.paroleParom1Report.cancelled cancelledTemplate,
                                         views.html.paroleParom1Report.completed completedTemplate,
-                                        views.html.paroleParom1Report.tester analyticsTesterTemplate) {
+                                        views.html.paroleParom1Report.tester analyticsTesterTemplate,
+                                        OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore, offenderApi);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
         this.analyticsTesterTemplate = analyticsTesterTemplate;
+    }
+
+    @Override
+    protected Map<String, String> storeOffenderDetails(Map<String, String> params, OffenderApi.Offender offender) {
+        return params;
     }
 
     @Override

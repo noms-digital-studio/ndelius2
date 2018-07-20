@@ -11,6 +11,7 @@ import lombok.val;
 import org.junit.Test;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
+import play.mvc.Result;
 import play.test.Helpers;
 import play.test.WithApplication;
 
@@ -32,6 +33,7 @@ import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.*;
 import static utils.OffenderHelper.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
 
@@ -140,9 +142,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void getSampleReportWithDocumentIdDecryptsAndRetrievesFromStore() {
+    public void updateReportRetrievesDocumentFromStoreAndUpdatesReportWithOffenderDetailsFromAPI() {
 
-        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"456\", \"pnc\": \"Retrieved From Store\", \"startDate\": \"12/12/2017\", \"crn\": \"1234\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\" } }", OffsetDateTime.now())));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"SHOULD NOT BE IN REPORT\", \"pnc\": \"2018/123456M\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Retrieved From Store\" } }", OffsetDateTime.now())));
 
         try {
             val clearDocumentId = "12345";
@@ -155,12 +157,73 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                     uri("/report/shortFormatPreSentenceReport?documentId=" + documentId +
                         "&onBehalfOfUser=" + onBehalfOfUser +
                         "&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D" +
-                        "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D" +
-                        "&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D");
+                        "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
 
             val content = Helpers.contentAsString(route(app, request));
+            assertTrue(content.contains(encryptor.apply("Retrieved From Store")));
+            assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
+            assertTrue(content.contains(encryptor.apply("15/10/1968")));
+            assertTrue(content.contains(encryptor.apply("2018/123456N")));
+            assertTrue(content.contains("name=\"age\" value=\""+encryptor.apply("49")));
+            assertTrue(content.contains(encryptor.apply("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
+            assertFalse(content.contains(encryptor.apply("SHOULD NOT BE IN REPORT")));
 
-            assertTrue(content.contains(encryptor.apply("Retrieved From Store")));   // Returned from Mock retrieveOriginalData
+        } catch (Exception ex) {
+
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void updateReportRetrievesDocumentFromStoreAndUpdatesReportWithOffenderDetailsFromAPI_addressAndPNCBlank() {
+
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"ADDRESS FROM DOC STORE\", \"pnc\": \"PNC FROM DOC STORE\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Retrieved From Store\" } }", OffsetDateTime.now())));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetailsAndNoPnc()));
+
+        try {
+            val clearDocumentId = "12345";
+            val clearUserName = "John Smith";
+
+            val documentId = URLEncoder.encode(encryptor.apply(clearDocumentId), "UTF-8");
+            val onBehalfOfUser = URLEncoder.encode(encryptor.apply(clearUserName), "UTF-8");
+
+            val request = new RequestBuilder().method(GET).
+                    uri("/report/shortFormatPreSentenceReport?documentId=" + documentId +
+                        "&onBehalfOfUser=" + onBehalfOfUser +
+                        "&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D" +
+                        "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
+
+            val content = Helpers.contentAsString(route(app, request));
+            assertFalse(content.contains(encryptor.apply("PNC FROM DOC STORE")));
+            assertFalse(content.contains(encryptor.apply("ADDRESS FROM DOC STORE")));
+
+        } catch (Exception ex) {
+
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void updateReportRetrievesDocumentFromStore_crnNotFoundInAPICauses500Error() {
+
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"SHOULD NOT BE IN REPORT\", \"pnc\": \"2018/123456M\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Retrieved From Store\" } }", OffsetDateTime.now())));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willThrow(RuntimeException.class);
+
+        try {
+            val clearDocumentId = "12345";
+            val clearUserName = "John Smith";
+
+            val documentId = URLEncoder.encode(encryptor.apply(clearDocumentId), "UTF-8");
+            val onBehalfOfUser = URLEncoder.encode(encryptor.apply(clearUserName), "UTF-8");
+
+            val request = new RequestBuilder().method(GET).
+                    uri("/report/shortFormatPreSentenceReport?documentId=" + documentId +
+                        "&onBehalfOfUser=" + onBehalfOfUser +
+                        "&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D" +
+                        "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
+
+            Result result = route(app, request);
+            assertThat(result.status()).isEqualTo(500);
 
         } catch (Exception ex) {
 
@@ -173,9 +236,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
         val formData = ImmutableMap.of(
             "name", "",
-            "pageNumber", "2",
-            "user", "john.smith",
-            "t", "1516976954871"
+            "pageNumber", "2"
         );
         val request = new RequestBuilder().method(POST).bodyForm(formData).uri("/report/shortFormatPreSentenceReport");
 
@@ -198,8 +259,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("address", encryptor.apply("10 High Street"));
                 put("crn", encryptor.apply("B56789"));
                 put("pnc", encryptor.apply("98793030"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("pageNumber", "2");
             }
@@ -225,8 +284,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("address", encryptor.apply("10 High Street"));
                 put("crn", encryptor.apply("B56789"));
                 put("pnc", encryptor.apply("98793030"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
 
@@ -258,8 +315,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("pageNumber", "3");
             }
@@ -290,8 +345,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
                 put("otherInformationSource", "true");
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("pageNumber", "4");
             }
@@ -320,8 +373,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -362,8 +413,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -407,8 +456,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -453,8 +500,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -500,8 +545,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -548,8 +591,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -604,8 +645,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -664,8 +703,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -724,8 +761,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -785,8 +820,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -845,8 +878,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -910,8 +941,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -977,8 +1006,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
-                put("user", "john.smith");
-                put("t", "1516976954871");
 
                 put("interviewInformationSource", "true");
                 put("serviceRecordsInformationSource", "true");
@@ -1041,7 +1068,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         documentStore = mock(DocumentStore.class);
         offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithMultipleAddresses()));
 
         return new GuiceApplicationBuilder().
                 overrides(

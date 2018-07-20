@@ -21,6 +21,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static play.libs.Json.toJson;
 
 public class StubOffenderApi implements OffenderApi {
+
     @Override
     public CompletionStage<String> logon(String username) {
         // JWT Header/Body is {"alg":"HS512"}{"sub":"cn=fake.user,cn=Users,dc=moj,dc=com","uid":"fake.user","probationAreaCodes":["N02", "N01", "N03", "N04", "C01", "C16"],"exp":1523599298}
@@ -54,6 +55,10 @@ public class StubOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn) {
+        if (isBlank(bearerToken)) {
+            throw new RuntimeException("getOffenderByCrn called with blank bearerToken");
+        }
+
         if (isBlank(crn)) {
             throw new RuntimeException("getOffenderByCrn called with blank CRN");
         }

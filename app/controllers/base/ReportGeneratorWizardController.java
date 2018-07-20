@@ -5,11 +5,12 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.ParamsValidator;
 import data.base.ReportGeneratorWizardData;
-import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
 import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
+import interfaces.OffenderApi;
+import interfaces.OffenderApi.Offender;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.springframework.cglib.beans.BeanMap;
@@ -23,14 +24,22 @@ import play.twirl.api.Content;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 
+import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.not;
 import static helpers.FluentHelper.value;
-import static helpers.JsonHelper.*;
+import static helpers.JsonHelper.badRequestJson;
+import static helpers.JsonHelper.okJson;
+import static helpers.JsonHelper.serverUnavailableJson;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.max;
 
@@ -48,9 +57,10 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                                               EncryptedFormFactory formFactory,
                                               Class<T> wizardType,
                                               PdfGenerator pdfGenerator,
-                                              DocumentStore documentStore) {
+                                              DocumentStore documentStore,
+                                              OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType);
+        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType, offenderApi);
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
@@ -107,25 +117,9 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         val continueFromInterstitial = queryParams.contains("continue");
         val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
-        return super.initialParams().thenCompose(params -> {
+        return super.initialParams().thenCompose(params ->
+            loadExistingDocument(params).orElseGet(() -> createNewDocument(params))).thenApply(params -> {
 
-            val encryptedUsername = params.get("user");
-            val encryptedEpochRequestTimeMills = params.get("t");
-            final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", encryptedUsername, encryptedEpochRequestTimeMills));
-
-            val badRequest = invalidCredentials(
-                decrypter.apply(encryptedUsername),
-                decrypter.apply(encryptedEpochRequestTimeMills),
-                errorReporter);
-
-            if (badRequest.isPresent()) {
-                throw new InvalidCredentialsException(badRequest.get());
-
-            } else {
-                return originalData(params).orElseGet(() -> addPageAndDocumentId(params));
-            }
-
-        }).thenApply(params -> {
             if (stopAtInterstitial) {
                 params.put("originalPageNumber", currentPageButNotInterstitialOrCompletion(params.get("pageNumber")));
                 params.put("pageNumber", "1");
@@ -138,6 +132,8 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
             return params;
         });
     }
+
+    protected abstract Map<String, String> storeOffenderDetails(Map<String, String> params, Offender offender);
 
     private String currentPageButNotInterstitialOrCompletion(String pageNumber) {
         // never allow jumping from interstitial  to interstitial, which would happen on
@@ -200,34 +196,38 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     protected abstract Content renderCancelledView();
 
-    protected CompletionStage<Map<String, String>> addPageAndDocumentId(Map<String, String> params) {
+    protected CompletionStage<Map<String, String>> createNewDocument(Map<String, String> params) {
 
         params.put("pageNumber", "1");
         params.put("startDate", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
 
-        return generateAndStoreReport(wizardForm.bind(params).value().orElseGet(this::newWizardData)).
+        val crn = params.get("crn");
+        return offenderApi.getOffenderByCrn(session(OFFENDER_API_BEARER_TOKEN), crn)
+            .thenApply(offender -> storeOffenderDetails(params, offender))
+            .thenCompose(updatedParams -> generateAndStoreReport(wizardForm.bind(updatedParams).value().orElseGet(this::newWizardData)).
                 exceptionally(error -> {
 
-                    Logger.error("Initial Params: Generation or Storage error - " + params.toString(), error);
+                    Logger.error("Initial Params: Generation or Storage error - " + updatedParams.toString(), error);
                     return ImmutableMap.of("errorMessage", ThrowableHelper.toMessageCauseStack(error));
                 }).
                 thenApply(stored -> {
 
-                    params.put("documentId", stored.get("ID"));
-                    params.put("errorMessage", stored.get("errorMessage"));
+                    updatedParams.put("documentId", stored.get("ID"));
+                    updatedParams.put("errorMessage", stored.get("errorMessage"));
 
-                    if (Strings.isNullOrEmpty(params.get("documentId")) && Strings.isNullOrEmpty(params.get("errorMessage"))) {
+                    if (Strings.isNullOrEmpty(updatedParams.get("documentId")) && Strings.isNullOrEmpty(updatedParams.get("errorMessage"))) {
 
                         val errorMessage = stored.get("message");
 
-                        params.put("errorMessage", Strings.isNullOrEmpty(errorMessage) ? "No Document ID" : errorMessage);
+                        updatedParams.put("errorMessage", Strings.isNullOrEmpty(errorMessage) ? "No Document ID" : errorMessage);
                     }
 
-                    return params;
-                });
+                    return updatedParams;
+                })
+            );
     }
 
-    private Optional<CompletionStage<Map<String, String>>> originalData(Map<String, String> params) {
+    private Optional<CompletionStage<Map<String, String>>> loadExistingDocument(Map<String, String> params) {
 
         return Optional.ofNullable(params.get("documentId")).
                 map(documentId -> documentStore.retrieveOriginalData(documentId, params.get("onBehalfOfUser"))).
@@ -236,8 +236,10 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                     info.put("lastUpdated", data.getLastModifiedDate().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
                     return info;
                 })).
+                map(originalInfo -> originalInfo.thenComposeAsync(info ->
+                    offenderApi.getOffenderByCrn(session(OFFENDER_API_BEARER_TOKEN), info.get("crn"))
+                        .thenApply(offender -> storeOffenderDetails(info, offender)), ec.current())).
                 map(originalInfo -> originalInfo.thenApply(info -> {
-
                     info.put("onBehalfOfUser", params.get("onBehalfOfUser"));
                     info.put("documentId", params.get("documentId"));
                     info.put("user", params.get("user"));
