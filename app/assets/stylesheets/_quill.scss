@@ -1,0 +1,91 @@
+// Quill specific styling that is compatible with both major versions of govuk stylesheets
+
+.form-group {
+  .ql-container.ql-snow {
+    border: none;
+  }
+
+  .ql-editor:focus {
+
+    @if global-variable-exists(focus-colour) {
+      outline-color: $focus-colour;
+    }
+    @if global-variable-exists(govuk-focus-colour) {
+      outline-color: $govuk-focus-colour;
+    }
+    outline-style: solid;
+    outline-width: 3px;
+    outline-offset: 2px;
+  }
+
+  .ql-toolbar {
+    visibility: hidden;
+    @if global-variable-exists(gutter-one-third) {
+      margin-bottom: $gutter-one-third;
+    }
+    @if global-variable-exists(govuk-gutter) {
+      margin-bottom: $govuk-gutter / 3;
+    }
+  }
+
+  .ql-snow.ql-toolbar button.ql-active {
+    @if global-variable-exists('grey-3') {
+      background-color: $grey-3;
+    }
+
+    @if mixin_exists(govuk-colour) {
+      background-color: govuk-colour('grey-3');
+    }
+  }
+
+  .ql-snow.ql-toolbar button.ql-active .ql-stroke {
+    @if global-variable-exists('black') {
+      stroke: $black;
+    }
+    @if mixin_exists(govuk-colour) {
+      stroke: govuk-colour('black');
+    }
+  }
+
+  .ql-container {
+    @if mixin_exists(core-19) {
+      @include core-19();
+    }
+    @if mixin_exists(govuk-font) {
+      @include govuk-font($size: 19);
+    }
+  }
+
+  .text-area-editor.form-control {
+    width: 100%;
+  }
+
+  .ql-editor {
+    .ql-align-justify {
+      white-space: normal;
+    }
+
+    strong {
+      font-weight: bold;
+    }
+    em {
+      font-style: italic;
+    }
+    u {
+      text-decoration: underline;
+      font-weight: inherit;
+    }
+  }
+
+}
+
+@-moz-document url-prefix() {
+  .form-group {
+    .ql-editor:focus {
+      .ql-align-justify {
+        white-space: inherit
+      }
+    }
+  }
+}
+

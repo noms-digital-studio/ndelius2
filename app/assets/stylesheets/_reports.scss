@@ -2,6 +2,7 @@
 @import "measurements";
 @import "typography";
 @import "tooltip";
+@import "quill";
 .interrupt-panel {
   background-color: $govuk-blue;
   color: $white;
@@ -111,53 +112,7 @@ footer {
   }
 }
 
-.form-group {
-  .ql-container.ql-snow {
-    border: none;
-  }
 
-  .ql-editor:focus {
-    outline: 3px solid $focus-colour;
-    outline-offset: 2px;
-  }
-
-  .ql-toolbar {
-    visibility: hidden;
-    margin-bottom: $gutter-one-third;
-  }
-
-  .ql-snow.ql-toolbar button.ql-active {
-    background-color: $grey-3;
-  }
-
-  .ql-snow.ql-toolbar button.ql-active .ql-stroke {
-    stroke: $black;
-  }
-
-  .ql-container {
-    @include core-19();
-  }
-
-  .text-area-editor.form-control {
-    width: 100%;
-  }
-
-  .ql-editor {
-    .ql-align-justify {
-      white-space: normal;
-    }
-  }
-}
-
-@-moz-document url-prefix() {
-  .form-group {
-    .ql-editor:focus {
-      .ql-align-justify {
-        white-space: inherit
-      }
-    }
-  }
-}
 
 .small-margin-bottom {
   margin-bottom: $gutter-one-third;

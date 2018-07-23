@@ -318,7 +318,7 @@ function openPopup(url) {
             toolbar.before($(id));
 
             function addTooltipsToToolbar() {
-                toolbar.find('button').addClass('tooltip')
+                toolbar.find('button').addClass('tooltip').addClass('moj-tooltip')
                 var tips = [
                     {selector: '.ql-bold', tooltip: 'Bold (⌘B)'},
                     {selector: '.ql-italic', tooltip: 'Italic (⌘I)'},
