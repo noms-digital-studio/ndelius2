@@ -11,7 +11,7 @@ import views.pages.paroleparom1report.PrisonerDetailsPage;
 import javax.inject.Inject;
 import java.time.format.DateTimeFormatter;
 
-import static bdd.paroleparom1report.PageHeadings.CURRENT_ROSH_CUSTODY;
+import static views.pages.paroleparom1report.Page.CURRENT_ROSH_CUSTODY;
 import static bdd.wiremock.AlfrescoDocumentBuilder.standardDocument;
 import static java.time.OffsetDateTime.now;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -32,11 +32,6 @@ public class LandingPageSteps {
         landingPage.navigateHere();
     }
 
-    @Then("^the user should be directed to \"([^\"]*)\" UI$")
-    public void the_user_should_be_directed_to_UI(String header) {
-        prisonerDetailsPage.isAt(header);
-    }
-
     @Given("^that the user is on the Parole Report landing page for an existing report$")
     public void thatTheUserIsOnTheParoleReportLandingPageForAnExistingReport() {
         val documentId = "12345";
@@ -48,7 +43,7 @@ public class LandingPageSteps {
         landingPage.navigateWithExistingReport(documentId);
     }
 
-    @When("^they select the \"([^\"]*)\" button$")
+    @When("^they select the \"([^\"]*)\" button on the landing page$")
     public void theySelectTheButton(String button) {
         landingPage.clickButton(button);
     }

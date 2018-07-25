@@ -43,6 +43,10 @@ public class LandingPage extends FluentPage {
         return this;
     }
 
+    public void next() {
+        clickButton("Start now");
+    }
+
     public String lastUpdatedText() {
         return $(By.id("lastUpdated")).text();
     }

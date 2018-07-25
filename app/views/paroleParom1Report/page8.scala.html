@@ -1,6 +1,5 @@
 @import data._
 @import helper._
-@import paroleParom1Report.hiddenInputs._
 @import play.Environment
 @import data.viewModel.PageStatus
 @import org.webjars.play.WebJarsUtil
@@ -11,5 +10,10 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "Interventions", 8) {
-    <p>WIP</p>
+    @textarea(reportForm("interventionsDetail"), '_label -> "Detail the interventions the prisoner has completed", 'class -> "wide", 'required -> "true")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
+    @textarea(reportForm("interventionsSummary"), '_label -> "Interventions summary", 'class -> "wide", 'required -> "true")
+
 }

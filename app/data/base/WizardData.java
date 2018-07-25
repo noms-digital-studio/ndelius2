@@ -126,7 +126,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
                     (mustValidateField(options, field)) &&
                     Strings.isNullOrEmpty(getStringValue(field).orElse(null));
 
-        }).map(field -> new ValidationError(field.getName(), RequiredValidator.message));
+        }).map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredOnPage.class).message()));
     }
     private Stream<ValidationError> mandatoryGroupErrors(Map<String, Object> options) {
 

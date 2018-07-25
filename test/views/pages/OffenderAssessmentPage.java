@@ -78,7 +78,7 @@ public class OffenderAssessmentPage extends FluentPage {
     }
 
     public int countErrors(String errorMessage) {
-        return $(xpath(String.format("//span[@class='error-message' and text()='%s']", errorMessage))).count();
+        return $(xpath(String.format("//span[contains(@class, 'error-message') and text()='%s']", errorMessage))).count();
     }
 
     public void saveAsDraft() {

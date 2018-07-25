@@ -22,10 +22,10 @@
         @govukInfoErrors(elements)
     </div>
 } else {
-  <div class="form-group@if(elements.hasErrors) { form-group-error}">
+  <div class="form-group@if(elements.hasErrors) { form-group-error govuk-form-group--error}">
     @govukLabel(elements)
     @if(elements.input.body.contains("textarea id=")) {
-      <span id="@elements.id-autosave_error" class="autosave-error-message error-message js-hidden" aria-hidden="true">We can't currently save your report as the service is unavailable</span>
+      <span id="@elements.id-autosave_error" class="autosave-error-message error-message govuk-error-message js-hidden" aria-hidden="true">We can't currently save your report as the service is unavailable</span>
       <span>
         <textarea class="form-control govuk-textarea @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" aria-label="@elements.label" role="textbox" placeholder="@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}" id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} } aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"}>@elements.field.value</textarea>
 

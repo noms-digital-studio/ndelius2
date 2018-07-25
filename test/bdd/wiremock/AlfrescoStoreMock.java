@@ -2,9 +2,11 @@ package bdd.wiremock;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableMap;
+import lombok.val;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static play.libs.Json.toJson;
@@ -40,6 +42,17 @@ public class AlfrescoStoreMock {
 
 
         return this;
+    }
+
+    public boolean verifySavedDocumentContainsValues(Map<String, String> values) {
+        val match = postRequestedFor(urlMatching("/noms-spg/updatemetadata/.*"));
+        // build matcher adding each tuple as JSON body match
+        values.forEach((key, text) -> match.withRequestBody(containing(String.format("\"%s\":\"<!-- RICH_TEXT --><p>%s </p>\"", key, text))));
+        val hasMatched = alfrescofWireMock.findAll(match).size() > 0;
+        if (hasMatched) {
+            System.out.println(alfrescofWireMock.findAllNearMissesFor(match));
+        }
+        return hasMatched;
     }
 
     public AlfrescoStoreMock stubExistingDocument(String documentId, String document) {

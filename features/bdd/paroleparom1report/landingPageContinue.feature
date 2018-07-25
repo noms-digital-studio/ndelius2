@@ -1,9 +1,9 @@
-Feature: Parole Report
+Feature: Parole Report Landing Page - Continue
 
   Scenario: Delius User wants to continue writing a Parole Report for a Prisoner
 
     Given that the user is on the Parole Report landing page for an existing report
-    When  they select the "Continue now" button
+    When  they select the "Continue now" button on the landing page
     Then  the user should be directed to the last page that they were on working on
 
   Scenario Outline: A time stamp must be displayed on the landing page to state when the user last worked on the report

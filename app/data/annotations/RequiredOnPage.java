@@ -1,5 +1,7 @@
 package data.annotations;
 
+import play.data.validation.Constraints;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -12,4 +14,6 @@ public @interface RequiredOnPage {
     int value();
 
     String onlyIfField() default "";
+
+    String message() default Constraints.RequiredValidator.message;
 }
