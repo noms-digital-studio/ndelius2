@@ -2,16 +2,17 @@
 @import helper._
 @import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
+@import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 @import menu._
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Give feedback- Short Format Pre Sentence Report") {
+@main("Give feedback- Short Format Pre Sentence Report", true, Some(0)) {
 
     <h1 class="heading-xlarge">Give feedback</h1>
 

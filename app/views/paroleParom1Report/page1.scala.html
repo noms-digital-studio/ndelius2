@@ -2,13 +2,14 @@
 @import helper._
 @import paroleParom1Report.hiddenInputs._
 @import play.Environment
+@import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
 @import java.time.OffsetDateTime
 @import java.time.Duration
-@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 

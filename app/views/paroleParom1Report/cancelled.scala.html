@@ -2,10 +2,11 @@
 @import helper._
 @import paroleParom1Report.hiddenInputs._
 @import play.Environment
+@import com.typesafe.config.Config
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 
-@this(implicit webJarsUtil: WebJarsUtil, environment: Environment)
+@this(implicit webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, reviewPage: Int)
 

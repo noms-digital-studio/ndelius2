@@ -7,12 +7,13 @@
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 @import play.twirl.api.Template1
+@import com.typesafe.config.Config
 
-@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, header: String, pageNumber: Int)(content: Html)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, header: String, pageNumber: Int)(content: Html)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@mainV2(header) {
+@mainV2(header, true) {
 
     <h1 class="govuk-heading-xl govuk-!-margin-top-6">@header</h1>
 

@@ -1,7 +1,9 @@
+@import helper._
 @import org.webjars.play.WebJarsUtil
+@import com.typesafe.config.Config
 @import helpers.CallHelper.relative
 
-@(title: String, banner: Boolean = true)(content: Html)(implicit webJarsUtil: WebJarsUtil)
+@(title: String, banner: Boolean = true)(content: Html)(implicit webJarsUtil: WebJarsUtil, configuration: Config)
 
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
@@ -15,15 +17,8 @@
         <link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/main.css"))' />
         <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
         <link rel="stylesheet" type="text/css" media="all" href='@relative(routes.Assets.versioned("stylesheets/vendor/quill.snow.css"))' />
-            <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122274748-1"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
 
-          gtag('config', 'UA-122274748-1');
-        </script>
+        @googleAnalyticsHead()
 
     </head>
     <body class="govuk-template__body">

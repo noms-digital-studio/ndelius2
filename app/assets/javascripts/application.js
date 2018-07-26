@@ -172,6 +172,16 @@ function openPopup(url) {
             $('#jumpNumber').val('');
         });
 
+        $('#consideredQualityDiversity_yes').click(function() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'short-format-equality-diversity-yes', {
+                    'event_category': 'report',
+                    'event_label': 'Short Format Report - Equality and Diversity - yes',
+                    'value': 'yes'
+                });
+            }
+        });
+
         /**
          * Save and exit
          */

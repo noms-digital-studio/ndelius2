@@ -5,8 +5,9 @@
 @import data.viewModel.PageStatus
 @import org.webjars.play.WebJarsUtil
 @import fragment.popup
+@import com.typesafe.config.Config
 
-@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 

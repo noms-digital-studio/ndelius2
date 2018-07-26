@@ -2,6 +2,7 @@
 @import helper._
 @import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
+@import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
@@ -9,13 +10,13 @@
 @import menu._
 @import fragment._
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @justiceAreas = @{ Source.fromInputStream(environment.resourceAsStream("justiceAreas.txt"), "UTF-8").getLines }
 
-@main("Sentencing court details - Short Format Pre Sentence Report") {
+@main("Sentencing court details - Short Format Pre Sentence Report", true, Some(3)) {
 
     <h1 class="heading-xlarge">Sentencing court details</h1>
 

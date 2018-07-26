@@ -12,6 +12,11 @@ import PropTypes from 'prop-types';
 const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}) => {
 
     if (firstTimeIn) {
+
+        if (typeof gtag === 'function') {
+            virtualPageLoad('')
+        }
+
         reloadRecentSearch();
     }
 

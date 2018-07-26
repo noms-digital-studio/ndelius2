@@ -61,6 +61,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
     protected final Function<String, String> encrypter;
     protected final Function<String, String> decrypter;
     protected final HttpExecutionContext ec;
+    protected final Config configuration;
     protected final OffenderApi offenderApi;
 
     protected WizardController(HttpExecutionContext ec,
@@ -75,6 +76,7 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         this.ec = ec;
         this.webJarsUtil = webJarsUtil;
         this.environment = environment;
+        this.configuration = configuration;
         this.analyticsStore = analyticsStore;
         this.offenderApi = offenderApi;
 
@@ -273,13 +275,13 @@ public abstract class WizardController<T extends WizardData> extends Controller 
 
     protected BiFunction<Form<T>, Map<Integer, PageStatus>, Content> formRenderer(String viewName) {
 
-        val render = getRenderMethod(viewName, Form.class, Function1.class, Map.class, WebJarsUtil.class, Environment.class);
+        val render = getRenderMethod(viewName, Form.class, Function1.class, Map.class, WebJarsUtil.class, Environment.class, Config.class);
 
         return (form, pageStatuses) -> {
 
             renderingData(form.value().orElseGet(this::newWizardData));
 
-            return render.map(method -> invokeContentMethod(method, form, viewEncrypter, pageStatuses, webJarsUtil, environment)).orElseGet(() -> {
+            return render.map(method -> invokeContentMethod(method, form, viewEncrypter, pageStatuses, webJarsUtil, environment, configuration)).orElseGet(() -> {
 
                 val errorMessage = new StringBuilder();
 

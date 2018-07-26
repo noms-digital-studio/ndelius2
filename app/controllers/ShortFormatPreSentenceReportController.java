@@ -171,6 +171,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     @Override
     protected Content renderErrorMessage(String errorMessage) {
 
-        return views.html.shortFormatPreSentenceReport.error.render(errorMessage, webJarsUtil);
+        return views.html.shortFormatPreSentenceReport.error.render(errorMessage, webJarsUtil, configuration);
     }
 }

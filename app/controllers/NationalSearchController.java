@@ -44,7 +44,6 @@ public class NationalSearchController extends Controller implements ParamsValida
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
     private final boolean inMaintenanceMode;
-    private final int recentSearchMinutes;
     private final Config configuration;
 
 
@@ -66,7 +65,6 @@ public class NationalSearchController extends Controller implements ParamsValida
         this.analyticsStore = analyticsStore;
         this.configuration = configuration;
 
-        recentSearchMinutes = configuration.getInt("recent.search.minutes");
         inMaintenanceMode = configuration.getBoolean("maintenance.offender.search");
 
         val paramsSecretKey = configuration.getString("params.secret.key");
@@ -101,7 +99,8 @@ public class NationalSearchController extends Controller implements ParamsValida
 
         }, ec.current())
         .thenCompose(bearerToken -> offenderApi.probationAreaDescriptions(bearerToken, probationAreaCodes(bearerToken))
-        .thenApplyAsync(probationAreas -> ok(template.render(recentSearchMinutes, probationAreas)), ec.current()));
+        .thenApplyAsync(template::render, ec.current()))
+        .thenApply(Results::ok);
 
         Logger.info("AUDIT:{}: About to login {}", "anonymous", username);
 

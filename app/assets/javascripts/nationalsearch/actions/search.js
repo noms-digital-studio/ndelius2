@@ -32,7 +32,26 @@ const performSearch = _.debounce((dispatch, searchTerm, probationAreasFilter, pa
     const encodedSearchTerm = encodeURIComponent(searchTerm)
     const toAreaFilter = () => probationAreasFilter.join(',')
 
+    if (typeof gtag === 'function') {
+        gtag('event', 'search-request(type:' + searchType + ')(page:' + pageNumber + ')', {
+            'event_category': 'search',
+            'event_label': 'Search Request: ' + searchTerm.length + ' chars (Type: ' + searchType + ') (Page: ' + pageNumber + ')',
+            'value': searchTerm.length
+        })
+    }
+
     $.getJSON(`searchOffender/${encodedSearchTerm}?pageSize=${PAGE_SIZE}&pageNumber=${pageNumber}&areasFilter=${toAreaFilter()}&searchType=${searchType}`, data => {
+
+        if (typeof gtag === 'function') {
+            gtag('event', 'search-results(type:' + searchType + ')(page:' + pageNumber + ')', {
+                'event_category': 'search',
+                'event_label': 'Search Results: ' + data.total + ' (Type: ' + searchType + ') (Page: ' + pageNumber + ')',
+                'value': data.total
+            })
+
+            virtualPageLoad('search')
+        }
+
         dispatch(searchResults(searchTerm, data, pageNumber))
     });
 }, 500);

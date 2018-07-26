@@ -1,7 +1,8 @@
 @import helper._
 @import org.webjars.play.WebJarsUtil
+@import com.typesafe.config.Config
 
-@(error: String)(implicit webJarsUtil: WebJarsUtil)
+@(error: String)(implicit webJarsUtil: WebJarsUtil, configuration: Config)
 
 <style type="text/css">
         body, html {

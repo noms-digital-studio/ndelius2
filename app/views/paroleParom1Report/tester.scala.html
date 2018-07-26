@@ -1,11 +1,12 @@
 @import helper._
 @import play.Environment
+@import com.typesafe.config.Config
 @import org.webjars.play.WebJarsUtil
 
 @import java.time.OffsetDateTime
 @import java.time.Duration
 
-@this(implicit webJarsUtil: WebJarsUtil, environment: Environment)
+@this(implicit webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @()
 

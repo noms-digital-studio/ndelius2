@@ -2,6 +2,7 @@
 @import helper._
 @import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
+@import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
@@ -9,7 +10,7 @@
 @import fragment._
 
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
@@ -20,7 +21,7 @@
 @caringResponsibilitiesGuidance = {
     <p>Detail the offender’s current and past caring responsibilities. Take account of caring for both children and adults. How have those responsibilities affected their offending? Have they affected their engagement with rehabilitative interventions?</p>
 }
-@main("Offender assessment - Short Format Pre Sentence Report") {
+@main("Offender assessment - Short Format Pre Sentence Report", true, Some(7)) {
 
     <h1 class="heading-xlarge">Offender assessment</h1>
 

@@ -47,7 +47,6 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     private final PdfGenerator pdfGenerator;
     private final DocumentStore documentStore;
-    private final Config configuration;
 
     protected ReportGeneratorWizardController(HttpExecutionContext ec,
                                               WebJarsUtil webJarsUtil,
@@ -64,7 +63,6 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;
-        this.configuration = configuration;
     }
 
     @Override

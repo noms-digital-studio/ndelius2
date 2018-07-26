@@ -1,9 +1,13 @@
+@import helper._
 @import org.webjars.play.WebJarsUtil
+@import com.typesafe.config.Config
 @import helpers.CallHelper.relative
 @import helpers.JsonHelper.stringify
-@this(webJarsUtil: WebJarsUtil)
+@this(webJarsUtil: WebJarsUtil)(implicit configuration: Config)
 
-@(recentSearchMinutes: Int, probationAreas: Map[String, String])
+@(probationAreas: Map[String, String])
+
+@recentSearchMinutes = @{configuration.getInt("recent.search.minutes")}
 
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
@@ -21,6 +25,8 @@
     <!--[if IE 8]><link rel="stylesheet" type="text/css" media="screen" href='@relative(routes.Assets.versioned("stylesheets/national-search-ie8.css"))' /><![endif]-->
     <!--[if gt IE 8]><!--><link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/national-search.css"))' /><!--<![endif]-->
     <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
+
+    @googleAnalyticsHead()
 
   </head>
   <body>

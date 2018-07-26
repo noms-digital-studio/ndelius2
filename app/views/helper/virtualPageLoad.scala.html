@@ -1,0 +1,15 @@
+@(hashName: Any)
+
+<script>
+    if (typeof gtag === 'function') {
+
+        gtag('event', 'load-page-@hashName.toString', {
+
+            'event_category': 'report',
+            'event_label': 'Report Page Load: @hashName.toString',
+            'value': '@hashName.toString'
+        })
+
+        virtualPageLoad('@hashName.toString')
+    }
+</script>

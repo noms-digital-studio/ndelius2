@@ -2,13 +2,14 @@
 @import helper._
 @import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
+@import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 @import menu._
 @import fragment._
 
-@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment)
+@(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
@@ -26,7 +27,7 @@
     <p class="margin-top">Any information you have from other agencies should state how they will assist in monitoring and managing risk, including partnership working.</p>
 }
 
-@main("Risk assessment - Short Format Pre Sentence Report") {
+@main("Risk assessment - Short Format Pre Sentence Report", true, Some(8)) {
 
     <h1 class="heading-xlarge">Risk assessment</h1>
 
