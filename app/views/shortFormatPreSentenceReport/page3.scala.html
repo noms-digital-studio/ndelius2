@@ -14,8 +14,6 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@justiceAreas = @{ Source.fromInputStream(environment.resourceAsStream("justiceAreas.txt"), "UTF-8").getLines }
-
 @main("Sentencing court details - Short Format Pre Sentence Report", true, Some(3)) {
 
     <h1 class="heading-xlarge">Sentencing court details</h1>
@@ -34,12 +32,11 @@
             @commonFields(reportForm, encrypter)
             @page2Fields(reportForm, encrypter)
 
-            @inputText(reportForm("court"), '_label -> "Court", 'required -> "true", '_error -> "Enter the name of the sentencing court")
+            @readOnlyField(reportForm("court"), "Court", encrypter)
 
-            @select(reportForm("localJusticeArea"), options(justiceAreas.toList), '_label -> "Local justice area",
-                '_default -> "Please select", 'class -> "auto-complete")
+            @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area", 'required -> "true", '_error -> "Enter a local justice area")
 
-            @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true", '_error -> "Enter the date of the hearing")
+            @readOnlyField(reportForm("dateOfHearing"), "Date of hearing", encrypter)
 
             @page4Fields(reportForm)
             @page5Fields(reportForm)

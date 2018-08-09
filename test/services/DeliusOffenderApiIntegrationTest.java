@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import com.google.common.collect.ImmutableList;
 import interfaces.OffenderApi;
-import interfaces.OffenderApi.Offender;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,14 +17,17 @@ import play.test.WithApplication;
 import java.util.AbstractMap;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.anyUrl;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.okForContentType;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static scala.io.Source.fromInputStream;
 
 public class DeliusOffenderApiIntegrationTest extends WithApplication {
     private OffenderApi offenderApi;
     private static final int PORT = 18080;
-
 
     @Rule
     public WireMockRule wireMock = new WireMockRule(PORT);
@@ -36,6 +38,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         val n01 = loadResource("/deliusoffender/probationAreaByCode_N01.json");
         val n02 = loadResource("/deliusoffender/probationAreaByCode_N02.json");
         val offender = loadResource("/deliusoffender/offender.json");
+        val courtAppearances = loadResource("/deliusoffender/courtAppearances.json");
 
         wireMock.stubFor(
                 get(urlEqualTo("/probationAreas/code/N01"))
@@ -51,6 +54,11 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                 get(urlEqualTo("/offenders/crn/X12345/all"))
                         .willReturn(
                                 okForContentType("application/json",  offender)));
+
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/crn/X12345/courtAppearances"))
+                        .willReturn(
+                                okForContentType("application/json",  courtAppearances)));
 
         offenderApi = instanceOf(OffenderApi.class);
     }
@@ -121,13 +129,24 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
 
     @Test
     public void getsOffenderByCrn() {
-        Offender offender = offenderApi.getOffenderByCrn("ABC", "X12345").toCompletableFuture().join();
+        val offender = offenderApi.getOffenderByCrn("ABC", "X12345").toCompletableFuture().join();
 
         assertThat(offender.getFirstName()).isEqualTo("John");
         assertThat(offender.getSurname()).isEqualTo("Smith");
         assertThat(offender.getOtherIds()).extracting("pncNumber").contains("2018/123456P");
         assertThat(offender.getContactDetails().mainAddress().get().getStatus().getCode()).isEqualTo("M");
         wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/all")));
+    }
+
+    @Test
+    public void getsCourtAppearancesByCrn() {
+        val courtAppearances = offenderApi.getCourtAppearancesByCrn("ABC", "X12345").toCompletableFuture().join();
+
+        assertThat(courtAppearances.getItems().size()).isEqualTo(3);
+        assertThat(courtAppearances.getItems().get(0).getCourtAppearanceId()).isEqualTo(1);
+        assertThat(courtAppearances.getItems().get(0).getCourt().getCourtId()).isEqualTo(1);
+        assertThat(courtAppearances.getItems().get(0).getCourtReports().get(0).getCourtReportId()).isEqualTo(1);
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/courtAppearances")));
     }
 
     private static Map.Entry<String, String> entry(String code, String description) {

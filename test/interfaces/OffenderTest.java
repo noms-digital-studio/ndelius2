@@ -1,6 +1,8 @@
 package interfaces;
 
 import com.google.common.collect.ImmutableList;
+import interfaces.OffenderApi.CourtAppearance;
+import interfaces.OffenderApi.CourtAppearances;
 import interfaces.OffenderApi.Offender;
 import lombok.val;
 import org.junit.Test;
@@ -97,4 +99,112 @@ public class OffenderTest {
             .isEqualTo("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE");
     }
 
+    @Test
+    public void findsCourtAppearanceForCourtReportId() {
+        assertThat(courtAppearances().findForCourtReportId(1L).get().getCourtAppearanceId()).isEqualTo(3L);
+    }
+
+    @Test
+    public void findsNoCourtAppearanceWhenAllAreSoftDeleted() {
+        assertThat(softDeletedCourtAppearances().findForCourtReportId(1L).isPresent()).isFalse();
+    }
+
+    @Test
+    public void findsNoCourtAppearanceWhenAllCourtReportsAreSoftDeleted() {
+        assertThat(courtAppearancesWithSoftDeletedCourtReports().findForCourtReportId(1L).isPresent()).isFalse();
+    }
+
+    @Test
+    public void findsNoCourtAppearanceWhenNoCourtReportsMatch() {
+        assertThat(courtAppearances().findForCourtReportId(3L).isPresent()).isFalse();
+    }
+
+    @Test
+    public void findsNoCourtAppearanceWhenCourtReportsIsNull() {
+        assertThat(courtAppearanceWithNullItems().findForCourtReportId(1L).isPresent()).isFalse();
+    }
+
+    private CourtAppearances courtAppearanceWithNullItems() {
+        return CourtAppearances.builder()
+            .items(ImmutableList.of(
+                CourtAppearance.builder()
+                    .courtAppearanceId(1L)
+                    .courtReports(null).build()
+            )).build();
+    }
+    private CourtAppearances courtAppearances() {
+        return CourtAppearances.builder()
+            .items(ImmutableList.of(
+                CourtAppearance.builder()
+                    .courtAppearanceId(1L)
+                    .softDeleted(true)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .build()
+                    )).build(),
+                CourtAppearance.builder()
+                    .courtAppearanceId(2L)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(2L)
+                            .build(),
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .softDeleted(true)
+                            .build()
+                    )).build(),
+                CourtAppearance.builder()
+                    .courtAppearanceId(3L)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .build()
+                    )).build()
+                )).build();
+    }
+
+    private CourtAppearances softDeletedCourtAppearances() {
+        return CourtAppearances.builder()
+            .items(ImmutableList.of(
+                CourtAppearance.builder()
+                    .courtAppearanceId(1L)
+                    .softDeleted(true)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .build()
+                    )).build(),
+                CourtAppearance.builder()
+                    .courtAppearanceId(2L)
+                    .softDeleted(true)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(2L)
+                            .build()
+                    )).build()
+            )).build();
+    }
+
+    private CourtAppearances courtAppearancesWithSoftDeletedCourtReports() {
+        return CourtAppearances.builder()
+            .items(ImmutableList.of(
+                CourtAppearance.builder()
+                    .courtAppearanceId(1L)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(1L)
+                            .softDeleted(true)
+                            .build()
+                    )).build(),
+                CourtAppearance.builder()
+                    .courtAppearanceId(2L)
+                    .courtReports(ImmutableList.of(
+                        OffenderApi.CourtReport.builder()
+                            .courtReportId(2L)
+                            .softDeleted(true)
+                            .build()
+                    )).build()
+            )).build();
+    }
 }

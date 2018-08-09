@@ -1,11 +1,13 @@
 package controllers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
+import interfaces.OffenderApi.CourtAppearances;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Test;
@@ -28,7 +30,10 @@ import static org.mockito.Mockito.mock;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.*;
+import static play.test.Helpers.BAD_REQUEST;
+import static play.test.Helpers.GET;
+import static play.test.Helpers.UNAUTHORIZED;
+import static play.test.Helpers.route;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 public class ShortFormatPreSentenceReportController_userCredsValidation_Test extends WithApplication {
@@ -119,6 +124,8 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
         offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), eq("B56789")))
+            .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder().items(ImmutableList.of()).build()));
 
         return new GuiceApplicationBuilder().
                 overrides(

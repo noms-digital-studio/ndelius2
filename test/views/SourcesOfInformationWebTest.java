@@ -33,9 +33,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 import static play.libs.Json.toJson;
+import static utils.CourtAppearanceHelpers.someCourtAppearances;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -189,6 +193,8 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), any()))
+            .willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
 
         return new GuiceApplicationBuilder().
                 overrides(

@@ -13,15 +13,22 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
-import views.pages.*;
+import views.pages.CheckYourReportPage;
+import views.pages.DraftSavedConfirmationPage;
+import views.pages.OffenderAssessmentPage;
+import views.pages.OffenderDetailsPage;
 
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
+import static utils.CourtAppearanceHelpers.someCourtAppearances;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -98,6 +105,9 @@ public class SaveAsDraftWebTest extends WithIE8Browser {
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), any()))
+            .willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
+
 
         return new GuiceApplicationBuilder().
             overrides(

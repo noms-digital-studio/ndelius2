@@ -1,11 +1,16 @@
 package controllers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
+import interfaces.OffenderApi.Court;
+import interfaces.OffenderApi.CourtAppearance;
+import interfaces.OffenderApi.CourtAppearances;
+import interfaces.OffenderApi.CourtReport;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Test;
@@ -22,7 +27,11 @@ import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -31,9 +40,15 @@ import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.*;
-import static utils.OffenderHelper.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static play.test.Helpers.BAD_REQUEST;
+import static play.test.Helpers.GET;
+import static play.test.Helpers.POST;
+import static play.test.Helpers.route;
+import static utils.OffenderHelper.anOffenderWithEmptyAddressList;
+import static utils.OffenderHelper.anOffenderWithEmptyContactDetails;
+import static utils.OffenderHelper.anOffenderWithMultipleAddresses;
+import static utils.OffenderHelper.anOffenderWithNoContactDetailsAndNoPnc;
+import static utils.OffenderHelper.anOffenderWithNoMainAddress;
 
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
 
@@ -47,11 +62,12 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
             .willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&foo=bar"));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&foo=bar&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
+        assertTrue(content.contains(encryptor.apply("court name from api")));
         assertFalse(content.contains("bar"));
     }
 
@@ -61,13 +77,21 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
             .willReturn(CompletableFuture.completedFuture(anOffenderWithEmptyContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
+                .items(ImmutableList.of(CourtAppearance.builder()
+                    .court(Court.builder().courtName("court name from api").build())
+                    .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
+                    .build()))
+                .build()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D&crn="+ crn));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
+        assertTrue(content.contains(encryptor.apply("court name from api")));
     }
 
     @Test
@@ -76,13 +100,21 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
             .willReturn(CompletableFuture.completedFuture(anOffenderWithEmptyAddressList()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
+                .items(ImmutableList.of(CourtAppearance.builder()
+                    .court(Court.builder().courtName("court name from api").build())
+                    .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
+                    .build()))
+                .build()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D&crn="+ crn));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
+        assertTrue(content.contains(encryptor.apply("court name from api")));
     }
 
     @Test
@@ -91,13 +123,21 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
             .willReturn(CompletableFuture.completedFuture(anOffenderWithNoMainAddress()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
+                .items(ImmutableList.of(CourtAppearance.builder()
+                    .court(Court.builder().courtName("court name from api").build())
+                    .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
+                    .build()))
+                .build()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D&crn="+ crn));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
+        assertTrue(content.contains(encryptor.apply("court name from api")));
     }
 
     @Test
@@ -106,14 +146,22 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
             .willReturn(CompletableFuture.completedFuture(anOffenderWithMultipleAddresses()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), eq("X12345")))
+            .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
+                .items(ImmutableList.of(CourtAppearance.builder()
+                    .court(Court.builder().courtName("court name from api").build())
+                    .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
+                    .build()))
+                .build()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn="+ crn));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D&crn="+ crn));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
         assertTrue(content.contains(encryptor.apply("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
+        assertTrue(content.contains(encryptor.apply("court name from api")));
     }
 
     @Test
@@ -144,7 +192,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void updateReportRetrievesDocumentFromStoreAndUpdatesReportWithOffenderDetailsFromAPI() {
 
-        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"SHOULD NOT BE IN REPORT\", \"pnc\": \"2018/123456M\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Retrieved From Store\" } }", OffsetDateTime.now())));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"SHOULD NOT BE IN REPORT\", \"pnc\": \"2018/123456M\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Court Retrieved From Store\" } }", OffsetDateTime.now())));
 
         try {
             val clearDocumentId = "12345";
@@ -160,14 +208,12 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                         "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
 
             val content = Helpers.contentAsString(route(app, request));
-            assertTrue(content.contains(encryptor.apply("Retrieved From Store")));
+            assertTrue(content.contains(encryptor.apply("court name from api")));
             assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
             assertTrue(content.contains(encryptor.apply("15/10/1968")));
             assertTrue(content.contains(encryptor.apply("2018/123456N")));
             assertTrue(content.contains("name=\"age\" value=\""+encryptor.apply("49")));
             assertTrue(content.contains(encryptor.apply("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
-            assertFalse(content.contains(encryptor.apply("SHOULD NOT BE IN REPORT")));
-
         } catch (Exception ex) {
 
             fail(ex.getMessage());
@@ -177,7 +223,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void updateReportRetrievesDocumentFromStoreAndUpdatesReportWithOffenderDetailsFromAPI_addressAndPNCBlank() {
 
-        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"ADDRESS FROM DOC STORE\", \"pnc\": \"PNC FROM DOC STORE\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Retrieved From Store\" } }", OffsetDateTime.now())));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"ADDRESS FROM DOC STORE\", \"pnc\": \"PNC FROM DOC STORE\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Court Retrieved From Store\" } }", OffsetDateTime.now())));
         given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetailsAndNoPnc()));
 
         try {
@@ -206,7 +252,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     @Test
     public void updateReportRetrievesDocumentFromStore_crnNotFoundInAPICauses500Error() {
 
-        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"SHOULD NOT BE IN REPORT\", \"pnc\": \"2018/123456M\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Retrieved From Store\" } }", OffsetDateTime.now())));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"SHOULD NOT BE IN REPORT\", \"pnc\": \"2018/123456M\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Court Retrieved From Store\" } }", OffsetDateTime.now())));
         given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willThrow(RuntimeException.class);
 
         try {
@@ -1069,6 +1115,14 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithMultipleAddresses()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), eq("B56789")))
+            .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
+                .items(ImmutableList.of(CourtAppearance.builder()
+                    .court(Court.builder().courtName("court name from api").build())
+                    .appearanceDate("2018-08-06T00:00:00")
+                    .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
+                    .build()))
+                .build()));
 
         return new GuiceApplicationBuilder().
                 overrides(

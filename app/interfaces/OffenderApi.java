@@ -1,6 +1,7 @@
 package interfaces;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableList;
 import lombok.Builder;
 import lombok.Value;
 import lombok.val;
@@ -10,10 +11,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
+import static helpers.FluentHelper.not;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-
 
 public interface OffenderApi {
 
@@ -83,6 +84,49 @@ public interface OffenderApi {
         private String description;
     }
 
+    @Value
+    @Builder(toBuilder = true)
+    class CourtAppearances {
+        @Builder.Default private List<CourtAppearance> items = ImmutableList.of();
+
+        public Optional<CourtAppearance> findForCourtReportId(Long courtReportId) {
+
+            return items.stream()
+                .filter(not(courtAppearance -> Optional.ofNullable(courtAppearance.softDeleted).orElse(false)))
+                .filter(courtAppearance -> Optional.ofNullable(courtAppearance.courtReports).isPresent())
+                .filter(courtAppearance ->
+                    courtAppearance.courtReports.stream()
+                        .filter(not(report -> Optional.ofNullable(report.softDeleted).orElse(false)))
+                        .anyMatch(report -> report.getCourtReportId().equals(courtReportId)))
+                .findFirst();
+        }
+    }
+
+    @Value
+    @Builder(toBuilder = true)
+    class CourtAppearance {
+        private Long courtAppearanceId;
+        private String appearanceDate;
+        private Boolean softDeleted;
+        private Court court;
+        @Builder.Default private List<CourtReport> courtReports = ImmutableList.of();
+    }
+
+    @Value
+    @Builder(toBuilder = true)
+    class Court {
+        private Long courtId;
+        private String courtName;
+        private String locality;
+    }
+
+    @Value
+    @Builder(toBuilder = true)
+    class CourtReport {
+        private Long courtReportId;
+        private Boolean softDeleted;
+    }
+
     static String joinList(String delimiter, List<String> list) {
         return String.join(delimiter,
             list.stream()
@@ -105,4 +149,6 @@ public interface OffenderApi {
     CompletionStage<Map<String, String>> probationAreaDescriptions(String bearerToken, List<String> probationAreaCodes);
 
     CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn);
+
+    CompletionStage<CourtAppearances> getCourtAppearancesByCrn(String bearerToken, String crn);
 }

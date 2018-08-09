@@ -28,8 +28,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
-import static views.helpers.AlfrescoDataHelper.legacyReportWith;
+import static utils.CourtAppearanceHelpers.someCourtAppearances;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
+import static views.helpers.AlfrescoDataHelper.legacyReportWith;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InterstitialWebTest extends WithBrowser {
@@ -164,6 +165,7 @@ public class InterstitialWebTest extends WithBrowser {
         OffenderApi offenderApi = mock(OffenderApi.class);
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
 
         return new GuiceApplicationBuilder().
             overrides(

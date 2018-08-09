@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 import static java.time.LocalDate.now;
 import static java.time.LocalDate.parse;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
@@ -65,6 +66,11 @@ public class DateTimeHelper {
 
     public static String format(String dateString) {
         val date = parse(dateString, ISO_LOCAL_DATE);
+        return date.format(DateTimeFormatter.ofPattern("dd/MM/YYYY"));
+    }
+
+    public static String formatDateTime(String dateString) {
+        val date = parse(dateString, ISO_LOCAL_DATE_TIME);
         return date.format(DateTimeFormatter.ofPattern("dd/MM/YYYY"));
     }
 
