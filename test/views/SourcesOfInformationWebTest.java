@@ -59,7 +59,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
             "Previous OASys assessments",
             "Previous convictions",
             "Victim statement",
-            "Children services checks",
+            "services checks", // Should be `Children's services checks` - but xpath not escaping the apostrophe, so use contains rather than equals
             "Police information",
             "Sentencing guidelines",
             "Other (please specify below)"
@@ -77,7 +77,20 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
 
     @Test
     public void issuesWillContainAllCommonOptions() {
-        assertThat(sourcesOfInformationPage.navigateHere().sourcesOfInformation()).contains(sources);
+        final String[] labels = {
+                "Interview",
+                "Service records",
+                "CPS summary",
+                "Previous OASys assessments",
+                "Previous convictions",
+                "Victim statement",
+                "Children's services checks",
+                "Police information",
+                "Sentencing guidelines",
+                "Other (please specify below)"
+        };
+
+        assertThat(sourcesOfInformationPage.navigateHere().sourcesOfInformation()).contains(labels);
     }
 
     @Test

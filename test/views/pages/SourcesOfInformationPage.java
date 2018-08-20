@@ -48,11 +48,11 @@ public class SourcesOfInformationPage extends FluentPage {
     }
 
     public SourcesOfInformationPage tick(String informationSourceLabel) {
-        $(xpath(String.format("//label[span[text()='%s']]", informationSourceLabel))).click();
+        $(xpath(String.format("//label[span[contains(.,'%s')]]", informationSourceLabel))).click();
         return this;
     }
 
     private String checkBoxIdFromLabel(String optionLabel) {
-        return $(xpath(String.format("//label[span[text()='%s']]", optionLabel))).attribute("for");
+        return $(xpath(String.format("//label[span[contains(.,'%s')]]", optionLabel))).attribute("for");
     }
 }
