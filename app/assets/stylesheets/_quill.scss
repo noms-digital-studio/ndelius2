@@ -8,14 +8,15 @@
   .ql-editor:focus {
 
     @if global-variable-exists(focus-colour) {
+      outline-offset: 2px;
       outline-color: $focus-colour;
     }
     @if global-variable-exists(govuk-focus-colour) {
+      outline-offset: 3px;
       outline-color: $govuk-focus-colour;
     }
     outline-style: solid;
     outline-width: 3px;
-    outline-offset: 2px;
   }
 
   .ql-toolbar {
@@ -75,6 +76,7 @@
       text-decoration: underline;
       font-weight: inherit;
     }
+    padding-left: 12px;
   }
 
 }

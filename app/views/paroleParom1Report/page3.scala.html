@@ -12,5 +12,14 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "Prisoner contact", 3) {
-    <p>WIP</p>
+    @textarea(reportForm("prisonerContactDetail"), '_label -> "How long have you managed the prisoner, and what contact have you had with them?", 'class -> "wide", 'required -> "true")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
+    @textarea(reportForm("prisonerContactFamilyDetail"), '_label -> "What contact have you had with the prisoner`s family, partners or significant others?", 'class -> "wide", 'required -> "true")
+
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
+    @textarea(reportForm("prisonerContactAgenciesDetail"), '_label -> "What contact have you had with other relevant agencies about the prisoner?", 'class -> "wide", 'required -> "true")
 }

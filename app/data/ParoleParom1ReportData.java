@@ -11,6 +11,18 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class ParoleParom1ReportData extends ReportGeneratorWizardData {
 
+    @RequiredOnPage(value = 3, message = "Enter how long you have managed the prisoner, and what contact you have had with them")
+    @JsonProperty("PRISONER_CONTACT_DETAIL")
+    private String prisonerContactDetail;
+
+    @RequiredOnPage(value = 3, message = "Enter what contact you have had with the prisoner's family, partners or significant others")
+    @JsonProperty("PRISONER_CONTACT_FAMILY_DETAIL")
+    private String prisonerContactFamilyDetail;
+
+    @RequiredOnPage(value = 3, message = "Enter what contact you have had with other relevant agencies about the prisoner")
+    @JsonProperty("PRISONER_CONTACT_AGENCIES_DETAIL")
+    private String prisonerContactAgenciesDetail;
+
 
     @RequiredOnPage(value = 8, message = "Detail the interventions the prisoner has completed")
     @JsonProperty("INTERVENTIONS_DETAIL")
