@@ -53,7 +53,7 @@ function openPopup(url) {
          */
         function startSaveIcon(elem) {
             var saveIcon = $('#save_indicator'),
-                spinner = $('.spinner', saveIcon);
+                spinner = $('.spinner, .moj-auto-save__spinner', saveIcon);
 
             saveIcon.removeClass('js-hidden');
             spinner.removeClass('error');
@@ -67,7 +67,7 @@ function openPopup(url) {
          */
         function endSaveIcon(elem, error) {
             var saveIcon = $('#save_indicator'),
-                spinner = $('.spinner', saveIcon),
+                spinner = $('.spinner, .moj-auto-save__spinner', saveIcon),
                 errorMessage = $('#' + elem.attr('id') + '-autosave_error'),
                 formGroup = $(elem).closest('.form-group');
 
