@@ -70,5 +70,13 @@ public class GlobalSteps {
     }
 
 
+    @Given("^that the user does not select an option on the page$")
+    public void thatTheUserDoesNotSelectAnOptionOnThePage() {
+        // no page action required
+    }
 
+    @When("^they select the \"([^\"]*)\" option on the \"([^\"]*)\"$")
+    public void theySelectTheOptionOnThe(String label, String legend)  {
+        page.clickRadioButtonWithLabelWithinLegend(label, legend);
+    }
 }

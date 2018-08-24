@@ -23,6 +23,9 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("PRISONER_CONTACT_AGENCIES_DETAIL")
     private String prisonerContactAgenciesDetail;
 
+    @RequiredOnPage(value = 6, message = "Specify if the prisoner has met OPD screening criteria and been considered for OPD pathway services")
+    @JsonProperty("CONSIDERED_FOR_OPD_PATHWAY_SERVICES")
+    private String consideredForOPDPathwayServices;
 
     @RequiredOnPage(value = 8, message = "Detail the interventions the prisoner has completed")
     @JsonProperty("INTERVENTIONS_DETAIL")

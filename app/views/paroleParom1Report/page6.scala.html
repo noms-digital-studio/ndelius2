@@ -12,5 +12,29 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "OPD pathway", 6) {
-    <p>WIP</p>
+    <div class="form-group" data-module="radios" >
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Has the prisoner met the OPD screening criteria and been considered for OPD pathway services?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("consideredForOPDPathwayServices"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                Symbol("data-aria-controls") -> "opd-pathway-details"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="opd-pathway-details-yes">
+            <p class="govuk-body">
+            Make reference, where relevant, throughout this report if:</p>
+            <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+                <li>You have consulted OPD pathway services about the prisoner</li>
+                <li>The prisoner is engaged with OPD pathway services</li>
+            </ul>
+        </div>
+    </div>
 }

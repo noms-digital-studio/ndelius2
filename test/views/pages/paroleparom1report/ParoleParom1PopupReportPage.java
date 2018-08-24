@@ -2,10 +2,13 @@ package views.pages.paroleparom1report;
 
 import lombok.val;
 import org.fluentlenium.core.FluentPage;
+import org.fluentlenium.core.domain.FluentWebElement;
 import org.openqa.selenium.By;
 import play.test.TestBrowser;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static org.openqa.selenium.By.cssSelector;
 import static org.openqa.selenium.By.xpath;
@@ -36,7 +39,28 @@ public class ParoleParom1PopupReportPage extends FluentPage {
         $(cssSelector(String.format("#%s .ql-editor", fieldId))).fill().with(text);
     }
     public String fieldNameFromLabel(String label) {
-        return $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
+        val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
+        return Optional.ofNullable(fieldId).orElseGet(() -> radioFieldNameFromLegend(label));
+    }
+
+    private String radioFieldNameFromLegend(String legend) {
+        // find any radio input within section with legend - we just need the name of form field name
+        return findSectionFromLegend(legend).find(By.cssSelector("input[type='radio']")).attribute("name");
+    }
+
+    public void clickRadioButtonWithLabelWithinLegend(String label, String legend) {
+        val fieldId = fieldNameFromLabelWithLegend(label, legend);
+        $(By.id(fieldId)).first().click();
+    }
+
+    private String fieldNameFromLabelWithLegend(String label, String legend) {
+        return findSectionFromLegend(legend)
+                .find(xpath(String.format("//label[contains(.,'%s')]", label)))
+                .attribute("for");
+    }
+
+    private FluentWebElement findSectionFromLegend(String legend) {
+        return $(xpath(String.format("//fieldset[legend[contains(.,'%s')]]", legend))).first();
     }
 
     public String errorMessage(String name) {

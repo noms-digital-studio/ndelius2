@@ -5,7 +5,7 @@ import views.pages.paroleparom1report.PrisonerContactPage;
 
 import javax.inject.Inject;
 
-public class prisonerContactSteps {
+public class PrisonerContactSteps {
     @Inject
     private PrisonerContactPage page;
 
