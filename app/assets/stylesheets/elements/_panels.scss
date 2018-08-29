@@ -28,6 +28,7 @@
 // Used to show the left edge of "toggled" content
 .panel-border-narrow {
   border-left-width: 5px;
+  padding: 15px 0 15px 15px;
 }
 
 // Panels within form groups
@@ -35,9 +36,6 @@
 .form-group .panel-border-narrow {
   float: left;
   width: 100%;
-  // Remove the bottom padding as .form-group sets a bottom margin
-  padding-bottom: 0;
-  // Don't remove the bottom margin for all panels, assume they are often within stacked groups
 }
 
 // Note: This is incredibly fragile, and needs rebuilding.

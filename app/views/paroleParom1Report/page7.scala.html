@@ -11,6 +11,18 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@summaryHint = {
+    <p>Detail and any relevant information relating to this. Where periods of RoTL have taken place,
+        include how successful this has been to the prisoner’s resettlement. If RoTL not being
+        undertaken explain why</p>
+}
+
 @popup(reportForm, encrypter, "Behaviour in prison", 7) {
-    <p>WIP</p>
+
+    @textarea(reportForm("behaviourDetail"), '_label -> "Detail the prisoner`s behaviour whilst in prison", 'class -> "wide", 'required -> "true", '_error -> "Enter details of the prisoner's behaviour in prison")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
+
+    @textarea(reportForm("rotlSummary"), '_label -> "RoTL summary", '_hint -> summaryHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the RoTL summary")
+
 }

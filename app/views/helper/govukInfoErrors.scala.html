@@ -5,11 +5,14 @@
 }
 
 @elements.args.get('_hint).map { hint =>
-    <a href="javascript:void(0)" class="expand-content" data-target="hint_@elements.id">What to include</a>
-    <div id="hint_@elements.id" class="js-hidden">
-        <div class="panel panel-border-narrow">@hint</div>
-        <div>&nbsp;</div>
-    </div>
+    <details class="govuk-details govuk-!-margin-bottom-0">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">What to include</span>
+        </summary>
+        <div id="hint_@elements.id" class="panel panel-border-narrow govuk-details__text">
+            @hint
+        </div>
+    </details>
 }
 
 @for(error <- elements.errors) {
