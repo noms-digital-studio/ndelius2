@@ -1,4 +1,4 @@
-Feature: Parole report
+Feature: Parole report - OPD Pathway
 
   Background:
   Given Delius user is on the "OPD Pathway" UI on the Parole Report

@@ -23,6 +23,23 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("PRISONER_CONTACT_AGENCIES_DETAIL")
     private String prisonerContactAgenciesDetail;
 
+    @RequiredOnPage(value = 5, message = "Enter your analysis of the impact of the offence on the victims")
+    @JsonProperty("VICTIMS_IMPACT_DETAILS")
+    private String victimsImpactDetails;
+
+    @RequiredOnPage(value = 5, message = "Enter the date you contacted the VLO")
+    @JsonProperty("VICTIMS_VLO_CONTACT_DATE")
+    private String victimsVLOContactDate;
+
+    @RequiredOnPage(value = 5, message = "Specify if the victims are engaged with the VCS")
+    @JsonProperty("VICTIMS_ENGAGED_IN_VCS")
+    private String victimsEngagedInVCS;
+
+    @RequiredOnPage(value = 5, message = "Specify if the victims wish to submit a VPS")
+    @JsonProperty("VICTIMS_SUBMIT_VPS")
+    private String victimsSubmitVPS;
+
+
     @RequiredOnPage(value = 6, message = "Specify if the prisoner has met OPD screening criteria and been considered for OPD pathway services")
     @JsonProperty("CONSIDERED_FOR_OPD_PATHWAY_SERVICES")
     private String consideredForOPDPathwayServices;

@@ -2,6 +2,7 @@ package views.pages.paroleparom1report;
 
 import org.fluentlenium.core.FluentPage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import play.test.TestBrowser;
 
 import javax.inject.Inject;
@@ -40,6 +41,8 @@ public class LandingPage extends FluentPage {
     public LandingPage clickButton(String button) {
         $(By.xpath(String.format("//button[contains(text(),'%s')]", button))).click();
         window().switchTo("reportpopup");
+        getDriver().manage().window().setSize(new Dimension(830, 3000));
+
         return this;
     }
 

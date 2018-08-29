@@ -2,6 +2,7 @@ package bdd.paroleparom1report;
 
 import bdd.wiremock.AlfrescoStoreMock;
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -44,6 +45,10 @@ public class GlobalSteps {
         fieldNameToValues = toNameValues(labelTextMap);
     }
 
+    @When("^they enter the date \"([^\"]*)\" for \"([^\"]*)\"$")
+    public void theyEnterTheDateFor(String text, String label) {
+        page.fillInput(label, text);
+    }
     private Map<String, String> toNameValues(Map<String, String> labelTextMap) {
         return labelTextMap.keySet().stream().map(label -> new SimpleEntry<>(nameFromLabel(label), labelTextMap.get(label))).collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
     }
@@ -58,8 +63,23 @@ public class GlobalSteps {
                 alfrescoStoreMock.verifySavedDocumentContainsValues(fieldNameToValues));
     }
 
+    @Then("^the following information should be saved in the prisoner parole report$")
+    public void theFollowingInformationShouldBeSavedInThePrisonerParoleReport(DataTable fieldNameToValuesTable) throws Throwable {
+        control.await().until(unused ->
+                alfrescoStoreMock.verifySavedDocumentContainsValues(fieldNameToValuesTable.asMap(String.class, String.class)));
+    }
+
+
     @Given("^the user does not any enter any characters in the free text fields on the page$")
     public void theUserDoesNotAnyEnterAnyCharactersInTheFreeTextFieldsOnThePage() {
+        // no page action required
+    }
+    @Given("^that the user does not select an option on the page$")
+    public void thatTheUserDoesNotSelectAnOptionOnThePage() {
+        // no page action required
+    }
+    @Given("^that the user enters no information on the page$")
+    public void thatTheUserEntersNoInformationOnThePage() {
         // no page action required
     }
 
@@ -69,11 +89,6 @@ public class GlobalSteps {
         nameErrorMessages.forEach((name, message) -> assertThat(page.errorMessage(name)).isEqualTo(nameErrorMessages.get(name)));
     }
 
-
-    @Given("^that the user does not select an option on the page$")
-    public void thatTheUserDoesNotSelectAnOptionOnThePage() {
-        // no page action required
-    }
 
     @When("^they select the \"([^\"]*)\" option on the \"([^\"]*)\"$")
     public void theySelectTheOptionOnThe(String label, String legend)  {

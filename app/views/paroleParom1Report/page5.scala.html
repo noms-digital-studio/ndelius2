@@ -12,5 +12,50 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "Victims", 5) {
-    <p>WIP</p>
+    @textarea(reportForm("victimsImpactDetails"), '_label -> "Analyse the impact of the offence on the victims", 'class -> "wide", 'required -> "true")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
+    @inputText(reportForm("victimsVLOContactDate"), '_label -> "On what date did you contact the VLO?", 'class -> "date-picker", 'required -> "true")
+
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Are the victims engaged in the Victim Contact Scheme (VCS)?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("victimsEngagedInVCS"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                )
+            )
+        </fieldset>
+    </div>
+
+    </fieldset>
+
+    <div class="govuk-form-group" data-module="radios" >
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Do the victims wish to submit a Victim Personal Statement (VPS)?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("victimsSubmitVPS"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No",
+                    "unknown" -> "Don`t know"
+                ),
+                Symbol("data-aria-controls") -> "vps-advice"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="vps-advice-yes">
+            <p class="govuk-body">The VPS should be submitted with this report if possible</p>
+        </div>
+    </div>
+
 }

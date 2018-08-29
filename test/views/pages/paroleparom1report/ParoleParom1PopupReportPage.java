@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 import static org.openqa.selenium.By.cssSelector;
+import static org.openqa.selenium.By.name;
 import static org.openqa.selenium.By.xpath;
 
 public class ParoleParom1PopupReportPage extends FluentPage {
@@ -38,6 +39,10 @@ public class ParoleParom1PopupReportPage extends FluentPage {
         val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
         $(cssSelector(String.format("#%s .ql-editor", fieldId))).fill().with(text);
     }
+    public void fillInput(String label, String text) {
+        val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
+        $(name(fieldId)).fill().with(text);
+    }
     public String fieldNameFromLabel(String label) {
         val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
         return Optional.ofNullable(fieldId).orElseGet(() -> radioFieldNameFromLegend(label));
@@ -55,7 +60,7 @@ public class ParoleParom1PopupReportPage extends FluentPage {
 
     private String fieldNameFromLabelWithLegend(String label, String legend) {
         return findSectionFromLegend(legend)
-                .find(xpath(String.format("//label[contains(.,'%s')]", label)))
+                .find(xpath(String.format(".//label[contains(.,'%s')]", label)))
                 .attribute("for");
     }
 

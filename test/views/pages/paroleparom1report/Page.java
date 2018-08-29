@@ -3,6 +3,7 @@ package views.pages.paroleparom1report;
 public enum Page {
     PRISONER_DETAILS("2", "Prisoner details"),
     PRISONER_CONTACT("3", "Prisoner contact"),
+    VICTIMS("5", "OPD pathway"),
     OPD_PATHWAY("6", "OPD pathway"),
     BEHAVIOUR_IN_PRISON("7", "Behaviour in prison"),
     INTERVENTION("8", "Interventions"),
