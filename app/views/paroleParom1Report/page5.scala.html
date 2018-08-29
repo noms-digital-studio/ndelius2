@@ -12,6 +12,21 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "Victims", 5) {
+    <div class="moj-interrupt govuk-!-margin-top-0">
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1 moj-!-color-white">This report will be disclosed to the prisoner</p>
+        <p class="govuk-body-s govuk-!-margin-bottom-0 moj-!-color-white">Consider how you present sensitive information in this section</p>
+    </div>
+
+    <div class="govuk-warning-text moj-warning-text">
+        <span aria-hidden="true" class="govuk-warning-text__icon">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            You must contact the Victim Liaison Officer (VLO) for each hearing as part of designing the Risk Management Plan
+        </strong>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
     @textarea(reportForm("victimsImpactDetails"), '_label -> "Analyse the impact of the offence on the victims", 'class -> "wide", 'required -> "true")
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
