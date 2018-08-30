@@ -364,7 +364,9 @@ function openPopup(url) {
 
             // add classes to reduce margins
             $(id).closest('.form-group').addClass('small-margin-bottom')
+            $(id).closest('.form-group').addClass('govuk-!-margin-bottom-0')
             $(id).closest('.form-group').next('hr').addClass('small-margin-top')
+            $(id).closest('.form-group').next('hr').addClass('govuk-!-margin-top-0')
 
             // remove tab key binding for editor, toolbar (and for IE11 svg)
             delete editor.getModule('keyboard').bindings[9];
