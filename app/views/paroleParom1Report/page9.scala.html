@@ -11,5 +11,5 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "Current sentence plan and response", 9) {
-    <p>WIP</p>
+    @textarea(reportForm("sentencePlan"), '_label -> "Detail the prisoner`s current sentence plan objectives, including their response", 'class -> "wide", 'required -> "true", '_error -> "Enter the prisoner's current sentence plan objectives, including their response")
 }
