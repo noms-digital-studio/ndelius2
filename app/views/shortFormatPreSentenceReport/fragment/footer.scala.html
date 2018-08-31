@@ -11,6 +11,29 @@
         </button>
 
     </div>
+    <div class="container" style="
+        width: 250px;
+        font-size: 14px;
+        float: left;
+        padding-left: 30px;
+    ">
+        <label for="numbering">
+            How should the report be numbered?
+        </label>
+        <select id="numbering" onchange="numberingChange(this.value)">
+            <option value="NUMBERING_NONE">No numbering</option>
+            <option value="NUMBERING_BASIC">Sections only</option>
+            <option value="NUMBERING_LISTS">Include numbered list</option>
+            <option value="NUMBERING_AUTO">All paragraphs automatically</option>
+        </select>
+    </div>
+    <script>
+            $("#numbering").val($('#numberingMode').val());
+            function numberingChange(value) {
+                $('#numberingMode').val(value)
+            }
+    </script>
+
     <div class="container">
         <div id="save_indicator" class="inline margin-top margin-right js-hidden">
             <div class="font-xxsmall inline">

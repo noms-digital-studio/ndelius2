@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper=false)
 public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData {
 
+    @JsonProperty("NUMBERING_MODE")
+    private String numberingMode;
     // Page 2
 
     @Encrypted
