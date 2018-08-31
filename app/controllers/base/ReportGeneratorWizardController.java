@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.ParamsValidator;
 import data.base.ReportGeneratorWizardData;
+import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
 import helpers.ThrowableHelper;
 import interfaces.AnalyticsStore;
@@ -40,6 +41,7 @@ import static helpers.FluentHelper.value;
 import static helpers.JsonHelper.badRequestJson;
 import static helpers.JsonHelper.okJson;
 import static helpers.JsonHelper.serverUnavailableJson;
+import static helpers.JwtHelper.principal;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.max;
 
@@ -115,8 +117,44 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
         val continueFromInterstitial = queryParams.contains("continue");
         val stopAtInterstitial = queryParams.contains("documentId") && !continueFromInterstitial;
 
+        val user = Optional.ofNullable(request().queryString().get("user"))
+            .map(users -> users[0])
+            .orElse(null);
+        val t = Optional.ofNullable(request().queryString().get("t"))
+            .map(times -> times[0])
+            .orElse(null);
 
-        return super.initialParams().thenCompose(params ->
+        final Runnable errorReporter = () -> Logger.error(String.format("Report page request did not receive a valid user (%s) or t (%s)", user, t));
+
+        val possibleBearerTokenRefresh = Optional.of(continueFromInterstitial)
+            .filter(not(bool -> bool))
+            .map(ignored -> {
+
+                val invalidRequest = invalidCredentials(
+                    decrypter.apply(user),
+                    decrypter.apply(t),
+                    errorReporter);
+
+                if (invalidRequest.isPresent()) {
+                    return CompletableFuture.supplyAsync(() -> {
+                        throw new InvalidCredentialsException(invalidRequest.get());
+                    });
+                }
+
+                val username = decrypter.apply(user);
+
+                final CompletionStage<String> result = offenderApi.logon(username)
+                    .thenApplyAsync(bearerToken -> {
+                        Logger.info("AUDIT:{}: ReportGeneratorWizardController: Successful logon for user {}", principal(bearerToken), username);
+                        session(OFFENDER_API_BEARER_TOKEN, bearerToken);
+                        return bearerToken;
+
+                    }, ec.current());
+
+                return result; })
+            .orElse(CompletableFuture.completedFuture("ignored"));
+
+        return possibleBearerTokenRefresh.thenCompose(ignored -> super.initialParams()).thenCompose(params ->
             loadExistingDocument(params).orElseGet(() -> createNewDocument(params))).thenApply(params -> {
 
             if (stopAtInterstitial) {

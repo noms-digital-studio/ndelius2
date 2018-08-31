@@ -27,6 +27,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
@@ -76,7 +78,7 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
 
 
     @Test
-    public void timeTokenInFuture30Mins200Response() throws UnsupportedEncodingException {
+    public void timeTokenInFuture30MinsGetsA200Response() throws UnsupportedEncodingException {
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
             .willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
@@ -88,7 +90,7 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
     }
 
     @Test
-    public void timeTokenInPast30MinsIsOk() throws UnsupportedEncodingException {
+    public void timeTokenInPast30MinsGetsA200Response() throws UnsupportedEncodingException {
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
             .willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
@@ -97,6 +99,18 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
         val result = route(app, request);
 
         assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void sessionTokenGetsRefreshedEachRequest() throws UnsupportedEncodingException {
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
+            .willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+
+        Http.RequestBuilder request = buildReportRequest(0);
+        val result = route(app, request);
+        route(app, request.session("offenderApiBearerToken", result.session().get("offenderApiBearerToken")));
+
+        verify(offenderApi, times(2)).logon(any());
     }
 
     @Test
