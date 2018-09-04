@@ -1,7 +1,7 @@
 @(elements: helper.FieldElements)
 
 @for(info <- elements.infos) {
-    <span class="form-hint">@info</span>
+    <span class="form-hint govuk-hint">@info</span>
 }
 
 @elements.args.get('_hint).map { hint =>

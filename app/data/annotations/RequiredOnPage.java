@@ -15,5 +15,7 @@ public @interface RequiredOnPage {
 
     String onlyIfField() default "";
 
+    String onlyIfFieldMatchValue() default "";
+
     String message() default Constraints.RequiredValidator.message;
 }

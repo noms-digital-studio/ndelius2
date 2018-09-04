@@ -66,6 +66,32 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SENTENCE_PLAN")
     private String sentencePlan;
 
+    // Page 15 - RoSH analysis
+    @RequiredOnPage(value = 15, message = "Enter the nature of the risk of serious harm")
+    @JsonProperty("NATURE_OF_RISK")
+    private String natureOfRisk;
+
+    @RequiredOnPage(value = 15, message = "Enter the factors that might increase the risk of serious harm")
+    @JsonProperty("INCREASE_FACTORS")
+    private String increaseFactors;
+
+    @RequiredOnPage(value = 15, message = "Enter the factors that might decrease the risk of serious harm")
+    @JsonProperty("DECREASE_FACTORS")
+    private String decreaseFactors;
+
+    @RequiredOnPage(value = 15, message = "Enter your analysis of the likelihood of further offending")
+    @JsonProperty("LIKELIHOOD_FURTHER_OFFENDING")
+    private String likelihoodFurtherOffending;
+
+    @RequiredOnPage(value = 15, message = "Specify if the prisoner poses a risk of absconding")
+    @JsonProperty("RISK_OF_ABSCONDING")
+    private String riskOfAbsconding;
+
+    @RequiredOnPage(value = 15, message = "Enter the details of the absconding risk", onlyIfField = "riskOfAbsconding", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("RISK_OF_ABSCONDING_DETAILS")
+    private String riskOfAbscondingDetails;
+
+
     // Page 23
     @OnPage(23)
     private String dummy23;

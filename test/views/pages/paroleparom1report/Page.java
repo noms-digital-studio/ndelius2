@@ -8,7 +8,8 @@ public enum Page {
     BEHAVIOUR_IN_PRISON("7", "Behaviour in prison"),
     INTERVENTION("8", "Interventions"),
     SENTENCE_PLAN("9", "Current sentence plan and response"),
-    CURRENT_ROSH_CUSTODY("13", "Current ROSH: custody")
+    CURRENT_ROSH_CUSTODY("13", "Current ROSH: custody"),
+    ROSH_ANALYSIS("15", "RoSH analysis")
     ;
     private final String pageNumber;
     private final String pageHeader;

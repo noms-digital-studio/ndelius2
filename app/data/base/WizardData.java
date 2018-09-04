@@ -10,6 +10,7 @@ import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
 import lombok.Data;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.RequiredValidator;
@@ -120,7 +121,12 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return requiredFields().filter(field -> {       // exists, otherwise use onlyIfField current boolean
 
             val onlyIfName = field.getAnnotation(RequiredOnPage.class).onlyIfField();
-            val requiredEnforced = getField(onlyIfName).flatMap(this::getBooleanValue).orElse(true);
+            val onlyIfFieldMatchValue = field.getAnnotation(RequiredOnPage.class).onlyIfFieldMatchValue();
+            val matcher = Optional.of(onlyIfFieldMatchValue)
+                    .filter(StringUtils::isNotBlank)
+                    .map(matchValue -> (Function<Field, Optional<Boolean>>) onlyIfField -> this.getStringValue(onlyIfField).map(value -> value.equals(matchValue)))
+                    .orElse(this::getBooleanValue);
+            val requiredEnforced = getField(onlyIfName).flatMap(matcher).orElse(true);
 
             return requiredEnforced &&
                     (mustValidateField(options, field)) &&

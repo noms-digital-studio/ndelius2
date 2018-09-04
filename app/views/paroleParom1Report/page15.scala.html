@@ -11,6 +11,43 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@popup(reportForm, encrypter, "ROSH analysis", 15) {
-    <p>WIP</p>
+@popup(reportForm, encrypter, "RoSH analysis", 15) {
+
+    @textarea(reportForm("natureOfRisk"), '_label -> "Detail the nature of the risk of serious harm to all relevant groups", '_help -> "Explain why they are at risk", 'class -> "wide", 'required -> "true", '_error -> "Enter the nature of the risk of serious harm")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("increaseFactors"), '_label -> "What factors might increase the risk of serious harm to the relevant groups?", 'class -> "wide", 'required -> "true", '_error -> "Enter the factors that might increase the risk of serious harm")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("decreaseFactors"), '_label -> "What factors might decrease the risk of serious harm to the relevant groups?", 'class -> "wide", 'required -> "true", '_error -> "Enter the factors that might decrease the risk of serious harm")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("likelihoodFurtherOffending"), '_label -> "Analyse the likelihood of further offending", 'class -> "wide", 'required -> "true", '_error -> "Enter your analysis of the likelihood of further offending")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    <div class="form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Does the prisoner pose a risk of absconding?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("riskOfAbsconding"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                Symbol("data-aria-controls") -> "risk-of-absconding"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="risk-of-absconding-yes">
+            @textarea(reportForm("riskOfAbscondingDetails"), '_label -> "Provide details of the absconding risk", 'class -> "wide", 'required -> "true", 'error -> "Enter the details of the absconding risk")
+        </div>
+    </div>
+
 }
