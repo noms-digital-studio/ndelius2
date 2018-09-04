@@ -124,7 +124,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
             val onlyIfFieldMatchValue = field.getAnnotation(RequiredOnPage.class).onlyIfFieldMatchValue();
             val matcher = Optional.of(onlyIfFieldMatchValue)
                     .filter(StringUtils::isNotBlank)
-                    .map(matchValue -> (Function<Field, Optional<Boolean>>) onlyIfField -> this.getStringValue(onlyIfField).map(value -> value.equals(matchValue)))
+                    .map(matchValue -> (Function<Field, Optional<Boolean>>) onlyIfField -> Optional.of(this.getStringValue(onlyIfField).map(value -> value.equals(matchValue)).orElse(false)))
                     .orElse(this::getBooleanValue);
             val requiredEnforced = getField(onlyIfName).flatMap(matcher).orElse(true);
 

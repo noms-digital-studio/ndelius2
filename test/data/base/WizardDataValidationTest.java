@@ -86,6 +86,7 @@ public class WizardDataValidationTest {
     @Test
     public void onlyIfRequiredFieldWithMatchValueIsValidatedWhenLinkedFieldHasMatchingValue() {
         data.setPageNumber(5);
+        assertThat(data.validate()).isEmpty();
 
         data.setIfOnlyStringField("notmatched");
         assertThat(data.validate()).isEmpty();
