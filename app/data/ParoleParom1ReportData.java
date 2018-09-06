@@ -92,6 +92,39 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RISK_OF_ABSCONDING_DETAILS")
     private String riskOfAbscondingDetails;
 
+    // Page 16 - Risk Management Plan (RMP)
+    @RequiredOnPage(value = 16, message = "Enter the agencies")
+    @JsonProperty("AGENCIES")
+    private String agencies;
+
+    @RequiredOnPage(value = 16, message = "Enter the support")
+    @JsonProperty("SUPPORT")
+    private String support;
+
+    @RequiredOnPage(value = 16, message = "Enter the control")
+    @JsonProperty("CONTROL")
+    private String control;
+
+    @RequiredOnPage(value = 16, message = "Enter the added measures for specific risks")
+    @JsonProperty("RISK_MEASURES")
+    private String riskMeasures;
+
+    @RequiredOnPage(value = 16, message = "Enter the agency actions")
+    @JsonProperty("AGENCY_ACTIONS")
+    private String agencyActions;
+
+    @RequiredOnPage(value = 16, message = "Enter the additional conditions or requirements")
+    @JsonProperty("ADDITIONAL_CONDITIONS")
+    private String additionalConditions;
+
+    @RequiredOnPage(value = 16, message = "Enter the level of contact")
+    @JsonProperty("LEVEL_OF_CONTACT")
+    private String levelOfContact;
+
+    @RequiredOnPage(value = 16, message = "Enter the contingency plan")
+    @JsonProperty("CONTINGENCY_PLAN")
+    private String contingencyPlan;
+
     @RequiredGroupOnPage(value = 21, message = "Select the case documents you have used")
     @JsonProperty("SOURCES_PREVIOUS_CONVICTIONS")
     private boolean sourcesPreviousConvictions;

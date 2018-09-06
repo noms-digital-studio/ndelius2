@@ -9,8 +9,50 @@
 
 @(reportForm: Form[ParoleParom1ReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
-@implicitField = @{ FieldConstructor(govukElements.f) }
+@implicitField = @{
+    FieldConstructor(govukElements.f)
+}
 
 @popup(reportForm, encrypter, "Risk Management Plan (RMP)", 16) {
-    <p>WIP</p>
+
+    <div class="govuk-warning-text moj-warning-text">
+        <span aria-hidden="true" class="govuk-warning-text__icon">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            You must complete the RMP for all prisoners, even if you are not supporting their move or release.
+        </strong>
+    </div>
+
+    <p class="govuk-caption-xl govuk-!-margin-bottom-4">Detail the risk management plan (RMP)</p>
+
+    @textarea(reportForm("agencies"), '_label -> "Agencies", 'class -> "wide", 'required -> "true", '_error -> "Enter the agencies")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("support"), '_label -> "Support", 'class -> "wide", 'required -> "true", '_error -> "Enter the support")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("control"), '_label -> "Control", 'class -> "wide", 'required -> "true", '_error -> "Enter the support")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("riskMeasures"), '_label -> "Added measures for specific risks", 'class -> "wide", 'required -> "true", '_error -> "Enter the added measures for specific risks")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("agencyActions"), '_label -> "Agency actions", 'class -> "wide", 'required -> "true", '_error -> "Enter the agency actions")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("additionalConditions"), '_label -> "Additional conditions or requirements", 'class -> "wide", 'required -> "true", '_error -> "Enter the additional conditions or requirements")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("levelOfContact"), '_label -> "Level of contact", 'class -> "wide", 'required -> "true", '_error -> "Enter the level of contact")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
+
+    @textarea(reportForm("contingencyPlan"), '_label -> "Contingency plan", 'class -> "wide", 'required -> "true", '_error -> "Enter the contingency plan")
+
 }

@@ -10,6 +10,7 @@ public enum Page {
     SENTENCE_PLAN("9", "Current sentence plan and response"),
     CURRENT_ROSH_CUSTODY("13", "Current ROSH: custody"),
     ROSH_ANALYSIS("15", "RoSH analysis"),
+    RISK_MANAGEMENT_PLAN("16", "Risk Management Plan (RMP)"),
     SOURCES("21", "Sources")
     ;
     private final String pageNumber;
