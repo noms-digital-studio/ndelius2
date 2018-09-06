@@ -26,6 +26,7 @@ public class GlobalSteps {
     private AlfrescoStoreMock alfrescoStoreMock;
 
     private Map<String, String> fieldNameToValues;
+    private String whatToIncludeFieldLabel;
 
 
     @When("^they select the \"([^\"]*)\" button$")
@@ -82,6 +83,10 @@ public class GlobalSteps {
     public void thatTheUserEntersNoInformationOnThePage() {
         // no page action required
     }
+    @When("^they don't enter text into the \"([^\"]*)\"$")
+    public void theyDonTEnterTextIntoThe(String label) {
+        // no page action required
+    }
 
     @Then("^the following error messages are displayed$")
     public void theFollowingErrorMessagesAreDisplayed(DataTable errorFieldMessages) {
@@ -93,5 +98,25 @@ public class GlobalSteps {
     @When("^they select the \"([^\"]*)\" option on the \"([^\"]*)\"$")
     public void theySelectTheOptionOnThe(String label, String legend)  {
         page.clickRadioButtonWithLabelWithinLegend(label, legend);
+    }
+
+    @Given("^that the \"([^\"]*)\" is ticked$")
+    public void thatTheIsTicked(String checkboxLabel) {
+        page.clickCheckboxWithLabel(checkboxLabel);
+    }
+
+    @Given("^that the Delius user is unclear to what information they need to add to the \"([^\"]*)\" free text field$")
+    public void thatTheDeliusUserIsUnclearToWhatInformationTheyNeedToAddToTheFreeTextField(String label) throws Throwable {
+        this.whatToIncludeFieldLabel = label;
+    }
+
+    @When("^they select \"([^\"]*)\" hyperlink$")
+    public void theySelectHyperlink(String text) {
+        page.clickSpanWithSiblingLabel(text, whatToIncludeFieldLabel);
+    }
+
+    @Then("^the UI should expand to show additional content to the end user$")
+    public void theUIShouldExpandToShowAdditionalContentToTheEndUser() throws Throwable {
+        assertThat(page.whatToIncludeContentVisibleWithSiblingLabel(whatToIncludeFieldLabel)).isTrue();
     }
 }

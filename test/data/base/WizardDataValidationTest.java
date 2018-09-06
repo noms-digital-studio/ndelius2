@@ -1,6 +1,8 @@
 package data.base;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import data.annotations.OnPage;
+import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
 import lombok.Data;
 import org.junit.Before;
@@ -31,7 +33,19 @@ public class WizardDataValidationTest {
         @RequiredOnPage(value = 5, onlyIfField = "ifOnlyStringField", onlyIfFieldMatchValue = "matched")
         private String requiredIfOnlyStringField;
 
-        @OnPage(6)
+        @RequiredGroupOnPage(value = 6, message = "my group validation message")
+        private boolean groupedField1;
+
+        @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
+        private boolean groupedField2;
+
+        @RequiredGroupOnPage(value = 7)
+        private boolean otherGroupedField1;
+
+        @RequiredGroupOnPage(value = 7)
+        private boolean otherGroupedField2;
+
+        @OnPage(8)
         private String dummyFinalPageField;
 
     }
@@ -97,5 +111,20 @@ public class WizardDataValidationTest {
         data.setIfOnlyStringField("matched");
         data.setRequiredIfOnlyStringField("this is valid");
         assertThat(data.validate()).isEmpty();
+    }
+
+    @Test
+    public void groupedFieldsFilterItemsMarkedWithNotErrorWhenInvalid() {
+        data.setPageNumber(6);
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("groupedField1", "my group validation message"));
+    }
+
+    @Test
+    public void groupedFieldsIncludeAllItemsByDefault() {
+        data.setPageNumber(7);
+        assertThat(data.validate()).hasSize(2);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("otherGroupedField1", "error.required"));
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("otherGroupedField2", "error.required"));
     }
 }

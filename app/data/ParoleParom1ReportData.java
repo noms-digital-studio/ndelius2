@@ -2,6 +2,7 @@ package data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import data.annotations.OnPage;
+import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
@@ -90,6 +91,50 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @RequiredOnPage(value = 15, message = "Enter the details of the absconding risk", onlyIfField = "riskOfAbsconding", onlyIfFieldMatchValue= "yes")
     @JsonProperty("RISK_OF_ABSCONDING_DETAILS")
     private String riskOfAbscondingDetails;
+
+    @RequiredGroupOnPage(value = 21, message = "Select the case documents you have used")
+    @JsonProperty("SOURCES_PREVIOUS_CONVICTIONS")
+    private boolean sourcesPreviousConvictions;
+
+    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @JsonProperty("SOURCES_CPS_DOCUMENTS")
+    private boolean sourcesCPSDocuments;
+
+    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @JsonProperty("SOURCES_JUDGES_COMMENTS")
+    private boolean sourcesJudgesComments;
+
+    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @JsonProperty("SOURCES_PAROLE_DOSSIER")
+    private boolean sourcesParoleDossier;
+
+    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @JsonProperty("SOURCES_PRISON_SECURITY_INFORMATION")
+    private boolean sourcesPrisonSecurityInformation;
+
+    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @JsonProperty("SOURCES_PROBATION_CASE_RECORD")
+    private boolean sourcesProbationCaseRecord;
+
+    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @JsonProperty("SOURCES_OTHER")
+    private boolean sourcesOther;
+
+    @RequiredOnPage(value = 21, onlyIfField = "sourcesOther", message = "Enter the other case documents you have used")
+    @JsonProperty("SOURCES_OTHER_DETAIL")
+    private String sourcesOtherDetail;
+
+    @RequiredOnPage(value = 21, message = "Enter the reports, assessments and directions you have used")
+    @JsonProperty("SOURCES_ASSESSMENT_LIST")
+    private String sourcesAssessmentList;
+
+    @RequiredOnPage(value = 21, message = "Specify if there have been any omissions or limitations")
+    @JsonProperty("SOURCES_LIMITATIONS")
+    private String sourceLimitations;
+
+    @RequiredOnPage(value = 21, message = "Enter the explanation", onlyIfField = "sourceLimitations", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("SOURCES_LIMITATIONS_DETAIL")
+    private String sourceLimitationsDetail;
 
 
     // Page 23

@@ -71,4 +71,20 @@ public class ParoleParom1PopupReportPage extends FluentPage {
     public String errorMessage(String name) {
         return $(xpath(String.format("//a[@href='#%s-error']", name))).text();
     }
+
+    public void clickCheckboxWithLabel(String label) {
+        val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
+        $(By.id(fieldId)).first().click();
+    }
+
+    public void clickSpanWithSiblingLabel(String text, String label) {
+        val parent = $(xpath(String.format("//label[span[text()='%s']]", label))).first().find(By.xpath("./.."));
+        parent.find(xpath(String.format(".//span[contains(.,'%s')]", text))).click();
+    }
+
+    public boolean whatToIncludeContentVisibleWithSiblingLabel(String label) {
+        val parent = $(xpath(String.format("//label[span[text()='%s']]", label))).first().find(By.xpath("./.."));
+        return parent.find(By.cssSelector(".govuk-details__text")).first().displayed();
+
+    }
 }

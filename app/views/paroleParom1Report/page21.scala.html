@@ -11,6 +11,62 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@sourcesAssessmentListHint = {
+    <ul>
+        <li>Interventions/programme reports</li>
+        <li>Approved premises referral</li>
+        <li>SARN assessments</li>
+        <li>Psychology/psychiatry reports</li>
+        <li>Previous parole directions</li>
+        <li>ROTL paperwork</li>
+        <li>OASys</li>
+        <li>Sentence planning board notes</li>
+        <li>Security information</li>
+        <li>SARA assessment</li>
+    </ul>
+}
+
 @popup(reportForm, encrypter, "Sources", 21) {
-    <p>WIP</p>
+    <div class="govuk-form-group @if(!reportForm.errors("sourcesPreviousConvictions").isEmpty) { govuk-form-group--error}">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">Select all case documents you have used for this PAROM 1</legend>
+            <div class="govuk-checkboxes" data-module="checkboxes">
+                @checkbox(reportForm("sourcesPreviousConvictions"), '_label -> "Previous convictions")
+                @checkbox(reportForm("sourcesCPSDocuments"), '_label -> "Crown Prosecution Service (CPS) documents")
+                @checkbox(reportForm("sourcesJudgesComments"), '_label -> "Judges comments")
+                @checkbox(reportForm("sourcesParoleDossier"), '_label -> "Parole dossier")
+                @checkbox(reportForm("sourcesProbationCaseRecord"), '_label -> "Probation case records (nDelius)")
+                @checkbox(reportForm("sourcesPrisonSecurityInformation"), '_label -> "Prison security information ")
+                @checkbox(reportForm("sourcesOther"), '_label -> "Other", Symbol("data-aria-controls") -> "other-sources")
+                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="other-sources">
+                @textarea(reportForm("sourcesOtherDetail"), '_label -> "Detail any other case documents you have used", 'class -> "wide")
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+    @textarea(reportForm("sourcesAssessmentList"), '_label -> "List all of the reports, assessments and directions you have used for this PAROM 1", '_hint -> sourcesAssessmentListHint, 'class -> "wide", 'required -> "true")
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+    <div class="form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Has any information not been made available to you, or are there any limitations to the sources?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("sourceLimitations"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                Symbol("data-aria-controls") -> "source-limitations",
+                Symbol("_inline") -> "true"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="source-limitations-yes">
+        @textarea(reportForm("sourceLimitationsDetail"), '_label -> "Provide an explanation", 'class -> "wide")
+        </div>
+    </div>
+
 }

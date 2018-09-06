@@ -6,16 +6,16 @@
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
   @govukInfoErrors(elements)
-  <div class="multiple-choice" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>
-    <input class="@elements.args.get('class)" type="checkbox" role="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse("false"))) { checked="checked" } aria-checked="@Boolean.parseBoolean(elements.field.value.getOrElse("false"))" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} />
-    <label for="@elements.id">
+  <div class="govuk-checkboxes__item multiple-choice" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>
+    <input class="govuk-checkboxes__input @elements.args.get('class)" type="checkbox" role="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse("false"))) { checked="checked" } aria-checked="@Boolean.parseBoolean(elements.field.value.getOrElse("false"))" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} @if(elements.args.get(Symbol("data-aria-controls"))) {data-aria-controls="@elements.args.get(Symbol("data-aria-controls"))"} />
+    <label class="govuk-label govuk-checkboxes__label" for="@elements.id">
         <span class="form-label-bold">@elements.label</span>
     </label>
   </div>
   <div class="clearfix"></div>
   <div class="margin-top"></div>
 } else if(elements.input.body.contains("type=\"radio\"")) {
-    <div class="govuk-radios form-group@if(elements.hasErrors) { form-group-error govuk-form-group--error}">
+    <div class="govuk-radios form-group@if(elements.hasErrors) { form-group-error govuk-form-group--error} @if(elements.args.get(Symbol("_inline"))) {govuk-radios--inline}"  >
         @govukInfoErrors(elements)
         @htmlLines.init.tail.grouped(2).map(_.mkString).map { radioAndLabel =>
             <div class="govuk-radios__item multiple-choice" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>

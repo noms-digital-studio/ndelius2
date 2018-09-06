@@ -47,7 +47,7 @@ public class AlfrescoStoreMock {
     public boolean verifySavedDocumentContainsValues(Map<String, String> values) {
         val match = postRequestedFor(urlMatching("/noms-spg/updatemetadata/.*"));
         // build matcher adding each tuple as JSON body match
-        values.forEach((key, text) -> match.withRequestBody(matching(String.format(".*\"%s\":\".*%s.*\".*", key, text))));
+        values.forEach((key, text) -> match.withRequestBody(matching(String.format(".*\"%s\":.*%s.*.*", key, text))));
         val hasMatched = alfrescofWireMock.findAll(match).size() > 0;
         if (!hasMatched) {
             System.out.println(alfrescofWireMock.findAllNearMissesFor(match));
