@@ -12,5 +12,25 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "Supervision plan for release", 18) {
-    <p>WIP</p>
+    <div class="form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Does the prisoner require a supervision plan for release?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("supervisionPlanRequired"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                Symbol("data-aria-controls") -> "supervision-plan",
+                Symbol("_inline") -> "true"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="supervision-plan-yes">
+        @textarea(reportForm("supervisionPlanDetail"), '_label -> "Detail the supervision plan for release", 'class -> "wide")
+        </div>
+    </div>
 }

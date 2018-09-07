@@ -125,6 +125,14 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("CONTINGENCY_PLAN")
     private String contingencyPlan;
 
+    @RequiredOnPage(value = 18, message = "Specify if the prisoner requires a supervision plan for release")
+    @JsonProperty("SUPERVISION_PLAN_REQUIRED")
+    private String supervisionPlanRequired;
+
+    @RequiredOnPage(value = 18, message = "Enter the supervision plan for release", onlyIfField = "supervisionPlanRequired", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("SUPERVISION_PLAN_DETAIL")
+    private String supervisionPlanDetail;
+
     @RequiredGroupOnPage(value = 21, message = "Select the case documents you have used")
     @JsonProperty("SOURCES_PREVIOUS_CONVICTIONS")
     private boolean sourcesPreviousConvictions;
