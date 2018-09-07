@@ -18,7 +18,8 @@ Feature: Parole Report - Sources UI
       | sourcesJudgesComments             | true  |
       | sourcesParoleDossier              | false |
       | sourcesProbationCaseRecord        | false |
-      | sourcesPrisonSecurityInformation  | false |
+      | sourcesPreviousParoleReports      | false |
+      | sourcesPreSentenceReport          | false |
       | sourcesOther                      | false |
       | sourceLimitations                 | yes   |
 

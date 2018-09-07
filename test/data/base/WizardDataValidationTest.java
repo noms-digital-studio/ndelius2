@@ -5,6 +5,7 @@ import data.annotations.OnPage;
 import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.junit.Before;
 import org.junit.Test;
 import play.data.validation.ValidationError;
@@ -12,8 +13,9 @@ import play.data.validation.ValidationError;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WizardDataValidationTest {
+    @EqualsAndHashCode(callSuper = true)
     @Data
-    static class MyTestData extends WizardData {
+    private static class MyTestData extends WizardData {
         @OnPage(1)
         private String optionalField;
 

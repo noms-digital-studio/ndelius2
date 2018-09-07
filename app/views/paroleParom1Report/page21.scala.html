@@ -36,7 +36,8 @@
                 @checkbox(reportForm("sourcesJudgesComments"), '_label -> "Judges comments")
                 @checkbox(reportForm("sourcesParoleDossier"), '_label -> "Parole dossier")
                 @checkbox(reportForm("sourcesProbationCaseRecord"), '_label -> "Probation case records (nDelius)")
-                @checkbox(reportForm("sourcesPrisonSecurityInformation"), '_label -> "Prison security information ")
+                @checkbox(reportForm("sourcesPreviousParoleReports"), '_label -> "Previous parole reports")
+                @checkbox(reportForm("sourcesPreSentenceReport"), '_label -> "Pre-sentence report")
                 @checkbox(reportForm("sourcesOther"), '_label -> "Other", Symbol("data-aria-controls") -> "other-sources")
                 <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="other-sources">
                 @textarea(reportForm("sourcesOtherDetail"), '_label -> "Detail any other case documents you have used", 'class -> "wide")

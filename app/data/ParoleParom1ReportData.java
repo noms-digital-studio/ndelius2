@@ -142,8 +142,12 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private boolean sourcesParoleDossier;
 
     @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
-    @JsonProperty("SOURCES_PRISON_SECURITY_INFORMATION")
-    private boolean sourcesPrisonSecurityInformation;
+    @JsonProperty("SOURCES_PREVIOUS_PAROLE_REPORTS")
+    private boolean sourcesPreviousParoleReports;
+
+    @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
+    @JsonProperty("SOURCES_PRE_SENTENCE_REPORT")
+    private boolean sourcesPreSentenceReport;
 
     @RequiredGroupOnPage(value = 21, errorWhenInvalid = false)
     @JsonProperty("SOURCES_PROBATION_CASE_RECORD")
