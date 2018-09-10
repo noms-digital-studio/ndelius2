@@ -12,5 +12,25 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "Resettlement plan for release", 17) {
-    <p>WIP</p>
+    <div class="form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Does the prisoner require a resettlement plan for release?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("resettlementPlan"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                Symbol("data-aria-controls") -> "resettlement-plan",
+                Symbol("_inline") -> "true"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="resettlement-plan-yes">
+        @textarea(reportForm("resettlementPlanDetail"), '_label -> "Detail the resettlement plan for release", 'class -> "wide")
+        </div>
+    </div>
 }

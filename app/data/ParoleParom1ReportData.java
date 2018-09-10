@@ -125,6 +125,15 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("CONTINGENCY_PLAN")
     private String contingencyPlan;
 
+    // Page 17 - Resettlement plan for release
+    @RequiredOnPage(value = 17, message = "Specify if the prisoner requires a resettlement plan for release")
+    @JsonProperty("RESETTLEMENT_PLAN")
+    private String resettlementPlan;
+
+    @RequiredOnPage(value = 17, message = "Enter the resettlement plan for release", onlyIfField = "resettlementPlan", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("RESETTLEMENT_PLAN_DETAIL")
+    private String resettlementPlanDetail;
+
     @RequiredOnPage(value = 18, message = "Specify if the prisoner requires a supervision plan for release")
     @JsonProperty("SUPERVISION_PLAN_REQUIRED")
     private String supervisionPlanRequired;
@@ -133,6 +142,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SUPERVISION_PLAN_DETAIL")
     private String supervisionPlanDetail;
 
+    // Page 21 - Sources
     @RequiredGroupOnPage(value = 21, message = "Select the case documents you have used")
     @JsonProperty("SOURCES_PREVIOUS_CONVICTIONS")
     private boolean sourcesPreviousConvictions;

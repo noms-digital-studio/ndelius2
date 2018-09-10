@@ -11,6 +11,7 @@ public enum Page {
     CURRENT_ROSH_CUSTODY("13", "Current ROSH: custody"),
     ROSH_ANALYSIS("15", "RoSH analysis"),
     RISK_MANAGEMENT_PLAN("16", "Risk Management Plan (RMP)"),
+    RESETTLEMENT_PLAN("17", "Resettlement plan for release"),
     SUPERVISION_PLAN("18", "Supervision plan for release"),
     SOURCES("21", "Sources")
     ;
