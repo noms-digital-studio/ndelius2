@@ -15,10 +15,14 @@ public class AlfrescoStoreMock {
     @Inject
     @Named("alfrescofWireMock")
     private WireMockServer alfrescofWireMock;
+    private boolean started;
 
 
     public AlfrescoStoreMock start() {
-        alfrescofWireMock.start();
+        if (!started) {
+            alfrescofWireMock.start();
+            started = true;
+        }
         return this;
     }
 
