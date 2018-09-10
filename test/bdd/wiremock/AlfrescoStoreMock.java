@@ -23,7 +23,7 @@ public class AlfrescoStoreMock {
     }
 
     public AlfrescoStoreMock stop() {
-        alfrescofWireMock.stop();
+        alfrescofWireMock.resetAll();
         return this;
     }
 

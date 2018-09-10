@@ -21,7 +21,7 @@ public class PdfGeneratorMock {
     }
 
     public PdfGeneratorMock stop() {
-        pdfWireMock.stop();
+        pdfWireMock.resetAll();
         return this;
     }
 

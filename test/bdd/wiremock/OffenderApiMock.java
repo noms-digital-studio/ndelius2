@@ -24,7 +24,7 @@ public class OffenderApiMock {
     }
 
     public OffenderApiMock stop() {
-        offenderApiWireMock.stop();
+        offenderApiWireMock.resetAll();
         return this;
     }
 
