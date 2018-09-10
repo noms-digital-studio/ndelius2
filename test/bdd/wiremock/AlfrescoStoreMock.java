@@ -15,7 +15,7 @@ public class AlfrescoStoreMock {
     @Inject
     @Named("alfrescofWireMock")
     private WireMockServer alfrescofWireMock;
-    private boolean started;
+    private static boolean started;
 
 
     public AlfrescoStoreMock start() {

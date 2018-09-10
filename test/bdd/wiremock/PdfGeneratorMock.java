@@ -15,7 +15,7 @@ public class PdfGeneratorMock {
     @Named("pdfWireMock")
     private WireMockServer pdfWireMock;
 
-    private boolean started;
+    private static boolean started;
 
 
     public PdfGeneratorMock start() {
