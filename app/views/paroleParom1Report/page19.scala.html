@@ -12,5 +12,5 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "Recommendation", 19) {
-    <p>WIP</p>
+    @textarea(reportForm("recommendation"), '_label -> "What is your recommendation?", 'class -> "wide")
 }
