@@ -15,7 +15,7 @@ jobs:
             - run:
                 name: Run sbt build
                 command: |
-                  export _JAVA_OPTIONS="-Xms512m -Xmx1536m"
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt assembly < /dev/null
             - save_cache:
