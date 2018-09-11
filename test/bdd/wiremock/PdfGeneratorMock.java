@@ -15,19 +15,13 @@ public class PdfGeneratorMock {
     @Named("pdfWireMock")
     private WireMockServer pdfWireMock;
 
-    private static boolean started;
-
-
     public PdfGeneratorMock start() {
-        if (!started) {
             pdfWireMock.start();
-            started = true;
-        }
         return this;
     }
 
     public PdfGeneratorMock stop() {
-        pdfWireMock.resetAll();
+        pdfWireMock.stop();
         return this;
     }
 

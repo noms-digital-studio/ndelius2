@@ -17,18 +17,14 @@ public class OffenderApiMock {
     @Inject
     @Named("offenderApiWireMock")
     private WireMockServer offenderApiWireMock;
-    private static boolean started;
 
     public OffenderApiMock start() {
-        if (!started) {
             offenderApiWireMock.start();
-            started = true;
-        }
         return this;
     }
 
     public OffenderApiMock stop() {
-        offenderApiWireMock.resetAll();
+        offenderApiWireMock.stop();
         return this;
     }
 
