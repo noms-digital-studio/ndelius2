@@ -16,7 +16,7 @@ public class PdfGeneratorMock {
     private WireMockServer pdfWireMock;
 
     public PdfGeneratorMock start() {
-            pdfWireMock.start();
+        pdfWireMock.start();
         return this;
     }
 
