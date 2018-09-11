@@ -12,7 +12,7 @@ jobs:
                 keys:
                   - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                   - v2-ndelius-new-tech-
-            - bdd:
+            - run:
                 name: Run bdd
                 command: |
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
