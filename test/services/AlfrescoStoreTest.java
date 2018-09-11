@@ -14,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.AbstractMap;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static play.libs.Json.toJson;
 
@@ -24,7 +25,7 @@ public class AlfrescoStoreTest {
     private AlfrescoStore alfrescoStore;
 
     @Rule
-    public WireMockRule wireMock = new WireMockRule(PORT);
+    public WireMockRule wireMock = new WireMockRule(wireMockConfig().port(PORT).jettyStopTimeout(10000L));
 
     @Before
     public void setup() {

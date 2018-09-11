@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
@@ -38,7 +39,7 @@ import static play.test.Helpers.*;
 public class UtilityControllerTest extends WithApplication {
 
     @Rule
-    public  WireMockRule wireMock = new WireMockRule(8080);
+    public  WireMockRule wireMock = new WireMockRule(wireMockConfig().port(8080).jettyStopTimeout(10000L));
 
     @Mock
     private AnalyticsStore analyticsStore;

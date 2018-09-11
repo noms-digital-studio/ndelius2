@@ -22,6 +22,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.okForContentType;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static scala.io.Source.fromInputStream;
 
@@ -30,7 +31,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
     private static final int PORT = 18080;
 
     @Rule
-    public WireMockRule wireMock = new WireMockRule(PORT);
+    public WireMockRule wireMock = new WireMockRule(wireMockConfig().port(PORT).jettyStopTimeout(10000L));
 
 
     @Before

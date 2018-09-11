@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -39,7 +40,7 @@ public class ElasticOffenderSearchIntegrationTest {
     private ElasticOffenderSearch elasticOffenderSearch;
 
     @Rule
-    public WireMockRule wireMock = new WireMockRule(PORT);
+    public WireMockRule wireMock = new WireMockRule(wireMockConfig().port(PORT).jettyStopTimeout(10000L));
 
     @Mock
     private OffenderApi offenderApi;
