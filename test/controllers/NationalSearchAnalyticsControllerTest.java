@@ -1,8 +1,10 @@
 package controllers;
 
 import com.google.common.collect.ImmutableMap;
+import com.mongodb.rx.client.MongoClient;
 import interfaces.AnalyticsStore;
 import lombok.val;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
@@ -228,7 +231,9 @@ public class NationalSearchAnalyticsControllerTest extends WithApplication {
     protected Application provideApplication() {
         return new GuiceApplicationBuilder().
                 overrides(
-                        bind(AnalyticsStore.class).toInstance(analyticsStore)
+                        bind(AnalyticsStore.class).toInstance(analyticsStore),
+                        bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
+                        bind(MongoClient.class).toInstance(mock(MongoClient.class))
                 )
                 .build();
     }

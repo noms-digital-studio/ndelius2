@@ -3,9 +3,11 @@ package bdd;
 import bdd.wiremock.AlfrescoStoreMock;
 import bdd.wiremock.OffenderApiMock;
 import bdd.wiremock.PdfGeneratorMock;
+import com.mongodb.rx.client.MongoClient;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import interfaces.AnalyticsStore;
+import org.elasticsearch.client.RestHighLevelClient;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.TestBrowser;
@@ -55,7 +57,10 @@ public class GlobalHooks extends WithChromeBrowser {
     protected Application provideApplication() {
         return new GuiceApplicationBuilder().
                 overrides(
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)))
+                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
+                        bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
+                        bind(MongoClient.class).toInstance(mock(MongoClient.class))
+                )
                 .configure("params.user.token.valid.duration", "100000d")
                 .configure("pdf.generator.url", String.format("http://localhost:%d/", Ports.PDF.getPort()))
                 .configure("store.alfresco.url", String.format("http://localhost:%d/", Ports.ALFRESCO.getPort()))

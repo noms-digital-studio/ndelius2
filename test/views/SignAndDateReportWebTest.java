@@ -2,17 +2,12 @@ package views;
 
 import com.google.common.collect.ImmutableMap;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
-import interfaces.OffenderApi;
-import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import play.Application;
-import play.inject.guice.GuiceApplicationBuilder;
 import views.pages.SignAndDateReportPage;
 import views.pages.StartPage;
 
@@ -24,8 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static play.inject.Bindings.bind;
+import static org.mockito.Mockito.when;
 import static utils.CourtAppearanceHelpers.someCourtAppearances;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
@@ -33,12 +27,18 @@ import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 public class SignAndDateReportWebTest extends WithIE8Browser {
     private SignAndDateReportPage signAndDateReportPage;
     private StartPage startPage;
-    private DocumentStore documentStore;
 
     @Before
     public void before() {
         signAndDateReportPage = new SignAndDateReportPage(browser);
         startPage = new StartPage(browser);
+        given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        when(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
+                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
     }
 
     @Test
@@ -96,28 +96,6 @@ public class SignAndDateReportWebTest extends WithIE8Browser {
         return new DocumentStore.OriginalData("{\"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"11\", \"name\": \"Smith,John\", \"address\": \"1234\", \"pnc\": \"Retrieved From Store\" } }", OffsetDateTime.now());
     }
 
-    @Override
-    protected Application provideApplication() {
-        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
-        given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
-
-        documentStore = mock(DocumentStore.class);
-        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
-
-        OffenderApi offenderApi = mock(OffenderApi.class);
-        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
-        given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
-
-        return new GuiceApplicationBuilder().
-            overrides(
-                bind(PdfGenerator.class).toInstance(pdfGenerator),
-                bind(DocumentStore.class).toInstance(documentStore),
-                bind(OffenderApi.class).toInstance(offenderApi),
-                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)))
-            .configure("params.user.token.valid.duration", "100000d")
-            .build();
-    }
 
     private String todaysDate() {
         return new SimpleDateFormat("dd/MM/yyyy").format(new Date());

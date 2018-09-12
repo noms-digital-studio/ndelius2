@@ -2,18 +2,10 @@ package views;
 
 import com.google.common.collect.ImmutableMap;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
-import interfaces.DocumentStore;
-import interfaces.OffenderApi;
-import interfaces.PdfGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import play.Application;
-import play.inject.guice.GuiceApplicationBuilder;
-import play.test.WithBrowser;
 import views.pages.OffenderAssessmentPage;
 import views.pages.OffenderDetailsPage;
 import views.pages.StartPage;
@@ -25,18 +17,13 @@ import java.util.concurrent.CompletableFuture;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static play.inject.Bindings.bind;
 import static utils.CourtAppearanceHelpers.someCourtAppearances;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 import static views.helpers.AlfrescoDataHelper.legacyReportWith;
 
 @RunWith(MockitoJUnitRunner.class)
-public class InterstitialWebTest extends WithBrowser {
-    @Mock
-    private DocumentStore alfrescoDocumentStore;
-
+public class InterstitialWebTest extends WithPartialMockedApplicationBrowser {
     private OffenderAssessmentPage offenderAssessmentPage;
     private OffenderDetailsPage offenderDetailsPage;
     private StartPage startPage;
@@ -46,15 +33,21 @@ public class InterstitialWebTest extends WithBrowser {
         offenderAssessmentPage = new OffenderAssessmentPage(browser);
         offenderDetailsPage = new OffenderDetailsPage(browser);
         startPage = new StartPage(browser);
-        when(alfrescoDocumentStore.updateExistingPdf(any(), any(), any(), any(), any()))
+        when(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(alfrescoDocumentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
+        when(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+
+        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
+
     }
 
     @Test
     public void reportSaveOnPage1WillTakeYouToPage2WhenReturning() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of( "pageNumber", "1")));
 
@@ -66,7 +59,7 @@ public class InterstitialWebTest extends WithBrowser {
 
     @Test
     public void reportThatHasInvalidZeroPageNumberWillTakeYouToPage2WhenReturning() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of( "pageNumber", "0")));
 
@@ -78,7 +71,7 @@ public class InterstitialWebTest extends WithBrowser {
 
     @Test
     public void reportThatHasValidPageNumberWillTakeYouToPageWhenReturning() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of( "pageNumber", "3")));
 
@@ -90,7 +83,7 @@ public class InterstitialWebTest extends WithBrowser {
 
     @Test
     public void reportThatIsLessThanMinuteOldShowsChangedSecondsAgo() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of(), OffsetDateTime.now().minus(2, ChronoUnit.SECONDS)));
 
@@ -99,7 +92,7 @@ public class InterstitialWebTest extends WithBrowser {
 
     @Test
     public void reportThatIsLessThanHourOldShowsChangedMinutesAgo() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of(), OffsetDateTime.now().minus(58, ChronoUnit.MINUTES)));
 
@@ -108,7 +101,7 @@ public class InterstitialWebTest extends WithBrowser {
 
     @Test
     public void reportThatIsLessThanTwoMinutesOldShowsChangedMinuteAgo() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of(), OffsetDateTime.now().minus(1, ChronoUnit.MINUTES)));
 
@@ -117,7 +110,7 @@ public class InterstitialWebTest extends WithBrowser {
 
     @Test
     public void reportThatIsLessThanDayOldShowsChangedHoursAgo() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of(), OffsetDateTime.now().minus(23, ChronoUnit.HOURS)));
 
@@ -126,7 +119,7 @@ public class InterstitialWebTest extends WithBrowser {
 
     @Test
     public void reportThatIsMoreThanDayOldShowsChangedDaysAgo() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of(), OffsetDateTime.now().minus(25, ChronoUnit.HOURS)));
 
@@ -135,7 +128,7 @@ public class InterstitialWebTest extends WithBrowser {
 
     @Test
     public void reportThatIsReallyOldShowsChangedDaysAgo() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of(), OffsetDateTime.now().minus(10, ChronoUnit.YEARS)));
 
@@ -145,7 +138,7 @@ public class InterstitialWebTest extends WithBrowser {
 
     @Test
     public void continuingAReportThatHasValidPageNumberWillTakeYouToPageWhenReturning() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.of( "pageNumber", "3")));
 
@@ -155,26 +148,6 @@ public class InterstitialWebTest extends WithBrowser {
         startPage.switchToWindow().gotoNext();
         offenderAssessmentPage.isAt();
 
-    }
-
-    @Override
-    protected Application provideApplication() {
-        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
-        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
-
-        OffenderApi offenderApi = mock(OffenderApi.class);
-        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
-        given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
-
-        return new GuiceApplicationBuilder().
-            overrides(
-                bind(PdfGenerator.class).toInstance(pdfGenerator),
-                bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                bind(OffenderApi.class).toInstance(offenderApi),
-                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)))
-            .configure("params.user.token.valid.duration", "100000d")
-            .build();
     }
 
 }

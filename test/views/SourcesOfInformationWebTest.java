@@ -2,20 +2,14 @@ package views;
 
 import com.google.common.collect.ImmutableMap;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
-import interfaces.OffenderApi;
-import interfaces.PdfGenerator;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import play.Application;
-import play.inject.guice.GuiceApplicationBuilder;
 import play.libs.Json;
 import views.pages.SourcesOfInformationPage;
 import views.pages.StartPage;
@@ -33,20 +27,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static play.inject.Bindings.bind;
+import static org.mockito.Mockito.*;
 import static play.libs.Json.toJson;
 import static utils.CourtAppearanceHelpers.someCourtAppearances;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SourcesOfInformationWebTest extends WithIE8Browser {
-    @Mock
-    private DocumentStore alfrescoDocumentStore;
-
     @Captor
     private ArgumentCaptor<String> metaDataCaptor;
 
@@ -69,10 +56,17 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
     public void before() {
         sourcesOfInformationPage = new SourcesOfInformationPage(browser);
         startPage = new StartPage(browser);
-        when(alfrescoDocumentStore.updateExistingPdf(any(), any(), any(), any(), any()))
+        when(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(alfrescoDocumentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
+        when(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
                 .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+
+        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
+        given(offenderApi.getCourtAppearancesByCrn(any(), any()))
+                .willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
+
     }
 
     @Test
@@ -117,7 +111,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
 
     @Test
     public void existingReportWithNoSourcesHasNothingTicked() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(existingReportWith(
                         ImmutableMap.<String, Object>builder().
                                 put("pageNumber", "4").
@@ -142,7 +136,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
 
     @Test
     public void existingReportWithAllSourcesHasEverythingTicked() {
-        when(alfrescoDocumentStore.retrieveOriginalData(any(), any())).
+        when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(existingReportWith(
                         ImmutableMap.<String, Object>builder().
                                 put("pageNumber", "4").
@@ -184,7 +178,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
     }
 
     private Map<String, String> storedData() {
-        verify(alfrescoDocumentStore, atLeastOnce()).updateExistingPdf(any(), any(), any(), metaDataCaptor.capture(), any());
+        verify(documentStore, atLeastOnce()).updateExistingPdf(any(), any(), any(), metaDataCaptor.capture(), any());
         return jsonToMap(Json.parse(metaDataCaptor.getValue()).get("values"));
     }
 
@@ -198,25 +192,5 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
         sourcesOfInformationPage.fillOtherDetailsWith("Other details");
     }
 
-    @Override
-    protected Application provideApplication() {
-        PdfGenerator pdfGenerator = mock(PdfGenerator.class);
-        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
-
-        OffenderApi offenderApi = mock(OffenderApi.class);
-        given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
-        given(offenderApi.getCourtAppearancesByCrn(any(), any()))
-            .willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
-
-        return new GuiceApplicationBuilder().
-                overrides(
-                        bind(PdfGenerator.class).toInstance(pdfGenerator),
-                        bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                        bind(OffenderApi.class).toInstance(offenderApi),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)))
-            .configure("params.user.token.valid.duration", "100000d")
-            .build();
-    }
 
 }

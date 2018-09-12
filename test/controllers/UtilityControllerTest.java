@@ -3,12 +3,14 @@ package controllers;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableMap;
+import com.mongodb.rx.client.MongoClient;
 import helpers.JsonHelper;
 import interfaces.AnalyticsStore;
 import interfaces.HealthCheckResult;
 import interfaces.OffenderSearch;
 import interfaces.PrisonerApi;
 import lombok.val;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,6 +31,7 @@ import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
@@ -327,7 +330,9 @@ public class UtilityControllerTest extends WithApplication {
             .overrides(
                 bind(AnalyticsStore.class).toInstance(analyticsStore),
                 bind(OffenderSearch.class).toInstance(offenderSearch),
-                bind(PrisonerApi.class).toInstance(prisonerApi)
+                bind(PrisonerApi.class).toInstance(prisonerApi),
+                bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
+                bind(MongoClient.class).toInstance(mock(MongoClient.class))
             )
             .build();
     }

@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.mongodb.rx.client.MongoClient;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
@@ -10,6 +11,7 @@ import interfaces.OffenderApi;
 import interfaces.OffenderApi.CourtAppearances;
 import interfaces.PdfGenerator;
 import lombok.val;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Test;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
@@ -146,7 +148,10 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
                         bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(documentStore),
                         bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
-                        bind(OffenderApi.class).toInstance(offenderApi))
+                        bind(OffenderApi.class).toInstance(offenderApi),
+                        bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
+                        bind(MongoClient.class).toInstance(mock(MongoClient.class))
+                )
                 .configure("params.user.token.valid.duration", "60m")
                 .build();
     }

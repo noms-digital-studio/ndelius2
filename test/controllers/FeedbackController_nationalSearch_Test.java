@@ -2,8 +2,10 @@ package controllers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.mongodb.rx.client.MongoClient;
 import interfaces.AnalyticsStore;
 import lombok.val;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +21,7 @@ import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
@@ -108,7 +111,9 @@ public class FeedbackController_nationalSearch_Test extends WithApplication {
     protected Application provideApplication() {
         return new GuiceApplicationBuilder().
                 overrides(
-                        bind(AnalyticsStore.class).toInstance(analyticsStore)
+                        bind(AnalyticsStore.class).toInstance(analyticsStore),
+                        bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
+                        bind(MongoClient.class).toInstance(mock(MongoClient.class))
                 )
                 .configure("auth.feedback.user", "andymarke")
                 .configure("auth.feedback.password", "secret")

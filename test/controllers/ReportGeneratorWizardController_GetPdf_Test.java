@@ -1,12 +1,14 @@
 package controllers;
 
 import akka.util.ByteString;
+import com.mongodb.rx.client.MongoClient;
 import data.ShortFormatPreSentenceReportData;
 import helpers.Encryption;
 import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import lombok.val;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +29,7 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
@@ -116,7 +119,9 @@ public class ReportGeneratorWizardController_GetPdf_Test extends WithApplication
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                bind(AnalyticsStore.class).toInstance(analyticsStore)
+                bind(AnalyticsStore.class).toInstance(analyticsStore),
+                bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
+                bind(MongoClient.class).toInstance(mock(MongoClient.class))
             )
             .build();
     }

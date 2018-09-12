@@ -2,12 +2,14 @@ package controllers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.mongodb.rx.client.MongoClient;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -407,7 +409,9 @@ public class NationalSearchControllerTest extends WithApplication {
             overrides(
                 bind(OffenderSearch.class).toInstance(elasticOffenderSearch),
                 bind(OffenderApi.class).toInstance(offenderApi),
-                bind(AnalyticsStore.class).toInstance(analyticsStore)
+                bind(AnalyticsStore.class).toInstance(analyticsStore),
+                bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
+                bind(MongoClient.class).toInstance(mock(MongoClient.class))
             )
             .configure("params.user.token.valid.duration", userTokenValidDuration)
             .build();
