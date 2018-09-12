@@ -29,7 +29,6 @@ import java.util.function.Consumer;
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.DateTimeHelper.calculateAge;
 import static helpers.DateTimeHelper.format;
-import static helpers.DateTimeHelper.formatDateTime;
 import static java.time.Clock.systemUTC;
 import static java.util.Optional.ofNullable;
 
@@ -119,14 +118,10 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             .map(appearance -> {
                     params.put("court", appearance.getCourt().getCourtName());
 
-                    ofNullable(appearance.getAppearanceDate()).ifPresent(dateOfHearing ->
-                        params.put("dateOfHearing", formatDateTime(dateOfHearing)));
-
                     return params;
             })
             .orElseGet(() -> {
                         params.put("court", "");
-                        params.put("dateOfHearing", "");
                         return params;
             });
     }
@@ -167,6 +162,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         }
 
         if ("3".equals(params.get("pageNumber"))) {
+            paramEncrypter.accept("dateOfHearing");
             paramEncrypter.accept("localJusticeArea");
         }
 

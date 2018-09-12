@@ -36,7 +36,7 @@
 
             @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area", 'required -> "true", '_error -> "Enter a local justice area")
 
-            @readOnlyField(reportForm("dateOfHearing"), "Date of hearing", encrypter)
+            @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true", '_error -> "Enter the date of the hearing")
 
             @page4Fields(reportForm)
             @page5Fields(reportForm)
