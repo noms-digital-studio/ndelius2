@@ -53,6 +53,10 @@ public class ParoleParom1PopupReportPage extends FluentPage {
         return findSectionFromLegend(legend).find(By.cssSelector("input[type='radio']")).attribute("name");
     }
 
+    public void clickElementWithId(String id) {
+        $(By.id(id)).first().click();
+    }
+
     public void clickRadioButtonWithLabelWithinLegend(String label, String legend) {
         val fieldId = fieldNameFromLabelWithLegend(label, legend);
         $(By.id(fieldId)).first().click();

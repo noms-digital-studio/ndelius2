@@ -67,6 +67,23 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SENTENCE_PLAN")
     private String sentencePlan;
 
+    // Page 14 - Risk to the prisoner
+    @RequiredOnPage(value = 14, message = "Specify if the prisoner poses a risk of self harm in the community")
+    @JsonProperty("SELF_HARM_COMMUNITY")
+    private String selfHarmCommunity;
+
+    @RequiredOnPage(value = 14, message = "Specify if the prisoner poses a risk of self harm in custody")
+    @JsonProperty("SELF_HARM_CUSTODY")
+    private String selfHarmCustody;
+
+    @RequiredOnPage(value = 14, message = "Specify if the prisoner is at risk of serious harm from others in the community")
+    @JsonProperty("OTHERS_HARM_COMMUNITY")
+    private String othersHarmCommunity;
+
+    @RequiredOnPage(value = 14, message = "Specify if the prisoner is at risk of serious harm from others in custody")
+    @JsonProperty("OTHERS_HARM_CUSTODY")
+    private String othersHarmCustody;
+
     // Page 15 - RoSH analysis
     @RequiredOnPage(value = 15, message = "Enter the nature of the risk of serious harm")
     @JsonProperty("NATURE_OF_RISK")
