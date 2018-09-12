@@ -1,7 +1,7 @@
 Feature: Parole Report
 
   Background:
-  Given Delius user is on the "Risk Managemant Plan (RMP)" UI on the Parole Report
+  Given Delius user is on the "Risk Managemant Plan RMP" UI on the Parole Report
 
   Scenario: Delius user wants to leave the "Risk Management Plan (RMP)" page without entering any details into the free text fields
 

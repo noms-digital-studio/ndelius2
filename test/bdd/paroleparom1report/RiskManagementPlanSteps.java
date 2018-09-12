@@ -9,6 +9,6 @@ public class RiskManagementPlanSteps {
     @Inject
     private RiskManagementPlanPage page;
 
-    @Given("^Delius user is on the \"Risk Managemant Plan (RMP)\" UI on the Parole Report$")
+    @Given("^Delius user is on the \"Risk Managemant Plan RMP\" UI on the Parole Report$")
     public void thatTheDeliusUserIsOnThePageWithinTheParoleReport() throws Throwable { page.navigateHere(); }
 }
