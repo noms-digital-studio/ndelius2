@@ -134,6 +134,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RESETTLEMENT_PLAN_DETAIL")
     private String resettlementPlanDetail;
 
+    // Page 18 - Supervision plan for release
     @RequiredOnPage(value = 18, message = "Specify if the prisoner requires a supervision plan for release")
     @JsonProperty("SUPERVISION_PLAN_REQUIRED")
     private String supervisionPlanRequired;
@@ -147,6 +148,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RECOMMENDATION")
     private String recommendation;
 
+    // Page 20 - Oral hearing
+    @RequiredOnPage(value = 20, message = "Enter the oral hearing considerations")
+    @JsonProperty("ORAL_HEARING")
+    private String oralHearing;
 
     // Page 21 - Sources
     @RequiredGroupOnPage(value = 21, message = "Select the case documents you have used")

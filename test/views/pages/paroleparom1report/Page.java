@@ -14,6 +14,7 @@ public enum Page {
     RESETTLEMENT_PLAN("17", "Resettlement plan for release"),
     SUPERVISION_PLAN("18", "Supervision plan for release"),
     RECOMMENDATION("19", "Recommendation"),
+    ORAL_HEARING("20", "Oral hearing"),
     SOURCES("21", "Sources")
     ;
     private final String pageNumber;
@@ -28,7 +29,5 @@ public enum Page {
         return pageNumber;
     }
 
-    public String getPageHeader() {
-        return pageHeader;
-    }
+    public String getPageHeader() { return pageHeader; }
 }
