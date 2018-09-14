@@ -151,4 +151,7 @@ public interface OffenderApi {
     CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn);
 
     CompletionStage<CourtAppearances> getCourtAppearancesByCrn(String bearerToken, String crn);
+
+
+    CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url);
 }

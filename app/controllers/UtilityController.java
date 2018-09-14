@@ -1,6 +1,7 @@
 package controllers;
 
 import com.google.common.collect.ImmutableMap;
+import com.typesafe.config.Config;
 import helpers.JsonHelper;
 import interfaces.*;
 import lombok.Value;
@@ -9,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Results;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -16,6 +18,7 @@ import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -40,6 +43,7 @@ public class UtilityController extends Controller {
 
     private final Map<Definition, Supplier<CompletableFuture<HealthCheckResult>>> healthChecks;
 
+    private final Config configuration;
     private final OffenderApi offenderApi; // Used by searchDb and searchLdap
 
     @Inject
@@ -48,7 +52,8 @@ public class UtilityController extends Controller {
                              AnalyticsStore analyticsStore,
                              OffenderSearch offenderSearch,
                              OffenderApi offenderApi,
-                             PrisonerApi prisonerApi) {
+                             PrisonerApi prisonerApi,
+                             Config configuration) {
 
         this.offenderApi = offenderApi; // Used by searchDb and searchLdap, so stored directly for later, others are closed over below
 
@@ -60,6 +65,8 @@ public class UtilityController extends Controller {
                 put(definition("offender-api", true), () -> offenderApi.isHealthy().toCompletableFuture()).
                 put(definition("prisoner-api", true), () -> prisonerApi.isHealthy().toCompletableFuture()).
                 build();
+
+        this.configuration = configuration;
     }
 
     public CompletionStage<Result> healthcheck(boolean details) {
@@ -119,6 +126,22 @@ public class UtilityController extends Controller {
     public CompletionStage<Result> searchDb() {
 
         return offenderApi.searchDb(getQueryParams()).thenApply(JsonHelper::okJson);
+    }
+
+    public CompletionStage<Result> apiLogon() {
+
+        val userPass = String.format("%s:%s", configuration.getString("auth.feedback.user"), configuration.getString("auth.feedback.password"));
+        val required = Base64.getEncoder().encodeToString(userPass.getBytes());
+        val supplied = request().header(AUTHORIZATION).orElse("").substring(6);
+
+        return supplied.equals(required) ?
+                offenderApi.logon(request().body().asText()).thenApply(Results::ok) :
+                CompletableFuture.supplyAsync(Results::unauthorized);
+    }
+
+    public CompletionStage<Result> apiCall(String url) {
+
+        return offenderApi.callOffenderApi(request().header(AUTHORIZATION).orElse(""), url).thenApply(Results::ok);
     }
 
     public CompletionStage<Result> searchLdap() {

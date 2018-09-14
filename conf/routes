@@ -5,6 +5,9 @@
 GET     /healthcheck                                controllers.UtilityController.healthcheck(detail: Boolean ?= false)
 GET     /utility/searchDb                           controllers.UtilityController.searchDb
 GET     /utility/searchLdap                         controllers.UtilityController.searchLdap
++ nocsrf
+POST    /api/logon                                  controllers.UtilityController.apiLogon
+GET     /api/*url                                   controllers.UtilityController.apiCall(url)
 
 GET     /analytics                                  controllers.AnalyticsController.index
 GET     /analytics/pageVisits                       controllers.AnalyticsController.pageVisits

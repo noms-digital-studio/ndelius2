@@ -18,6 +18,7 @@ import play.libs.ws.WSResponse;
 import javax.inject.Inject;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -65,7 +66,7 @@ public class DeliusOffenderApi implements OffenderApi {
     @Override
     public CompletionStage<String> logon(String username) {
         return wsClient.url(offenderApiBaseUrl + "logon")
-            .post(format(ldapStringFormat, username))
+            .post(username.equals("NationalUser") ? username : format(ldapStringFormat, username))
             .thenApply(response ->  assertOkResponse(response, "logon"))
             .thenApply(WSResponse::getBody);
     }
@@ -188,7 +189,7 @@ public class DeliusOffenderApi implements OffenderApi {
 
     private CompletionStage<JsonNode> logonAndCallOffenderApi(String action, Map<String, String> params) {
 
-        val url = offenderApiBaseUrl + action + queryParamsFrom(params);
+        val url = action + queryParamsFrom(params);
         return wsClient.url(offenderApiBaseUrl + "logon")
                 .post("NationalUser")
                 .thenApply(response ->  assertOkResponse(response, "logon"))
@@ -196,16 +197,23 @@ public class DeliusOffenderApi implements OffenderApi {
                 .thenCompose(bearerToken -> callOffenderApi(bearerToken, url));
     }
 
-    private CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
+    public CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
 
-        return wsClient.url(url)
+        return wsClient.url(offenderApiBaseUrl + url)
             .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
             .get()
             .thenApply(wsResponse -> {
                 if (wsResponse.getStatus() != OK) {
                     throw new RuntimeException(String.format("Bad response calling Delius Offender API %s. Status %d", url, wsResponse.getStatus()));
                 }
-                return wsResponse.asJson();
+
+                return wsResponse.getContentType().toLowerCase().contains("json") ?
+                        wsResponse.asJson() :
+                        Json.toJson(ImmutableMap.of(
+                                "headers", wsResponse.getHeaders(),
+                                "content", Base64.getEncoder().encodeToString(wsResponse.asByteArray()))
+                        );
+
             })
             .exceptionally(throwable -> {
                 Logger.error("Got an error calling Delius Offender API", throwable);

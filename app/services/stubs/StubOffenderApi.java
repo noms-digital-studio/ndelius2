@@ -1,6 +1,7 @@
 package services.stubs;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.NullNode;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import interfaces.HealthCheckResult;
@@ -106,6 +107,10 @@ public class StubOffenderApi implements OffenderApi {
 
         return CompletableFuture.completedFuture(courtAppearances);
 
+    }
+
+    public CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
+        return CompletableFuture.completedFuture(NullNode.instance);
     }
 
     private ContactDetails contactDetails() {
