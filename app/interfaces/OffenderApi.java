@@ -11,9 +11,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
-import static helpers.FluentHelper.not;
+import static helpers.DateTimeHelper.formatDateTime;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 public interface OffenderApi {
@@ -92,11 +93,9 @@ public interface OffenderApi {
         public Optional<CourtAppearance> findForCourtReportId(Long courtReportId) {
 
             return items.stream()
-                .filter(not(courtAppearance -> Optional.ofNullable(courtAppearance.softDeleted).orElse(false)))
                 .filter(courtAppearance -> Optional.ofNullable(courtAppearance.courtReports).isPresent())
                 .filter(courtAppearance ->
                     courtAppearance.courtReports.stream()
-                        .filter(not(report -> Optional.ofNullable(report.softDeleted).orElse(false)))
                         .anyMatch(report -> report.getCourtReportId().equals(courtReportId)))
                 .findFirst();
         }
@@ -107,9 +106,22 @@ public interface OffenderApi {
     class CourtAppearance {
         private Long courtAppearanceId;
         private String appearanceDate;
-        private Boolean softDeleted;
         private Court court;
         @Builder.Default private List<CourtReport> courtReports = ImmutableList.of();
+        @Builder.Default private List<String> offenceIds = ImmutableList.of();
+
+        public String mainOffenceId() {
+            return offenceIds.stream()
+                .filter(s -> s.startsWith("M"))
+                .findFirst()
+                .orElse("");
+        }
+
+        public List<String> otherOffenceIds() {
+            return offenceIds.stream()
+                .filter(s -> s.startsWith("A"))
+                .collect(toList());
+        }
     }
 
     @Value
@@ -124,7 +136,63 @@ public interface OffenderApi {
     @Builder(toBuilder = true)
     class CourtReport {
         private Long courtReportId;
-        private Boolean softDeleted;
+    }
+
+
+    @Value
+    @Builder(toBuilder = true)
+    class Offences {
+        @Builder.Default private List<Offence> items = ImmutableList.of();
+
+        public String mainOffenceDescriptionForId(String mainOffenceId) {
+            return items.stream()
+                .filter(offence -> offence.mainOffence)
+                .filter(offence -> Optional.ofNullable(offence.getOffenceId()).isPresent())
+                .filter(offence -> offence.getOffenceId().equals(mainOffenceId))
+                .findFirst()
+                .map(Offence::offenceDescription)
+                .orElse("NO MAIN OFFENCE FOUND");
+        }
+
+        public String otherOffenceDescriptionsForIds(List<String> otherOffenceIds) {
+            return items.stream()
+                .filter(offence -> !offence.mainOffence)
+                .filter(offence -> Optional.ofNullable(offence.getOffenceId()).isPresent())
+                .filter(offence -> otherOffenceIds.contains(offence.getOffenceId()))
+                .map(Offence::offenceDescription)
+                .collect(joining("<br>"));
+        }
+    }
+
+    @Value
+    @Builder(toBuilder = true)
+    class Offence {
+        private String offenceId;
+        private Boolean mainOffence;
+        private String offenceDate;
+        private OffenceDetail detail;
+
+        String offenceDescription() {
+            return Optional.ofNullable(offenceDate)
+                .map(ignored -> String.format("%s (%s) - %s",
+                    detail.getSubCategoryDescription(),
+                    detail.getCode(),
+                    formatDateTime(offenceDate)))
+                .orElse(String.format("%s (%s)",
+                    detail.getSubCategoryDescription(),
+                    detail.getCode()));
+        }
+    }
+
+    @Value
+    @Builder(toBuilder = true)
+    class OffenceDetail {
+        private String code;
+        private String description;
+        private String mainCategoryCode;
+        private String mainCategoryDescription;
+        private String subCategoryCode;
+        private String subCategoryDescription;
     }
 
     static String joinList(String delimiter, List<String> list) {
@@ -152,6 +220,7 @@ public interface OffenderApi {
 
     CompletionStage<CourtAppearances> getCourtAppearancesByCrn(String bearerToken, String crn);
 
+    CompletionStage<Offences> getOffencesByCrn(String bearerToken, String crn);
 
     CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url);
 }

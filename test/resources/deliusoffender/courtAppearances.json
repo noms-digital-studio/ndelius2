@@ -3,7 +3,6 @@
     "courtAppearanceId": 1,
     "appearanceDate": "2018-07-25T00:00:00",
     "eventId": 1,
-    "softDeleted": false,
     "court": {
       "courtId": 1,
       "code": "A",
@@ -24,7 +23,6 @@
         "courtReportId": 1,
         "dateRequested": "2018-07-23T00:00:00",
         "dateRequired": "2018-07-23T00:00:00",
-        "softDeleted": false,
         "levelOfSeriousnessId": 1,
         "createdDatetime": "2018-01-01T00:00:00",
         "lastUpdatedDatetime": "2018-01-01T00:00:00",
@@ -35,20 +33,23 @@
         "courtReportId": 2,
         "dateRequested": "2018-07-24T00:00:00",
         "dateRequired": "2018-07-24T00:00:00",
-        "softDeleted": false,
         "levelOfSeriousnessId": 1,
         "createdDatetime": "2018-01-01T00:00:00",
         "lastUpdatedDatetime": "2018-01-01T00:00:00",
         "offenderId": 1,
         "pendingTransfer": false
       }
+    ],
+    "offenceIds": [
+      "M1",
+      "A1",
+      "A2"
     ]
   },
   {
     "courtAppearanceId": 3,
     "appearanceDate": "2017-02-10T00:00:00",
     "eventId": 1,
-    "softDeleted": false,
     "court": {
       "courtId": 1,
       "code": "A",
@@ -69,7 +70,6 @@
     "courtAppearanceId": 2,
     "appearanceDate": "2016-06-01T00:00:00",
     "eventId": 1,
-    "softDeleted": false,
     "court": {
       "courtId": 2,
       "code": "A",
@@ -90,13 +90,17 @@
         "courtReportId": 3,
         "dateRequested": "2017-02-09T00:00:00",
         "dateRequired": "2017-02-09T00:00:00",
-        "softDeleted": false,
         "levelOfSeriousnessId": 1,
         "createdDatetime": "2017-01-01T00:00:00",
         "lastUpdatedDatetime": "2017-01-01T00:00:00",
         "offenderId": 1,
         "pendingTransfer": false
       }
+    ],
+    "offenceIds": [
+      "M1",
+      "A1",
+      "A2"
     ]
   }
 ]

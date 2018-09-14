@@ -259,6 +259,8 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                         updatedParams.put("errorMessage", Strings.isNullOrEmpty(errorMessage) ? "No Document ID" : errorMessage);
                     }
 
+                    updatedParams.put("createJourney", "true");
+
                     return updatedParams;
                 })
             );

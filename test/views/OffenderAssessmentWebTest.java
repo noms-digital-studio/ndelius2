@@ -24,6 +24,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static utils.CourtAppearanceHelpers.someCourtAppearances;
+import static utils.OffenceHelpers.someOffences;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 import static views.helpers.AlfrescoDataHelper.legacyReportWith;
 
@@ -51,14 +52,15 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
         offenderAssessmentPage = new OffenderAssessmentPage(browser);
         startPage = new StartPage(browser);
         checkYourReportPage = new CheckYourReportPage(browser);
-        when(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
-                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
-                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        given(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
         given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
         given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+        given(offenderApi.getOffencesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someOffences()));
     }
 
     @Test

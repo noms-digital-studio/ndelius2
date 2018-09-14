@@ -9,6 +9,7 @@ import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderApi.CourtAppearances;
+import interfaces.OffenderApi.Offences;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -142,6 +143,8 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
         given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
         given(offenderApi.getCourtAppearancesByCrn(any(), eq("B56789")))
             .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder().items(ImmutableList.of()).build()));
+        given(offenderApi.getOffencesByCrn(any(), eq("B56789")))
+            .willReturn(CompletableFuture.completedFuture(Offences.builder().items(ImmutableList.of()).build()));
 
         return new GuiceApplicationBuilder().
                 overrides(

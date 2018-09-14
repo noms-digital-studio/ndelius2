@@ -27,9 +27,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static play.libs.Json.toJson;
 import static utils.CourtAppearanceHelpers.someCourtAppearances;
+import static utils.OffenceHelpers.someOffences;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,17 +59,16 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
     public void before() {
         sourcesOfInformationPage = new SourcesOfInformationPage(browser);
         startPage = new StartPage(browser);
-        when(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
-                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
-                .thenReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
-        when(pdfGenerator.generate(any(), any())).thenReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
+        given(documentStore.updateExistingPdf(any(), any(), any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(ImmutableMap.of("ID", "123")));
+        given(pdfGenerator.generate(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new Byte[0]));
 
         given(offenderApi.logon(any())).willReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
-        given(offenderApi.getCourtAppearancesByCrn(any(), any()))
-                .willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
-
+        given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
+        given(offenderApi.getOffencesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someOffences()));
     }
 
     @Test

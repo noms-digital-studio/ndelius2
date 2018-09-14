@@ -86,10 +86,10 @@ public class StubOffenderApi implements OffenderApi {
             throw new RuntimeException("getOffenderByCrn called with blank CRN");
         }
 
-        CourtAppearances courtAppearances = CourtAppearances.builder()
+        val courtAppearances = CourtAppearances.builder()
             .items(ImmutableList.of(CourtAppearance.builder()
+                .courtAppearanceId(12345L)
                 .appearanceDate("2018-08-01T00:00:00")
-                .softDeleted(false)
                 .court(Court.builder()
                     .courtName("High Court")
                     .locality("City of Westminster")
@@ -102,6 +102,7 @@ public class StubOffenderApi implements OffenderApi {
                         .courtReportId(2L)
                         .build()
                     ))
+                .offenceIds(ImmutableList.of("M1", "A1", "A2"))
                 .build()))
             .build();
 
@@ -109,6 +110,63 @@ public class StubOffenderApi implements OffenderApi {
 
     }
 
+    @Override
+    public CompletionStage<Offences> getOffencesByCrn(String bearerToken, String crn) {
+        if (isBlank(bearerToken)) {
+            throw new RuntimeException("getOffencesByCrn called with blank bearerToken");
+        }
+
+        if (isBlank(crn)) {
+            throw new RuntimeException("getOffencesByCrn called with blank CRN");
+        }
+
+        val offences = Offences.builder()
+            .items(ImmutableList.of(Offence.builder()
+                .mainOffence(true)
+                .offenceId("M1")
+                .offenceDate("2018-09-03T00:00:00")
+                .detail(OffenceDetail.builder()
+                    .code("05331")
+                    .description("Obtaining a money transfer by deception - 05331")
+                    .mainCategoryCode("053")
+                    .mainCategoryDescription("Other frauds (Category)")
+                    .subCategoryCode("31")
+                    .subCategoryDescription("Obtaining a money transfer by deception")
+                    .build())
+                .build(),
+                Offence.builder()
+                    .mainOffence(false)
+                    .offenceId("A1")
+                    .offenceDate("2018-08-01T00:00:00")
+                    .detail(OffenceDetail.builder()
+                        .code("05332")
+                        .description("Dishonestly retaining a wrongful credit - 05332")
+                        .mainCategoryCode("053")
+                        .mainCategoryDescription("Other frauds (Category)")
+                        .subCategoryCode("32")
+                        .subCategoryDescription("Dishonestly retaining a wrongful credit")
+                        .build())
+                    .build(),
+                Offence.builder()
+                    .mainOffence(false)
+                    .offenceId("A2")
+                    .offenceDate("2018-08-25T00:00:00")
+                    .detail(OffenceDetail.builder()
+                        .code("05333")
+                        .description("Dishonest representation for obtaining benefit etc - 05333")
+                        .mainCategoryCode("053")
+                        .mainCategoryDescription("Other frauds (Category)")
+                        .subCategoryCode("33")
+                        .subCategoryDescription("Dishonest representation for obtaining benefit etc")
+                        .build())
+                    .build()
+                )
+
+            ).build();
+
+        return CompletableFuture.completedFuture(offences);
+    }
+  
     public CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
         return CompletableFuture.completedFuture(NullNode.instance);
     }

@@ -9,6 +9,7 @@ import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderApi.CourtAppearances;
+import interfaces.OffenderApi.Offences;
 import interfaces.OffenderApi.Offender;
 import interfaces.PdfGenerator;
 import lombok.val;
@@ -106,19 +107,27 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                 return migrateLegacyReport(params);
             })
             .thenComposeAsync(params -> offenderApi.getCourtAppearancesByCrn(session(OFFENDER_API_BEARER_TOKEN), params.get("crn"))
-                .thenApply(courtAppearances -> storeCourtData(params, courtAppearances)), ec.current());
+            .thenCombineAsync(offenderApi.getOffencesByCrn(session(OFFENDER_API_BEARER_TOKEN), params.get("crn")),
+                         (courtAppearances, offences) -> storeCourtData(params, courtAppearances, offences)), ec.current());
     }
 
-    private Map<String, String> storeCourtData(Map<String, String> params, CourtAppearances courtAppearances) {
+    private Map<String, String> storeCourtData(Map<String, String> params,
+                                               CourtAppearances courtAppearances,
+                                               Offences offences) {
 
         Logger.info("CourtAppearances: " + courtAppearances);
+        Logger.info("Offences: " + offences);
         return Optional.ofNullable(params.get("entityId"))
             .map(Long::parseLong)
             .flatMap(courtAppearances::findForCourtReportId)
             .map(appearance -> {
-                    params.put("court", appearance.getCourt().getCourtName());
+                params.put("court", appearance.getCourt().getCourtName());
 
-                    return params;
+                if (params.containsKey("createJourney")) {
+                    params.put("mainOffence", offences.mainOffenceDescriptionForId(appearance.mainOffenceId()));
+                    params.put("otherOffences", offences.otherOffenceDescriptionsForIds(appearance.otherOffenceIds()));
+                }
+                return params;
             })
             .orElseGet(() -> {
                         params.put("court", "");

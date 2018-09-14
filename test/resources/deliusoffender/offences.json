@@ -1,0 +1,59 @@
+[
+  {
+    "offenceId": "M1",
+    "mainOffence": true,
+    "detail": {
+      "code": "00101",
+      "description": "Vehicle theft - 00101",
+      "mainCategoryCode": "001",
+      "mainCategoryDescription": "Vehicle theft",
+      "mainCategoryAbbreviation": "Vehicle theft",
+      "ogrsOffenceCategory": "CODE_DESCRIPTION",
+      "subCategoryCode": "01",
+      "subCategoryDescription": "Vehicle theft"
+    },
+    "offenceDate": "2018-06-05T00:00:00",
+    "offenceCount": 1,
+    "tics": 3,
+    "verdict": "G",
+    "offenderId": 1,
+    "createdDatetime": "2017-01-01T00:00:00",
+    "lastUpdatedDatetime": "2017-01-01T00:00:00"
+  },
+  {
+    "offenceId": "A1",
+    "mainOffence": false,
+    "detail": {
+      "code": "00102",
+      "description": "Fraud - 00102",
+      "mainCategoryCode": "001",
+      "mainCategoryDescription": "Fraud",
+      "mainCategoryAbbreviation": "Fraud",
+      "ogrsOffenceCategory": "CODE_DESCRIPTION",
+      "subCategoryCode": "02",
+      "subCategoryDescription": "Fraud"
+    },
+    "offenceDate": "2017-01-01T00:00:00",
+    "offenceCount": 2,
+    "createdDatetime": "2017-01-01T00:00:00",
+    "lastUpdatedDatetime": "2017-01-01T00:00:00"
+  },
+  {
+    "offenceId": "A2",
+    "mainOffence": false,
+    "detail": {
+      "code": "00103",
+      "description": "Perjury - 00103",
+      "mainCategoryCode": "001",
+      "mainCategoryDescription": "Perjury",
+      "mainCategoryAbbreviation": "Perjury",
+      "ogrsOffenceCategory": "CODE_DESCRIPTION",
+      "subCategoryCode": "03",
+      "subCategoryDescription": "Perjury"
+    },
+    "offenceDate": "2017-01-01T00:00:00",
+    "offenceCount": 5,
+    "createdDatetime": "2017-01-01T00:00:00",
+    "lastUpdatedDatetime": "2017-01-01T00:00:00"
+  }
+]
