@@ -4,22 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import data.annotations.Encrypted;
-import data.annotations.OnPage;
-import data.annotations.RequiredGroupOnPage;
-import data.annotations.RequiredOnPage;
+import data.annotations.*;
 import lombok.Data;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import play.data.validation.Constraints.Required;
-import play.data.validation.Constraints.RequiredValidator;
 import play.data.validation.Constraints.Validatable;
 import play.data.validation.Constraints.Validate;
 import play.data.validation.ValidationError;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -104,13 +102,18 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 field.getAnnotation(OnPage.class).value() :
                 field.isAnnotationPresent(RequiredOnPage.class) ?
                     field.getAnnotation(RequiredOnPage.class).value() :
-                    field.getAnnotation(RequiredGroupOnPage.class).value();
+                    field.isAnnotationPresent(RequiredGroupOnPage.class) ?
+                        field.getAnnotation(RequiredGroupOnPage.class).value() :
+                        field.getAnnotation(RequiredDateOnPage.class).value();
     }
 
     protected List<Function<Map<String, Object>, Stream<ValidationError>>> validators() {    // Overridable in derived Data classes
 
         return ImmutableList.of(
                 this::mandatoryErrors,
+                this::mandatoryDateErrors,
+                this::partialDateErrors,
+                this::invalidDateErrors,
                 this::mandatoryGroupErrors
         );
     }
@@ -140,6 +143,26 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 filter(field -> mustValidateField(options, field) && noFieldInPageGroupSelected(field)).
                 filter(field -> field.getAnnotation(RequiredGroupOnPage.class).errorWhenInvalid()).
                 map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredGroupOnPage.class).message()));
+    }
+    private Stream<ValidationError> mandatoryDateErrors(Map<String, Object> options) {
+
+        return requiredDateFields().
+                filter(field -> mustValidateField(options, field) && allDateFieldsAreEmpty(field)).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).message()));
+    }
+
+    private Stream<ValidationError> partialDateErrors(Map<String, Object> options) {
+
+        return requiredDateFields().
+                filter(field -> mustValidateField(options, field) && someDateFieldsAreEmpty(field)).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).incompleteMessage()));
+    }
+
+    private Stream<ValidationError> invalidDateErrors(Map<String, Object> options) {
+
+        return requiredDateFields().
+                filter(field -> mustValidateField(options, field) && allDateFieldsAreSupplied(field) && composedDateBitsAreInvalid(field)).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).invalidMessage()));
     }
 
     private boolean shouldCheckAll(Map<String, Object> options) {
@@ -172,6 +195,49 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private boolean isInSameGroup(Field field, int pageNumber, String group) {
         return field.getAnnotation(RequiredGroupOnPage.class).value() == pageNumber &&
                 field.getAnnotation(RequiredGroupOnPage.class).group().equals(group);
+    }
+
+    private boolean allDateFieldsAreEmpty(Field field) {
+        return dateFieldValues(field)
+                .allMatch(StringUtils::isBlank);
+
+    }
+    private boolean allDateFieldsAreSupplied(Field field) {
+        return dateFieldValues(field)
+                .allMatch(StringUtils::isNotBlank);
+
+    }
+    private boolean someDateFieldsAreEmpty(Field field) {
+        return !allDateFieldsAreEmpty(field) && !allDateFieldsAreSupplied(field);
+    }
+    private boolean composedDateBitsAreInvalid(Field field) {
+        try {
+            String formattedDate = dateFieldValues(field).collect(Collectors.joining("/"));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
+            dateFormat.setLenient(false);
+            dateFormat.parse(formattedDate);
+            return false;
+        } catch (ParseException e) {
+            return true;
+        }
+    }
+
+    protected String formattedDateFromDateParts(String fieldName) {
+        return formattedDateFromDateParts(fieldForName(fieldName));
+    }
+
+    private String formattedDateFromDateParts(Field field) {
+        return composedDateBitsAreInvalid(field) ?
+                "" :
+                dateFieldValues(field).collect(Collectors.joining("/"));
+    }
+
+    private Stream<String> dateFieldValues(Field field) {
+        return Stream.of("day", "month", "year")
+                .map(postifx -> String.format("%s_%s", field.getName(), postifx))
+                .map(this::fieldForName)
+                .map(this::getStringValue)
+                .map(value -> value.orElse(""));
     }
 
     private boolean isJumping() {
@@ -211,9 +277,18 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return annotatedFields(RequiredOnPage.class);
     }
 
+    private Stream<Field> requiredDateFields() {
+
+        return annotatedFields(RequiredDateOnPage.class);
+    }
+
     private Stream<Field> requiredGroupFields() {
 
         return annotatedFields(RequiredGroupOnPage.class);
+    }
+
+    private Field fieldForName(String name) {
+        return FieldUtils.getField(this.getClass(), name, true);
     }
 
     private Stream<Field> onPageFields() {

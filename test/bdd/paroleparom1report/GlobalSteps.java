@@ -10,6 +10,8 @@ import play.test.TestBrowser;
 import views.pages.paroleparom1report.ParoleParom1PopupReportPage;
 
 import javax.inject.Inject;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.AbstractMap.SimpleEntry;
 
@@ -46,8 +48,12 @@ public class GlobalSteps {
     }
 
     @When("^they enter the date \"([^\"]*)\" for \"([^\"]*)\"$")
-    public void theyEnterTheDateFor(String text, String label) {
-        page.fillInput(label, text);
+    public void theyEnterTheDateFor(String dateText, String legend) throws ParseException {
+        val date = new SimpleDateFormat("dd/MM/yyyy").parse(dateText);
+
+        page.fillInputInSectionWithLegend(legend, "Day", new SimpleDateFormat("dd").format(date));
+        page.fillInputInSectionWithLegend(legend, "Month", new SimpleDateFormat("MM").format(date));
+        page.fillInputInSectionWithLegend(legend, "Year", new SimpleDateFormat("yyyy").format(date));
     }
     private Map<String, String> toNameValues(Map<String, String> labelTextMap) {
         return labelTextMap.keySet().stream().map(label -> new SimpleEntry<>(nameFromLabel(label), labelTextMap.get(label))).collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));

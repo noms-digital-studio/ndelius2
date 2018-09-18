@@ -1,15 +1,17 @@
 package data.base;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import data.annotations.OnPage;
+import data.annotations.RequiredDateOnPage;
 import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import play.data.validation.ValidationError;
 
+import static data.base.WizardData.fieldPage;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WizardDataValidationTest {
@@ -47,8 +49,23 @@ public class WizardDataValidationTest {
         @RequiredGroupOnPage(value = 7)
         private boolean otherGroupedField2;
 
-        @OnPage(8)
+        @RequiredDateOnPage(value = 8, message = "my mandatory date message", incompleteMessage = "my incomplete date message", invalidMessage = "my invalid date message")
+        private String dob;
+        private String dob_day;
+        private String dob_month;
+        private String dob_year;
+
+        @OnPage(9)
         private String dummyFinalPageField;
+
+        @OnPage(10)
+        private String page10Field;
+        @RequiredOnPage(11)
+        private String page11Field;
+        @RequiredGroupOnPage(12)
+        private String page12Field;
+        @RequiredDateOnPage(13)
+        private String page13Field;
 
     }
 
@@ -60,6 +77,13 @@ public class WizardDataValidationTest {
         data.setOnBehalfOfUser("whatever");
     }
 
+    @Test
+    public void fieldPageNumberReadFromAllPageAnnotations() {
+        assertThat(fieldPage(FieldUtils.getField(MyTestData.class, "page10Field", true))).isEqualTo(10);
+        assertThat(fieldPage(FieldUtils.getField(MyTestData.class, "page11Field", true))).isEqualTo(11);
+        assertThat(fieldPage(FieldUtils.getField(MyTestData.class, "page12Field", true))).isEqualTo(12);
+        assertThat(fieldPage(FieldUtils.getField(MyTestData.class, "page13Field", true))).isEqualTo(13);
+    }
 
     @Test
     public void optionalFieldsCanBeLeftNull() {
@@ -129,4 +153,56 @@ public class WizardDataValidationTest {
         assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("otherGroupedField1", "error.required"));
         assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("otherGroupedField2", "error.required"));
     }
+
+    @Test
+    public void requiredDateFieldWithMessageUsesAnnotatedMessage() {
+        data.setPageNumber(8);
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("dob", "my mandatory date message"));
+    }
+
+    @Test
+    public void requiredIncompleteDateFieldWithMessageUsesAnnotatedMessage() {
+        data.setPageNumber(8);
+        data.setDob_day("19");
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("dob", "my incomplete date message"));
+    }
+
+    @Test
+    public void requiredIncompleteDateFieldWithMessageUsesAnnotatedMessageEvenWhenTwoSupplied() {
+        data.setPageNumber(8);
+        data.setDob_day("19");
+        data.setDob_month("7");
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("dob", "my incomplete date message"));
+    }
+
+    @Test
+    public void requiredInvalidDateFieldWithMessageUsesAnnotatedMessageWhenInvalidDate() {
+        data.setPageNumber(8);
+        data.setDob_day("31");
+        data.setDob_month("02");
+        data.setDob_year("2003");
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("dob", "my invalid date message"));
+    }
+
+    @Test
+    public void requiredDateFieldValidWithValidDateParts() {
+        data.setPageNumber(8);
+        data.setDob_day("01");
+        data.setDob_month("02");
+        data.setDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+    @Test
+    public void requiredDateFieldValidWithValidDatePartsWithNonPaddedNumbers() {
+        data.setPageNumber(8);
+        data.setDob_day("1");
+        data.setDob_month("2");
+        data.setDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+
 }

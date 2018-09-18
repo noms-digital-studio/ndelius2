@@ -2,6 +2,7 @@ package data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import data.annotations.OnPage;
+import data.annotations.RequiredDateOnPage;
 import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
 import data.base.ReportGeneratorWizardData;
@@ -28,9 +29,16 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("VICTIMS_IMPACT_DETAILS")
     private String victimsImpactDetails;
 
-    @RequiredOnPage(value = 5, message = "Enter the date you contacted the VLO")
     @JsonProperty("VICTIMS_VLO_CONTACT_DATE")
+    public String getVictimsVLOContactDate() {
+        return formattedDateFromDateParts("victimsVLOContactDate");
+    }
+
+    @RequiredDateOnPage(value = 5, message = "Enter the date you contacted the VLO", incompleteMessage = "Enter the date you contacted the VLO and include a day, month and year", invalidMessage = "Enter a real date you contacted the VLO")
     private String victimsVLOContactDate;
+    private String victimsVLOContactDate_day;
+    private String victimsVLOContactDate_month;
+    private String victimsVLOContactDate_year;
 
     @RequiredOnPage(value = 5, message = "Specify if the victims are engaged with the VCS")
     @JsonProperty("VICTIMS_ENGAGED_IN_VCS")

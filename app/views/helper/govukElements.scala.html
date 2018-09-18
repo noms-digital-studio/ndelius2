@@ -35,6 +35,48 @@
             </div>
         }
     </div>
+} else if(elements.args.get(Symbol("_date"))) {
+    <div class="govuk-form-group form-group@if(elements.hasErrors) { form-group-error govuk-form-group--error}">
+        <fieldset class="govuk-fieldset" aria-describedby="dob-hint" role="group">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend">
+                @elements.label
+            </legend>
+
+            @if(elements.args.get(Symbol("_form_hint"))) {
+            <span id="@elements.id-hint" class="govuk-hint">
+                @elements.args.get(Symbol("_form_hint"))
+            </span>
+            }
+            @govukInfoErrors(elements)
+            <div class="govuk-date-input" id="@elements.id">
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-date-input__label" for="@elements.id-day">
+                            Day
+                        </label>
+                        <input class="govuk-input govuk-date-input__input govuk-input--width-2 @if(elements.hasErrors) { govuk-input--error}" id="@elements.id-day" name="@{elements.field.name}_day" type="number" pattern="[0-9]*" value="@elements.args.get(Symbol("_day"))" >
+                    </div>
+                </div>
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-date-input__label" for="@elements.id-month">
+                            Month
+                        </label>
+                        <input class="govuk-input govuk-date-input__input govuk-input--width-2 @if(elements.hasErrors) { govuk-input--error}" id="@elements.id-month" name="@{elements.field.name}_month" type="number" pattern="[0-9]*"  value="@elements.args.get(Symbol("_month"))" >
+                    </div>
+                </div>
+                <div class="govuk-date-input__item">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label govuk-date-input__label" for="@elements.id-year">
+                            Year
+                        </label>
+                        <input class="govuk-input govuk-date-input__input govuk-input--width-4 @if(elements.hasErrors) { govuk-input--error}" id="@elements.id-year" name="@{elements.field.name}_year" type="number" pattern="[0-9]*"  value="@elements.args.get(Symbol("_year"))" >
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
 } else {
   <div class="govuk-form-group form-group@if(elements.hasErrors) { form-group-error govuk-form-group--error}">
     @govukLabel(elements)
@@ -57,7 +99,7 @@
       </select>
     } else {
       <span>
-        <input class="govuk-input form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" type="text" role="textbox" placeholder="@elements.args.get('placeholder)" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} />
+        <input class="govuk-input form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error govuk-input--error}" type="text" role="textbox" placeholder="@elements.args.get('placeholder)" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} />
       </span>
     }
   </div>

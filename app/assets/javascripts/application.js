@@ -417,6 +417,7 @@ function openPopup(url) {
             if (event.which == '8'
                 && event.target.type != 'text'
                 && event.target.type != 'file'
+                && event.target.type != 'number'
                 && event.target.tagName != 'TEXTAREA'
                 && event.target.className != 'ql-editor') {
                 event.preventDefault();
