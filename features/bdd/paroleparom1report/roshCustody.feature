@@ -1,19 +1,19 @@
 Feature: Parole Report
 
   Background:
-    Given Delius user is on the "Current RoSH community" UI on the Parole Report
+    Given Delius user is on the "Current RoSH custody" UI on the Parole Report
 
   Scenario: Delius user wants to enter RoSH community data for an offender within their parole report
 
-    Given they select the radio button with id "roshCommunityPublic_low"
-    And they select the radio button with id "roshCommunityKnownAdult_medium"
-    And they select the radio button with id "roshCommunityChildren_high"
-    And they select the radio button with id "roshCommunityPrisoners_very_high"
-    And they select the radio button with id "roshCommunityStaff_low"
+    Given they select the radio button with id "roshCustodyPublic_low"
+    And they select the radio button with id "roshCustodyKnownAdult_medium"
+    And they select the radio button with id "roshCustodyChildren_high"
+    And they select the radio button with id "roshCustodyPrisoners_very_high"
+    And they select the radio button with id "roshCustodyStaff_low"
     When they select the "Continue" button
-    Then the user should be directed to the "Current RoSH: custody" UI
+    Then the user should be directed to the "Risk to the prisoner" UI
 
-  Scenario: Delius User does not complete the relevant fields within the "Current RoSH community" UI
+  Scenario: Delius User does not complete the relevant fields within the "Current RoSH custody" UI
 
     When  they select the "Continue" button
     Then  the following error messages are displayed
