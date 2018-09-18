@@ -11,6 +11,98 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@popup(reportForm, encrypter, "Current ROSH: community", 12) {
-    <p>WIP</p>
+@popup(reportForm, encrypter, "Current RoSH: community", 12) {
+
+    <p class="govuk-caption-xl govuk-!-margin-top-0 govuk-!-margin-bottom-4">Select the prisoner’s current RoSH in the community</p>
+
+    <div class="form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Public
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("roshCommunityPublic"),
+                options(
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
+            )
+        </fieldset>
+    </div>
+
+    <div class="form-group govuk-!-margin-top-6" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Known adult
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("roshCommunityKnownAdult"),
+                options(
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
+            )
+        </fieldset>
+    </div>
+
+    <div class="form-group govuk-!-margin-top-6" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Children
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("roshCommunityChildren"),
+                options(
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
+            )
+        </fieldset>
+    </div>
+
+    <div class="form-group govuk-!-margin-top-6" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Prisoners
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("roshCommunityPrisoners"),
+                options(
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
+            )
+        </fieldset>
+    </div>
+
+    <div class="form-group govuk-!-margin-top-6" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Staff
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("roshCommunityStaff"),
+                options(
+                    "low" -> "Low",
+                    "medium" -> "Medium",
+                    "high" -> "High",
+                    "very_high" -> "Very high"
+                )
+            )
+        </fieldset>
+    </div>
+
 }

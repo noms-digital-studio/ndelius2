@@ -8,6 +8,7 @@ public enum Page {
     BEHAVIOUR_IN_PRISON("7", "Behaviour in prison"),
     INTERVENTION("8", "Interventions"),
     SENTENCE_PLAN("9", "Current sentence plan and response"),
+    CURRENT_ROSH_COMMUNITY("12", "Current RoSH: community"),
     CURRENT_ROSH_CUSTODY("13", "Current ROSH: custody"),
     RISK_TO_PRISONER("14", "Risk to the prisoner"),
     ROSH_ANALYSIS("15", "RoSH analysis"),
