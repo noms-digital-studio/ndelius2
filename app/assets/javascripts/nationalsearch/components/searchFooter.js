@@ -3,7 +3,7 @@ const SearchFooter = () => (
         <div className="background-box">
             <div className="key-content">
                 <p className="font-medium margin-bottom">
-                    Narrow <span className="bold">your results</span> by selecting <span className="bold">'Yes'</span> to <span className="bold">'Match all terms'</span>
+                    Expand <span className="bold">the results</span> by selecting <span className="bold">'No'</span> to <span className="bold">'Match all terms'</span>
                 </p>
             </div>
         </div>

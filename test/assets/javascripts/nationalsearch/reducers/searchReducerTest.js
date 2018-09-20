@@ -49,8 +49,8 @@ describe("searchReducer", () => {
         it('showWelcomeBanner will be false', () => {
             expect(state.showWelcomeBanner).to.equal(false)
         });
-        it('searchType will be `broad`', () => {
-            expect(state.searchType).to.equal('broad')
+        it('searchType will be `exact`', () => {
+            expect(state.searchType).to.equal('exact')
         });
     })
     describe("when REQUEST_SEARCH action received", () => {
@@ -98,7 +98,7 @@ describe("searchReducer", () => {
         context('when searchTerm matches from request action', () => {
             beforeEach(() => {
                 state = search(
-                    {searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3, firstTimeIn: true, firstTimeIn: true, probationAreasFilter: ['N01']},
+                    {searchTerm: 'Mr Bean', resultsSearchTerm: 'Nobby', results: someResults(), resultsReceived: false, total: 28, pageNumber: 3, firstTimeIn: true, probationAreasFilter: ['N01']},
                     {type: SEARCH_RESULTS, searchTerm: 'Mr Bean', results: emptyResults()})
             })
             it('results are replaced with new results', () => {

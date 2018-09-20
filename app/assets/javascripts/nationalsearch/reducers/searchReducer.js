@@ -2,7 +2,7 @@ import {CLEAR_RESULTS, REQUEST_SEARCH, SEARCH_RESULTS, PAGE_SIZE, NO_SAVED_SEARC
 import {flatMap} from '../../helpers/streams'
 import {setIn, removeIn} from '../../helpers/immutable'
 
-const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: {}, myProbationAreas: myProbationAreas(),  total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false, searchType: "broad"}, action) => {
+const searchResults = (state = {searchTerm: '', resultsSearchTerm: '', resultsReceived: false, results: [], suggestions: [], byProbationArea: [], probationAreasFilter: {}, myProbationAreas: myProbationAreas(),  total: 0, pageNumber: 1, firstTimeIn: true, showWelcomeBanner: false, searchType: "exact"}, action) => {
     switch (action.type) {
         case REQUEST_SEARCH:
             return {
