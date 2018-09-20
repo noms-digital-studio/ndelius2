@@ -440,6 +440,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 
@@ -480,6 +481,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 
@@ -523,6 +525,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 
@@ -567,6 +570,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence","Some offence");
@@ -612,6 +616,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
@@ -658,6 +663,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
@@ -712,6 +718,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
@@ -770,6 +777,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
@@ -828,6 +836,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
@@ -887,6 +896,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
@@ -945,6 +955,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
@@ -1008,6 +1019,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
@@ -1073,6 +1085,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("childrenServicesInformationSource", "true");
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
+                put("domesticAbuseInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
                 put("mainOffence", "Some offence");
