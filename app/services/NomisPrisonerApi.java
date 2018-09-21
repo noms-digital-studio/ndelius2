@@ -50,7 +50,7 @@ public class NomisPrisonerApi implements PrisonerApi {
 
         Logger.info("Nomis Image API request for Id: {}", nomisId);
 
-        return wsClient.url(apiBaseUrl + "offenders/" + nomisId + "/image").
+        return wsClient.url(apiBaseUrl + "nomisapi/offenders/" + nomisId + "/image").
                 addHeader(AUTHORIZATION, "Bearer " + apiToken.get()).
                 get().
                 thenApply(reportNonOKResponse).
@@ -74,15 +74,14 @@ public class NomisPrisonerApi implements PrisonerApi {
     @Override
     public CompletionStage<HealthCheckResult> isHealthy() {
 
-        return wsClient.url(apiBaseUrl + "../elite2api/health").
-                addHeader(AUTHORIZATION, "Bearer " + apiToken.get()).
+        return wsClient.url(apiBaseUrl + "custodyapi/health").
                 get().
                 thenApply(wsResponse -> {
 
                     val healthy = wsResponse.getStatus() == OK;
 
                     if (!healthy) {
-                        Logger.warn("NOMIS API Response Status: " + wsResponse.getStatus());
+                        Logger.warn("Custody API Response Status: " + wsResponse.getStatus());
                         return unhealthy(String.format("Status %d", wsResponse.getStatus()));
                     }
 
@@ -90,7 +89,7 @@ public class NomisPrisonerApi implements PrisonerApi {
                 }).
                 exceptionally(throwable -> {
 
-                    Logger.error("Error while checking NOMIS API connectivity", throwable);
+                    Logger.error("Error while checking Custody API connectivity", throwable);
                     return unhealthy(throwable.getLocalizedMessage());
                 });
         }

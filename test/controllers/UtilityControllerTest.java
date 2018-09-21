@@ -244,7 +244,7 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat(dependencies(result)).contains(entry("prisoner-api", "OK"));
+        assertThat(dependencies(result)).contains(entry("custody-api", "OK"));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
@@ -258,7 +258,7 @@ public class UtilityControllerTest extends WithApplication {
         assertEquals(OK, result.status());
         assertThat(dependenciesWithDetail(result))
                 .contains(entry(
-                        "prisoner-api",
+                        "custody-api",
                         ImmutableMap.of("healthy", Boolean.TRUE, "detail", "some detail")));
         assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
@@ -272,7 +272,7 @@ public class UtilityControllerTest extends WithApplication {
         val result = route(app, request);
 
         assertEquals(OK, result.status());
-        assertThat(dependencies(result)).contains(entry("prisoner-api", "FAILED"));
+        assertThat(dependencies(result)).contains(entry("custody-api", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
 

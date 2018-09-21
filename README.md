@@ -83,6 +83,6 @@ Webpages are generated via Play Framework [Twirl](https://www.playframework.com/
  - Elastic Search
  - PDF Generator
  - MongoDb (for Analytics)
- - NOMIS API
+ - Custody API (NOMIS)
 
 [Smoke Tests]: https://github.com/noms-digital-studio/ndelius-new-tech-smoke-test

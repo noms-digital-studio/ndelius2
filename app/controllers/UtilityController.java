@@ -63,7 +63,7 @@ public class UtilityController extends Controller {
                 put(definition("analytics-store", false), analyticsStore::isUp).
                 put(definition("offender-search", true), () -> offenderSearch.isHealthy().toCompletableFuture()).
                 put(definition("offender-api", true), () -> offenderApi.isHealthy().toCompletableFuture()).
-                put(definition("prisoner-api", true), () -> prisonerApi.isHealthy().toCompletableFuture()).
+                put(definition("custody-api", true), () -> prisonerApi.isHealthy().toCompletableFuture()).
                 build();
 
         this.configuration = configuration;
