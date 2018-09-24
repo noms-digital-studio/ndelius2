@@ -47,7 +47,7 @@
 
             @if(banner) {
                 <div class="phase-banner">
-                    <p><strong class="phase-tag">ALPHA</strong><span>This is a new service – your <a href="javascript:void(0);" class="feedback-link" title="feedback">feedback</a> will help us to improve it.</span></p>
+                    <p><strong class="phase-tag">ALPHA</strong><span>This is a new service – your <a href="@configuration.getString("feedback.form.url")" target="_blank" id="sfrFeedback" title="feedback">feedback</a> will help us to improve it.</span></p>
                 </div>
             }
 

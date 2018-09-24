@@ -165,18 +165,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         }
     }
 
-    public final CompletionStage<Result> feedbackPost() {
-
-        return CompletableFuture.supplyAsync(() -> {
-
-            val formData = wizardForm.bindFromRequest();
-
-            return ok(formRenderer(baseViewName() + "Feedback").apply(
-                    formData, getPageStatuses(formData.value(), 0, null)));
-
-        }, ec.current());
-    }
-
     protected CompletionStage<Map<String, String>> initialParams() { // Overridable in derived Controllers to supplant initial params
 
         val params = request().queryString().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue()[0]));
@@ -213,18 +201,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             session("id", UUID.randomUUID().toString());
         }
 
-        val feedback = new HashMap<String, Object>()
-        {
-            {
-                put("email", wizardData.getEmail());
-                put("rating", wizardData.getRating());
-                put("feedback", wizardData.getFeedback());
-                put("role", wizardData.getRoleother() == null || wizardData.getRoleother().isEmpty() ? wizardData.getRole() : wizardData.getRoleother());
-                put("provider", wizardData.getProvider());
-                put("region", wizardData.getRegion());
-            }
-        };
-
         val eventData = new HashMap<String, Object>()
         {
             {
@@ -232,7 +208,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                 put("sessionId", session("id"));
                 put("pageNumber", wizardData.getPageNumber());
                 put("dateTime", DateTime.now().toDate());
-                put("feedback", feedback);
             }
         };
 

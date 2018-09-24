@@ -7,10 +7,9 @@ function formWithZeroJumpNumber(form) {
     });
 }
 
-function openPopup(url) {
-    window.open(url, 'reportpopup', 'top=200,height=760,width=820,resizable=yes,scrollbars=yes,location=no,menubar=no,status=yes,toolbar=no').focus();
+function openPopup(url, name, top, left) {
+    window.open(url, (name || 'reportpopup'), 'top=' + (top || '200') + ',left=' + (left || '0') + ',height=760,width=820,resizable=yes,scrollbars=yes,location=no,menubar=no,status=yes,toolbar=no').focus();
 }
-
 
 (function ($) {
 
@@ -27,6 +26,12 @@ function openPopup(url) {
             // Stick at top when scrolling
             GOVUK.stickAtTopWhenScrolling.init();
         }
+
+        // SFR Feedback
+        $('#sfrFeedback').click(function (e) {
+            e.preventDefault();
+            openPopup($(this).attr('href'), 'sfrFeedback', 250, 50);
+        });
 
         /**
          *
@@ -163,16 +168,6 @@ function openPopup(url) {
                     window.location = target
                 }
             });
-        });
-
-        /**
-         * Feedback link - change form action and submit
-         */
-        $('.feedback-link').click(function (e) {
-            e.preventDefault();
-
-            var form = $('form');
-            form.attr('action', form.attr('action') + '/feedback').submit();
         });
 
         /**
