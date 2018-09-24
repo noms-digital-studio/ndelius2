@@ -75,6 +75,32 @@ input[type="checkbox"].right {
   }
 }
 
+// Bring inline with changes to GOV.UK Design System
+.panel.panel-border-narrow.moj-reveal {
+  margin-left: 15px;
+
+  &.moj-reveal-reduce {
+    margin-top: -15px;
+  }
+}
+
+// Include support for inline radio buttons
+.govuk-radios--inline {
+  margin-bottom: 0;
+
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+
+  .govuk-radios__item {
+    margin-right: 20px;
+    float: left;
+    clear: none;
+  }
+}
+
 .button {
   &.secondary {
     @include button($grey-3);

@@ -49,7 +49,7 @@
                     @checkbox(reportForm("domesticAbuseInformationSource"), '_label -> "Domestic abuse call out information")
                     @checkbox(reportForm("otherInformationSource"), '_label -> "Other (please specify below)", Symbol("data-target") -> "other-information")
 
-                    <div class="panel panel-border-narrow js-hidden" id="other-information">
+                    <div class="panel panel-border-narrow moj-reveal moj-reveal-reduce js-hidden" id="other-information">
                     @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information", 'class -> "wide", '_error -> "Enter the other information source details")
                     </div>
 

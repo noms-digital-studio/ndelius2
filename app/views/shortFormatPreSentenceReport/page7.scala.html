@@ -101,12 +101,13 @@
                                 "yes" -> "Yes",
                                 "no" -> "No"
                             ),
+                            Symbol("_inline") -> "true",
                             Symbol("data-target") -> "experienceTrauma-details",
                             Symbol("data-ignore") -> "no"
                         )
                     </fieldset>
 
-                    <div class="panel panel-border-narrow js-hidden" id="experienceTrauma-details">
+                    <div class="panel panel-border-narrow js-hidden moj-reveal margin-top" id="experienceTrauma-details">
                     @textarea(reportForm("experienceTraumaDetails"), '_label -> "Experience of trauma", '_hint -> traumaGuidance, 'class -> "wide")
                     </div>
                 </div>
@@ -126,12 +127,13 @@
                                 "yes" -> "Yes",
                                 "no" -> "No"
                             ),
+                            Symbol("_inline") -> "true",
                             Symbol("data-target") -> "caringResponsibilities-details",
                             Symbol("data-ignore") -> "no"
                         )
                     </fieldset>
 
-                    <div class="panel panel-border-narrow js-hidden" id="caringResponsibilities-details">
+                    <div class="panel panel-border-narrow moj-reveal js-hidden" id="caringResponsibilities-details">
                     @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance, 'class -> "wide")
                     </div>
                 </div>
