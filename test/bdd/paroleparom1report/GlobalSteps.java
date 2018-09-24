@@ -47,6 +47,13 @@ public class GlobalSteps {
         fieldNameToValues = toNameValues(labelTextMap);
     }
 
+    @When("^they input the following information$")
+    public void theyInputTheFollowingInformation(DataTable fieldTexts) {
+        val labelTextMap = fieldTexts.asMap(String.class, String.class);
+        labelTextMap.forEach((label, text) -> page.fillInput(label, text));
+        fieldNameToValues = toNameValues(labelTextMap);
+    }
+
     @When("^they enter the date \"([^\"]*)\" for \"([^\"]*)\"$")
     public void theyEnterTheDateFor(String dateText, String legend) throws ParseException {
         val date = new SimpleDateFormat("dd/MM/yyyy").parse(dateText);

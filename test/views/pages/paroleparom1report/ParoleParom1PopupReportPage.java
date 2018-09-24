@@ -75,7 +75,7 @@ public class ParoleParom1PopupReportPage extends FluentPage {
     }
 
     private FluentWebElement findSectionFromLegend(String legend) {
-        return $(xpath(String.format("//fieldset[legend[contains(.,'%s')]]", legend))).first();
+        return $(xpath(String.format("//fieldset[legend[contains(.,'%s')]]", legend))).last();
     }
 
     public String errorMessage(String name) {

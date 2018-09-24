@@ -11,6 +11,105 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@popup(reportForm, encrypter, "Current risk assessment", 11) {
-    <p>WIP</p>
+@popup(reportForm, encrypter, "Current risk assessment scores", 11) {
+    @inputText(
+        reportForm("riskAssessmentRSRScore"),
+        '_label -> "Risk of serious recidivism (RSR) score",
+        'required -> "true",
+        '_number -> "true",
+        '_form_hint -> "0.00 format eg 6.32 or 4.78")
+    @inputText(
+        reportForm("riskAssessmentOGRS3ReoffendingProbability"),
+        '_label -> "OGRS3 probability of proven reoffending",
+        'required -> "true",
+        '_number -> "true",
+        '_form_hint -> "For example, 23")
+    @inputText(
+        reportForm("riskAssessmentOGPReoffendingProbability"),
+        '_label -> "OGP probability of proven non violent type reoffending",
+        'required -> "true",
+        '_number -> "true",
+        '_form_hint -> "For example, 23")
+
+    @inputText(
+        reportForm("riskAssessmentOVPReoffendingProbability"),
+        '_label -> "OVP probability of proven violent type reoffending",
+        'required -> "true",
+        '_number -> "true",
+        '_form_hint -> "For example, 23")
+
+    <div class="form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Has a Risk Matrix 2000 assessment been completed?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("riskAssessmentMatrix2000AssessmentCompleted"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                Symbol("data-aria-controls") -> "matrix-2000",
+                Symbol("_inline") -> "true"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="matrix-2000-yes">
+            <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+                <legend class="govuk-fieldset__legend govuk-label">
+                    Risk Matrix 2000
+                </legend>
+
+                @inputRadioGroup(
+                    reportForm("riskAssessmentMatrix2000Score"),
+                    options(
+                        "low" -> "Low",
+                        "medium" -> "Medium",
+                        "high" -> "High",
+                        "very_high" -> "Very high"
+                    )
+                )
+            </fieldset>
+
+        </div>
+    </div>
+
+    <div class="form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Has a Spousal Assault Risk Assessment (SARA) been completed?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("riskAssessmentSpousalAssaultAssessmentCompleted"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                Symbol("data-aria-controls") -> "sara",
+                Symbol("_inline") -> "true"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="sara-yes">
+            <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+                <legend class="govuk-fieldset__legend govuk-label">
+                    Spousal Assault Risk Assessment (SARA)
+                </legend>
+
+                @inputRadioGroup(
+                    reportForm("riskAssessmentSpousalAssaultScore"),
+                    options(
+                        "low" -> "Low",
+                        "medium" -> "Medium",
+                        "high" -> "High"
+                    )
+                )
+            </fieldset>
+
+        </div>
+    </div>
+
+
 }

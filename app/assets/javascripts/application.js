@@ -128,7 +128,17 @@ function openPopup(url) {
              })
         })
 
-        /**
+        $('input[type="text"], input[type="number"]').blur(function () {
+            var editor = $(this)
+            quietSaveProgress(editor);
+        })
+
+        $('input[type="radio"], input[type="checkbox"]').click(function () {
+            var editor = $(this)
+            quietSaveProgress(editor);
+        })
+
+            /**
          * Navigation items
          */
         $('.nav-item').click(function (e) {

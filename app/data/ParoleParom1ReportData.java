@@ -8,6 +8,11 @@ import data.annotations.RequiredOnPage;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+
+import java.math.BigDecimal;
+import java.util.Optional;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -74,6 +79,89 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @RequiredOnPage(value = 9, message = "Enter the prisoner's current sentence plan objectives, including their response")
     @JsonProperty("SENTENCE_PLAN")
     private String sentencePlan;
+
+    // Page 11 - Current risk assessment scores
+    @RequiredOnPage(value = 11, message = "Enter the RSR score")
+    @JsonProperty("RISK_ASSESSMENT_RSR_SCORE")
+    private String riskAssessmentRSRScore;
+    @JsonProperty("RISK_ASSESSMENT_RSR_SCORE_AS_LEVEL")
+    public String getRiskAssessmentRSRScoreLevel() {
+        return asBigDecimal(riskAssessmentRSRScore).map(value -> {
+            if (value.compareTo(BigDecimal.valueOf(3)) < 0) {
+                return "low";
+            }
+            if (value.compareTo(BigDecimal.valueOf(7)) < 0) {
+                return "medium";
+            }
+            return "high";
+        }).orElse("");
+    }
+    @RequiredOnPage(value = 11, message = "Enter the OGRS3 score")
+    @JsonProperty("RISK_ASSESSMENT_OGRS3_SCORE")
+    private String riskAssessmentOGRS3ReoffendingProbability;
+    @JsonProperty("RISK_ASSESSMENT_OGRS3_SCORE_AS_LEVEL")
+    public String getRiskAssessmentOGRS3ReoffendingProbabilityLevel() {
+        return asInteger(riskAssessmentOGRS3ReoffendingProbability).map(value -> {
+            if (value < 50) {
+                return "low";
+            }
+            if (value < 75) {
+                return "medium";
+            }
+            if (value < 90) {
+                return "high";
+            }
+            return "very_high";
+        }).orElse("");
+    }
+    @RequiredOnPage(value = 11, message = "Enter the OGP score")
+    @JsonProperty("RISK_ASSESSMENT_OGP_SCORE")
+    private String riskAssessmentOGPReoffendingProbability;
+    @JsonProperty("RISK_ASSESSMENT_OGP_SCORE_AS_LEVEL")
+    public String getRiskAssessmentOGPReoffendingProbabilityLevel() {
+        return asInteger(riskAssessmentOGPReoffendingProbability).map(value -> {
+            if (value < 34) {
+                return "low";
+            }
+            if (value < 67) {
+                return "medium";
+            }
+            if (value < 85) {
+                return "high";
+            }
+            return "very_high";
+        }).orElse("");
+    }
+    @RequiredOnPage(value = 11, message = "Enter the OVP score")
+    @JsonProperty("RISK_ASSESSMENT_OVP_SCORE")
+    private String riskAssessmentOVPReoffendingProbability;
+    @JsonProperty("RISK_ASSESSMENT_OVP_SCORE_AS_LEVEL")
+    public String getRiskAssessmentOVPReoffendingProbabilityLevel() {
+        return asInteger(riskAssessmentOVPReoffendingProbability).map(value -> {
+            if (value < 30) {
+                return "low";
+            }
+            if (value < 60) {
+                return "medium";
+            }
+            if (value < 80) {
+                return "high";
+            }
+            return "very_high";
+        }).orElse("");
+    }
+    @RequiredOnPage(value = 11, message = "Specify if a Risk Matrix 2000 has been completed")
+    @JsonProperty("RISK_ASSESSMENT_MATRIX2000_COMPLETED")
+    private String riskAssessmentMatrix2000AssessmentCompleted;
+    @RequiredOnPage(value = 11, message = "Select the Risk Matrix 2000 score", onlyIfField = "riskAssessmentMatrix2000AssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("RISK_ASSESSMENT_MATRIX2000_SCORE")
+    private String riskAssessmentMatrix2000Score;
+    @RequiredOnPage(value = 11, message = "Specify if a SARA has been completed")
+    @JsonProperty("RISK_ASSESSMENT_SARA_COMPLETED")
+    private String riskAssessmentSpousalAssaultAssessmentCompleted;
+    @RequiredOnPage(value = 11, message = "Select the SARA score", onlyIfField = "riskAssessmentSpousalAssaultAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("RISK_ASSESSMENT_SARA_SCORE")
+    private String riskAssessmentSpousalAssaultScore;
 
     // Page 12 - Current RoSH: community
     @RequiredOnPage(value = 12, message = "Select the risk to the public")
@@ -273,5 +361,21 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     // Page 23
     @OnPage(23)
     private String dummy23;
+
+    private static Optional<Integer> asInteger(String value) {
+        try {
+            return Optional.ofNullable(value).filter(StringUtils::isNumeric).map(Integer::valueOf);
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<BigDecimal> asBigDecimal(String value) {
+        try {
+            return Optional.ofNullable(value).filter(StringUtils::isNotBlank).map(NumberUtils::createBigDecimal);
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
 
 }
