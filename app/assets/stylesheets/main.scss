@@ -25,3 +25,16 @@
 .js-hidden {
   display: none;
 }
+
+.row-counting-table {
+  counter-reset: rowNumber;
+}
+
+.row-counting-table tr {
+  counter-increment: rowNumber;
+}
+
+.row-counting-table tr td:first-child::before {
+  content: counter(rowNumber);
+  min-width: 1em;
+}

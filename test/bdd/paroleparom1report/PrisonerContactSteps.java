@@ -19,4 +19,10 @@ public class PrisonerContactSteps {
         // no page action required
     }
 
+    @Given("^that the Delius user has not completed all the relevant fields for \"Prisoner Contact\" UI$")
+    public void thatTheDeliusUserHasNotCompletedAllTheRelevantFieldsForUI() {
+        page.navigateHere();
+        page.fillTextArea("How long have you managed the prisoner, and what contact have you had with them?", "Mauris cursus mattis molestie a iaculis at.");
+        page.clickButton("Continue");
+    }
 }

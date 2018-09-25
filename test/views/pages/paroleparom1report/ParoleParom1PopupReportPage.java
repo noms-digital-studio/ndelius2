@@ -97,4 +97,8 @@ public class ParoleParom1PopupReportPage extends FluentPage {
         return parent.find(By.cssSelector(".govuk-details__text")).first().displayed();
 
     }
+
+    public void clickLink(String linkText) {
+        $(By.linkText(linkText)).click();
+    }
 }

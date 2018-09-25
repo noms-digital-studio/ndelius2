@@ -359,8 +359,8 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
 
 
     // Page 23
-    @OnPage(23)
-    private String dummy23;
+    @RequiredOnPage(23)
+    private String dummy;
 
     private static Optional<Integer> asInteger(String value) {
         try {

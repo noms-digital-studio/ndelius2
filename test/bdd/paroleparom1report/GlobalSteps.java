@@ -12,8 +12,8 @@ import views.pages.paroleparom1report.ParoleParom1PopupReportPage;
 import javax.inject.Inject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Map;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -129,7 +129,7 @@ public class GlobalSteps {
     }
 
     @Given("^that the Delius user is unclear to what information they need to add to the \"([^\"]*)\" free text field$")
-    public void thatTheDeliusUserIsUnclearToWhatInformationTheyNeedToAddToTheFreeTextField(String label) throws Throwable {
+    public void thatTheDeliusUserIsUnclearToWhatInformationTheyNeedToAddToTheFreeTextField(String label) {
         this.whatToIncludeFieldLabel = label;
     }
 
@@ -139,7 +139,23 @@ public class GlobalSteps {
     }
 
     @Then("^the UI should expand to show additional content to the end user$")
-    public void theUIShouldExpandToShowAdditionalContentToTheEndUser() throws Throwable {
+    public void theUIShouldExpandToShowAdditionalContentToTheEndUser() {
         assertThat(page.whatToIncludeContentVisibleWithSiblingLabel(whatToIncludeFieldLabel)).isTrue();
     }
+
+    @When("^they select \"([^\"]*)\" hyperlink from the UI$")
+    public void theySelectHyperlinkFromTheUI(String linkText) {
+        page.clickLink(linkText);
+    }
+
+    @When("^they are select \"([^\"]*)\" link on the navigation menu$")
+    public void theyAreSelectLinkOnTheNavigationMenu(String linkText) {
+        page.clickLink(linkText);
+    }
+
+    @Then("^they must be directed to \"([^\"]*)\" UI$")
+    public void theyMustBeDirectedToUI(String pageTitle) {
+        page.isAt(pageTitle);
+    }
+
 }

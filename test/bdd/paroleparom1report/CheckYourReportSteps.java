@@ -1,0 +1,30 @@
+package bdd.paroleparom1report;
+
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import views.pages.paroleparom1report.CheckYourReportPage;
+
+import javax.inject.Inject;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class CheckYourReportSteps {
+    @Inject
+    private CheckYourReportPage page;
+
+    @Then("^the button for \"([^\"]*)\" must display \"([^\"]*)\"$")
+    public void theButtonForMustDisplay(String pageName, String buttonText) {
+        assertThat(page.statusTextForPage(pageName)).isEqualTo(buttonText);
+    }
+
+    @Given("^the Delius user is on \"Check your report\" UI$")
+    public void theDeliusUserIsOnUI() {
+        page.navigateHere();
+    }
+
+    @And("^they want to complete the fields within the \"Prisoner Contact\"$")
+    public void theyWantToCompleteTheFieldsWithinThe() {
+        // noop
+    }
+}

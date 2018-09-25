@@ -19,4 +19,9 @@ public class BehaviourInPrisonSteps {
     public void thatTheDeliusUserWantsToEnterDetailsOfTheOffenderSBehaviourInPrisonInTheOffenderParoleReport() throws Throwable {
         // no page action required
     }
+
+    @Given("^that the Delius user has not completed any fields in the \"Behaviour in Prison\" UI$")
+    public void thatTheDeliusUserHasNotCompletedAnyFieldsInTheUI() {
+        page.doNotNavigateHere();
+    }
 }

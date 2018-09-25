@@ -17,4 +17,9 @@ public class BehaviourInPrisonPage extends ParoleParom1PopupReportPage {
         jumpTo(Page.BEHAVIOUR_IN_PRISON);
         return this;
     }
+
+    public void doNotNavigateHere() {
+        // navigate somewhere other than here
+        prisonerDetailsPage.navigateHere();
+    }
 }

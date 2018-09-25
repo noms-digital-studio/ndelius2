@@ -2,7 +2,7 @@
 @import helpers.CallHelper.relative
 @import helper._
 
-@(page: Int, reportForm: Form[ParoleParom1ReportData], encrypter: String => String, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true)
+@(page: Int, reportForm: Form[ParoleParom1ReportData], encrypter: String => String, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true, showNextButton: Boolean = true)
 <div class="moj-footer-compensate"></div>
 <footer class="moj-report-footer">
     <div class="moj-report-footer__container-left">
@@ -22,7 +22,13 @@
 
 
 
-        @pageNumber(page, nextText)
+        @if(showNextButton) {
+            @pageNumber(page, nextText)
+        } else {
+            <input type="hidden" id="jumpNumber" name="jumpNumber" value="" />
+            <input type="hidden" id="pageNumber" name="pageNumber" value="@page"/>
+        }
+
         @if(showCloseButton) {
         <button class="govuk-button moj-button--secondary moj-tooltip govuk-!-margin-bottom-1" id="exitLink" type="button" aria-label="Close" >
             Close<span>Save and close your report</span>

@@ -18,7 +18,8 @@ public enum Page {
     SUPERVISION_PLAN("18", "Supervision plan for release"),
     RECOMMENDATION("19", "Recommendation"),
     ORAL_HEARING("20", "Oral hearing"),
-    SOURCES("21", "Sources")
+    SOURCES("21", "Sources"),
+    CHECK_YOUR_REPORT("22", "Check your report"),
     ;
     private final String pageNumber;
     private final String pageHeader;

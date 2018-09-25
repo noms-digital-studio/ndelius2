@@ -9,7 +9,7 @@
 @import play.twirl.api.Template1
 @import com.typesafe.config.Config
 
-@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, header: String, pageNumber: Int)(content: Html)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
+@(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, header: String, pageNumber: Int, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true)(content: Html)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
@@ -44,7 +44,7 @@
 
             @content
 
-            @footer(pageNumber, reportForm, encrypter)
+            @footer(pageNumber, reportForm, encrypter, nextText, showCloseButton)
 
         }
 
