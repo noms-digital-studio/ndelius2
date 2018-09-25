@@ -80,10 +80,36 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SENTENCE_PLAN")
     private String sentencePlan;
 
+    // Page 10 - MAPPA
+    @RequiredOnPage(value = 10, message = "Specify if the prisoner is eligible for MAPPA")
+    @JsonProperty("ELIGIBLE_FOR_MAPPA")
+    private String eligibleForMappa;
+
+    @JsonProperty("MAPPA_SCREENED_DATE")
+    public String getMappaScreenedDate() {
+        return formattedDateFromDateParts("mappaScreenedDate");
+    }
+
+    @RequiredDateOnPage(value = 10, message = "Enter the date when the prisoner was screened for MAPPA", incompleteMessage = "Enter the date when the prisoner was screened for MAPPA and include a day, month and year", invalidMessage = "Enter a real date when the prisoner was screened for MAPPA", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    private String mappaScreenedDate;
+    private String mappaScreenedDate_day;
+    private String mappaScreenedDate_month;
+    private String mappaScreenedDate_year;
+
+    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA category", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("MAPPA_CATEGORY")
+    private String mappaCategory;
+
+    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA level", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("MAPPA_LEVEL")
+    private String mappaLevel;
+
     // Page 11 - Current risk assessment scores
+
     @RequiredOnPage(value = 11, message = "Enter the RSR score")
     @JsonProperty("RISK_ASSESSMENT_RSR_SCORE")
     private String riskAssessmentRSRScore;
+
     @JsonProperty("RISK_ASSESSMENT_RSR_SCORE_AS_LEVEL")
     public String getRiskAssessmentRSRScoreLevel() {
         return asBigDecimal(riskAssessmentRSRScore).map(value -> {
@@ -96,9 +122,11 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             return "high";
         }).orElse("");
     }
+
     @RequiredOnPage(value = 11, message = "Enter the OGRS3 score")
     @JsonProperty("RISK_ASSESSMENT_OGRS3_SCORE")
     private String riskAssessmentOGRS3ReoffendingProbability;
+
     @JsonProperty("RISK_ASSESSMENT_OGRS3_SCORE_AS_LEVEL")
     public String getRiskAssessmentOGRS3ReoffendingProbabilityLevel() {
         return asInteger(riskAssessmentOGRS3ReoffendingProbability).map(value -> {
@@ -114,9 +142,11 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             return "very_high";
         }).orElse("");
     }
+
     @RequiredOnPage(value = 11, message = "Enter the OGP score")
     @JsonProperty("RISK_ASSESSMENT_OGP_SCORE")
     private String riskAssessmentOGPReoffendingProbability;
+
     @JsonProperty("RISK_ASSESSMENT_OGP_SCORE_AS_LEVEL")
     public String getRiskAssessmentOGPReoffendingProbabilityLevel() {
         return asInteger(riskAssessmentOGPReoffendingProbability).map(value -> {
@@ -132,9 +162,11 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             return "very_high";
         }).orElse("");
     }
+
     @RequiredOnPage(value = 11, message = "Enter the OVP score")
     @JsonProperty("RISK_ASSESSMENT_OVP_SCORE")
     private String riskAssessmentOVPReoffendingProbability;
+
     @JsonProperty("RISK_ASSESSMENT_OVP_SCORE_AS_LEVEL")
     public String getRiskAssessmentOVPReoffendingProbabilityLevel() {
         return asInteger(riskAssessmentOVPReoffendingProbability).map(value -> {
@@ -150,15 +182,19 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             return "very_high";
         }).orElse("");
     }
+
     @RequiredOnPage(value = 11, message = "Specify if a Risk Matrix 2000 has been completed")
     @JsonProperty("RISK_ASSESSMENT_MATRIX2000_COMPLETED")
     private String riskAssessmentMatrix2000AssessmentCompleted;
+
     @RequiredOnPage(value = 11, message = "Select the Risk Matrix 2000 score", onlyIfField = "riskAssessmentMatrix2000AssessmentCompleted", onlyIfFieldMatchValue= "yes")
     @JsonProperty("RISK_ASSESSMENT_MATRIX2000_SCORE")
     private String riskAssessmentMatrix2000Score;
+
     @RequiredOnPage(value = 11, message = "Specify if a SARA has been completed")
     @JsonProperty("RISK_ASSESSMENT_SARA_COMPLETED")
     private String riskAssessmentSpousalAssaultAssessmentCompleted;
+
     @RequiredOnPage(value = 11, message = "Select the SARA score", onlyIfField = "riskAssessmentSpousalAssaultAssessmentCompleted", onlyIfFieldMatchValue= "yes")
     @JsonProperty("RISK_ASSESSMENT_SARA_SCORE")
     private String riskAssessmentSpousalAssaultScore;

@@ -100,48 +100,62 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private Stream<ValidationError> mandatoryErrors(Map<String, Object> options) {
 
         // Default to required is enforced if no onlyIfField
-        return requiredFields().filter(field -> {       // exists, otherwise use onlyIfField current boolean
-
-            val onlyIfName = field.getAnnotation(RequiredOnPage.class).onlyIfField();
-            val onlyIfFieldMatchValue = field.getAnnotation(RequiredOnPage.class).onlyIfFieldMatchValue();
-            val matcher = Optional.of(onlyIfFieldMatchValue)
-                    .filter(StringUtils::isNotBlank)
-                    .map(matchValue -> (Function<Field, Optional<Boolean>>) onlyIfField -> Optional.of(this.getStringValue(onlyIfField).map(value -> value.equals(matchValue)).orElse(false)))
-                    .orElse(this::getBooleanValue);
-            val requiredEnforced = getField(onlyIfName).flatMap(matcher).orElse(true);
-
-            return requiredEnforced &&
-                    (mustValidateField(options, field)) &&
-                    Strings.isNullOrEmpty(getStringValue(field).orElse(null));
-
-        }).map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredOnPage.class).message()));
+        return requiredFields().
+                filter(this::requiredMandatoryFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> Strings.isNullOrEmpty(getStringValue(field).orElse(null))).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredOnPage.class).message()));
     }
+
     private Stream<ValidationError> mandatoryGroupErrors(Map<String, Object> options) {
 
         return requiredGroupFields().
-                filter(field -> mustValidateField(options, field) && noFieldInPageGroupSelected(field)).
+                filter(this::noFieldInPageGroupSelected).
+                filter(field -> mustValidateField(options, field)).
                 filter(field -> field.getAnnotation(RequiredGroupOnPage.class).errorWhenInvalid()).
                 map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredGroupOnPage.class).message()));
     }
     private Stream<ValidationError> mandatoryDateErrors(Map<String, Object> options) {
 
         return requiredDateFields().
-                filter(field -> mustValidateField(options, field) && allDateFieldsAreEmpty(field)).
+                filter(this::requiredDateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(this::allDateFieldsAreEmpty).
                 map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).message()));
     }
 
     private Stream<ValidationError> partialDateErrors(Map<String, Object> options) {
 
         return requiredDateFields().
-                filter(field -> mustValidateField(options, field) && someDateFieldsAreEmpty(field)).
+                filter(this::requiredDateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(this::someDateFieldsAreEmpty).
                 map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).incompleteMessage()));
     }
 
     private Stream<ValidationError> invalidDateErrors(Map<String, Object> options) {
 
         return requiredDateFields().
-                filter(field -> mustValidateField(options, field) && allDateFieldsAreSupplied(field) && composedDateBitsAreInvalid(field)).
+                filter(this::requiredDateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && composedDateBitsAreInvalid(field)).
                 map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).invalidMessage()));
+    }
+
+    private boolean requiredMandatoryFieldEnforced(Field field) {
+        return requiredEnforced(field.getAnnotation(RequiredOnPage.class).onlyIfField(), field.getAnnotation(RequiredOnPage.class).onlyIfFieldMatchValue());
+    }
+
+    private boolean requiredDateFieldEnforced(Field field) {
+        return requiredEnforced(field.getAnnotation(RequiredDateOnPage.class).onlyIfField(), field.getAnnotation(RequiredDateOnPage.class).onlyIfFieldMatchValue());
+    }
+
+    private boolean requiredEnforced(String onlyIfName, String onlyIfFieldMatchValue) {
+        val matcher = Optional.of(onlyIfFieldMatchValue)
+                .filter(StringUtils::isNotBlank)
+                .map(matchValue -> (Function<Field, Optional<Boolean>>) onlyIfField -> Optional.of(this.getStringValue(onlyIfField).map(value -> value.equals(matchValue)).orElse(false)))
+                .orElse(this::getBooleanValue);
+        return  getField(onlyIfName).flatMap(matcher).orElse(true);
     }
 
     private boolean shouldCheckAll(Map<String, Object> options) {

@@ -55,9 +55,6 @@ public class WizardDataValidationTest {
         private String dob_month;
         private String dob_year;
 
-        @OnPage(9)
-        private String dummyFinalPageField;
-
         @OnPage(10)
         private String page10Field;
         @RequiredOnPage(11)
@@ -66,6 +63,18 @@ public class WizardDataValidationTest {
         private String page12Field;
         @RequiredDateOnPage(13)
         private String page13Field;
+
+        @RequiredDateOnPage(value = 14, onlyIfField = "ifOnlyDobField", onlyIfFieldMatchValue = "matched")
+        private String conditionalDob;
+        private String conditionalDob_day;
+        private String conditionalDob_month;
+        private String conditionalDob_year;
+        @OnPage(14)
+        private String ifOnlyDobField;
+
+        @OnPage(99)
+        private String dummyFinalPageField;
+
 
     }
 
@@ -202,6 +211,72 @@ public class WizardDataValidationTest {
         data.setDob_day("1");
         data.setDob_month("2");
         data.setDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+
+    @Test
+    public void onlyIfRequiredDateFieldWithMatchValueIsRequiredValidatedWhenLinkedFieldHasMatchingValue() {
+        data.setPageNumber(14);
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDobField("notmatched");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDobField("matched");
+        assertThat(data.validate()).hasSize(1);
+
+        data.setIfOnlyDobField("matched");
+        data.setConditionalDob_day("1");
+        data.setConditionalDob_month("2");
+        data.setConditionalDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+
+    @Test
+    public void onlyIfRequiredDateFieldWithMatchValueIsIncompleteValidatedWhenLinkedFieldHasMatchingValue() {
+        data.setPageNumber(14);
+        data.setConditionalDob_day("1");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDobField("notmatched");
+        data.setConditionalDob_day("1");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDobField("matched");
+        data.setConditionalDob_day("1");
+        assertThat(data.validate()).hasSize(1);
+
+        data.setIfOnlyDobField("matched");
+        data.setConditionalDob_day("1");
+        data.setConditionalDob_month("2");
+        data.setConditionalDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+
+    @Test
+    public void onlyIfRequiredDateFieldWithMatchValueIsDateValidatedWhenLinkedFieldHasMatchingValue() {
+        data.setPageNumber(14);
+        data.setConditionalDob_day("31");
+        data.setConditionalDob_month("2");
+        data.setConditionalDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDobField("notmatched");
+        data.setConditionalDob_day("31");
+        data.setConditionalDob_month("2");
+        data.setConditionalDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDobField("matched");
+        data.setConditionalDob_day("31");
+        data.setConditionalDob_month("2");
+        data.setConditionalDob_year("2003");
+        assertThat(data.validate()).hasSize(1);
+
+        data.setIfOnlyDobField("matched");
+        data.setConditionalDob_day("1");
+        data.setConditionalDob_month("2");
+        data.setConditionalDob_year("2003");
         assertThat(data.validate()).isEmpty();
     }
 

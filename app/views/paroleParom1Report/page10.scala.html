@@ -12,5 +12,81 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @popup(reportForm, encrypter, "Multi Agency Public Protection Arrangements (MAPPA)", 10) {
-    <p>WIP</p>
+
+    <div class="govuk-warning-text moj-warning-text">
+        <span aria-hidden="true" class="govuk-warning-text__icon">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            This must be completed if a prisoner is eligible for release
+        </strong>
+    </div>
+
+    <div class="form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Is the prisoner eligible for MAPPA?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("eligibleForMappa"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                Symbol("data-aria-controls") -> "eligible-for-mappa",
+                Symbol("_inline") -> "true"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="eligible-for-mappa-yes">
+
+            @inputText(
+                reportForm("mappaScreenedDate"),
+                '_label -> "When was the prisoner screened for MAPPA (MAPPA Q completed)?",
+                'required -> "true",
+                '_date -> "true",
+                '_form_hint -> "For example, 31 3 1980",
+                '_day -> reportForm("mappaScreenedDate_day").getValue.orElse(""),
+                '_month -> reportForm("mappaScreenedDate_month").getValue.orElse(""),
+                '_year -> reportForm("mappaScreenedDate_year").getValue.orElse(""))
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+
+            <div class="form-group" data-module="radios">
+                <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+                    <legend class="govuk-fieldset__legend govuk-label">
+                        What is the prisoner`s current MAPPA category?
+                    </legend>
+
+                    @inputRadioGroup(
+                        reportForm("mappaCategory"),
+                        options(
+                            "1" -> "1",
+                            "2" -> "2",
+                            "3" -> "3"
+                        )
+                    )
+                </fieldset>
+            </div>
+
+            <div class="form-group govuk-!-margin-top-6" data-module="radios">
+                <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+                    <legend class="govuk-fieldset__legend govuk-label">
+                        What is the prisoner`s current MAPPA level?
+                    </legend>
+
+                    @inputRadioGroup(
+                        reportForm("mappaLevel"),
+                        options(
+                            "1" -> "1",
+                            "2" -> "2",
+                            "3" -> "3"
+                        )
+                    )
+                </fieldset>
+            </div>
+
+        </div>
+    </div>
+
 }
