@@ -18,4 +18,10 @@ public class SentencePlanSteps {
     public void thatTheDeliusUserWantsToEnterDetailsOfTheCurrentSentencePlanInTheOffenderParoleReport() throws Throwable {
         // no page action required
     }
+
+    @Given("^Delius User completes the \"Current sentence plan and response\" UI within the Parole Report$")
+    public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
+        page.fillTextArea("Detail the prisoner`s current sentence plan objectives, including their response", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.clickButton("Continue");
+    }
 }

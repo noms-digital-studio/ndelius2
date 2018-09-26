@@ -24,4 +24,11 @@ public class BehaviourInPrisonSteps {
     public void thatTheDeliusUserHasNotCompletedAnyFieldsInTheUI() {
         page.doNotNavigateHere();
     }
+
+    @Given("^Delius User completes the \"Behaviour in prison\" UI within the Parole Report$")
+    public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
+        page.fillTextArea("Detail the prisoner`s behaviour whilst in prison", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.fillTextArea("RoTL summary", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.clickButton("Continue");
+    }
 }

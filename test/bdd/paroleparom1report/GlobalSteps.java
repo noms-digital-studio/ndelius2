@@ -47,6 +47,13 @@ public class GlobalSteps {
         fieldNameToValues = toNameValues(labelTextMap);
     }
 
+    @When("^they enter the following information into a classic TextArea$")
+    public void theyEnterTheFollowingInformationIntoAClassicTextArea(DataTable fieldTexts) {
+        val labelTextMap = fieldTexts.asMap(String.class, String.class);
+        labelTextMap.forEach((label, text) -> page.fillClassicTextArea(label, text));
+        fieldNameToValues = toNameValues(labelTextMap);
+    }
+
     @When("^they input the following information$")
     public void theyInputTheFollowingInformation(DataTable fieldTexts) {
         val labelTextMap = fieldTexts.asMap(String.class, String.class);

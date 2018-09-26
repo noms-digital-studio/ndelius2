@@ -14,7 +14,6 @@ public class PrisonerDetailsPage extends ParoleParom1PopupReportPage {
         this.landingPage = landingPage;
     }
 
-
     public void navigateHere() {
         landingPage.navigateHere().next();
     }

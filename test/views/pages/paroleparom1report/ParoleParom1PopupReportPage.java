@@ -33,6 +33,11 @@ public class ParoleParom1PopupReportPage extends FluentPage {
         $(By.xpath(linkSelector)).click();
     }
 
+    public void fillClassicTextArea(String label, String text) {
+        val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
+        $(name(fieldId)).fill().with(text);
+    }
+
     public void fillTextArea(String label, String text) {
         val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
         $(cssSelector(String.format("#%s .ql-editor", fieldId))).fill().with(text);

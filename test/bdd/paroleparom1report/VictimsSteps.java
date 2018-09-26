@@ -13,7 +13,7 @@ public class VictimsSteps {
     private VictimsPage page;
 
     @Given("^that the Delius user is on the \"Victims\" page within the Parole Report$")
-    public void thatTheDeliusUserIsOnThePageWithinTheParoleReport() {
+    public void thatTheDeliusUserIsOnThePageWithinTheParoleReport() throws Throwable {
         page.navigateHere();
     }
 
@@ -27,9 +27,8 @@ public class VictimsSteps {
         assertThat(page.isVPSAdviceContentPresent()).isFalse();
     }
 
-    @Given("^that the Delius user has completed all the relevant fields for the \"Victims\" UI$")
-    public void thatTheDeliusUserHasCompletedAllTheRelevantFieldsForTheUI() {
-        page.navigateHere();
+    @Given("^Delius User completes the \"Victims\" UI within the Parole Report$")
+    public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
         page.fillTextArea("Analyse the impact of the offence on the victims", "Victims impact detail text");
         page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Day", "19");
         page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Month", "07");

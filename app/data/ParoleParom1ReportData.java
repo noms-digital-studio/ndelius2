@@ -393,10 +393,46 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SOURCES_LIMITATIONS_DETAIL")
     private String sourceLimitationsDetail;
 
-
     // Page 23
-    @RequiredOnPage(23)
-    private String dummy;
+    @RequiredOnPage(value = 23, message = "Enter the report author")
+    @JsonProperty("SIGNATURE_NAME")
+    private String signatureName;
+
+    @RequiredOnPage(value = 23, message = "Enter the NPS division and LDU")
+    @JsonProperty("SIGNATURE_DIVISION")
+    private String signatureDivision;
+
+    @RequiredOnPage(value = 23, message = "Enter the office address")
+    @JsonProperty("SIGNATURE_OFFICE_ADDRESS")
+    private String signatureOfficeAddress;
+
+    @RequiredOnPage(value = 23, message = "Enter the email address")
+    @JsonProperty("SIGNATURE_EMAIL")
+    private String signatureEmail;
+
+    @RequiredOnPage(value = 23, message = "Enter the telephone number and extension")
+    @JsonProperty("SIGNATURE_TELEPHONE")
+    private String signatureTelephone;
+
+    @OnPage(value = 23)
+    @JsonProperty("SIGNATURE_COUNTER_NAME")
+    private String signatureCounterName;
+
+    @OnPage(value = 23)
+    @JsonProperty("SIGNATURE_COUNTER_ROLE")
+    private String signatureCounterRole;
+
+    @JsonProperty("SIGNATURE_DATE")
+    public String getSignatureDate() {
+        return formattedDateFromDateParts("signatureDate");
+    }
+
+    @RequiredDateOnPage(value = 23, message = "Enter the completion date", incompleteMessage = "Enter the completion date and include a day, month and year", invalidMessage = "Enter a real completion date")
+    private String signatureDate;
+    private String signatureDate_day;
+    private String signatureDate_month;
+    private String signatureDate_year;
+
 
     private static Optional<Integer> asInteger(String value) {
         try {

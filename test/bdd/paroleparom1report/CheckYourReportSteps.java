@@ -27,4 +27,9 @@ public class CheckYourReportSteps {
     public void theyWantToCompleteTheFieldsWithinThe() {
         // noop
     }
+
+    @Given("^Delius User is ready to sign their Parole Report$")
+    public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
+        page.clickButton("Sign");
+    }
 }

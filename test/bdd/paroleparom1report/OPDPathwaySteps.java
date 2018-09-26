@@ -13,7 +13,7 @@ public class OPDPathwaySteps {
     private OPDPathwayPage page;
 
     @Given("^Delius user is on the \"OPD Pathway\" UI on the Parole Report$")
-    public void thatTheDeliusUserIsOnThePageWithinTheParoleReport() {
+    public void thatTheDeliusUserIsOnThePageWithinTheParoleReport() throws Throwable {
         page.navigateHere();
     }
 
@@ -25,5 +25,11 @@ public class OPDPathwaySteps {
     @Then("^the screen should hide additional OPD Pathway content to the user$")
     public void theScreenShouldHideAdditionalOPDPathwayContentToTheUser() {
         assertThat(page.isNotOPDPathwayAdviceContentPresent()).isTrue();
+    }
+
+    @Given("^Delius User completes the \"OPD Pathway\" UI within the Parole Report$")
+    public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
+        page.clickRadioButtonWithLabelWithinLegend("Yes", "Has the prisoner met the OPD screening criteria and been considered for OPD pathway services?");
+        page.clickButton("Continue");
     }
 }

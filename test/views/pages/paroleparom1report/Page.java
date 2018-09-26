@@ -3,7 +3,8 @@ package views.pages.paroleparom1report;
 public enum Page {
     PRISONER_DETAILS("2", "Prisoner details"),
     PRISONER_CONTACT("3", "Prisoner contact"),
-    VICTIMS("5", "OPD pathway"),
+    ROSH_AT_POINT_OF_SENTENCE("4", "RoSH at point of sentence"),
+    VICTIMS("5", "Victims"),
     OPD_PATHWAY("6", "OPD pathway"),
     BEHAVIOUR_IN_PRISON("7", "Behaviour in prison"),
     INTERVENTION("8", "Interventions"),
@@ -21,6 +22,7 @@ public enum Page {
     ORAL_HEARING("20", "Oral hearing"),
     SOURCES("21", "Sources"),
     CHECK_YOUR_REPORT("22", "Check your report"),
+    SIGNATURE("23", "Signature & date")
     ;
     private final String pageNumber;
     private final String pageHeader;

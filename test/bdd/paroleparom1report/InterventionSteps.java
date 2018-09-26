@@ -24,4 +24,11 @@ public class InterventionSteps {
         page.fillTextArea(label1, String.format("Any text for %s", label1));
         page.fillTextArea(label2, String.format("Any text for %s", label2));
     }
+
+    @Given("^Delius User completes the \"Interventions\" UI within the Parole Report$")
+    public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
+        page.fillTextArea("Detail the interventions the prisoner has completed", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.fillTextArea("Interventions summary", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.clickButton("Continue");
+    }
 }

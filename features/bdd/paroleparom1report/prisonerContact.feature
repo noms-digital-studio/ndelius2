@@ -32,7 +32,7 @@ Feature: Parole Report - Prisoner contact
       | What contact have you had with the prisoner`s family, partners or significant others? | Mauris cursus mattis molestie a iaculis at. Ullamcorper a lacus vestibulum sed arcu non odio euismod lacinia. Ullamcorper morbi tincidunt ornare massa.                                          |
       | What contact have you had with other relevant agencies about the prisoner?  | Enim blandit volutpat maecenas volutpat blandit aliquam etiam. Et malesuada fames ac turpis egestas sed. Elementum tempus egestas sed sed risus. Vestibulum lorem sed risus ultricies tristique. |
     When  they select the "Continue" button
-    Then  the user should be directed to the "ROSH at point of sentence" UI
+    Then  the user should be directed to the "RoSH at point of sentence" UI
 
   Scenario: Delius user wants to close the report
 
