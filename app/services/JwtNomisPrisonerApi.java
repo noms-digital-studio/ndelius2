@@ -12,6 +12,7 @@ import play.Logger;
 import javax.inject.Inject;
 import java.time.Instant;
 
+@Deprecated
 public class JwtNomisPrisonerApi implements PrisonerApiToken {
 
     private final String privateKey;

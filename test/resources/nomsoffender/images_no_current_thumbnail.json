@@ -1,0 +1,13 @@
+[
+  {
+    "offenderImageId": 3,
+    "bookingId": -1,
+    "captureTime": "2017-05-05T00:00:00",
+    "orientationType": "FRONT",
+    "imageObjectType": "BOOKING",
+    "imageViewType": "FACE",
+    "imageObjectId": -5,
+    "imageObjectSeq": 1,
+    "activeFlag": false
+  }
+]

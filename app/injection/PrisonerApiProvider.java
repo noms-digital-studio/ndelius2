@@ -1,0 +1,28 @@
+package injection;
+
+import com.typesafe.config.Config;
+import interfaces.PrisonerApi;
+import play.inject.Injector;
+import services.NomisCustodyApi;
+import services.NomisPrisonerApi;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
+
+public class PrisonerApiProvider implements Provider<PrisonerApi> {
+
+    private final String prisonerApiProvider;
+    private Injector injector;
+
+    @Inject
+    public PrisonerApiProvider(Config configuration, Injector injector) {
+        this.prisonerApiProvider = configuration.getString("prisoner.api.provider");
+        this.injector = injector;
+    }
+
+    @Override
+    public PrisonerApi get() {
+        return "legacy".equals(prisonerApiProvider) ?
+            injector.instanceOf(NomisPrisonerApi.class) : injector.instanceOf(NomisCustodyApi.class);
+    }
+}

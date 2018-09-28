@@ -68,7 +68,7 @@ public class OffenderController extends Controller {
                 }).
                 exceptionally(throwable -> {
 
-                    Logger.error("Failed to get Nomis Image", throwable);
+                    Logger.warn("Failed to get Nomis Image due to {}", throwable.getMessage());
                     return noPhotoResult.get();
                 });
     }

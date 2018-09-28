@@ -53,6 +53,7 @@ public class UtilityController extends Controller {
                              OffenderSearch offenderSearch,
                              OffenderApi offenderApi,
                              PrisonerApi prisonerApi,
+                             PrisonerApiToken prisonerApiToken,
                              Config configuration) {
 
         this.offenderApi = offenderApi; // Used by searchDb and searchLdap, so stored directly for later, others are closed over below
@@ -64,6 +65,7 @@ public class UtilityController extends Controller {
                 put(definition("offender-search", true), () -> offenderSearch.isHealthy().toCompletableFuture()).
                 put(definition("offender-api", true), () -> offenderApi.isHealthy().toCompletableFuture()).
                 put(definition("custody-api", true), () -> prisonerApi.isHealthy().toCompletableFuture()).
+                put(definition("nomis-authentication-api", true), () -> prisonerApiToken.isHealthy().toCompletableFuture()).
                 build();
 
         this.configuration = configuration;

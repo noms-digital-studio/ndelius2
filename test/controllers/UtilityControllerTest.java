@@ -1,14 +1,12 @@
 package controllers;
 
+import bdd.Ports;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import helpers.JsonHelper;
-import interfaces.AnalyticsStore;
-import interfaces.HealthCheckResult;
-import interfaces.OffenderSearch;
-import interfaces.PrisonerApi;
+import interfaces.*;
 import lombok.val;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
@@ -41,8 +39,9 @@ import static play.test.Helpers.*;
 @RunWith(MockitoJUnitRunner.class)
 public class UtilityControllerTest extends WithApplication {
 
+    private static int PORT=9101;
     @Rule
-    public  WireMockRule wireMock = new WireMockRule(wireMockConfig().port(8080).jettyStopTimeout(10000L));
+    public  WireMockRule wireMock = new WireMockRule(wireMockConfig().port(PORT).jettyStopTimeout(10000L));
 
     @Mock
     private AnalyticsStore analyticsStore;
@@ -53,6 +52,9 @@ public class UtilityControllerTest extends WithApplication {
     @Mock
     private PrisonerApi prisonerApi;
 
+    @Mock
+    private PrisonerApiToken prisonerApiToken;
+
     @Before
     public void setup() {
         stubPdfGeneratorWithStatus("OK");
@@ -61,6 +63,7 @@ public class UtilityControllerTest extends WithApplication {
         when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
         when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
         when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
+        when(prisonerApiToken.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
     }
 
     @Test
@@ -277,6 +280,30 @@ public class UtilityControllerTest extends WithApplication {
     }
 
     @Test
+    public void healthEndpointIndicatesOkWhenPrisonerApiTokenIsHealthy() {
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependencies(result)).contains(entry("nomis-authentication-api", "OK"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
+    @Test
+    public void healthEndpointIndicatesFailedWhenPrisonerApiTokenIsUnhealthy() {
+        when(prisonerApiToken.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::unhealthy));
+
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependencies(result)).contains(entry("nomis-authentication-api", "FAILED"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
+    }
+
+    @Test
     public void healthEndpointIndicatesOkWhenOffenderApiIsHealthy() {
         val request = new RequestBuilder().method(GET).uri("/healthcheck");
 
@@ -327,10 +354,14 @@ public class UtilityControllerTest extends WithApplication {
     @Override
     protected Application provideApplication() {
         return new GuiceApplicationBuilder()
+            .configure("pdf.generator.url", String.format("http://localhost:%d/", PORT))
+            .configure("store.alfresco.url", String.format("http://localhost:%d/alfresco/service/", PORT))
+            .configure("offender.api.url", String.format("http://localhost:%d/api/", PORT))
             .overrides(
                 bind(AnalyticsStore.class).toInstance(analyticsStore),
                 bind(OffenderSearch.class).toInstance(offenderSearch),
                 bind(PrisonerApi.class).toInstance(prisonerApi),
+                bind(PrisonerApiToken.class).toInstance(prisonerApiToken),
                 bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                 bind(MongoClient.class).toInstance(mock(MongoClient.class))
             )

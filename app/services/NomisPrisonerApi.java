@@ -22,6 +22,7 @@ import static interfaces.HealthCheckResult.unhealthy;
 import static play.mvc.Http.HeaderNames.AUTHORIZATION;
 import static play.mvc.Http.Status.OK;
 
+@Deprecated
 public class NomisPrisonerApi implements PrisonerApi {
 
     private final String apiBaseUrl;
@@ -35,6 +36,8 @@ public class NomisPrisonerApi implements PrisonerApi {
 
         this.wsClient = wsClient;
         this.apiToken = apiToken;
+
+        Logger.info("Running with legacy NomisPrisonerAPI");
     }
 
     @Override
