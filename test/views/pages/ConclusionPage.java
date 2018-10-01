@@ -18,11 +18,8 @@ public class ConclusionPage extends FluentPage {
         return this;
     }
 
-
-
     public ConclusionPage gotoNext() {
         $(id("proposal")).fill().with("Proposal");
-        $(id("consideredQualityDiversity_yes")).click();
         $(id("nextButton")).click();
         return this;
     }

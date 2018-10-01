@@ -14,23 +14,24 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @proposalHint = {
+    <p>Have you considered what equality and diversity issues are present and how they can help inform your proposal?</p>
     <p>Have you used the effective proposal tool?</p>
-    <p class="margin-top">Be aware of the sentencing guidelines and relevant legislation. Remember to reference the sentencing intentions of the court, if they were made clear.</p>
-    <p class="margin-top">Consider all possible sentencing options, and whether or not the offence is passed the custody threshold or is suitable for a Community Order.</p>
-    <p class="margin-top">Consider and describe both aggravating or mitigating factors.</p>
-    <p class="margin-top">Consider whether specific needs such as gender, maturity or diversity make particular sentences more appropriate.</p>
-    <p class="margin-top">In cases of women, ensure that you think about women only disposals and that your proposal gives a robust community option.</p>
-    <p class="margin-top">Make clear how your proposals will manage risk.</p>
-    <p class="margin-top">What will the impact of the sentence be on the offender?</p>
-    <p class="margin-top">How will the proposed sentence affect the offender’s family and anyone for whom they have caring responsibilities?</p>
-    <p class="margin-top">Remember that evidence shows that imprisonment of mothers has significant impacts on those that they care for.</p>
-    <p class="margin-top">If relevant, what is not suitable in this case?</p>
-    <p class="margin-top">Are there any relevant alternative requirements that the offender may have been eligible for, but circumstances have made them unsuitable for participation?</p>
+    <p>Be aware of the sentencing guidelines and relevant legislation. Remember to reference the sentencing intentions of the court, if they were made clear.</p>
+    <p>Consider all possible sentencing options, and whether or not the offender is past the custody threshold or suitable for a community order.</p>
+    <p>Consider and describe both aggravating or mitigating factors.</p>
+    <p>Consider whether specific needs such as gender, maturity, diversity make particular sentences more appropriate.</p>
+    <p>In cases of women, ensure that you think about women only disposals and that your proposal gives a robust community option.</p>
+    <p>Make clear how your proposals will manage risk.</p>
+    <p>What will the impact of the sentence be on the offender?</p>
+    <p>How will the proposed sentence affect the offender’s family and anyone for whom they have caring responsibilities?</p>
+    <p>Remember that evidence shows that imprisonment of mothers has significant impacts on those that they care for.</p>
+    <p>If relevant, what is not suitable in this case?</p>
+    <p>Are there any relevant alternative requirements that the offender may have been eligible for, but circumstances have made them unsuitable for participation?</p>
 }
 
 @main("Conclusion - Short Format Pre Sentence Report", true, Some(9)) {
 
-    <h1 class="heading-xlarge">Conclusion</h1>
+    <h1 class="heading-xlarge">Proposal</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -52,25 +53,7 @@
             @page7Fields(reportForm)
             @page8Fields(reportForm)
 
-            @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_hint -> proposalHint, 'class -> "wide", Symbol("data-limit") -> "3000", 'required -> "true", '_error -> "Enter your conclusion")
-            <hr />
-
-            <div class="form-group">
-                <fieldset>
-                    <legend class="margin-bottom medium">
-                        <span class="form-label-bold">Have you considered what equality and diversity issues are present?</span>
-                    </legend>
-
-                    @inputRadioGroup(
-                        reportForm("consideredQualityDiversity"),
-                        options(
-                            "yes" -> "Yes",
-                            "no" -> "No"
-                        ),
-                        Symbol("_inline") -> "true"
-                    )
-                </fieldset>
-            </div>
+            @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_hint -> proposalHint, 'class -> "wide", Symbol("data-limit") -> "3000", 'required -> "true", '_error -> "Enter your proposed sentence")
 
             @page11Fields(reportForm, encrypter)
 

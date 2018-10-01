@@ -14,17 +14,28 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @likelihoodHint = {
-    <p>This is about the offender’s capacity to change.</p>
-    <p>Indicate which tools have been used (RM2000,OGRS etc.)</p>
+    <p>This should include the use of both static tools (for example, OGRS,OVP, RM2000, RSR scores) and professional assessment.</p>
+    <p>The outcomes of static tools should be noted and professional assessment used. Make clear their relevance for this particular person.</p>
+    <p>Indicate which tools have been used.</p>
 }
 
 @seriousHarmHint = {
-    <p>This is about harm, not reoffending.</p>
-    <p class="margin-top">Outline if you have made a referral to other agencies or attempted contact and not received a satisfactory response.</p>
-    <p class="margin-top">Any information from other agencies for the court must not place any identifiable groups at risk.</p>
-    <p class="margin-top">Consider the impact on the overall assessment, including the impact on safer sentencing principles.</p>
-    <p class="margin-top">You must clearly state how this information adds value to the assessment.</p>
-    <p class="margin-top">Any information you have from other agencies should state how they will assist in monitoring and managing risk, including partnership working.</p>
+    <p>This is about the risk of serious harm occurring.</p>
+    <p>The nature and imminence of harm should be evidenced within this section and should be based on information already provided within the report.</p>
+    <p>Outline if you have made a referral to other agencies, or attempted contact, and not received a satisfactory response.</p>
+    <p>Any information from other agencies for the court must not place any identifiable groups at risk.</p>
+    <p>Consider the impact of this information on the overall assessment, including the impact on safer sentencing principles.</p>
+    <p>Any information you have from other agencies should state how they will assist in monitoring and managing risk, including partnership working.</p>
+    <p>Remember that you should also make clear any risk that the offender presents to themselves.</p>
+    <p>Identify who is at risk and be clear about what the risk is and how imminent that risk is.</p>
+}
+
+@responseHint = {
+    <p>Include their compliance with any youth offending supervision orders.</p>
+    <p>Remember to make clear in the text boxes previous periods of supervision and whether or not they were completed successfully.</p>
+    <p>Include information about the effectiveness of previous interventions, and make links to likely compliance with further interventions.</p>
+    <p>If you select not applicable, make clear in the text box whether or not the person has been involved with other agencies who have provided interventions, for example, substance misuse agencies.</p>
+    <p>Detail what level of compliance there was with these, and make links to likely compliance with future interventions.</p>
 }
 
 @main("Risk assessment - Short Format Pre Sentence Report", true, Some(8)) {
@@ -50,7 +61,7 @@
             @page6Fields(reportForm)
             @page7Fields(reportForm)
 
-            @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of reoffending", '_hint -> likelihoodHint, 'class -> "wide", 'required -> "true", '_error -> "Tell us their likelihood of re-offending")
+            @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of further offending", '_hint -> likelihoodHint, 'class -> "wide", 'required -> "true", '_error -> "Tell us their likelihood of re-offending")
 
             <hr />
 
@@ -60,9 +71,8 @@
 
             <div class="form-group">
                 <fieldset>
-                    <legend class="margin-bottom medium">
+                    <legend>
                         <span class="form-label-bold">Response to previous supervision</span>
-                        <span class="form-hint">Include their compliance with any Youth Offending Supervision Orders</span>
                     </legend>
 
                     @inputRadioGroup(
@@ -73,8 +83,8 @@
                             "Poor" -> "Poor",
                             "N/A" -> "Not applicable"
                         ),
-                        Symbol("data-target") -> "supervision-details",
-                        Symbol("data-ignore") -> "N/A"
+                        '_hint -> responseHint,
+                        Symbol("data-target") -> "supervision-details"
                     )
                 </fieldset>
 

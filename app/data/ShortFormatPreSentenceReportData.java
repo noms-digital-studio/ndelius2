@@ -262,9 +262,6 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("PROPOSAL")
     private String proposal;
 
-    @RequiredOnPage(9)
-    private String consideredQualityDiversity;
-
     // Page 10
 
     // Intentionally Blank
