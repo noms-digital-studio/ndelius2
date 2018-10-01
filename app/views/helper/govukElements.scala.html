@@ -49,14 +49,19 @@
             }
             @govukInfoErrors(elements)
             <div class="govuk-date-input" id="@elements.id">
-                <div class="govuk-date-input__item">
-                    <div class="govuk-form-group">
-                        <label class="govuk-label govuk-date-input__label" for="@elements.id-day">
-                            Day
-                        </label>
-                        <input class="govuk-input govuk-date-input__input govuk-input--width-2 @if(elements.hasErrors) { govuk-input--error}" id="@elements.id-day" name="@{elements.field.name}_day" type="number" pattern="[0-9]*" value="@elements.args.get(Symbol("_day"))" >
+
+                @if(elements.args.get(Symbol("_hideDay"))) {
+                    <input type="hidden" id="@elements.id-day" name="@{elements.field.name}_day" value="@elements.args.get(Symbol("_day"))" />
+                } else {
+                    <div class="govuk-date-input__item">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label govuk-date-input__label" for="@elements.id-day">
+                                Day
+                            </label>
+                            <input class="govuk-input govuk-date-input__input govuk-input--width-2 @if(elements.hasErrors) { govuk-input--error}" id="@elements.id-day" name="@{elements.field.name}_day" type="number" pattern="[0-9]*" value="@elements.args.get(Symbol("_day"))" >
+                        </div>
                     </div>
-                </div>
+                }
                 <div class="govuk-date-input__item">
                     <div class="govuk-form-group">
                         <label class="govuk-label govuk-date-input__label" for="@elements.id-month">

@@ -11,6 +11,124 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@indexOffenceHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>evidence of any change in attitude</li>
+        <li>reasons for the change</li>
+        <li>your analysis of the change</li>
+    </ul>
+}
+
 @popup(reportForm, encrypter, "RoSH at point of sentence", 4) {
-    <p>WIP</p>
+
+    <div class="govuk-form-group" data-module="radios">
+        <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Was a RoSH assessment completed at the point of sentence?
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("roshAtPosAssessmentCompleted"),
+                options(
+                    "yes" -> "Yes",
+                    "no" -> "No"
+                ),
+                Symbol("_inline") -> "true",
+                Symbol("data-aria-controls") -> "rosh-at-pos-completed"
+            )
+        </fieldset>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="rosh-at-pos-completed-yes">
+
+            @inputText(
+                reportForm("roshAtPosDate"),
+                '_label -> "When was the RoSH assessment completed?",
+                'required -> "true",
+                '_date -> "true",
+                '_form_hint -> "For example, 3 1980",
+                '_hideDay -> "true",
+                '_day -> "01",
+                '_month -> reportForm("roshAtPosDate_month").getValue.orElse(""),
+                '_year -> reportForm("roshAtPosDate_year").getValue.orElse(""))
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+
+            <p class="govuk-caption-xl govuk-!-margin-bottom-3">Select the RoSH scores at the point of sentence for the index offence.</p>
+
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-label">Public</legend>
+                @inputRadioGroup(
+                    reportForm("roshAtPosPublic"),
+                    options(
+                        "low" -> "Low",
+                        "medium" -> "Medium",
+                        "high" -> "High",
+                        "very_high" -> "Very high",
+                    )
+                )
+            </fieldset>
+
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+                <legend class="govuk-fieldset__legend govuk-label">Known adult</legend>
+                @inputRadioGroup(
+                    reportForm("roshAtPosKnownAdult"),
+                    options(
+                        "low" -> "Low",
+                        "medium" -> "Medium",
+                        "high" -> "High",
+                        "very_high" -> "Very high",
+                    )
+                )
+            </fieldset>
+
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+                <legend class="govuk-fieldset__legend govuk-label">Children</legend>
+                @inputRadioGroup(
+                    reportForm("roshAtPosChildren"),
+                    options(
+                        "low" -> "Low",
+                        "medium" -> "Medium",
+                        "high" -> "High",
+                        "very_high" -> "Very high",
+                    )
+                )
+            </fieldset>
+
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+                <legend class="govuk-fieldset__legend govuk-label">Prisoners</legend>
+                @inputRadioGroup(
+                    reportForm("roshAtPosPrisoners"),
+                    options(
+                        "low" -> "Low",
+                        "medium" -> "Medium",
+                        "high" -> "High",
+                        "very_high" -> "Very high",
+                    )
+                )
+            </fieldset>
+
+            <fieldset class="govuk-fieldset govuk-!-margin-top-6">
+                <legend class="govuk-fieldset__legend govuk-label">Staff</legend>
+                @inputRadioGroup(
+                    reportForm("roshAtPosStaff"),
+                    options(
+                        "low" -> "Low",
+                        "medium" -> "Medium",
+                        "high" -> "High",
+                        "very_high" -> "Very high",
+                    )
+                )
+            </fieldset>
+
+        </div>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+
+    @textarea(reportForm("roshAtPosAttitudeIndexOffence"), '_label -> "What is the prisoner`s attitude to the index offence?", '_hint -> indexOffenceHint, 'class -> "wide", 'required -> "true")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible" />
+
+    @textarea(reportForm("roshAtPosAttitudePreviousOffending"), '_label -> "What is the prisoner`s attitude to their previous offending?", 'class -> "wide", 'required -> "true")
+
 }

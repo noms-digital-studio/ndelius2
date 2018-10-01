@@ -8,10 +8,13 @@ import data.annotations.RequiredOnPage;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 @Data
@@ -29,6 +32,60 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @RequiredOnPage(value = 3, message = "Enter what contact you have had with other relevant agencies about the prisoner")
     @JsonProperty("PRISONER_CONTACT_AGENCIES_DETAIL")
     private String prisonerContactAgenciesDetail;
+
+    // Page 4 - RoSH at point of sentence
+
+    @RequiredOnPage(value = 4, message = "Specify if a RoSH assessment was completed at the point of sentence")
+    @JsonProperty("ROSH_AT_POS_ASSESSMENT_COMPLETED")
+    private String roshAtPosAssessmentCompleted;
+
+    @JsonProperty("ROSH_AT_POS_DATE")
+    public String getRoshAtPosDate() {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
+            val date = dateFormat.parse(formattedDateFromDateParts("roshAtPosDate"));
+            SimpleDateFormat dateNoDayFormat = new SimpleDateFormat("MMM yyyy");
+            return dateNoDayFormat.format(date);
+        } catch (ParseException e) {
+            return "";
+        }
+    }
+
+    @RequiredDateOnPage(value = 4, message = "Enter the date when the RoSH assessment was completed", incompleteMessage = "Enter the date when the RoSH assessment was completed", invalidMessage = "Enter a real date when the RoSH assessment was completed", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    private String roshAtPosDate;
+    private String roshAtPosDate_day;
+    private String roshAtPosDate_month;
+    private String roshAtPosDate_year;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to the public", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_PUBLIC")
+    private String roshAtPosPublic;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to any known adult", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_KNOWN_ADULT")
+    private String roshAtPosKnownAdult;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to children", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_CHILDREN")
+    private String roshAtPosChildren;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to prisoners", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_PRISONERS")
+    private String roshAtPosPrisoners;
+
+    @RequiredOnPage(value = 4, message = "Select the risk to staff", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @JsonProperty("ROSH_AT_POS_STAFF")
+    private String roshAtPosStaff;
+
+    @RequiredOnPage(value = 4, message = "Enter the prisoner's attitude to the index offence")
+    @JsonProperty("ROSH_AT_POS_ATTITUDE_INDEX_OFFENCE")
+    private String roshAtPosAttitudeIndexOffence;
+
+    @RequiredOnPage(value = 4, message = "Enter the prisoner's attitude to their previous offending")
+    @JsonProperty("ROSH_AT_POS_ATTITUDE_PREVIOUS_OFFENDING")
+    private String roshAtPosAttitudePreviousOffending;
+
+    // Page 5 - Victims
 
     @RequiredOnPage(value = 5, message = "Enter your analysis of the impact of the offence on the victims")
     @JsonProperty("VICTIMS_IMPACT_DETAILS")
