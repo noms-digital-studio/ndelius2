@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.DateTimeHelper.calculateAge;
 import static helpers.DateTimeHelper.format;
+import static helpers.DateTimeHelper.formatDateTime;
 import static java.time.Clock.systemUTC;
 import static java.util.Optional.ofNullable;
 
@@ -126,6 +127,11 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                 if (params.containsKey("createJourney")) {
                     params.put("mainOffence", offences.mainOffenceDescriptionForId(appearance.mainOffenceId()));
                     params.put("otherOffences", offences.otherOffenceDescriptionsForIds(appearance.otherOffenceIds()));
+                    ofNullable(appearance.getAppearanceDate())
+                            .filter(StringUtils::isNotBlank)
+                            .ifPresent(dateOfHearing -> params.put("dateOfHearing", formatDateTime(dateOfHearing)));
+                    params.put("localJusticeArea", appearance.getCourt().getLocality());
+
                 }
                 return params;
             })

@@ -20,7 +20,7 @@ public class CourtAppearanceHelpers {
                     ))
                     .offenceIds(ImmutableList.of("M1", "A1", "A2"))
                     .appearanceDate("2018-08-06T00:00:00")
-                    .court(Court.builder().courtName("Some court").build())
+                    .court(Court.builder().courtName("Some court").locality("Leeds Justice Area").build())
                     .build(),
                 CourtAppearance.builder()
                     .courtAppearanceId(2L)
