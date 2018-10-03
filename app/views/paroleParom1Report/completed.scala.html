@@ -10,57 +10,93 @@
 
 @(reportForm: Form[ParoleParom1ReportData], encrypter: String => String, reviewPage: Int)
 
-    @implicitField = @{ FieldConstructor(govukElements.f) }
+@implicitField = @{
+    FieldConstructor(govukElements.f)
+}
 
-@main("Report saved") {
+@mainV2("Report saved") {
 
-    <div class="govuk-box-highlight margin-top medium">
+    <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-top-6">
+        <h1 class="govuk-panel__title govuk-!-margin-top-6">Report saved</h1>
+        <p class="govuk-panel__body">Your report has been saved<br>and uploaded successfully to Delius</p>
+    </div>
+    <div class="moj-box-border govuk-!-margin-top-4">
 
-        <h1 class="heading-large">Report saved</h1>
+        <h2 class="govuk-heading-l">What to do next</h2>
 
-        <p class="font-medium">Your report has been saved and uploaded to Delius</p>
+        <table role="presentation">
+            <tbody>
+                <tr>
+                    <td style="width: 36px; vertical-align: top;"><span class="moj-icon moj-icon--pdf" /></td>
+                    <td>
+                        <p class="govuk-body" id="view-pdf">Review and print your 'Parole Report - Parom 1'<br>
+                            <a href="@relative(routes.ParoleParom1ReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">
+                                View your completed PDF report</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top;"><span class="moj-icon moj-icon--edit" /></td>
+                    <td>
+                        <p class="govuk-body" id="edit-pdf">Check or edit your report again<br>
+                            <a class="nav-item" href="javascript:void(0);" data-target="@reviewPage" aria-label="Update report">
+                                Select a section to update or change</a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top;"><span class="moj-icon moj-icon--list" /></td>
+                    <td>
+                        <p class="govuk-body" id="close-report">Close this report<br>
+                            <a href="javascript:closePopup()" aria-label="Return to Delius">
+                                Return back to the main Delius window</a>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
-    <div class="highlight-border margin-top medium">
-        <h2 class="heading-large">What to do next</h2>
-        <ul class="next-steps">
-            <li>
-                <div id="view-pdf">
-                    <div>Review and print your 'Parole Report - Parom 1'</div>
-                    <a class="bold-medium clickable" tabindex="1" href="@relative(routes.ParoleParom1ReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your completed PDF report</a>
-                </div>
-            </li>
-            <li>
-                <div id="edit-pdf">
-                    <div>Check or edit your report again</div>
-                    <a class="nav-item bold-medium clickable" tabindex="1" href="javascript:void(0);" data-target="@reviewPage" aria-label="Update report">Select a section to update or change</a>
-                </div>
-            </li>
-            <li>
-                <div id="close-report">
-                    <div>Close this report</div>
-                    <a class="bold-medium clickable" tabindex="1" href="javascript:closePopup()" aria-label="Return to Delius">Return back to the main Delius window</a>
-                </div>
-            </li>
-        </ul>
-    </div>
 
-    <p class="margin-top large">
-        <a href="javascript:void(0);" class="feedback-link" aria-label="Enter feedback">What did you think of this service?</a><span>&nbsp;(takes 30 seconds)</span>
+    <p class="govuk-body">
+        <a href="@configuration.getString("feedback.form.url")" target="_blank" id="sfrFeedback" title="feedback">
+            What did you think of this service?</a> (takes 30 seconds)
     </p>
 
-        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-            @CSRF.formField
+    @helper.form(action = relative(routes.ParoleParom1ReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+        @CSRF.formField
 
-            <input type="hidden" name="jumpNumber" id="jumpNumber"/>
-            <input type="hidden" name="pageNumber" id="pageNumber" value="@reviewPage"/>
+        <input type="hidden" name="jumpNumber" id="jumpNumber"/>
+        <input type="hidden" name="pageNumber" id="pageNumber" value="@reviewPage"/>
 
-            @commonFields(reportForm, encrypter)
-        }
+        @commonFields(reportForm, encrypter)
+        @page2Fields(reportForm)
+        @page3Fields(reportForm)
+        @page4Fields(reportForm)
+        @page5Fields(reportForm)
+        @page6Fields(reportForm)
+        @page7Fields(reportForm)
+        @page8Fields(reportForm)
+        @page9Fields(reportForm)
+        @page10Fields(reportForm)
+        @page11Fields(reportForm)
+        @page12Fields(reportForm)
+        @page13Fields(reportForm)
+        @page14Fields(reportForm)
+        @page15Fields(reportForm)
+        @page16Fields(reportForm)
+        @page17Fields(reportForm)
+        @page18Fields(reportForm)
+        @page19Fields(reportForm)
+        @page20Fields(reportForm)
+        @page21Fields(reportForm)
+        @page22Fields(reportForm)
+        @page23Fields(reportForm)
+    }
 }
 
 <script type="text/javascript">
     function closePopup () {
-        window.close()
+        window.close();
     }
 </script>
