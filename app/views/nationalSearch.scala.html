@@ -8,6 +8,7 @@
 @(probationAreas: Map[String, String])
 
 @recentSearchMinutes = @{configuration.getInt("recent.search.minutes")}
+@feedbackLink = @{configuration.getString("feedback.form.url")}
 
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
@@ -34,7 +35,8 @@
 
     <script type="text/javascript">
       window.recentSearchMinutes = @recentSearchMinutes;
-      window.probationAreas = @Html(stringify(probationAreas))
+      window.probationAreas = @Html(stringify(probationAreas));
+      window.feedbackLink = @Html(stringify(feedbackLink));
     </script>
 
     <script type='text/javascript' src='@relative(webJarsUtil.url("es5-shim", "es5-shim.js").get)'></script>
