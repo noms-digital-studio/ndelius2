@@ -153,7 +153,11 @@ public class NationalSearchController extends Controller implements ParamsValida
                                             pageNumber,
                                             "exact".equals(searchType) ? MUST : SHOULD).
                                 thenApplyAsync(this::recordSearchResultsAnalytics, ec.current()).
-                                thenApply(JsonHelper::okJson);
+                                thenApply(JsonHelper::okJson).
+                                thenApply(result -> result.withHeader(CACHE_CONTROL, "no-cache, no-store, must-revalidate")).
+                                thenApply(result -> result.withHeader(PRAGMA, "no-cache")).
+                                thenApply(result -> result.withHeader(EXPIRES, "0"));
+
 
         }).orElseGet(() -> {
 

@@ -179,6 +179,20 @@ public class NationalSearchControllerTest extends WithApplication {
         assertEquals(OK, result.status());
         assertEquals("{\"offenders\":[],\"suggestions\":[],\"total\":0}", contentAsString(result));
     }
+    @Test
+    public void searchTermReturnsResultsShouldNotBeCached() {
+        val request = new Http.RequestBuilder().
+                session("offenderApiBearerToken", generateToken()).
+                session("searchAnalyticsGroupId", "999-aaa-888").
+                method(GET).uri("/searchOffender/smith?searchType=broad");
+        val result = route(app, request);
+
+        assertThat(result.headers()).contains(
+                entry("Cache-Control", "no-cache, no-store, must-revalidate"),
+                entry("Pragma", "no-cache"),
+                entry("Expires", "0")
+        );
+    }
 
     @Test
     public void analyticsSearchRequestEventRecordedBeforeAndAfterWhenSearchCalled() {
