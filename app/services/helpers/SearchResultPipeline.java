@@ -32,12 +32,12 @@ public interface SearchResultPipeline {
             String searchTerm,
             Map<String, HighlightField> highlightsMap
     ) {
-        final Function<String, String> oneTimeNomisRef = nomisId -> {
+        final BiFunction<String, Long, String> oneTimeNomisRef = (nomisId, tick) -> {
 
             val reference = ImmutableMap.of(                        // Creates a limited-time reference to the nomisId number as
                     "user", JwtHelper.principal(bearerToken),   // a string that can only be used by the same user within a
                     "noms", nomisId,                            // limited time frame. This allows safe access to a NomisId
-                    "tick", Instant.now().toEpochMilli()        // only by a User that has already had Offender canAccess() checked
+                    "tick", tick                                // only by a User that has already had Offender canAccess() checked
             );
 
             return encrypter.apply(JsonHelper.stringify(reference));
@@ -77,7 +77,7 @@ public interface SearchResultPipeline {
                 "addOneTimeNomisRef", new AbstractMap.SimpleEntry<>(
 
                         source -> Optional.ofNullable(source.get("otherIds")).flatMap(otherIds -> Optional.ofNullable(otherIds.get("nomsNumber"))),
-                        (result, nomsNumber) -> result.put("oneTimeNomisRef", oneTimeNomisRef.apply(nomsNumber.asText()))
+                        (result, nomsNumber) -> result.put("oneTimeNomisRef", oneTimeNomisRef.apply(nomsNumber.asText(), Instant.now().toEpochMilli()))
                 )
         );
     }
