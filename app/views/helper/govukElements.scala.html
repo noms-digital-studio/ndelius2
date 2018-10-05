@@ -29,6 +29,7 @@
                         .replaceFirst("data-aria-controls=\"(.*)\"/>", String.format("data-aria-controls=\"$1-%s\"/>", value))
                         .replace("<input ", "<input class=\"govuk-radios__input\" ")
                         .replace("<label ", "<label class=\"govuk-label govuk-radios__label\" ")
+                        .replaceAll("((?:id|for)=\".*?)\\/(.*?\")", "$1_$2")
                 )
             }
 
