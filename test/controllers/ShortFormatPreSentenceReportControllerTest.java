@@ -280,7 +280,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                         "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
 
             val content = Helpers.contentAsString(route(app, request));
-            assertTrue(content.contains(encryptor.apply("court name from api")));
+            assertTrue(content.contains(encryptor.apply("Court Retrieved From Store")));
             assertTrue(content.contains(encryptor.apply("John Smith")));
             assertTrue(content.contains(encryptor.apply("19/07/1965")));
             assertTrue(content.contains(encryptor.apply("2018/123456N")));

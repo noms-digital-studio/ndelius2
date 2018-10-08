@@ -32,7 +32,7 @@
             @commonFields(reportForm, encrypter)
             @page2Fields(reportForm, encrypter)
 
-            @readOnlyField(reportForm("court"), "Court", encrypter)
+            @inputText(reportForm("court"), '_label -> "Court", 'required -> "true", '_error -> "Enter a court")
 
             @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area", 'required -> "true", '_error -> "Enter a local justice area")
 

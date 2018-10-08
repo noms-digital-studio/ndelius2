@@ -118,13 +118,14 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
         Logger.info("CourtAppearances: " + courtAppearances);
         Logger.info("Offences: " + offences);
+        Logger.info("Params: " + params);
         return Optional.ofNullable(params.get("entityId"))
             .map(Long::parseLong)
             .flatMap(courtAppearances::findForCourtReportId)
             .map(appearance -> {
-                params.put("court", appearance.getCourt().getCourtName());
 
                 if (params.containsKey("createJourney")) {
+                    params.put("court", appearance.getCourt().getCourtName());
                     params.put("mainOffence", offences.mainOffenceDescriptionForId(appearance.mainOffenceId()));
                     params.put("otherOffences", offences.otherOffenceDescriptionsForIds(appearance.otherOffenceIds()));
                     ofNullable(appearance.getAppearanceDate())
@@ -136,6 +137,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                 return params;
             })
             .orElseGet(() -> {
+                        Logger.warn("No court appearance found for given report id");
                         params.put("court", "");
                         return params;
             });
@@ -177,6 +179,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
         }
 
         if ("3".equals(params.get("pageNumber"))) {
+            paramEncrypter.accept("court");
             paramEncrypter.accept("dateOfHearing");
             paramEncrypter.accept("localJusticeArea");
         }
