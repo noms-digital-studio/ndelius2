@@ -17,14 +17,14 @@ import static services.helpers.SearchQueryBuilder.simpleTermsIncludingSingleLett
 public class SearchQueryBuilderTest {
 
     @Test
-    public void simpleTermsAreLowercase_and_doNotInclude_singleLetters_dates_termsWithSlashes() {
+    public void simpleTermsAreLowercase_and_doNotInclude_dates_termsWithSlashes() {
         String terms = simpleTerms("a SNA 28/02/2018 b foo SF69/ABC 2017-Jun-3 bar c");
-        assertThat(terms).isEqualTo("sna foo bar");
+        assertThat(terms).isEqualTo("a sna b foo bar c");
     }
 
     @Test
     public void simpleTermsAreLowercase_returnsEmptyString_whenThereAreNoSimpleTerms() {
-        String terms = simpleTerms("a b c 28/02/2018 SF69/ABC");
+        String terms = simpleTerms("28/02/2018 SF69/ABC");
         assertThat(terms).isEqualTo("");
     }
 
@@ -59,7 +59,7 @@ public class SearchQueryBuilderTest {
 
         val query = (BoolQueryBuilder) builder.query();
         val queryBuilder1 = (MultiMatchQueryBuilder)query.should().get(0);
-        assertThat(queryBuilder1.value()).isEqualTo("smith");
+        assertThat(queryBuilder1.value()).isEqualTo("a smith");
         assertThat(queryBuilder1.fields()).containsOnlyKeys(
             "firstName",
             "surname",
@@ -69,7 +69,7 @@ public class SearchQueryBuilderTest {
             "contactDetails.addresses.town");
 
         val queryBuilder2 = (MultiMatchQueryBuilder)query.should().get(1);
-        assertThat(queryBuilder2.value()).isEqualTo("smith");
+        assertThat(queryBuilder2.value()).isEqualTo("a smith");
         assertThat(queryBuilder2.fields()).containsOnlyKeys(
             "gender",
             "otherIds.crn",
@@ -93,10 +93,6 @@ public class SearchQueryBuilderTest {
         assertThat(((MultiMatchQueryBuilder)query.should().get(4)).value()).isEqualTo("1970-09-15");
 
         assertThat(((MultiMatchQueryBuilder)query.should().get(5)).value()).isEqualTo("1992-02-01");
-
-        assertThat(((PrefixQueryBuilder)query.should().get(6)).value()).isEqualTo("a");
-
-        assertThat(((PrefixQueryBuilder)query.should().get(7)).value()).isEqualTo("smith");
 
         TermQueryBuilder termQueryBuilder = (TermQueryBuilder) query.mustNot().get(0);
         assertThat(termQueryBuilder.fieldName()).isEqualTo("softDeleted");

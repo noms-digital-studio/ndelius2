@@ -129,10 +129,6 @@ public class SearchQueryBuilder {
                 .field("dateOfBirth", 11)
                 .lenient(true)));
 
-        Stream.of(simpleTermsIncludingSingleLetters(searchTerm).split(" "))
-            .filter(not(String::isEmpty))
-            .forEach(term -> boolQueryBuilder.should().add(prefixQuery("firstName", term.toLowerCase()).boost(11)));
-
         return boolQueryBuilder;
     }
 
@@ -179,7 +175,6 @@ public class SearchQueryBuilder {
 
     static String simpleTerms(String searchTerm) {
         return Stream.of(searchTerm.split(" "))
-            .filter(term -> term.length() > 1)
             .filter(not(DateTimeHelper::canBeConvertedToADate))
             .filter(not(term -> term.contains("/")))
             .map(String::toLowerCase)
