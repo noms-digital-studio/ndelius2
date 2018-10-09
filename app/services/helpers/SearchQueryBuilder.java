@@ -151,6 +151,7 @@ public class SearchQueryBuilder {
                 .field("otherIds.nomsNumber", 10)
                 .field("otherIds.niNumber", 10)
                 .operator(Operator.AND)
+                .analyzer("whitespace")
                 .type(CROSS_FIELDS));
         }
 
