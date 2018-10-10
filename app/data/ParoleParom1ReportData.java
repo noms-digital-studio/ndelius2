@@ -341,35 +341,39 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String riskOfAbscondingDetails;
 
     // Page 16 - Risk Management Plan (RMP)
-    @RequiredOnPage(value = 16, message = "Enter the agencies")
+    @RequiredOnPage(value = 16, message = "Specify if the prisoner requires a community RMP")
+    @JsonProperty("RISK_MANAGEMENT_PLAN_REQUIRED")
+    private String riskManagementPlanRequired;
+
+    @RequiredOnPage(value = 16, message = "Enter the current situation (Agencies)", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
     @JsonProperty("AGENCIES")
     private String agencies;
 
-    @RequiredOnPage(value = 16, message = "Enter the support")
+    @RequiredOnPage(value = 16, message = "Enter the support", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
     @JsonProperty("SUPPORT")
     private String support;
 
-    @RequiredOnPage(value = 16, message = "Enter the control")
+    @RequiredOnPage(value = 16, message = "Enter the control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
     @JsonProperty("CONTROL")
     private String control;
 
-    @RequiredOnPage(value = 16, message = "Enter the added measures for specific risks")
+    @RequiredOnPage(value = 16, message = "Enter the added measures for specific risks", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
     @JsonProperty("RISK_MEASURES")
     private String riskMeasures;
 
-    @RequiredOnPage(value = 16, message = "Enter the agency actions")
+    @RequiredOnPage(value = 16, message = "Enter the agency actions", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
     @JsonProperty("AGENCY_ACTIONS")
     private String agencyActions;
 
-    @RequiredOnPage(value = 16, message = "Enter the additional conditions or requirements")
+    @RequiredOnPage(value = 16, message = "Enter the additional conditions or requirements", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
     @JsonProperty("ADDITIONAL_CONDITIONS")
     private String additionalConditions;
 
-    @RequiredOnPage(value = 16, message = "Enter the level of contact")
+    @RequiredOnPage(value = 16, message = "Enter the level of contact", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
     @JsonProperty("LEVEL_OF_CONTACT")
     private String levelOfContact;
 
-    @RequiredOnPage(value = 16, message = "Enter the contingency plan")
+    @RequiredOnPage(value = 16, message = "Enter the contingency plan", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
     @JsonProperty("CONTINGENCY_PLAN")
     private String contingencyPlan;
 

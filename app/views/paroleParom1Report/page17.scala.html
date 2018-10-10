@@ -11,12 +11,24 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@resettlementPlanDetailHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>Accommodation plans - with an assessment of suitability and likely compliance.</li>
+        <li>Clarification that a referral to Approved Premises has been accepted, if appropriate. If a referral has not been accepted explain why.</li>
+        <li>Analysis of the value an AP will add to risk management. Consideration of the impact an AP placement away from the prisoner’s home area, for example, female estates are not available in every division.</li>
+        <li>Consideration if the prisoner entered custody as a juvenile, was a care leaver or has been in secure accommodation - they are unlikely to have experience of managing tenancies, budgeting and other life skills. State how they will be supported.</li>
+        <li>An explanation, with reasons, of all relevant licence conditions required to manage risk - matched to those in the RMP.</li>
+        <li>Victim and safeguarding issues, if appropriate.</li>
+    </ul>
+}
+
 @popup(reportForm, encrypter, "Resettlement plan for release", 17) {
     <div class="form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
                 Does the prisoner require a resettlement plan for release?
             </legend>
+            <span class="govuk-hint" id="resettlementPlanRequired-hint">The Parole Board do not require a resettlement plan if the prisoner is pre-tariff</span>
 
             @inputRadioGroup(
                 reportForm("resettlementPlan"),
@@ -24,13 +36,13 @@
                     "yes" -> "Yes",
                     "no" -> "No"
                 ),
-                Symbol("data-aria-controls") -> "resettlement-plan",
-                Symbol("_inline") -> "true"
+                '_inline -> "true",
+                Symbol("data-aria-controls") -> "resettlement-plan"
             )
         </fieldset>
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="resettlement-plan-yes">
-        @textarea(reportForm("resettlementPlanDetail"), '_label -> "Detail the resettlement plan for release", 'class -> "wide")
+        @textarea(reportForm("resettlementPlanDetail"), '_label -> "Detail the resettlement plan for release", '_hint -> resettlementPlanDetailHint, 'class -> "wide")
         </div>
     </div>
 }

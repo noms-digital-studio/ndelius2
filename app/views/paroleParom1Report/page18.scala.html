@@ -11,12 +11,23 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@supervisionPlanDetailHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>A supervision plan which outlines what objectives the prisoner is required to complete upon release.  The objectives should meet the required risk, need and responsivity considerations to help ensure the licence period is successful.</li>
+        <li>Evidence that the prisoner has engaged in the sentence plan process.  Prisoners should be clear on the purpose of any interventions and be encouraged to take responsibility for the objectives they have agreed.</li>
+        <li>Objectives to address RoSH in child, adult and victim safeguarding cases.</li>
+        <li>A reference to the likelihood of compliance with supervision.</li>
+        <li>Analysis of additional factors to encourage and support compliance - this is pertinent for prisoners who have served long sentences or entered custody as a juvenile. They could feel institutionalised or struggle to manage the demands of life in the community, for example, claiming benefits or new technology.</li>
+    </ul>
+}
+
 @popup(reportForm, encrypter, "Supervision plan for release", 18) {
     <div class="form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
                 Does the prisoner require a supervision plan for release?
             </legend>
+            <span class="govuk-hint" id="supervisionPlanRequired-hint">The Parole Board do not require a supervision plan if the prisoner is pre-tariff</span>
 
             @inputRadioGroup(
                 reportForm("supervisionPlanRequired"),
@@ -24,13 +35,13 @@
                     "yes" -> "Yes",
                     "no" -> "No"
                 ),
-                Symbol("data-aria-controls") -> "supervision-plan",
-                Symbol("_inline") -> "true"
+                '_inline -> "true",
+                Symbol("data-aria-controls") -> "supervision-plan"
             )
         </fieldset>
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="supervision-plan-yes">
-        @textarea(reportForm("supervisionPlanDetail"), '_label -> "Detail the supervision plan for release", 'class -> "wide")
+        @textarea(reportForm("supervisionPlanDetail"), '_label -> "Detail the supervision plan for release", '_hint -> supervisionPlanDetailHint, 'class -> "wide")
         </div>
     </div>
 }
