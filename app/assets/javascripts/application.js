@@ -27,10 +27,10 @@ function openPopup(url, name, top, left) {
             GOVUK.stickAtTopWhenScrolling.init();
         }
 
-        // SFR Feedback
-        $('#sfrFeedback').click(function (e) {
+        // Feedback links
+        $('#feedbackForm,#footerFeedbackForm').click(function (e) {
             e.preventDefault();
-            openPopup($(this).attr('href'), 'sfrFeedback', 250, 50);
+            openPopup($(this).attr('href'), 'feedbackForm', 250, 50);
         });
 
         /**
