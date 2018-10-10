@@ -30,6 +30,10 @@ textarea.form-control {
   }
 }
 
+.form-control.force-border {
+  border: 2px solid $text-colour !important;
+}
+
 input[type="text"], input[type="number"] {
   width: 100%; // Override default
 
