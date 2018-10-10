@@ -11,15 +11,42 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@prisonerContactDetailHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>The length of time you have known the prisoner and the author of the previous PAROM1.</li>
+        <li>A detailed summary, including dates, of contact with the prisoner. This could include prison visits, telephone calls, letters or video calls.</li>
+        <li>Reasons why a face to to face parole report interview did not take place. If there is a valid reason why this could not happen, for example, the prisoner refused to engage, you should state this.</li>
+        <li>The reason for contact, for example, sentence planning or programme review.</li>
+    </ul>
+}
+
+@prisonerContacFamilyDetailtHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>A detailed summary, including dates, of contact with the prisoner’s family, partners or significant others.</li>
+        <li>The type of contact, for example, home visit or telephone call.</li>
+        <li>The reason for contact, for example, RoTL assessment.</li>
+        <li>If you have been unable to make contact, you should give a detailed response. Include how, when and why you tried to make contact.</li>
+    </ul>
+}
+
+@prisonerContactAgenciesDetailHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>A detailed summary, including dates, of contact with relevant agencies.</li>
+        <li>The type of contact, for example, email or telephone call.</li>
+        <li>The reason for contact, for example, AP referral for RoTL.</li>
+        <li>If you have been unable to make contact, you should give a detailed response. Include how, when and why you tried to make contact.</li>
+        <li>A statement to say that the prisoner is not working with any agencies, if appropriate.</li>
+    </ul>
+}
+
 @popup(reportForm, encrypter, "Prisoner contact", 3) {
-    @textarea(reportForm("prisonerContactDetail"), '_label -> "How long have you managed the prisoner, and what contact have you had with them?", 'class -> "wide", 'required -> "true")
+    @textarea(reportForm("prisonerContactDetail"), '_label -> "How long have you managed the prisoner, and what contact have you had with them?", '_hint -> prisonerContactDetailHint, 'class -> "wide", 'required -> "true")
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
 
-    @textarea(reportForm("prisonerContactFamilyDetail"), '_label -> "What contact have you had with the prisoner`s family, partners or significant others?", 'class -> "wide", 'required -> "true")
-
+    @textarea(reportForm("prisonerContactFamilyDetail"), '_label -> "What contact have you had with the prisoner`s family, partners or significant others?", '_hint -> prisonerContacFamilyDetailtHint, 'class -> "wide", 'required -> "true")
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
 
-    @textarea(reportForm("prisonerContactAgenciesDetail"), '_label -> "What contact have you had with other relevant agencies about the prisoner?", 'class -> "wide", 'required -> "true")
+    @textarea(reportForm("prisonerContactAgenciesDetail"), '_label -> "What contact have you had with other relevant agencies about the prisoner?", '_hint -> prisonerContactAgenciesDetailHint, 'class -> "wide", 'required -> "true")
 }

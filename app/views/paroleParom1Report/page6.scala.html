@@ -17,6 +17,7 @@
             <legend class="govuk-fieldset__legend govuk-label">
                 Has the prisoner met the OPD screening criteria and been considered for OPD pathway services?
             </legend>
+            <span class="govuk-hint" id="opdPathway-hint">Select Yes even if OPD services have only been asked for advice.</span>
 
             @inputRadioGroup(
                 reportForm("consideredForOPDPathwayServices"),
@@ -30,12 +31,9 @@
         </fieldset>
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="opd-pathway-details-yes">
-            <p class="govuk-body">
-            Make reference, where relevant, throughout this report if:</p>
-            <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
-                <li>You have consulted OPD pathway services about the prisoner</li>
-                <li>The prisoner is engaged with OPD pathway services</li>
-            </ul>
+            <p class="govuk-body">Record any OPD pathway information about the prisoner in the relevant sections of the
+                report. For example, if an intervention has been assessed as appropriate to manage risk include this in
+                the RMP and sentence plan sections.</p>
         </div>
     </div>
 }
