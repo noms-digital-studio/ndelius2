@@ -12,17 +12,19 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @sourcesAssessmentListHint = {
-    <ul>
-        <li>Interventions/programme reports</li>
-        <li>Approved premises referral</li>
-        <li>SARN assessments</li>
-        <li>Psychology/psychiatry reports</li>
-        <li>Previous parole directions</li>
-        <li>ROTL paperwork</li>
-        <li>OASys</li>
-        <li>Sentence planning board notes</li>
-        <li>Security information</li>
-        <li>SARA assessment</li>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>All written sources used and the author’s name and completion date - this can show changes in attitudes, behaviours and risks. For example, sentence planning notes, psychology reports and previous convictions.</li>
+        <li>Documents and oral information included in the MAPPA minutes - these must be obtained from the agency as you cannot cite MAPPA minutes in this section.</li>
+        <li>Information that can be shared with the prisoner. It must not contain information that could put others at risk, for example, the location of children or victims that prisoner is unaware of, MALRAP intelligence or the name and contact details of the VLO.</li>
+        <li>Contact PPCS if you have disclosure concerns. Contact the Victim Liaison Unit if you have concerns about victims.</li>
+    </ul>
+}
+
+@sourceLimitationsDetailHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>Limitations to the information, for example, an unavailable report.</li>
+        <li>An explanation of the impact of the limitations on the overall assessment - the Parole Board might wish to pursue missing evidence if it is highlighted in advance of the oral hearing.</li>
+        <li>Discrepancies between sources - evidence this.</li>
     </ul>
 }
 
@@ -60,13 +62,13 @@
                     "yes" -> "Yes",
                     "no" -> "No"
                 ),
-                Symbol("data-aria-controls") -> "source-limitations",
-                Symbol("_inline") -> "true"
+                '_inline -> "true",
+                Symbol("data-aria-controls") -> "source-limitations"
             )
         </fieldset>
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="source-limitations-yes">
-        @textarea(reportForm("sourceLimitationsDetail"), '_label -> "Provide an explanation", 'class -> "wide")
+        @textarea(reportForm("sourceLimitationsDetail"), '_label -> "Provide an explanation", '_hint -> sourceLimitationsDetailHint, 'class -> "wide")
         </div>
     </div>
 
