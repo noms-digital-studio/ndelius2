@@ -11,15 +11,31 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@behaviourDetailHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>A holistic analysis, from liaison with all relevant prison staff, of the prisoner’s positive and negative behaviour while in prison. Record this chronologically.</li>
+        <li>Changes in behaviour and offence paralleling behaviours, for example, bullying when there is a history of manipulation.</li>
+        <li>Prison and security information such as adjudications, drug tests, wing reports, the IEP scheme and the MAPPA F for MAPPA offenders.</li>
+        <li>Positive and negative behaviour linked to letters, telephone calls and visits the prisoner has received. This can provide an understanding of their support network or potential risk concerns, for example, visits from people who have a history of abusive or manipulative behaviour.</li>
+        <li>The reasons for, and impact of unavailable information.</li>
+        <li>An awareness of unconscious bias, stereotyping and diversity - to ensure that you do not inappropriately represent the prisoner’s race, socio-economic background, culture or religious beliefs as concerning.</li>
+        <li>An awareness of disguised compliance – when the prisoner gives the appearance of co-operation to do things like avert suspicion, allay professional concerns or avoid interventions.</li>
+        <li>The prisoner’s opinion on, and explanation for their behaviour. If the prisoner refused to engage, you should state this.</li>
+    </ul>
+}
+
 @summaryHint = {
-    <p>Detail and any relevant information relating to this. Where periods of RoTL have taken place,
-        include how successful this has been to the prisoner’s resettlement. If RoTL not being
-        undertaken explain why</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>The prisoner’s RoTL status - ineligible, unsuitable, eligible or undertaking.</li>
+        <li><strong>Ineligible or unsuitable</strong> - an analytical explanation and their eligibility date, if relevant.  You should record if the prisoner is ineligible due to absconding from open conditions. Include Police or MAPPA consultation.</li>
+        <li><strong>Eligible</strong> - an analytical explanation, dates for resettlement day and overnight release and where they are working or residing - link this to the sentence plan. Include Police or MAPPA consultation.</li>
+        <li><strong>Undertaking</strong> - an explanation of progress and concerns - record past or future RoTL dates and venues. Include Police or MAPPA consultation.</li>
+    </ul>
 }
 
 @popup(reportForm, encrypter, "Behaviour in prison", 7) {
 
-    @textarea(reportForm("behaviourDetail"), '_label -> "Detail the prisoner`s behaviour whilst in prison", 'class -> "wide", 'required -> "true", '_error -> "Enter details of the prisoner's behaviour in prison")
+    @textarea(reportForm("behaviourDetail"), '_label -> "Detail the prisoner`s behaviour whilst in prison", '_hint -> behaviourDetailHint, 'class -> "wide", 'required -> "true", '_error -> "Enter details of the prisoner's behaviour in prison")
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
 

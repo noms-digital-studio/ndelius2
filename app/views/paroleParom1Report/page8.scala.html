@@ -10,11 +10,27 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@interventionsDetailHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>All interventions completed throughout the sentence - not just those finished since the last report was submitted. Record these chronologically with dates.</li>
+        <li>Interventions the prisoner refused to attend or did not complete.</li>
+    </ul>
+}
+
+@interventionsSummaryHint = {
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
+        <li>A summary of the impact that an intervention has had on the prisoner, or the lack of impact. You do not have to analyse interventions individually - this is included in the dossier in reports like the post-sentence or Structured Assessment of Risk (SARN).</li>
+        <li>Achievements, shifts in behaviour or attitude, diversity considerations and capacity to change.</li>
+        <li>Application of learning, for example, evidence of using a new skill.</li>
+        <li>A summary of the impact of gender-specific and trauma-informed interventions.</li>
+    </ul>
+}
+
 @popup(reportForm, encrypter, "Interventions", 8) {
-    @textarea(reportForm("interventionsDetail"), '_label -> "Detail the interventions the prisoner has completed", 'class -> "wide", 'required -> "true")
+    @textarea(reportForm("interventionsDetail"), '_label -> "Detail the interventions the prisoner has completed", '_hint -> interventionsDetailHint, 'class -> "wide", 'required -> "true")
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
 
-    @textarea(reportForm("interventionsSummary"), '_label -> "Interventions summary", 'class -> "wide", 'required -> "true")
+    @textarea(reportForm("interventionsSummary"), '_label -> "Interventions summary", '_hint -> interventionsSummaryHint, 'class -> "wide", 'required -> "true")
 
 }

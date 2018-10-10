@@ -7,7 +7,7 @@
 @elements.args.get('_hint).map { hint =>
     <details class="govuk-details govuk-!-margin-bottom-0 @if(elements.input.body.contains("type=\"radio\"")) { govuk-!-margin-bottom-2 margin-bottom }">
         <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">What to include</span>
+            <span class="govuk-details__summary-text">@elements.args.getOrElse('_hintLabel, "What to include")</span>
         </summary>
         <div id="hint_@elements.id" class="panel panel-border-narrow govuk-details__text @if(elements.input.body.contains("type=\"radio\"")) { govuk-!-margin-bottom-4 margin-bottom medium-important }">
             @hint

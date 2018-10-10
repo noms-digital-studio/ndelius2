@@ -11,6 +11,13 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@mappaHint = {
+    <p>Multi Agency Public Protection Arrangements (MAPPA) are a framework of statutory arrangements for managing sexual and violent offenders. All MAPPA offenders should be identified on reception to custody and the category recorded on PNOMIS, nDelius and ViSOR. For information about MAPPA Categories, refer to Chapter 6 (Identification and Notification) of the MAPPA Guidance.</p>
+    <p>The case must be screened (using the MAPPA Q) and the MAPPA level must be set at least six months before parole eligibility date. This is important because it can impact on early assignment and resources. Refer to chapter 7 (Levels) for an overview of MAPPA levels and screening, and chapter 15 (Custody) for additional processes for setting MAPPA levels for offenders in custody.</p>
+    <p>MAPPA screening is not required if the prisoner was given an indeterminate sentence not listed in schedule 15 CJA 2003 or schedule 3 SOA 2003 - you should still consider screening if they pose a risk of serious harm to the public.</p>
+    <p>If a case is level 2 or 3, you should include the information in the relevant sections of this report. If you have concerns about how to safely disclose sensitive information to the Parole Board you should discuss this with PPCS before submitting the PAROM1.</p>
+}
+
 @popup(reportForm, encrypter, "Multi Agency Public Protection Arrangements (MAPPA)", 10) {
 
     <div class="govuk-warning-text moj-warning-text">
@@ -33,8 +40,10 @@
                     "yes" -> "Yes",
                     "no" -> "No"
                 ),
-                Symbol("data-aria-controls") -> "eligible-for-mappa",
-                Symbol("_inline") -> "true"
+                '_hint -> mappaHint,
+                '_hintLabel -> "MAPPA guidance",
+                '_inline -> "true",
+                Symbol("data-aria-controls") -> "eligible-for-mappa"
             )
         </fieldset>
 
