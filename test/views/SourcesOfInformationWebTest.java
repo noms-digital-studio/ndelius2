@@ -49,7 +49,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
             "Previous OASys assessments",
             "Previous convictions",
             "Victim statement",
-            "services checks", // Should be `Children's services checks` - but xpath not escaping the apostrophe, so use contains rather than equals
+            "Safeguarding checks",
             "Police information",
             "Sentencing guidelines",
             "Other (please specify below)"
@@ -80,7 +80,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
                 "Previous OASys assessments",
                 "Previous convictions",
                 "Victim statement",
-                "Children's services checks",
+                "Safeguarding checks",
                 "Police information",
                 "Sentencing guidelines",
                 "Other (please specify below)"
