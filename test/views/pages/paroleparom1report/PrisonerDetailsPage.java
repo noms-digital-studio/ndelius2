@@ -17,4 +17,8 @@ public class PrisonerDetailsPage extends ParoleParom1PopupReportPage {
     public void navigateHere() {
         landingPage.navigateHere().next();
     }
+
+    public void navigateHereFemale() {
+        landingPage.navigateHereForFemale().next();
+    }
 }

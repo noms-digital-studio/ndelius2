@@ -29,6 +29,7 @@
             @CSRF.formField
 
             @commonFields(reportForm, encrypter)
+
             @pageStatuses.keySet.drop(1).filter(_ != pageNumber).map(hiddenFieldsFor)
 
             @if(!reportForm.allErrors().isEmpty) {

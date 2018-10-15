@@ -28,6 +28,7 @@ public interface OffenderApi {
         private String dateOfBirth;
         private Map<String, String> otherIds;
         private ContactDetails contactDetails;
+        private String gender;
 
         public String displayName() {
 

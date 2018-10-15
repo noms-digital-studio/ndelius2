@@ -40,6 +40,28 @@
             @CSRF.formField
 
             @commonFields(reportForm, encrypter)
+            @page2Fields(reportForm)
+            @page3Fields(reportForm)
+            @page4Fields(reportForm)
+            @page5Fields(reportForm)
+            @page6Fields(reportForm)
+            @page7Fields(reportForm)
+            @page8Fields(reportForm)
+            @page9Fields(reportForm)
+            @page10Fields(reportForm)
+            @page11Fields(reportForm)
+            @page12Fields(reportForm)
+            @page13Fields(reportForm)
+            @page14Fields(reportForm)
+            @page15Fields(reportForm)
+            @page16Fields(reportForm)
+            @page17Fields(reportForm)
+            @page18Fields(reportForm)
+            @page19Fields(reportForm)
+            @page20Fields(reportForm)
+            @page21Fields(reportForm)
+            @page22Fields(reportForm)
+            @page23Fields(reportForm)
 
             @pageNumber(
                 reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
@@ -51,6 +73,7 @@
         </div>
     </div>
     <a class="govuk-back-link" tabindex="1" href="javascript:documentList()">Back to document list</a>
+
 
 }
 

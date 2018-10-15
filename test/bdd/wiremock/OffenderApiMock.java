@@ -11,6 +11,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static utils.OffenderHelper.aFemaleOffenderWithNoContactDetails;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 public class OffenderApiMock {
@@ -38,6 +39,10 @@ public class OffenderApiMock {
         offenderApiWireMock.stubFor(
                 get(urlEqualTo("/offenders/crn/X12345/all"))
                     .willReturn(ok().withBody(JsonHelper.stringify(anOffenderWithNoContactDetails()))));
+
+        offenderApiWireMock.stubFor(
+                get(urlEqualTo("/offenders/crn/X54321/all"))
+                    .willReturn(ok().withBody(JsonHelper.stringify(aFemaleOffenderWithNoContactDetails()))));
 
         return this;
     }

@@ -17,12 +17,31 @@ public class LandingPage extends FluentPage {
     }
 
     public LandingPage navigateHere() {
+        return navigateHereMalePrisoner();
+    }
+
+    public LandingPage navigateHereForFemale() {
+        return navigateHereFemalePrisoner();
+    }
+
+    public LandingPage navigateHereMalePrisoner() {
         goTo(String.format("/report/paroleParom1Report?onBehalfOfUser=%s&user=%s&t=%s&crn=%s&entityId=%s",
                 encrypt("Smith,John"),
                 encrypt("john.smith"),
                 encrypt(String.format("%d", Instant.now().toEpochMilli())),
                 encrypt("X12345"),
                 encrypt("12345")
+        ));
+        return this;
+    }
+
+    public LandingPage navigateHereFemalePrisoner() {
+        goTo(String.format("/report/paroleParom1Report?onBehalfOfUser=%s&user=%s&t=%s&crn=%s&entityId=%s",
+                encrypt("Smith,Jane"),
+                encrypt("jane.smith"),
+                encrypt(String.format("%d", Instant.now().toEpochMilli())),
+                encrypt("X54321"),
+                encrypt("54332")
         ));
         return this;
     }

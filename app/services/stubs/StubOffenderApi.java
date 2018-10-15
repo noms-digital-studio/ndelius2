@@ -64,16 +64,27 @@ public class StubOffenderApi implements OffenderApi {
             throw new RuntimeException("getOffenderByCrn called with blank CRN");
         }
 
-        val offender = Offender.builder()
-            .firstName("Sam")
-            .surname("Jones")
-            .middleNames(ImmutableList.of("Henry", "James"))
-            .dateOfBirth("2000-06-22")
-            .otherIds(otherIds())
-            .contactDetails(contactDetails())
-            .build();
-
-        return CompletableFuture.completedFuture(offender);
+        if (crn.equals("X54321")) {
+            return CompletableFuture.completedFuture(Offender.builder()
+                .firstName("Lucy")
+                .surname("Jones")
+                .middleNames(ImmutableList.of("Jane", "Suzi"))
+                .dateOfBirth("1980-12-01")
+                .otherIds(otherIds())
+                .contactDetails(contactDetails())
+                .gender("Female")
+                .build());
+        } else {
+            return CompletableFuture.completedFuture(Offender.builder()
+                .firstName("Sam")
+                .surname("Jones")
+                .middleNames(ImmutableList.of("Henry", "James"))
+                .dateOfBirth("2000-06-22")
+                .otherIds(otherIds())
+                .contactDetails(contactDetails())
+                .gender("Male")
+                .build());
+        }
     }
 
     @Override

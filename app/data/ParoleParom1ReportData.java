@@ -1,6 +1,8 @@
 package data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import data.annotations.DateOnPage;
+import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredDateOnPage;
 import data.annotations.RequiredGroupOnPage;
@@ -20,6 +22,96 @@ import java.util.Optional;
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class ParoleParom1ReportData extends ReportGeneratorWizardData {
+
+    // Page 2
+
+    @Encrypted
+    @RequiredOnPage(2)
+    @JsonProperty("GENDER")
+    private String gender;
+
+    @RequiredOnPage(value = 2, message = "Enter the prison or Young Offender Institution")
+    @JsonProperty("PRISONER_DETAILS_PRISON_INSTITUTION")
+    private String prisonerDetailsPrisonInstitution;
+
+    @RequiredOnPage(value = 2, message = "Enter the prisoner's full name")
+    @JsonProperty("PRISONER_DETAILS_PRISONERS_FULL_NAME")
+    private String prisonerDetailsPrisonersFullName;
+
+    @RequiredOnPage(value = 2, message = "Enter the prison number")
+    @JsonProperty("PRISONER_DETAILS_PRISON_NUMBER")
+    private String prisonerDetailsPrisonNumber;
+
+    @RequiredOnPage(value = 2, message = "Enter the NOMIS number")
+    @JsonProperty("PRISONER_DETAILS_NOMIS_NUMBER")
+    private String prisonerDetailsNomisNumber;
+
+    @RequiredOnPage(value = 2, message = "Select the current prison category")
+    @JsonProperty("PRISONER_DETAILS_PRISONERS_CATEGORY")
+    private String prisonerDetailsPrisonersCategory;
+
+    @RequiredOnPage(value = 2, message = "Enter the offence")
+    @JsonProperty("PRISONER_DETAILS_OFFENCE")
+    private String prisonerDetailsOffence;
+
+    @RequiredOnPage(value = 2, message = "Enter the sentence")
+    @JsonProperty("PRISONER_DETAILS_SENTENCE")
+    private String prisonerDetailsSentence;
+
+    @RequiredOnPage(value = 2, message = "Select the sentence type")
+    @JsonProperty("PRISONER_DETAILS_SENTENCE_TYPE")
+    private String prisonerDetailsSentenceType;
+
+    @RequiredOnPage(value = 2, message = "Enter the tariff length",
+                               onlyIfField="prisonerDetailsSentenceType",
+                               onlyIfFieldMatchValue="indeterminate")
+    @JsonProperty("PRISONER_DETAILS_TARIFF_LENGTH")
+    private String prisonerDetailsTariffLength;
+
+    @JsonProperty("PRISONER_DETAILS_TARIFF_EXPIRY_DATE")
+    public String getPrisonerDetailsTariffExpiryDate() {
+        return formattedDateFromDateParts("prisonerDetailsTariffExpiryDate");
+    }
+
+    @RequiredDateOnPage(value = 2, message = "Enter the tariff expiry date",
+                                   incompleteMessage = "Enter the tariff expiry date and include a day, month and year",
+                                   invalidMessage = "Enter a real tariff expiry date",
+                                   onlyIfField="prisonerDetailsSentenceType",
+                                   onlyIfFieldMatchValue="indeterminate")
+    private String prisonerDetailsTariffExpiryDate;
+    private String prisonerDetailsTariffExpiryDate_day;
+    private String prisonerDetailsTariffExpiryDate_month;
+    private String prisonerDetailsTariffExpiryDate_year;
+
+    @JsonProperty("PRISONER_DETAILS_PAROLE_ELIGIBILITY_DATE")
+    public String getPrisonerDetailsParoleEligibilityDate() {
+        return formattedDateFromDateParts("prisonerDetailsParoleEligibilityDate");
+    }
+
+    @DateOnPage(value = 2, incompleteMessage = "Enter the parole eligibility date and include a day, month and year",
+                           invalidMessage = "Enter a real parole eligibility date",
+                           onlyIfField="prisonerDetailsSentenceType",
+                           onlyIfFieldMatchValue="determinate")
+    private String prisonerDetailsParoleEligibilityDate;
+    private String prisonerDetailsParoleEligibilityDate_day;
+    private String prisonerDetailsParoleEligibilityDate_month;
+    private String prisonerDetailsParoleEligibilityDate_year;
+
+    @JsonProperty("PRISONER_DETAILS_AUTO_RELEASE_DATE")
+    public String getPrisonerDetailsAutoReleaseDate() {
+        return formattedDateFromDateParts("prisonerDetailsAutoReleaseDate");
+    }
+
+    @DateOnPage(value = 2, incompleteMessage = "Enter the automatic release date and include a day, month and year",
+                           invalidMessage = "Enter a real automatic release date",
+                           onlyIfField="prisonerDetailsSentenceType",
+                           onlyIfFieldMatchValue="determinate")
+    private String prisonerDetailsAutoReleaseDate;
+    private String prisonerDetailsAutoReleaseDate_day;
+    private String prisonerDetailsAutoReleaseDate_month;
+    private String prisonerDetailsAutoReleaseDate_year;
+
+    // Page 3
 
     @RequiredOnPage(value = 3, message = "Enter how long you have managed the prisoner, and what contact you have had with them")
     @JsonProperty("PRISONER_CONTACT_DETAIL")

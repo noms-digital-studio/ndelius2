@@ -1,5 +1,6 @@
 package data.base;
 
+import data.annotations.DateOnPage;
 import data.annotations.OnPage;
 import data.annotations.RequiredDateOnPage;
 import data.annotations.RequiredGroupOnPage;
@@ -55,6 +56,12 @@ public class WizardDataValidationTest {
         private String dob_month;
         private String dob_year;
 
+        @DateOnPage(value = 9, incompleteMessage = "my incomplete date 2 message", invalidMessage = "my invalid date 2 message")
+        private String dob2;
+        private String dob2_day;
+        private String dob2_month;
+        private String dob2_year;
+
         @OnPage(10)
         private String page10Field;
         @RequiredOnPage(11)
@@ -71,6 +78,14 @@ public class WizardDataValidationTest {
         private String conditionalDob_year;
         @OnPage(14)
         private String ifOnlyDobField;
+
+        @RequiredDateOnPage(value = 15, onlyIfField = "ifOnlyDob3Field", onlyIfFieldMatchValue = "matched")
+        private String dob3;
+        private String dob3_day;
+        private String dob3_month;
+        private String dob3_year;
+        @OnPage(15)
+        private String ifOnlyDob3Field;
 
         @OnPage(99)
         private String dummyFinalPageField;
@@ -171,11 +186,25 @@ public class WizardDataValidationTest {
     }
 
     @Test
+    public void dateFieldNotRequired() {
+        data.setPageNumber(9);
+        assertThat(data.validate()).hasSize(0);
+    }
+
+    @Test
     public void requiredIncompleteDateFieldWithMessageUsesAnnotatedMessage() {
         data.setPageNumber(8);
         data.setDob_day("19");
         assertThat(data.validate()).hasSize(1);
         assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("dob", "my incomplete date message"));
+    }
+
+    @Test
+    public void incompleteDateFieldWithMessageUsesAnnotatedMessage() {
+        data.setPageNumber(9);
+        data.setDob2_day("19");
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("dob2", "my incomplete date 2 message"));
     }
 
     @Test
@@ -185,6 +214,15 @@ public class WizardDataValidationTest {
         data.setDob_month("7");
         assertThat(data.validate()).hasSize(1);
         assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("dob", "my incomplete date message"));
+    }
+
+    @Test
+    public void incompleteDateFieldWithMessageUsesAnnotatedMessageEvenWhenTwoSupplied() {
+        data.setPageNumber(9);
+        data.setDob2_day("19");
+        data.setDob2_month("7");
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("dob2", "my incomplete date 2 message"));
     }
 
     @Test
@@ -198,6 +236,16 @@ public class WizardDataValidationTest {
     }
 
     @Test
+    public void invalidDateFieldWithMessageUsesAnnotatedMessageWhenInvalidDate() {
+        data.setPageNumber(9);
+        data.setDob2_day("31");
+        data.setDob2_month("02");
+        data.setDob2_year("2003");
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("dob2", "my invalid date 2 message"));
+    }
+
+    @Test
     public void requiredDateFieldValidWithValidDateParts() {
         data.setPageNumber(8);
         data.setDob_day("01");
@@ -205,12 +253,31 @@ public class WizardDataValidationTest {
         data.setDob_year("2003");
         assertThat(data.validate()).isEmpty();
     }
+
+    @Test
+    public void dateFieldValidWithValidDateParts() {
+        data.setPageNumber(9);
+        data.setDob2_day("01");
+        data.setDob2_month("02");
+        data.setDob2_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+
     @Test
     public void requiredDateFieldValidWithValidDatePartsWithNonPaddedNumbers() {
         data.setPageNumber(8);
         data.setDob_day("1");
         data.setDob_month("2");
         data.setDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+
+    @Test
+    public void dateFieldValidWithValidDatePartsWithNonPaddedNumbers() {
+        data.setPageNumber(9);
+        data.setDob2_day("1");
+        data.setDob2_month("2");
+        data.setDob2_year("2003");
         assertThat(data.validate()).isEmpty();
     }
 
@@ -233,6 +300,24 @@ public class WizardDataValidationTest {
     }
 
     @Test
+    public void onlyIfDateFieldWithMatchValueIsRequiredValidatedWhenLinkedFieldHasMatchingValue() {
+        data.setPageNumber(15);
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDob3Field("notmatched");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDob3Field("matched");
+        assertThat(data.validate()).hasSize(1);
+
+        data.setIfOnlyDob3Field("matched");
+        data.setDob3_day("1");
+        data.setDob3_month("2");
+        data.setDob3_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+
+    @Test
     public void onlyIfRequiredDateFieldWithMatchValueIsIncompleteValidatedWhenLinkedFieldHasMatchingValue() {
         data.setPageNumber(14);
         data.setConditionalDob_day("1");
@@ -250,6 +335,27 @@ public class WizardDataValidationTest {
         data.setConditionalDob_day("1");
         data.setConditionalDob_month("2");
         data.setConditionalDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+
+    @Test
+    public void onlyIfDateFieldWithMatchValueIsIncompleteValidatedWhenLinkedFieldHasMatchingValue() {
+        data.setPageNumber(15);
+        data.setDob3_day("1");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDob3Field("notmatched");
+        data.setDob3_day("1");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDob3Field("matched");
+        data.setDob3_day("1");
+        assertThat(data.validate()).hasSize(1);
+
+        data.setIfOnlyDob3Field("matched");
+        data.setDob3_day("1");
+        data.setDob3_month("2");
+        data.setDob3_year("2003");
         assertThat(data.validate()).isEmpty();
     }
 
@@ -277,6 +383,33 @@ public class WizardDataValidationTest {
         data.setConditionalDob_day("1");
         data.setConditionalDob_month("2");
         data.setConditionalDob_year("2003");
+        assertThat(data.validate()).isEmpty();
+    }
+
+    @Test
+    public void onlyIfDateFieldWithMatchValueIsDateValidatedWhenLinkedFieldHasMatchingValue() {
+        data.setPageNumber(15);
+        data.setDob3_day("31");
+        data.setDob3_month("2");
+        data.setDob3_year("2003");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDob3Field("notmatched");
+        data.setDob3_day("31");
+        data.setDob3_month("2");
+        data.setDob3_year("2003");
+        assertThat(data.validate()).isEmpty();
+
+        data.setIfOnlyDob3Field("matched");
+        data.setDob3_day("31");
+        data.setDob3_month("2");
+        data.setDob3_year("2003");
+        assertThat(data.validate()).hasSize(1);
+
+        data.setIfOnlyDob3Field("matched");
+        data.setDob3_day("1");
+        data.setDob3_month("2");
+        data.setDob3_year("2003");
         assertThat(data.validate()).isEmpty();
     }
 

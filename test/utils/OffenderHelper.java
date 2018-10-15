@@ -15,6 +15,10 @@ public class OffenderHelper {
         return aBasicOffender();
     }
 
+    public static Offender aFemaleOffenderWithNoContactDetails() {
+        return aBasicFemaleOffender();
+    }
+
     public static Offender anOffenderWithNoContactDetailsAndNoPnc() {
         return aBasicOffender().toBuilder().otherIds(ImmutableMap.of()).build();
     }
@@ -75,6 +79,18 @@ public class OffenderHelper {
             .middleNames(ImmutableList.of("Jammy", "Fred"))
             .otherIds(ImmutableMap.of("pncNumber", "2018/123456N"))
             .dateOfBirth("2000-06-22")
+            .gender("male")
+            .build();
+    }
+
+    private static Offender aBasicFemaleOffender() {
+        return Offender.builder()
+            .firstName("Jane")
+            .surname("Doe")
+            .middleNames(ImmutableList.of("lizzy", "lucy"))
+            .otherIds(ImmutableMap.of("pncNumber", "2011/654321N"))
+            .dateOfBirth("1980-12-07")
+            .gender("female")
             .build();
     }
 
