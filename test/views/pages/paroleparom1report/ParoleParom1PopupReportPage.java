@@ -46,6 +46,11 @@ public class ParoleParom1PopupReportPage extends FluentPage {
         val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
         $(name(fieldId)).fill().with(text);
     }
+
+    public void fillInputWithId(String fieldId, String text) {
+        $(id(fieldId)).fill().with(text);
+    }
+
     public void fillInputInSectionWithLegend(String legend, String label, String text) {
         val fieldId = findSectionFromLegend(legend).find(xpath(String.format(".//label[contains(., '%s')]", label))).attribute("for");
         $(id(fieldId)).fill().with(text);
