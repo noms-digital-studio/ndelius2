@@ -31,6 +31,7 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static play.libs.Json.toJson;
+import static utils.CourtAppearanceHelpers.aCourtReport;
 import static utils.CourtAppearanceHelpers.someCourtAppearances;
 import static utils.OffenceHelpers.someOffences;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
@@ -69,6 +70,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
         given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
         given(offenderApi.getOffencesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someOffences()));
+        given(offenderApi.getCourtReportByCrnAndCourtReportId(any(), any(), any())).willReturn(CompletableFuture.completedFuture(aCourtReport()));
     }
 
     @Test

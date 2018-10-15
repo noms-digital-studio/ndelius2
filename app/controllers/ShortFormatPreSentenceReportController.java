@@ -11,6 +11,8 @@ import interfaces.OffenderApi;
 import interfaces.OffenderApi.CourtAppearances;
 import interfaces.OffenderApi.Offences;
 import interfaces.OffenderApi.Offender;
+import interfaces.OffenderApi.CourtReport;
+import interfaces.OffenderApi.Court;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +26,7 @@ import play.twirl.api.Content;
 import javax.inject.Inject;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
@@ -101,19 +104,29 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
-
         return super.initialParams().thenApply(params -> {
-                params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
-                params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
-                return migrateLegacyReport(params);
-            })
-            .thenComposeAsync(params -> offenderApi.getCourtAppearancesByCrn(session(OFFENDER_API_BEARER_TOKEN), params.get("crn"))
-            .thenCombineAsync(offenderApi.getOffencesByCrn(session(OFFENDER_API_BEARER_TOKEN), params.get("crn")),
-                         (courtAppearances, offences) -> storeCourtData(params, courtAppearances, offences)), ec.current());
+            params.putIfAbsent("pncSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("pnc"))).toString());
+            params.putIfAbsent("addressSupplied", Boolean.valueOf(!Strings.isNullOrEmpty(params.get("address"))).toString());
+            return migrateLegacyReport(params);
+        }).thenComposeAsync(params -> {
+            val crn = params.get("crn");
+            val courtAppearancesFuture = offenderApi.getCourtAppearancesByCrn(session(OFFENDER_API_BEARER_TOKEN), crn).toCompletableFuture();
+            val offencesFuture =  offenderApi.getOffencesByCrn(session(OFFENDER_API_BEARER_TOKEN), crn).toCompletableFuture();
+            val courtReportFuture = offenderApi.getCourtReportByCrnAndCourtReportId(session(OFFENDER_API_BEARER_TOKEN), crn, params.get("entityId")).toCompletableFuture();
+
+            return CompletableFuture.allOf(courtAppearancesFuture, offencesFuture, courtReportFuture)
+                    .thenApplyAsync(notUsed ->
+                            storeCourtData(
+                                    params,
+                                    courtAppearancesFuture.join(),
+                                    courtReportFuture.join(),
+                                    offencesFuture.join()));
+        }, ec.current());
     }
 
     private Map<String, String> storeCourtData(Map<String, String> params,
                                                CourtAppearances courtAppearances,
+                                               CourtReport courtReport,
                                                Offences offences) {
 
         Logger.info("CourtAppearances: " + courtAppearances);
@@ -125,10 +138,12 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             .map(appearance -> {
 
                 if (params.containsKey("createJourney")) {
-                    params.put("court", appearance.getCourt().getCourtName());
+                    params.put("court", Optional.ofNullable(courtReport.getRequiredByCourt())
+                            .map(Court::getCourtName)
+                            .orElse(appearance.getCourt().getCourtName()));
                     params.put("mainOffence", offences.mainOffenceDescriptionForId(appearance.mainOffenceId()));
                     params.put("otherOffences", offences.otherOffenceDescriptionsForIds(appearance.otherOffenceIds()));
-                    ofNullable(appearance.getAppearanceDate())
+                    ofNullable(courtReport.getDateRequired())
                             .filter(StringUtils::isNotBlank)
                             .ifPresent(dateOfHearing -> params.put("dateOfHearing", formatDateTime(dateOfHearing)));
                     params.put("localJusticeArea", appearance.getCourt().getLocality());

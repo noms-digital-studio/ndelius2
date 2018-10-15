@@ -45,5 +45,12 @@ public class CourtAppearanceHelpers {
                     .build()
             )).build();
     }
+
+    public static CourtReport aCourtReport() {
+        return CourtReport.builder()
+                .courtReportId(4L)
+                .dateRequired("2018-08-06T00:00:00")
+                .requiredByCourt(Court.builder().courtName("Some court").locality("Leeds Justice Area").build()).build();
+    }
 }
 

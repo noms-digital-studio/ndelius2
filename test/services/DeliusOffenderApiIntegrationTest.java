@@ -58,6 +58,11 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                                 okForContentType("application/json", loadResource("/deliusoffender/courtAppearances.json"))));
 
         wireMock.stubFor(
+                get(urlEqualTo("/offenders/crn/X12345/courtReports/41"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/courtReport.json"))));
+
+        wireMock.stubFor(
                 get(urlEqualTo("/offenders/crn/X12345/offences"))
                         .willReturn(
                                 okForContentType("application/json",  loadResource("/deliusoffender/offences.json"))));
@@ -152,6 +157,17 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(courtAppearances.getItems().get(0).getOffenceIds().size()).isEqualTo(3);
 
         wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/courtAppearances")));
+    }
+
+    @Test
+    public void getsACourtReportByCrnAndReportId() {
+        val courtReport = offenderApi.getCourtReportByCrnAndCourtReportId("ABC", "X12345", "41").toCompletableFuture().join();
+
+        assertThat(courtReport).isNotNull();
+        assertThat(courtReport.getDateRequired()).isEqualTo("2018-07-17T00:00:00");
+        assertThat(courtReport.getRequiredByCourt().getCourtName()).isEqualTo("Mansfield  Magistrates Court");
+
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/courtReports/41")));
     }
 
     @Test

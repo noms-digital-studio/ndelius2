@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static utils.CourtAppearanceHelpers.aCourtReport;
 import static utils.CourtAppearanceHelpers.someCourtAppearances;
 import static utils.OffenceHelpers.someOffences;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
@@ -44,6 +45,7 @@ public class SaveAsDraftWebTest extends WithIE8Browser {
         given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetails()));
         given(offenderApi.getCourtAppearancesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someCourtAppearances()));
         given(offenderApi.getOffencesByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(someOffences()));
+        given(offenderApi.getCourtReportByCrnAndCourtReportId(any(), any(), any())).willReturn(CompletableFuture.completedFuture(aCourtReport()));
     }
 
     @Test

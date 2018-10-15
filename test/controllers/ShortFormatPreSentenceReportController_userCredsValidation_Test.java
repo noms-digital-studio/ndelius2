@@ -145,6 +145,13 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
             .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder().items(ImmutableList.of()).build()));
         given(offenderApi.getOffencesByCrn(any(), eq("B56789")))
             .willReturn(CompletableFuture.completedFuture(Offences.builder().items(ImmutableList.of()).build()));
+        given(offenderApi.getCourtReportByCrnAndCourtReportId(any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(OffenderApi.CourtReport.builder()
+                        .dateRequired("2018-09-06T00:00:00")
+                        .requiredByCourt(OffenderApi.Court.builder()
+                                .courtName("court name from required by court")
+                                .locality("Bristol").build())
+                        .build()));
 
         return new GuiceApplicationBuilder().
                 overrides(

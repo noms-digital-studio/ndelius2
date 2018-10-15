@@ -111,6 +111,18 @@ public class StubOffenderApi implements OffenderApi {
     }
 
     @Override
+    public CompletionStage<CourtReport> getCourtReportByCrnAndCourtReportId(String bearerToken, String crn, String courtReportId) {
+        return CompletableFuture.completedFuture(CourtReport.builder()
+                .courtReportId(Long.valueOf(courtReportId))
+                .dateRequired("2018-08-09T00:00:00")
+                .requiredByCourt(Court.builder()
+                        .courtName("Old Bailey")
+                        .locality("City of Westminster")
+                        .build())
+                .build());
+    }
+
+    @Override
     public CompletionStage<Offences> getOffencesByCrn(String bearerToken, String crn) {
         if (isBlank(bearerToken)) {
             throw new RuntimeException("getOffencesByCrn called with blank bearerToken");

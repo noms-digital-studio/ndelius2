@@ -16,6 +16,7 @@ import interfaces.OffenderApi.Offences;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.junit.Before;
 import org.junit.Test;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
@@ -47,6 +48,7 @@ import static play.test.Helpers.BAD_REQUEST;
 import static play.test.Helpers.GET;
 import static play.test.Helpers.POST;
 import static play.test.Helpers.route;
+import static utils.CourtAppearanceHelpers.aCourtReport;
 import static utils.OffenderHelper.*;
 
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
@@ -66,7 +68,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
-        assertTrue(content.contains(encryptor.apply("court name from api")));
+        assertTrue(content.contains(encryptor.apply("court name from required by court")));
         assertFalse(content.contains("bar"));
     }
 
@@ -79,7 +81,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(offenderApi.getCourtAppearancesByCrn(any(), eq("X12345")))
             .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
                 .items(ImmutableList.of(CourtAppearance.builder()
-                    .court(Court.builder().courtName("court name from api").build())
+                    .court(Court.builder().courtName("court name from appearance").build())
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
@@ -92,7 +94,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
-        assertTrue(content.contains(encryptor.apply("court name from api")));
+        assertTrue(content.contains(encryptor.apply("court name from required by court")));
     }
 
     @Test
@@ -104,7 +106,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(offenderApi.getCourtAppearancesByCrn(any(), eq("X12345")))
             .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
                 .items(ImmutableList.of(CourtAppearance.builder()
-                    .court(Court.builder().courtName("court name from api").build())
+                    .court(Court.builder().courtName("court name from appearance").build())
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
@@ -117,11 +119,11 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
-        assertTrue(content.contains(encryptor.apply("court name from api")));
+        assertTrue(content.contains(encryptor.apply("court name from required by court")));
     }
 
     @Test
-    public void createNewReport_dateOfHearingRetrievedFromAPI() throws UnsupportedEncodingException {
+    public void createNewReport_dateOfHearingAndCourtRetrievedFromCourtReportRequiredByDate() throws UnsupportedEncodingException {
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
@@ -135,17 +137,23 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 .build()));
         given(offenderApi.getOffencesByCrn(any(), eq("X12345")))
             .willReturn(CompletableFuture.completedFuture(Offences.builder().items(ImmutableList.of()).build()));
+        given(offenderApi.getCourtReportByCrnAndCourtReportId(any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(CourtReport.builder()
+                        .dateRequired("2018-09-16T00:00:00")
+                        .requiredByCourt(Court.builder().courtName("Glasgow").build())
+                        .build()));
 
         val crn = URLEncoder.encode(encryptor.apply("X12345"), "UTF-8");
         val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D&crn="+ crn));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertTrue(content.contains(encryptor.apply("16/08/2018")));
+        assertTrue(content.contains(encryptor.apply("16/09/2018")));
+        assertTrue(content.contains(encryptor.apply("Glasgow")));
     }
 
     @Test
-    public void createNewReport_localJusticeAreaRetrievedFromAPI() throws UnsupportedEncodingException {
+    public void createNewReport_localJusticeAreaRetrievedFromInitialAppearanceCourt() throws UnsupportedEncodingException {
 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
         given(offenderApi.getOffenderByCrn(any(), eq("X12345")))
@@ -177,7 +185,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(offenderApi.getCourtAppearancesByCrn(any(), eq("X12345")))
             .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
                 .items(ImmutableList.of(CourtAppearance.builder()
-                    .court(Court.builder().courtName("court name from api").build())
+                    .court(Court.builder().courtName("court name from appearance").build())
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
@@ -190,7 +198,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
-        assertTrue(content.contains(encryptor.apply("court name from api")));
+        assertTrue(content.contains(encryptor.apply("court name from required by court")));
     }
 
     @Test
@@ -202,7 +210,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(offenderApi.getCourtAppearancesByCrn(any(), eq("X12345")))
             .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
                 .items(ImmutableList.of(CourtAppearance.builder()
-                    .court(Court.builder().courtName("court name from api").build())
+                    .court(Court.builder().courtName("court name from appearance").build())
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
@@ -216,7 +224,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
         assertTrue(content.contains(encryptor.apply("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
-        assertTrue(content.contains(encryptor.apply("court name from api")));
+        assertTrue(content.contains(encryptor.apply("court name from required by court")));
     }
 
     @Test
@@ -260,7 +268,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(offenderApi.getCourtAppearancesByCrn(any(), eq("B56789")))
                 .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
                         .items(ImmutableList.of(CourtAppearance.builder()
-                                .court(Court.builder().courtName("court name from api").build())
+                                .court(Court.builder().courtName("court name from appearance").build())
                                 .appearanceDate("2018-08-06T00:00:00")
                                 .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                                 .build()))
@@ -1241,13 +1249,20 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(offenderApi.getCourtAppearancesByCrn(any(), eq("B56789")))
             .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
                 .items(ImmutableList.of(CourtAppearance.builder()
-                    .court(Court.builder().courtName("court name from api").build())
+                    .court(Court.builder().courtName("court name from appearance").build())
                     .appearanceDate("2018-08-06T00:00:00")
                     .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
                     .build()))
                 .build()));
         given(offenderApi.getOffencesByCrn(any(), eq("B56789")))
             .willReturn(CompletableFuture.completedFuture(Offences.builder().items(ImmutableList.of()).build()));
+        given(offenderApi.getCourtReportByCrnAndCourtReportId(any(), any(), any()))
+                .willReturn(CompletableFuture.completedFuture(CourtReport.builder()
+                        .dateRequired("2018-09-06T00:00:00")
+                        .requiredByCourt(Court.builder()
+                                .courtName("court name from required by court")
+                                .locality("Bristol").build())
+                        .build()));
 
 
         return new GuiceApplicationBuilder().

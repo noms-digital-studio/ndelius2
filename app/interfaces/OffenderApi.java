@@ -136,6 +136,8 @@ public interface OffenderApi {
     @Builder(toBuilder = true)
     class CourtReport {
         private Long courtReportId;
+        private Court requiredByCourt;
+        private String dateRequired;
     }
 
 
@@ -219,6 +221,8 @@ public interface OffenderApi {
     CompletionStage<Offender> getOffenderByCrn(String bearerToken, String crn);
 
     CompletionStage<CourtAppearances> getCourtAppearancesByCrn(String bearerToken, String crn);
+
+    CompletionStage<CourtReport> getCourtReportByCrnAndCourtReportId(String bearerToken, String crn, String courtReportId);
 
     CompletionStage<Offences> getOffencesByCrn(String bearerToken, String crn);
 
