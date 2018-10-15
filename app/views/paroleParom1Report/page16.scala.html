@@ -108,6 +108,24 @@
         </strong>
     </div>
 
+    <p class="govuk-caption-xl govuk-!-margin-top-0 govuk-!-margin-bottom-0">Detail the risk management plan (RMP)</p>
+
+    <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">RMP guidance</span>
+        </summary>
+        <div class="govuk-details__text panel panel-border-narrow">
+
+            <p>The community RMP must include what other agencies will do to manage the risk presented by the offender.</p>
+            <p>Providing a custodial based RMP will not assist the Parole Board to make an informed decision about release.</p>
+            <p>Failure to provide a community RMP when one is required could cause further delay to proceedings and the prisoner pursuing action.</p>
+            <p>The accompanying OASys can detail both a custodial and community RMP.</p>
+            <p>For those on or post-tariff your report must consider the Parole Board’s statutory release test: ‘that it is no longer necessary for the protection of the public that the offender be confined.’</p>
+            <p>You do not need to state the test definition but you should be clear that manageability in the community has been considered, assessed and applied.</p>
+
+        </div>
+    </details>
+
     <div class="form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
@@ -126,24 +144,6 @@
         </fieldset>
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="risk-management-plan-yes">
-
-            <p class="govuk-caption-xl govuk-!-margin-top-0 govuk-!-margin-bottom-0">Detail the risk management plan (RMP)</p>
-
-            <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">RMP guidance</span>
-                </summary>
-                <div class="govuk-details__text panel panel-border-narrow">
-
-                    <p>The community RMP must include what other agencies will do to manage the risk presented by the offender.</p>
-                    <p>Providing a custodial based RMP will not assist the Parole Board to make an informed decision about release.</p>
-                    <p>Failure to provide a community RMP when one is required could cause further delay to proceedings and the prisoner pursuing action.</p>
-                    <p>The accompanying OASys can detail both a custodial and community RMP.</p>
-                    <p>For those on or post-tariff your report must consider the Parole Board’s statutory release test: ‘that it is no longer necessary for the protection of the public that the offender be confined.’</p>
-                    <p>You do not need to state the test definition but you should be clear that manageability in the community has been considered, assessed and applied.</p>
-
-                </div>
-            </details>
 
             @textarea(reportForm("agencies"), '_label -> "Current situation (Agencies)", '_hint -> agenciesHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the current situation (Agencies)")
 
