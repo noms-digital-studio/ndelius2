@@ -300,9 +300,96 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
     }
 
     @Test
-    public void updateReportRetrievesDocumentFromStoreAndUpdatesReportWithOffenderDetailsFromAPI_addressAndPNCBlank() {
+    public void updateReportRetrievesDocumentFromStoreAndUpdatesReportWithOffenderDetailsFromAPI_addressAndPNCNotBlankAndWasPreviouslyNotSupplied() {
+        // scenario: User previously enters offender details because they were not present in Delius, but now details are present in Delius so user entered details are overwritten
 
-        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\", \"address\": \"ADDRESS FROM DOC STORE\", \"pnc\": \"PNC FROM DOC STORE\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Court Retrieved From Store\" } }", OffsetDateTime.now())));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\",\"addressSupplied\": \"false\", \"address\": \"ADDRESS FROM DOC STORE\",\"pncSupplied\": \"false\", \"pnc\": \"PNC FROM DOC STORE\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Court Retrieved From Store\" } }", OffsetDateTime.now())));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789")))
+                .willReturn(CompletableFuture.completedFuture(
+                        anOffenderWithMultipleAddresses()));
+
+        given(offenderApi.getCourtAppearancesByCrn(any(), eq("B56789")))
+                .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
+                        .items(ImmutableList.of(CourtAppearance.builder()
+                                .court(Court.builder().courtName("court name from appearance").build())
+                                .appearanceDate("2018-08-06T00:00:00")
+                                .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
+                                .build()))
+                        .build()));
+
+        try {
+            val clearDocumentId = "12345";
+            val clearUserName = "John Smith";
+
+            val documentId = URLEncoder.encode(encryptor.apply(clearDocumentId), "UTF-8");
+            val onBehalfOfUser = URLEncoder.encode(encryptor.apply(clearUserName), "UTF-8");
+
+            val request = new RequestBuilder().method(GET).
+                    uri("/report/shortFormatPreSentenceReport?documentId=" + documentId +
+                            "&onBehalfOfUser=" + onBehalfOfUser +
+                            "&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D" +
+                            "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
+
+            val content = Helpers.contentAsString(route(app, request));
+            assertTrue(content.contains(encryptor.apply("2018/123456N")));
+            assertTrue(content.contains(encryptor.apply("Main address Building\n7 High Street\nNether Edge\nSheffield\nYorkshire\nS10 1LE")));
+            assertFalse(content.contains(encryptor.apply("PNC FROM DOC STORE")));
+            assertFalse(content.contains(encryptor.apply("ADDRESS FROM DOC STORE")));
+        } catch (Exception ex) {
+
+            fail(ex.getMessage());
+        }
+    }
+
+
+
+    @Test
+    public void updateReportRetrievesDocumentFromStoreAndUpdatesReportWithOffenderDetailsFromAPI_addressAndPNCBlankButPreviouslyWasNotSupplied() {
+        // scenario: User previously enters offender details because they were not present in Delius, now details are still not present in Delius so user entered details remain
+
+
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\",\"addressSupplied\": \"false\", \"address\": \"ADDRESS FROM DOC STORE\",\"pncSupplied\": \"false\", \"pnc\": \"PNC FROM DOC STORE\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Court Retrieved From Store\" } }", OffsetDateTime.now())));
+        given(offenderApi.getOffenderByCrn(any(), eq("B56789")))
+                .willReturn(CompletableFuture.completedFuture(
+                        anOffenderWithNoContactDetailsAndNoPnc()));
+
+        given(offenderApi.getCourtAppearancesByCrn(any(), eq("B56789")))
+                .willReturn(CompletableFuture.completedFuture(CourtAppearances.builder()
+                        .items(ImmutableList.of(CourtAppearance.builder()
+                                .court(Court.builder().courtName("court name from appearance").build())
+                                .appearanceDate("2018-08-06T00:00:00")
+                                .courtReports(ImmutableList.of(CourtReport.builder().courtReportId(456L).build()))
+                                .build()))
+                        .build()));
+
+        try {
+            val clearDocumentId = "12345";
+            val clearUserName = "John Smith";
+
+            val documentId = URLEncoder.encode(encryptor.apply(clearDocumentId), "UTF-8");
+            val onBehalfOfUser = URLEncoder.encode(encryptor.apply(clearUserName), "UTF-8");
+
+            val request = new RequestBuilder().method(GET).
+                    uri("/report/shortFormatPreSentenceReport?documentId=" + documentId +
+                        "&onBehalfOfUser=" + onBehalfOfUser +
+                        "&user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D" +
+                        "&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D");
+
+            val content = Helpers.contentAsString(route(app, request));
+            assertTrue(content.contains(encryptor.apply("PNC FROM DOC STORE")));
+            assertTrue(content.contains(encryptor.apply("ADDRESS FROM DOC STORE")));
+        } catch (Exception ex) {
+
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void updateReportRetrievesDocumentFromStoreAndUpdatesReportWithOffenderDetailsFromAPI_addressAndPNCBlankButPreviouslyWasSupplied() {
+        // scenario: User previously saw  offender details auto-populated from Delius, now details are still not present in Delius so previous Delius supplied details are cleared
+
+
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(() -> new DocumentStore.OriginalData("{ \"templateName\": \"fooBar\", \"values\": { \"pageNumber\": \"1\", \"name\": \"Smith, John\",\"addressSupplied\": \"true\", \"address\": \"ADDRESS FROM DOC STORE\",\"pncSupplied\": \"true\", \"pnc\": \"PNC FROM DOC STORE\", \"startDate\": \"12/12/2017\", \"crn\": \"B56789\", \"entityId\": \"456\", \"dateOfBirth\": \"15/10/1968\", \"age\": \"49\", \"court\": \"Court Retrieved From Store\" } }", OffsetDateTime.now())));
         given(offenderApi.getOffenderByCrn(any(), eq("B56789"))).willReturn(CompletableFuture.completedFuture(anOffenderWithNoContactDetailsAndNoPnc()));
 
         try {
