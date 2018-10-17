@@ -17,9 +17,9 @@
 
     @inputText(reportForm("prisonerDetailsPrisonersFullName"), '_label -> "Prisoner`s full name", 'required -> "true")
 
-    @inputText(reportForm("prisonerDetailsPrisonNumber"), '_label -> "Prison number", 'required -> "true")
+    @inputText(reportForm("prisonerDetailsPrisonNumber"), '_label -> "Prison number", 'required -> "true", 'class -> "govuk-!-width-one-half")
 
-    @inputText(reportForm("prisonerDetailsNomisNumber"), '_label -> "NOMIS number", 'required -> "true")
+    @inputText(reportForm("prisonerDetailsNomisNumber"), '_label -> "NOMIS number", 'required -> "true", 'class -> "govuk-!-width-one-half")
 
     <div class="govuk-form-group" data-module="radios" >
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
@@ -53,9 +53,15 @@
 
     </div>
 
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
     @textarea(reportForm("prisonerDetailsOffence"), '_label -> "Offence", 'class -> "wide", 'required -> "true")
 
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
     @textarea(reportForm("prisonerDetailsSentence"), '_label -> "Sentence", 'class -> "wide", 'required -> "true")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
 
     <div class="govuk-form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
@@ -76,7 +82,7 @@
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="sentence-type-indeterminate">
 
-            @inputText(reportForm("prisonerDetailsTariffLength"), '_label -> "Tariff length", 'required -> "true")
+            @inputText(reportForm("prisonerDetailsTariffLength"), '_label -> "Tariff length", 'required -> "true", 'class -> "govuk-!-width-one-half")
 
             @inputText(
                 reportForm("prisonerDetailsTariffExpiryDate"),
