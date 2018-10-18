@@ -42,24 +42,34 @@
         </div>
         <div class="column-two-thirds">
 
-        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-            @CSRF.formField
+            @if(!reportForm.allErrors().isEmpty) {
+                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
 
-            @commonFields(reportForm, encrypter)
-            @page2Fields(reportForm, encrypter)
-            @page3Fields(reportForm, encrypter)
-            @page4Fields(reportForm)
-            @page5Fields(reportForm)
-            @page6Fields(reportForm)
-            @page7Fields(reportForm)
-            @page8Fields(reportForm)
+                    <ul class="govuk-list govuk-error-summary__list">
+                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
+                    </ul>
+                </div>
+            }
 
-            @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_hint -> proposalHint, 'class -> "wide", Symbol("data-limit") -> "3000", 'required -> "true", '_error -> "Enter your proposed sentence")
+            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+                @CSRF.formField
 
-            @page11Fields(reportForm, encrypter)
+                @commonFields(reportForm, encrypter)
+                @page2Fields(reportForm, encrypter)
+                @page3Fields(reportForm, encrypter)
+                @page4Fields(reportForm)
+                @page5Fields(reportForm)
+                @page6Fields(reportForm)
+                @page7Fields(reportForm)
+                @page8Fields(reportForm)
 
-            @footer(9, reportForm, encrypter)
-        }
+                @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_hint -> proposalHint, 'class -> "wide", Symbol("data-limit") -> "3000", 'required -> "true")
+
+                @page11Fields(reportForm, encrypter)
+
+                @footer(9, reportForm, encrypter)
+            }
 
         </div>
     </div>

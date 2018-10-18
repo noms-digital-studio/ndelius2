@@ -50,56 +50,66 @@
         </div>
         <div class="column-two-thirds">
 
-        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-            @CSRF.formField
+            @if(!reportForm.allErrors().isEmpty) {
+                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
 
-            @commonFields(reportForm, encrypter)
-            @page2Fields(reportForm, encrypter)
-            @page3Fields(reportForm, encrypter)
-            @page4Fields(reportForm)
-            @page5Fields(reportForm)
-            @page6Fields(reportForm)
-            @page7Fields(reportForm)
-
-            @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of further offending", '_hint -> likelihoodHint, 'class -> "wide", 'required -> "true", '_error -> "Tell us their likelihood of re-offending")
-
-            <hr />
-
-            @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Risk of serious harm", '_hint -> seriousHarmHint, 'class -> "wide", Symbol("data-limit") -> "1000", 'required -> "true", '_error -> "Tell us the risk of serious harm")
-
-            <hr />
-
-            <div class="form-group">
-                <fieldset>
-                    <legend>
-                        <span class="form-label-bold">Response to previous supervision</span>
-                    </legend>
-
-                    @inputRadioGroup(
-                        reportForm("previousSupervisionResponse"),
-                        options(
-                            "Good" -> "Good",
-                            "Satisfactory" -> "Satisfactory",
-                            "Poor" -> "Poor",
-                            "N/A" -> "Not applicable"
-                        ),
-                        '_hint -> responseHint,
-                        Symbol("data-target") -> "supervision-details"
-                    )
-                </fieldset>
-
-                <div class="panel panel-border-narrow moj-reveal js-hidden" style="margin-top: -15px;" id="supervision-details">
-                    @textarea(reportForm("additionalPreviousSupervision"), '_label -> "Add additional details on previous supervision (if applicable)", 'class -> "wide", Symbol("data-limit") -> "800")
+                    <ul class="govuk-list govuk-error-summary__list">
+                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
+                    </ul>
                 </div>
-            </div>
+            }
 
-            <div>&nbsp;</div>
+            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+                @CSRF.formField
 
-            @page9Fields(reportForm)
-            @page11Fields(reportForm, encrypter)
+                @commonFields(reportForm, encrypter)
+                @page2Fields(reportForm, encrypter)
+                @page3Fields(reportForm, encrypter)
+                @page4Fields(reportForm)
+                @page5Fields(reportForm)
+                @page6Fields(reportForm)
+                @page7Fields(reportForm)
 
-            @footer(8, reportForm, encrypter)
-        }
+                @textarea(reportForm("likelihoodOfReOffending"), '_label -> "Likelihood of further offending", '_hint -> likelihoodHint, 'class -> "wide", 'required -> "true")
+
+                <hr />
+
+                @textarea(reportForm("riskOfSeriousHarm"), '_label -> "Risk of serious harm", '_hint -> seriousHarmHint, 'class -> "wide", Symbol("data-limit") -> "1000", 'required -> "true")
+
+                <hr />
+
+                <div class="form-group">
+                    <fieldset>
+                        <legend>
+                            <span class="form-label-bold">Response to previous supervision</span>
+                        </legend>
+
+                        @inputRadioGroup(
+                            reportForm("previousSupervisionResponse"),
+                            options(
+                                "Good" -> "Good",
+                                "Satisfactory" -> "Satisfactory",
+                                "Poor" -> "Poor",
+                                "N/A" -> "Not applicable"
+                            ),
+                            '_hint -> responseHint,
+                            Symbol("data-target") -> "supervision-details"
+                        )
+                    </fieldset>
+
+                    <div class="panel panel-border-narrow moj-reveal js-hidden" style="margin-top: -15px;" id="supervision-details">
+                        @textarea(reportForm("additionalPreviousSupervision"), '_label -> "Add additional details on previous supervision (if applicable)", 'class -> "wide", Symbol("data-limit") -> "800")
+                    </div>
+                </div>
+
+                <div>&nbsp;</div>
+
+                @page9Fields(reportForm)
+                @page11Fields(reportForm, encrypter)
+
+                @footer(8, reportForm, encrypter)
+            }
 
         </div>
     </div>
