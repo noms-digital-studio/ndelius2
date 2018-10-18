@@ -36,16 +36,22 @@
 
         </div>
         <div class="column-two-thirds">
+            @if(!reportForm.errors("issueAccommodation").isEmpty) {
+                <div class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
 
-            @if(!reportForm.allErrors().isEmpty) {
-                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
+                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
+                        You need to select one of the underlying issues
+                    </h2>
 
-                    <ul class="govuk-list govuk-error-summary__list">
-                        @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
-                    </ul>
+                    <p>
+                        Please select underlying issues from the options below.
+                    </p>
+                    <p>
+                        If the relevant option is not available select other.
+                    </p>
                 </div>
             }
+
 
             <h2 class="lede no-margin-top no-margin-bottom">Select the underlying issues that are relevant as motivators or drivers for the main offence</h2>
 
@@ -84,15 +90,15 @@
                 @page5Fields(reportForm)
                 @page6Fields(reportForm)
 
-                <div class="form-group@if(reportForm.allErrors.stream.anyMatch(_.key.contains("issue"))) { form-group-error}">
+                <div class="form-group@if(reportForm.allErrors.stream.anyMatch(_.key.startsWith("issue"))) { form-group-error}">
                 @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
-                @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment for employment")
-                @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment for finance")
-                @checkboxDetailsField(reportForm, "issueRelationships", "Relationships", "Provide a brief assessment for relationships")
-                @checkboxDetailsField(reportForm, "issueSubstanceMisuse", "Substance misuse", "Provide a brief assessment for substance misuse")
-                @checkboxDetailsField(reportForm, "issueHealth", "Physical & mental health", "Provide a brief assessment for physical & mental health")
-                @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment for behaviour")
-                @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues")
+                @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment for employment", Some(""))
+                @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment for finance", Some(""))
+                @checkboxDetailsField(reportForm, "issueRelationships", "Relationships", "Provide a brief assessment for relationships", Some(""))
+                @checkboxDetailsField(reportForm, "issueSubstanceMisuse", "Substance misuse", "Provide a brief assessment for substance misuse", Some(""))
+                @checkboxDetailsField(reportForm, "issueHealth", "Physical & mental health", "Provide a brief assessment for physical & mental health", Some(""))
+                @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment for behaviour", Some(""))
+                @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues", Some(""))
                 </div>
 
                 <hr />
@@ -145,6 +151,8 @@
                     @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance, 'class -> "wide")
                     </div>
                 </div>
+
+
 
                 @page8Fields(reportForm)
                 @page9Fields(reportForm)

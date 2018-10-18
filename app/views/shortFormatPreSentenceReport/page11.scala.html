@@ -25,38 +25,28 @@
         </div>
         <div class="column-two-thirds">
 
-            @if(!reportForm.allErrors().isEmpty) {
-                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
+        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+            @CSRF.formField
 
-                    <ul class="govuk-list govuk-error-summary__list">
-                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
-                    </ul>
-                </div>
-            }
+            @commonFields(reportForm, encrypter)
+            @page2Fields(reportForm, encrypter)
+            @page3Fields(reportForm, encrypter)
+            @page4Fields(reportForm)
+            @page5Fields(reportForm)
+            @page6Fields(reportForm)
+            @page7Fields(reportForm)
+            @page8Fields(reportForm)
+            @page9Fields(reportForm)
 
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-                @CSRF.formField
+            @inputText(reportForm("reportAuthor"), '_label -> "Report author", 'required -> "true")
+            @inputText(reportForm("office"), '_label -> "Office", 'required -> "true")
+            @inputText(reportForm("courtOfficePhoneNumber"), '_label -> "Court office phone number")
+            @inputText(reportForm("counterSignature"), '_label -> "Counter signature (if applicable)")
+            @readOnlyField(reportForm("startDate"), "Start date", encrypter)
+            @inputText(reportForm("reportDate"), '_label -> "Completion date", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
 
-                @commonFields(reportForm, encrypter)
-                @page2Fields(reportForm, encrypter)
-                @page3Fields(reportForm, encrypter)
-                @page4Fields(reportForm)
-                @page5Fields(reportForm)
-                @page6Fields(reportForm)
-                @page7Fields(reportForm)
-                @page8Fields(reportForm)
-                @page9Fields(reportForm)
-
-                @inputText(reportForm("reportAuthor"), '_label -> "Report author", 'required -> "true")
-                @inputText(reportForm("office"), '_label -> "Office", 'required -> "true")
-                @inputText(reportForm("courtOfficePhoneNumber"), '_label -> "Court office phone number")
-                @inputText(reportForm("counterSignature"), '_label -> "Counter signature (if applicable)")
-                @readOnlyField(reportForm("startDate"), "Start date", encrypter)
-                @inputText(reportForm("reportDate"), '_label -> "Completion date", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
-
-                @footer(11, reportForm, encrypter, Some(("Submit", Some("Submit and upload your report"))), false)
-            }
+            @footer(11, reportForm, encrypter, Some(("Submit", Some("Submit and upload your report"))), false)
+        }
 
         </div>
     </div>

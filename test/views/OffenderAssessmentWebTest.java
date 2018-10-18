@@ -100,16 +100,17 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
                 contains(entry("experienceTraumaDetails", "Some trauma")).
                 contains(entry("caringResponsibilities", "yes")).
                 contains(entry("caringResponsibilitiesDetails", "Some caring responsibilities"));
+
     }
 
     @Test
-    public void nothingEnteredResultsInErrorMessageForEachQuestion() {
+    public void nothingEnteredResultsInSingleErrorMessageForIssuesAndOneForEachQuestion() {
         offenderAssessmentPage.navigateHere();
 
         whenFormIsSubmitted();
 
-        assertThat(offenderAssessmentPage.countErrors("Specify whether there is evidence of the offender experiencing trauma")).isEqualTo(1);
-        assertThat(offenderAssessmentPage.countErrors("Specify whether the offender has caring responsibilities for children or adults")).isEqualTo(1);
+        assertThat(offenderAssessmentPage.countErrors("Select underlying issues from the options below")).isEqualTo(1);
+        assertThat(offenderAssessmentPage.countErrors("This field is required")).isEqualTo(2);
     }
 
     @Test

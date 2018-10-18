@@ -31,42 +31,32 @@
         </div>
         <div class="column-two-thirds">
 
-            @if(!reportForm.allErrors().isEmpty) {
-                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
+        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+            @CSRF.formField
 
-                    <ul class="govuk-list govuk-error-summary__list">
-                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
-                    </ul>
-                </div>
-            }
+            @commonFields(reportForm, encrypter)
+            @page2Fields(reportForm, encrypter)
+            @page3Fields(reportForm, encrypter)
+            @page4Fields(reportForm)
 
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-                @CSRF.formField
+            @textarea(reportForm("mainOffence"), '_label -> "Main offence and date", 'class -> "wide force-border", 'required -> "true", '_error -> "Enter the main offence and date")
 
-                @commonFields(reportForm, encrypter)
-                @page2Fields(reportForm, encrypter)
-                @page3Fields(reportForm, encrypter)
-                @page4Fields(reportForm)
+            <hr />
 
-                @textarea(reportForm("mainOffence"), '_label -> "Main offence and date", 'class -> "wide force-border", 'required -> "true")
+            @textarea(reportForm("otherOffences"), '_label -> "Other offences and dates (if applicable)", 'class -> "wide force-border")
 
-                <hr />
+            <hr />
 
-                @textarea(reportForm("otherOffences"), '_label -> "Other offences and dates (if applicable)", 'class -> "wide force-border")
+            @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", '_hint -> summaryHint, 'class -> "wide", 'required -> "true", '_error -> "You must enter a brief summary of the offence")
 
-                <hr />
+            @page6Fields(reportForm)
+            @page7Fields(reportForm)
+            @page8Fields(reportForm)
+            @page9Fields(reportForm)
+            @page11Fields(reportForm, encrypter)
 
-                @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", '_hint -> summaryHint, 'class -> "wide", 'required -> "true")
-
-                @page6Fields(reportForm)
-                @page7Fields(reportForm)
-                @page8Fields(reportForm)
-                @page9Fields(reportForm)
-                @page11Fields(reportForm, encrypter)
-
-                @footer(5, reportForm, encrypter)
-            }
+            @footer(5, reportForm, encrypter)
+        }
 
         </div>
     </div>

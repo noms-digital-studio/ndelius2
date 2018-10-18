@@ -35,10 +35,7 @@ textarea.form-control {
 }
 
 input[type="text"], input[type="number"] {
-
-  &.wide {
-    width: 100%;
-  }
+  width: 100%; // Override default
 
   &.half-width {
     width: 50%;

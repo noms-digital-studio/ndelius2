@@ -922,25 +922,17 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("patternOfOffending", "Some pattern of offending");
 
                 put("issueAccommodation", "true");
-                put("issueAccommodationDetails", "Accommodation issues text");
-                put("issueEmployment", "true");
-                put("issueEmploymentDetails", "Employment issues text");
-                put("issueFinance", "true");
-                put("issueFinanceDetails", "Finance issues text");
-                put("issueRelationships", "true");
-                put("issueRelationshipsDetails", "Relationships issues text");
-                put("issueSubstanceMisuse", "true");
-                put("issueSubstanceMisuseDetails", "Substance misuse issues text");
-                put("issueHealth", "true");
-                put("issueHealthDetails", "Health issues text");
-                put("issueBehaviour", "true");
-                put("issueBehaviourDetails", "Behaviour issues text");
-                put("issueOther", "true");
-                put("issueOtherDetails", "Other issues text");
-                put("experienceTrauma", "yes");
-                put("experienceTraumaDetails", "Experience trauma text");
-                put("caringResponsibilities", "yes");
-                put("caringResponsibilitiesDetails", "Caring responsibilities text");
+                put("issueEmployment", "false");
+                put("issueFinance", "false");
+                put("issueRelationships", "false");
+                put("issueSubstanceMisuse", "false");
+                put("issueHealth", "false");
+                put("issueBehaviour", "false");
+                put("issueOther", "false");
+                put("experienceTrauma", "no");
+                put("experienceTraumaDetails", "");
+                put("caringResponsibilities", "no");
+                put("caringResponsibilitiesDetails", "");
 
                 put("pageNumber", "7");
             }
@@ -988,25 +980,13 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
-                put("issueAccommodationDetails", "Accommodation issues text");
                 put("issueEmployment", "true");
-                put("issueEmploymentDetails", "Employment issues text");
                 put("issueFinance", "true");
-                put("issueFinanceDetails", "Finance issues text");
                 put("issueRelationships", "true");
-                put("issueRelationshipsDetails", "Relationships issues text");
                 put("issueSubstanceMisuse", "true");
-                put("issueSubstanceMisuseDetails", "Substance misuse issues text");
                 put("issueHealth", "true");
-                put("issueHealthDetails", "Health issues text");
                 put("issueBehaviour", "true");
-                put("issueBehaviourDetails", "Behaviour issues text");
                 put("issueOther", "true");
-                put("issueOtherDetails", "Other issues text");
-                put("experienceTrauma", "yes");
-                put("experienceTraumaDetails", "Experience trauma text");
-                put("caringResponsibilities", "yes");
-                put("caringResponsibilitiesDetails", "Caring responsibilities text");
 
 
                 put("riskOfSeriousHarm", "Some risk of serious harm");
@@ -1059,25 +1039,13 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
-                put("issueAccommodationDetails", "Accommodation issues text");
                 put("issueEmployment", "true");
-                put("issueEmploymentDetails", "Employment issues text");
                 put("issueFinance", "true");
-                put("issueFinanceDetails", "Finance issues text");
                 put("issueRelationships", "true");
-                put("issueRelationshipsDetails", "Relationships issues text");
                 put("issueSubstanceMisuse", "true");
-                put("issueSubstanceMisuseDetails", "Substance misuse issues text");
                 put("issueHealth", "true");
-                put("issueHealthDetails", "Health issues text");
                 put("issueBehaviour", "true");
-                put("issueBehaviourDetails", "Behaviour issues text");
                 put("issueOther", "true");
-                put("issueOtherDetails", "Other issues text");
-                put("experienceTrauma", "yes");
-                put("experienceTraumaDetails", "Experience trauma text");
-                put("caringResponsibilities", "yes");
-                put("caringResponsibilitiesDetails", "Caring responsibilities text");
 
 
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
@@ -1131,25 +1099,13 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
-                put("issueAccommodationDetails", "Accommodation issues text");
                 put("issueEmployment", "true");
-                put("issueEmploymentDetails", "Employment issues text");
                 put("issueFinance", "true");
-                put("issueFinanceDetails", "Finance issues text");
                 put("issueRelationships", "true");
-                put("issueRelationshipsDetails", "Relationships issues text");
                 put("issueSubstanceMisuse", "true");
-                put("issueSubstanceMisuseDetails", "Substance misuse issues text");
                 put("issueHealth", "true");
-                put("issueHealthDetails", "Health issues text");
                 put("issueBehaviour", "true");
-                put("issueBehaviourDetails", "Behaviour issues text");
                 put("issueOther", "true");
-                put("issueOtherDetails", "Other issues text");
-                put("experienceTrauma", "yes");
-                put("experienceTraumaDetails", "Experience trauma text");
-                put("caringResponsibilities", "yes");
-                put("caringResponsibilitiesDetails", "Caring responsibilities text");
 
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");
@@ -1202,25 +1158,13 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
-                put("issueAccommodationDetails", "Accommodation issues text");
                 put("issueEmployment", "true");
-                put("issueEmploymentDetails", "Employment issues text");
                 put("issueFinance", "true");
-                put("issueFinanceDetails", "Finance issues text");
                 put("issueRelationships", "true");
-                put("issueRelationshipsDetails", "Relationships issues text");
                 put("issueSubstanceMisuse", "true");
-                put("issueSubstanceMisuseDetails", "Substance misuse issues text");
                 put("issueHealth", "true");
-                put("issueHealthDetails", "Health issues text");
                 put("issueBehaviour", "true");
-                put("issueBehaviourDetails", "Behaviour issues text");
                 put("issueOther", "true");
-                put("issueOtherDetails", "Other issues text");
-                put("experienceTrauma", "yes");
-                put("experienceTraumaDetails", "Experience trauma text");
-                put("caringResponsibilities", "yes");
-                put("caringResponsibilitiesDetails", "Caring responsibilities text");
 
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");
@@ -1228,6 +1172,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("additionalPreviousSupervision", "Some previous supervision response");
 
                 put("proposal", "Some proposal");
+                put("consideredQualityDiversity", "no");
 
                 put("pageNumber", "9");
             }
@@ -1277,25 +1222,13 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
-                put("issueAccommodationDetails", "Accommodation issues text");
                 put("issueEmployment", "true");
-                put("issueEmploymentDetails", "Employment issues text");
                 put("issueFinance", "true");
-                put("issueFinanceDetails", "Finance issues text");
                 put("issueRelationships", "true");
-                put("issueRelationshipsDetails", "Relationships issues text");
                 put("issueSubstanceMisuse", "true");
-                put("issueSubstanceMisuseDetails", "Substance misuse issues text");
                 put("issueHealth", "true");
-                put("issueHealthDetails", "Health issues text");
                 put("issueBehaviour", "true");
-                put("issueBehaviourDetails", "Behaviour issues text");
                 put("issueOther", "true");
-                put("issueOtherDetails", "Other issues text");
-                put("experienceTrauma", "yes");
-                put("experienceTraumaDetails", "Experience trauma text");
-                put("caringResponsibilities", "yes");
-                put("caringResponsibilitiesDetails", "Caring responsibilities text");
 
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");
@@ -1304,7 +1237,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("proposal", "Some proposal");
 
                 put("office", "Sheffield probation office");
-                put("courtOfficePhoneNumber", "0114 114 114");
+                put("officePhone", "0114 114 114");
                 put("counterSignature", "Some other person");
 
                 put("pageNumber", "11");
@@ -1355,35 +1288,28 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("offenceAnalysis", "Some offence analysis");
                 put("patternOfOffending", "Some pattern of offending");
                 put("issueAccommodation", "true");
-                put("issueAccommodationDetails", "Accommodation issues text");
                 put("issueEmployment", "true");
-                put("issueEmploymentDetails", "Employment issues text");
                 put("issueFinance", "true");
-                put("issueFinanceDetails", "Finance issues text");
                 put("issueRelationships", "true");
-                put("issueRelationshipsDetails", "Relationships issues text");
                 put("issueSubstanceMisuse", "true");
-                put("issueSubstanceMisuseDetails", "Substance misuse issues text");
                 put("issueHealth", "true");
-                put("issueHealthDetails", "Health issues text");
                 put("issueBehaviour", "true");
-                put("issueBehaviourDetails", "Behaviour issues text");
                 put("issueOther", "true");
-                put("issueOtherDetails", "Other issues text");
-                put("experienceTrauma", "yes");
-                put("experienceTraumaDetails", "Experience trauma text");
-                put("caringResponsibilities", "yes");
-                put("caringResponsibilitiesDetails", "Caring responsibilities text");
+                put("experienceTrauma", "no");
+                put("experienceTraumaDetails", "");
+                put("caringResponsibilities", "no");
+                put("caringResponsibilitiesDetails", "");
 
                 put("likelihoodOfReOffending", "Some likelihood of reoffending");
                 put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
                 put("additionalPreviousSupervision", "Some previous supervision response");
                 put("proposal", "Some proposal");
+                put("consideredQualityDiversity", "yes");
 
                 put("reportAuthor", "Arthur Author");
                 put("office", "Sheffield probation office");
-                put("courtOfficePhoneNumber", "0114 114 114");
+                put("officePhone", "0114 114 114");
                 put("counterSignature", "Some other person");
                 put("reportDate", "21/06/2017");
 

@@ -26,16 +26,6 @@
         </div>
         <div class="column-two-thirds">
 
-            @if(!reportForm.allErrors().isEmpty) {
-                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
-
-                    <ul class="govuk-list govuk-error-summary__list">
-                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
-                    </ul>
-                </div>
-            }
-
             <fieldset>
 
                 <legend class="lede margin-bottom medium">Select the relevant options</legend>
@@ -60,7 +50,7 @@
                     @checkbox(reportForm("otherInformationSource"), '_label -> "Other (please specify below)", Symbol("data-target") -> "other-information")
 
                     <div class="panel panel-border-narrow moj-reveal moj-reveal-reduce js-hidden" id="other-information">
-                    @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information", 'class -> "wide")
+                    @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information", 'class -> "wide", '_error -> "Enter the other information source details")
                     </div>
 
                     <div class="margin-top large"></div>

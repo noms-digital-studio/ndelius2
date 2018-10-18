@@ -23,7 +23,6 @@ public class OffenderAssessmentPage extends FluentPage {
 
     public OffenderAssessmentPage gotoNext() {
         tick("Relationships");
-        fillDetailsWith("Relationships", "Relationships details");
         $(id("experienceTrauma_no")).click();
         $(id("caringResponsibilities_no")).click();
         $(id("nextButton")).click();
