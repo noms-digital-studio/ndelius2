@@ -106,7 +106,7 @@ function openPopup(url, name, top, left) {
             }
         }
 
-        var quietSaveProgress = _.debounce(saveProgress, 500);
+        var quietSaveProgress = _.debounce(saveProgress, 5000);
 
         function saveAndUpdateTextLimits(editor, lengthCalculator) {
             quietSaveProgress(editor);
