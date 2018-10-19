@@ -7,6 +7,5 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(format = {"pretty"})
-@Ignore // fix tme out - no time due to emergency fix
 public class RunCucumber {
 }

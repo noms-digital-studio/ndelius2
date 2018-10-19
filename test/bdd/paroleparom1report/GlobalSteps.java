@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -29,6 +30,7 @@ public class GlobalSteps {
     private Map<String, String> fieldNameToValues;
     private String whatToIncludeFieldLabel;
 
+    private static int SAVE_THROTTLE_TIME_SECONDS = 5;
 
     @When("^they select the \"([^\"]*)\" button$")
     public void theySelectTheButton(String button) {
@@ -85,13 +87,13 @@ public class GlobalSteps {
 
     @Then("^this information should be saved in the prisoner parole report$")
     public void thisInformationShouldBeSavedInThePrisonerParoleReport() {
-        control.await().until(unused ->
+        control.await().atMost(SAVE_THROTTLE_TIME_SECONDS + 1, TimeUnit.SECONDS).until(unused ->
                 alfrescoStoreMock.verifySavedDocumentContainsValues(fieldNameToValues));
     }
 
     @Then("^the following information should be saved in the prisoner parole report$")
     public void theFollowingInformationShouldBeSavedInThePrisonerParoleReport(DataTable fieldNameToValuesTable) throws Throwable {
-        control.await().until(unused ->
+        control.await().atMost(SAVE_THROTTLE_TIME_SECONDS + 1, TimeUnit.SECONDS).until(unused ->
                 alfrescoStoreMock.verifySavedDocumentContainsValues(fieldNameToValuesTable.asMap(String.class, String.class)));
     }
 
