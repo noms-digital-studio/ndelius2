@@ -276,7 +276,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("OFFICE")
     private String office;
 
-    @RequiredOnPage(value = 11, message = "Enter the court office phone number")
+    @OnPage(11)
     @JsonProperty("COURT_OFFICE_PHONE_NUMBER")
     private String courtOfficePhoneNumber;
 

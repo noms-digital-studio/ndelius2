@@ -1304,8 +1304,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("proposal", "Some proposal");
 
                 put("office", "Sheffield probation office");
-                put("courtOfficePhoneNumber", "0114 114 114");
-                put("counterSignature", "Some other person");
 
                 put("pageNumber", "11");
             }
@@ -1383,8 +1381,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
                 put("reportAuthor", "Arthur Author");
                 put("office", "Sheffield probation office");
-                put("courtOfficePhoneNumber", "0114 114 114");
-                put("counterSignature", "Some other person");
                 put("reportDate", "21/06/2017");
 
                 put("pageNumber", "11");
