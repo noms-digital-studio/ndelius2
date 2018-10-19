@@ -61,19 +61,19 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     // Page 3
 
     @Encrypted
-    @RequiredOnPage(3)
+    @RequiredOnPage(value = 3, message = "Enter the court")
     @JsonProperty("_COURT_")
     private String court;
 
     @Encrypted
-    @RequiredOnPage(3)
-    @JsonProperty("_DATE_OF_HEARING_")
-    private String dateOfHearing;
-
-    @Encrypted
-    @RequiredOnPage(3)
+    @RequiredOnPage(value = 3, message = "Enter the local justice area")
     @JsonProperty("_LOCAL_JUSTICE_AREA_")
     private String localJusticeArea;
+
+    @Encrypted
+    @RequiredOnPage(value = 3, message = "Enter the date of hearing")
+    @JsonProperty("_DATE_OF_HEARING_")
+    private String dateOfHearing;
 
 
     // Page 4
@@ -122,14 +122,14 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("OTHER_INFORMATION_SOURCE")
     private boolean otherInformationSource;
 
-    @RequiredOnPage(value = 4, onlyIfField = "otherInformationSource")
+    @RequiredOnPage(value = 4, message = "Enter the other information source details", onlyIfField = "otherInformationSource")
     @JsonProperty("OTHER_INFORMATION_DETAILS")
     private String otherInformationDetails;
 
 
     // Page 5
 
-    @RequiredOnPage(5)
+    @RequiredOnPage(value = 5, message = "Enter the main offence and date")
     @JsonProperty("MAIN_OFFENCE")
     private String mainOffence;
 
@@ -137,14 +137,14 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("OTHER_OFFENCE")
     private String otherOffences;
 
-    @RequiredOnPage(5)
+    @RequiredOnPage(value = 5, message = "Enter a brief summary of the offence")
     @JsonProperty("OFFENCE_SUMMARY")
     private String offenceSummary;
 
 
     // Page 6
 
-    @RequiredOnPage(6)
+    @RequiredOnPage(value = 6, message = "Enter your analysis of the offence")
     @JsonProperty("OFFENCE_ANALYSIS")
     private String offenceAnalysis;
 
@@ -155,100 +155,99 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 7
 
-    @RequiredGroupOnPage(value = 7)
+    @RequiredGroupOnPage(value = 7, message = "Select underlying issues from the options below")
     @JsonProperty("ISSUE_ACCOMMODATION")
     private boolean issueAccommodation;
 
-    @OnPage(7)
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_ACCOMMODATION_DETAILS")
     private String issueAccommodationDetails;
 
-    @RequiredGroupOnPage(value = 7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_EMPLOYMENT")
     private boolean issueEmployment;
 
-    @OnPage(7)
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_EMPLOYMENT_DETAILS")
     private String issueEmploymentDetails;
 
-    @RequiredGroupOnPage(value = 7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_FINANCE")
     private boolean issueFinance;
 
-    @OnPage(7)
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_FINANCE_DETAILS")
     private String issueFinanceDetails;
 
-    @RequiredGroupOnPage(value = 7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_RELATIONSHIPS")
     private boolean issueRelationships;
 
-    @OnPage(7)
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_RELATIONSHIPS_DETAILS")
     private String issueRelationshipsDetails;
 
-    @RequiredGroupOnPage(value = 7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_SUBSTANCE_MISUSE")
     private boolean issueSubstanceMisuse;
 
-    @OnPage(7)
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_SUBSTANCE_MISUSE_DETAILS")
     private String issueSubstanceMisuseDetails;
 
-    @RequiredGroupOnPage(value = 7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_HEALTH")
     private boolean issueHealth;
 
-    @OnPage(7)
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_HEALTH_DETAILS")
     private String issueHealthDetails;
 
-    @RequiredGroupOnPage(value = 7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_BEHAVIOUR")
     private boolean issueBehaviour;
 
-    @OnPage(7)
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_BEHAVIOUR_DETAILS")
     private String issueBehaviourDetails;
 
-    @RequiredGroupOnPage(value = 7)
+    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
     @JsonProperty("ISSUE_OTHER")
     private boolean issueOther;
 
-    @OnPage(7)
+    @OnPage(value = 7)
     @JsonProperty("ISSUE_OTHER_DETAILS")
     private String issueOtherDetails;
 
 
-    @RequiredOnPage(7)
+    @RequiredOnPage(value = 7, message = "Specify whether there is evidence of the offender experiencing trauma")
     @JsonProperty("EXPERIENCE_TRAUMA")
     private String experienceTrauma;
 
-    @OnPage(7)
+    @RequiredOnPage(value = 7, message = "Enter the experience of trauma", onlyIfField = "experienceTrauma", onlyIfFieldMatchValue = "yes")
     @JsonProperty("EXPERIENCE_TRAUMA_DETAILS")
     private String experienceTraumaDetails;
 
-
-    @RequiredOnPage(7)
+    @RequiredOnPage(value = 7, message = "Specify whether the offender has caring responsibilities for children or adults")
     @JsonProperty("CARING_RESPONSIBILITIES")
     private String caringResponsibilities;
 
-    @OnPage(7)
+    @RequiredOnPage(value = 7, message = "Enter the caring responsibilities", onlyIfField = "caringResponsibilities", onlyIfFieldMatchValue = "yes")
     @JsonProperty("CARING_RESPONSIBILITIES_DETAILS")
     private String caringResponsibilitiesDetails;
 
 
     // Page 8
 
-    @RequiredOnPage(8)
-    @JsonProperty("RISK_OF_SERIOUS_HARM")
-    private String riskOfSeriousHarm;
-
-    @RequiredOnPage(8)
+    @RequiredOnPage(value = 8, message = "Enter the likelihood of further offending")
     @JsonProperty("LIKELIHOOD_OF_RE_OFFENDING")
     private String likelihoodOfReOffending;
 
-    @RequiredOnPage(8)
+    @RequiredOnPage(value = 8, message = "Enter the risk of serious harm")
+    @JsonProperty("RISK_OF_SERIOUS_HARM")
+    private String riskOfSeriousHarm;
+
+    @RequiredOnPage(value = 8, message = "Enter the response to previous supervision")
     @JsonProperty("PREVIOUS_SUPERVISION_RESPONSE")
     private String previousSupervisionResponse;
 
@@ -258,7 +257,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 9
 
-    @RequiredOnPage(9)
+    @RequiredOnPage(value = 9, message = "Enter your proposed sentence")
     @JsonProperty("PROPOSAL")
     private String proposal;
 
@@ -269,25 +268,25 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 11
 
-    @RequiredOnPage(11)
+    @RequiredOnPage(value = 11, message = "Enter the report author")
     @JsonProperty("REPORT_AUTHOR")
     private String reportAuthor;
 
-    @RequiredOnPage(11)
+    @RequiredOnPage(value = 11, message = "Enter the office")
     @JsonProperty("OFFICE")
     private String office;
 
-    @OnPage(11)
-    @JsonProperty("REPORT_DATE")
-    private String reportDate;
-
-    @OnPage(11)
+    @RequiredOnPage(value = 11, message = "Enter the court office phone number")
     @JsonProperty("COURT_OFFICE_PHONE_NUMBER")
     private String courtOfficePhoneNumber;
 
     @OnPage(11)
     @JsonProperty("COUNTER_SIGNATURE")
     private String counterSignature;
+
+    @RequiredOnPage(value = 11, message = "Enter the report completion date")
+    @JsonProperty("REPORT_DATE")
+    private String reportDate;
 
     @JsonProperty("ADDRESS_LINES")
     public List<String> addressLines() {
@@ -303,9 +302,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     public List<ValidationError> validate() {
 
         if (Strings.isNullOrEmpty(reportDate)) { // Fill in for the first read only page, then keep any user changes
-
             reportDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-
         }
 
         return super.validate();

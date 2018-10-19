@@ -43,30 +43,40 @@
         </div>
         <div class="column-two-thirds">
 
-        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-            @CSRF.formField
+            @if(!reportForm.allErrors().isEmpty) {
+                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
 
-            @commonFields(reportForm, encrypter)
-            @page2Fields(reportForm, encrypter)
-            @page3Fields(reportForm, encrypter)
-            @page4Fields(reportForm)
-            @page5Fields(reportForm)
+                    <ul class="govuk-list govuk-error-summary__list">
+                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
+                    </ul>
+                </div>
+            }
 
-            @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", '_hint -> analysisHint, 'class -> "wide", 'required -> "true", '_error -> "You must enter your analysis of the offence", Symbol("data-limit") -> "4000")
+            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+                @CSRF.formField
 
-            <hr />
+                @commonFields(reportForm, encrypter)
+                @page2Fields(reportForm, encrypter)
+                @page3Fields(reportForm, encrypter)
+                @page4Fields(reportForm)
+                @page5Fields(reportForm)
 
-            @textarea(reportForm("patternOfOffending"), '_label -> "Patterns of offending behaviour (if applicable)", '_hint -> patternsHint, 'class -> "wide", Symbol("data-limit") -> "1000")
+                @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", '_hint -> analysisHint, 'class -> "wide", 'required -> "true", Symbol("data-limit") -> "4000")
 
-            <div class="margin-top large"></div>
+                <hr />
 
-            @page7Fields(reportForm)
-            @page8Fields(reportForm)
-            @page9Fields(reportForm)
-            @page11Fields(reportForm, encrypter)
+                @textarea(reportForm("patternOfOffending"), '_label -> "Patterns of offending behaviour (if applicable)", '_hint -> patternsHint, 'class -> "wide", Symbol("data-limit") -> "1000")
 
-            @footer(6, reportForm, encrypter)
-        }
+                <div class="margin-top large"></div>
+
+                @page7Fields(reportForm)
+                @page8Fields(reportForm)
+                @page9Fields(reportForm)
+                @page11Fields(reportForm, encrypter)
+
+                @footer(6, reportForm, encrypter)
+            }
 
         </div>
     </div>
