@@ -199,7 +199,7 @@ public class StubOffenderApi implements OffenderApi {
     }
 
     private ImmutableMap<String, String> otherIds() {
-        return ImmutableMap.of("pncNumber", "2018/123456N");
+        return ImmutableMap.of("pncNumber", "2018/123456N", "nomsNumber", "A3597AEX");
     }
 
     private ImmutableList<OffenderAddress> addresses() {

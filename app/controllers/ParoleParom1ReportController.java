@@ -19,6 +19,8 @@ import play.twirl.api.Content;
 import javax.inject.Inject;
 import java.util.Map;
 
+import static java.util.Optional.ofNullable;
+
 public class ParoleParom1ReportController extends ReportGeneratorWizardController<ParoleParom1ReportData> {
 
     private final views.html.paroleParom1Report.cancelled cancelledTemplate;
@@ -48,6 +50,15 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     @Override
     protected Map<String, String> storeOffenderDetails(Map<String, String> params, OffenderApi.Offender offender) {
         params.put("gender", offender.getGender());
+
+        ofNullable(offender.getOtherIds())
+            .filter(otherIds -> otherIds.containsKey("nomsNumber"))
+            .map(otherIds -> otherIds.get("nomsNumber"))
+            .ifPresent(nomsNumber -> {
+                params.put("prisonerDetailsNomisNumber", nomsNumber);
+            });
+
+        params.put("prisonerDetailsPrisonersFullName", offender.displayName());
         return params;
     }
 

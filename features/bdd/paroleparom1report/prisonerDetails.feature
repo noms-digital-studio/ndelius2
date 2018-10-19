@@ -13,10 +13,8 @@ Feature: Parole Report
 
     Given that the delius user want to enter for Male prisoner who has Indeterminate sentence
     And they input the following information
-      | Prison or Young Offender Institution | Doncaster     |
-      | Prisoner`s full name                 | Kieron Dobson |
-      | Prison number                        | P98793-123    |
-      | NOMIS number                         | N2124214-3423 |
+      | Prison or Young Offender Institution | Doncaster  |
+      | Prison number                        | P98793-123 |
     And they select the "A" option on the "Current prison category"
     And they enter the following information
       | Offence  | Aggravated assault |
@@ -25,16 +23,25 @@ Feature: Parole Report
     And they input the following information
       | Tariff length | 5 years |
     And they enter the date "29/06/2019" for "Tariff expiry date"
-    Then this information should be saved in the prisoner parole report
+    Then the following information should be saved in the prisoner parole report
+      | prisonerDetailsPrisonInstitution | Doncaster          |
+      | prisonerDetailsPrisonersFullName | Jimmy Jammy Fizz   |
+      | prisonerDetailsPrisonNumber      | P98793-123         |
+      | prisonerDetailsNomisNumber       | M123456            |
+      | prisonerDetailsPrisonersCategory | a                  |
+      | prisonerDetailsOffence           | Aggravated assault |
+      | prisonerDetailsSentence          | 4 years            |
+      | prisonerDetailsSentenceType      | indeterminate      |
+      | prisonerDetailsTariffLength      | 5 years            |
+      | prisonerDetailsTariffExpiryDate  | 29/06/2019         |
+
 
   Scenario: Delius user wants to enter details for Male prisoner whom has Determinate sentence
 
     Given that the delius user want to enter for Male prisoner who has Determinate sentence
     And they input the following information
-      | Prison or Young Offender Institution | Doncaster     |
-      | Prisoner`s full name                 | Kieron Dobson |
-      | Prison number                        | P98793-123    |
-      | NOMIS number                         | N2124214-3423 |
+      | Prison or Young Offender Institution | Doncaster  |
+      | Prison number                        | P98793-123 |
     And they select the "C" option on the "Current prison category"
     And they enter the following information
       | Offence  | Aggravated assault |
@@ -42,7 +49,18 @@ Feature: Parole Report
     And they select the "Determinate" option on the "Sentence type"
     And they enter the date "08/11/2031" for "Parole eligibility date"
     And they enter the date "09/12/2031" for "Automatic release date/non parole eligibility date"
-    Then this information should be saved in the prisoner parole report
+    Then the following information should be saved in the prisoner parole report
+      | prisonerDetailsPrisonInstitution     | Doncaster          |
+      | prisonerDetailsPrisonersFullName     | Jimmy Jammy Fizz   |
+      | prisonerDetailsPrisonNumber          | P98793-123         |
+      | prisonerDetailsNomisNumber           | M123456            |
+      | prisonerDetailsPrisonersCategory     | c                  |
+      | prisonerDetailsOffence               | Aggravated assault |
+      | prisonerDetailsSentence              | 20 years           |
+      | prisonerDetailsSentenceType          | determinate        |
+      | prisonerDetailsParoleEligibilityDate | 08/11/2031         |
+      | prisonerDetailsAutoReleaseDate       | 09/12/2031         |
+
 
   Scenario: Delius user wants to close the parole report
 
@@ -54,9 +72,7 @@ Feature: Parole Report
     When  they select the "Continue" button
     Then  the following error messages are displayed
       | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
-      | Prisoner`s full name                 | Enter the prisoner's full name                 |
       | Prison number                        | Enter the prison number                        |
-      | NOMIS number                         | Enter the NOMIS number                         |
       | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
@@ -68,9 +84,7 @@ Feature: Parole Report
     When  they select the "Continue" button
     Then  the following error messages are displayed
       | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
-      | Prisoner`s full name                 | Enter the prisoner's full name                 |
       | Prison number                        | Enter the prison number                        |
-      | NOMIS number                         | Enter the NOMIS number                         |
       | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
@@ -83,9 +97,7 @@ Feature: Parole Report
     When  they select the "Continue" button
     Then  the following error messages are displayed
       | Prison or Young Offender Institution | Enter the prison or Young Offender Institution |
-      | Prisoner`s full name                 | Enter the prisoner's full name                 |
       | Prison number                        | Enter the prison number                        |
-      | NOMIS number                         | Enter the NOMIS number                         |
       | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |

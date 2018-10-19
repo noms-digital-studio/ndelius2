@@ -15,11 +15,11 @@
 
     @inputText(reportForm("prisonerDetailsPrisonInstitution"), '_label -> "Prison or Young Offender Institution", 'required -> "true")
 
-    @inputText(reportForm("prisonerDetailsPrisonersFullName"), '_label -> "Prisoner`s full name", 'required -> "true")
+    @readOnlyField(reportForm("prisonerDetailsPrisonersFullName"), "Prisoner`s full name")
 
     @inputText(reportForm("prisonerDetailsPrisonNumber"), '_label -> "Prison number", 'required -> "true", 'class -> "govuk-!-width-one-half")
 
-    @inputText(reportForm("prisonerDetailsNomisNumber"), '_label -> "NOMIS number", 'required -> "true", 'class -> "govuk-!-width-one-half")
+    @readOnlyField(reportForm("prisonerDetailsNomisNumber"), "NOMIS number")
 
     <div class="govuk-form-group" data-module="radios" >
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
