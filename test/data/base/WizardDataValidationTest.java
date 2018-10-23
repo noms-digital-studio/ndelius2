@@ -1,5 +1,6 @@
 package data.base;
 
+import com.google.common.collect.ImmutableList;
 import data.annotations.DateOnPage;
 import data.annotations.OnPage;
 import data.annotations.RequiredDateOnPage;
@@ -11,6 +12,11 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Before;
 import org.junit.Test;
 import play.data.validation.ValidationError;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static data.base.WizardData.fieldPage;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -90,7 +96,9 @@ public class WizardDataValidationTest {
         @OnPage(99)
         private String dummyFinalPageField;
 
-
+        protected List<Function<Map<String, Object>, Stream<ValidationError>>> reportSpecificValidators() {
+            return ImmutableList.of();
+        }
     }
 
     private MyTestData data;
