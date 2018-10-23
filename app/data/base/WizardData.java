@@ -23,16 +23,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Data
 @Validate
-public class WizardData implements Validatable<List<ValidationError>> {
+public abstract class WizardData implements Validatable<List<ValidationError>> {
 
     @Encrypted
     @RequiredOnPage(1)
@@ -93,9 +91,9 @@ public class WizardData implements Validatable<List<ValidationError>> {
                             field.getAnnotation(DateOnPage.class).value();
     }
 
-    protected List<Function<Map<String, Object>, Stream<ValidationError>>> validators() {    // Overridable in derived Data classes
+    private List<Function<Map<String, Object>, Stream<ValidationError>>> validators() {    // Overridable in derived Data classes
 
-        return ImmutableList.of(
+        List<Function<Map<String, Object>, Stream<ValidationError>>> baseValidators = ImmutableList.of(
                 this::mandatoryErrors,
                 this::mandatoryDateErrors,
                 this::partialRequiredDateErrors,
@@ -104,7 +102,17 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 this::invalidDateErrors,
                 this::mandatoryGroupErrors
         );
+
+        List<Function<Map<String, Object>, Stream<ValidationError>>> specificValidators =
+                reportSpecificValidators();
+
+        return ImmutableList.<Function<Map<String, Object>, Stream<ValidationError>>>builder()
+                .addAll(baseValidators)
+                .addAll(specificValidators)
+                .build();
     }
+
+    protected abstract List<Function<Map<String, Object>, Stream<ValidationError>>> reportSpecificValidators();
 
     private Stream<ValidationError> mandatoryErrors(Map<String, Object> options) {
 
@@ -175,11 +183,11 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return requiredEnforced(field.getAnnotation(RequiredOnPage.class).onlyIfField(), field.getAnnotation(RequiredOnPage.class).onlyIfFieldMatchValue());
     }
 
-    private boolean requiredDateFieldEnforced(Field field) {
+    protected boolean requiredDateFieldEnforced(Field field) {
         return requiredEnforced(field.getAnnotation(RequiredDateOnPage.class).onlyIfField(), field.getAnnotation(RequiredDateOnPage.class).onlyIfFieldMatchValue());
     }
 
-    private boolean dateFieldEnforced(Field field) {
+    protected boolean dateFieldEnforced(Field field) {
         return requiredEnforced(field.getAnnotation(DateOnPage.class).onlyIfField(), field.getAnnotation(DateOnPage.class).onlyIfFieldMatchValue());
     }
 
@@ -195,7 +203,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return Boolean.parseBoolean(options.getOrDefault("checkAll", false).toString());
     }
 
-    private boolean mustValidateField(Map<String, Object> options, Field field) {
+    protected boolean mustValidateField(Map<String, Object> options, Field field) {
         // Check all pages if on last page and clicking next
         // Check current page if clicking next and not jumping
         // If jumping don't perform any validation
@@ -228,7 +236,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 .allMatch(StringUtils::isBlank);
 
     }
-    private boolean allDateFieldsAreSupplied(Field field) {
+    protected boolean allDateFieldsAreSupplied(Field field) {
         return dateFieldValues(field)
                 .allMatch(StringUtils::isNotBlank);
 
@@ -236,11 +244,17 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private boolean someDateFieldsAreEmpty(Field field) {
         return !allDateFieldsAreEmpty(field) && !allDateFieldsAreSupplied(field);
     }
-    private boolean composedDateBitsAreInvalid(Field field) {
+
+    protected SimpleDateFormat getValidatorDateFormat() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
+        dateFormat.setLenient(false);
+        return dateFormat;
+    }
+
+    protected boolean composedDateBitsAreInvalid(Field field) {
         try {
             String formattedDate = dateFieldValues(field).collect(Collectors.joining("/"));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
-            dateFormat.setLenient(false);
+            SimpleDateFormat dateFormat = getValidatorDateFormat();
             dateFormat.parse(formattedDate);
             return false;
         } catch (ParseException e) {
@@ -258,7 +272,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 dateFieldValues(field).collect(Collectors.joining("/"));
     }
 
-    private Stream<String> dateFieldValues(Field field) {
+    protected Stream<String> dateFieldValues(Field field) {
         return Stream.of("day", "month", "year")
                 .map(postifx -> String.format("%s_%s", field.getName(), postifx))
                 .map(this::fieldForName)
@@ -303,12 +317,12 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return annotatedFields(RequiredOnPage.class);
     }
 
-    private Stream<Field> requiredDateFields() {
+    protected Stream<Field> requiredDateFields() {
 
         return annotatedFields(RequiredDateOnPage.class);
     }
 
-    private Stream<Field> dateFields() {
+    protected Stream<Field> dateFields() {
 
         return annotatedFields(DateOnPage.class);
     }

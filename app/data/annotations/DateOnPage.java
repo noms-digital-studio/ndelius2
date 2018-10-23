@@ -19,4 +19,8 @@ public @interface DateOnPage {
 
     String incompleteMessage() default Constraints.RequiredValidator.message;
     String invalidMessage() default Constraints.RequiredValidator.message;
+    String outOfRangeMessage() default Constraints.RequiredValidator.message;
+
+    String minDate() default "";
+    String maxDate() default "";
 }

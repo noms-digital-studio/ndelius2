@@ -1,6 +1,7 @@
 package data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.ImmutableList;
 import data.annotations.DateOnPage;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
@@ -13,14 +14,19 @@ import lombok.EqualsAndHashCode;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import play.data.validation.ValidationError;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ParoleParom1ReportData extends ReportGeneratorWizardData {
 
     // Page 2
@@ -63,8 +69,8 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String prisonerDetailsSentenceType;
 
     @RequiredOnPage(value = 2, message = "Enter the tariff length",
-                               onlyIfField="prisonerDetailsSentenceType",
-                               onlyIfFieldMatchValue="indeterminate")
+            onlyIfField = "prisonerDetailsSentenceType",
+            onlyIfFieldMatchValue = "indeterminate")
     @JsonProperty("PRISONER_DETAILS_TARIFF_LENGTH")
     private String prisonerDetailsTariffLength;
 
@@ -74,10 +80,12 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     }
 
     @RequiredDateOnPage(value = 2, message = "Enter the tariff expiry date",
-                                   incompleteMessage = "Enter the tariff expiry date and include a day, month and year",
-                                   invalidMessage = "Enter a real tariff expiry date",
-                                   onlyIfField="prisonerDetailsSentenceType",
-                                   onlyIfFieldMatchValue="indeterminate")
+            incompleteMessage = "Enter the tariff expiry date and include a day, month and year",
+            invalidMessage = "Enter a real tariff expiry date",
+            onlyIfField = "prisonerDetailsSentenceType",
+            onlyIfFieldMatchValue = "indeterminate",
+            minDate = "TODAY",
+            outOfRangeMessage = "The tariff expiry date must be in the future")
     private String prisonerDetailsTariffExpiryDate;
     private String prisonerDetailsTariffExpiryDate_day;
     private String prisonerDetailsTariffExpiryDate_month;
@@ -89,9 +97,11 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     }
 
     @DateOnPage(value = 2, incompleteMessage = "Enter the parole eligibility date and include a day, month and year",
-                           invalidMessage = "Enter a real parole eligibility date",
-                           onlyIfField="prisonerDetailsSentenceType",
-                           onlyIfFieldMatchValue="determinate")
+            invalidMessage = "Enter a real parole eligibility date",
+            onlyIfField = "prisonerDetailsSentenceType",
+            onlyIfFieldMatchValue = "determinate",
+            minDate = "TODAY",
+            outOfRangeMessage = "The parole eligibility date must be in the future")
     private String prisonerDetailsParoleEligibilityDate;
     private String prisonerDetailsParoleEligibilityDate_day;
     private String prisonerDetailsParoleEligibilityDate_month;
@@ -103,9 +113,11 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     }
 
     @DateOnPage(value = 2, incompleteMessage = "Enter the automatic release date and include a day, month and year",
-                           invalidMessage = "Enter a real automatic release date",
-                           onlyIfField="prisonerDetailsSentenceType",
-                           onlyIfFieldMatchValue="determinate")
+            invalidMessage = "Enter a real automatic release date",
+            onlyIfField = "prisonerDetailsSentenceType",
+            onlyIfFieldMatchValue = "determinate",
+            minDate = "TODAY",
+            outOfRangeMessage = "The automatic release date/non parole eligibility date must be in the future")
     private String prisonerDetailsAutoReleaseDate;
     private String prisonerDetailsAutoReleaseDate_day;
     private String prisonerDetailsAutoReleaseDate_month;
@@ -143,29 +155,33 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         }
     }
 
-    @RequiredDateOnPage(value = 4, message = "Enter the date when the RoSH assessment was completed", incompleteMessage = "Enter the date when the RoSH assessment was completed", invalidMessage = "Enter a real date when the RoSH assessment was completed", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @RequiredDateOnPage(value = 4, message = "Enter the date when the RoSH assessment was completed",
+            incompleteMessage = "Enter the date when the RoSH assessment was completed",
+            invalidMessage = "Enter a real date when the RoSH assessment was completed",
+            onlyIfField = "roshAtPosAssessmentCompleted",
+            onlyIfFieldMatchValue = "yes")
     private String roshAtPosDate;
     private String roshAtPosDate_day;
     private String roshAtPosDate_month;
     private String roshAtPosDate_year;
 
-    @RequiredOnPage(value = 4, message = "Select the risk to the public", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 4, message = "Select the risk to the public", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("ROSH_AT_POS_PUBLIC")
     private String roshAtPosPublic;
 
-    @RequiredOnPage(value = 4, message = "Select the risk to any known adult", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 4, message = "Select the risk to any known adult", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("ROSH_AT_POS_KNOWN_ADULT")
     private String roshAtPosKnownAdult;
 
-    @RequiredOnPage(value = 4, message = "Select the risk to children", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 4, message = "Select the risk to children", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("ROSH_AT_POS_CHILDREN")
     private String roshAtPosChildren;
 
-    @RequiredOnPage(value = 4, message = "Select the risk to prisoners", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 4, message = "Select the risk to prisoners", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("ROSH_AT_POS_PRISONERS")
     private String roshAtPosPrisoners;
 
-    @RequiredOnPage(value = 4, message = "Select the risk to staff", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 4, message = "Select the risk to staff", onlyIfField = "roshAtPosAssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("ROSH_AT_POS_STAFF")
     private String roshAtPosStaff;
 
@@ -188,7 +204,12 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         return formattedDateFromDateParts("victimsVLOContactDate");
     }
 
-    @RequiredDateOnPage(value = 5, message = "Enter the date you contacted the VLO", incompleteMessage = "Enter the date you contacted the VLO and include a day, month and year", invalidMessage = "Enter a real date you contacted the VLO")
+    @RequiredDateOnPage(value = 5, message = "Enter the date you contacted the VLO",
+            incompleteMessage = "Enter the date you contacted the VLO and include a day, month and year",
+            invalidMessage = "Enter a real date you contacted the VLO",
+            minDate = "LAST_YEAR",
+            maxDate = "TODAY",
+            outOfRangeMessage = "The VLO date must be within the last year")
     private String victimsVLOContactDate;
     private String victimsVLOContactDate_day;
     private String victimsVLOContactDate_month;
@@ -239,17 +260,24 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         return formattedDateFromDateParts("mappaScreenedDate");
     }
 
-    @RequiredDateOnPage(value = 10, message = "Enter the date when the prisoner was screened for MAPPA", incompleteMessage = "Enter the date when the prisoner was screened for MAPPA and include a day, month and year", invalidMessage = "Enter a real date when the prisoner was screened for MAPPA", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    @RequiredDateOnPage(value = 10,
+            message = "Enter the date when the prisoner was screened for MAPPA",
+            incompleteMessage = "Enter the date when the prisoner was screened for MAPPA and include a day, month and year",
+            invalidMessage = "Enter a real date when the prisoner was screened for MAPPA",
+            onlyIfField = "eligibleForMappa",
+            onlyIfFieldMatchValue = "yes",
+            maxDate = "MAPPA_MAX_DATE",
+            outOfRangeMessage = "The MAPPA date must be at least 6 months prior to the Parole Eligibility date and must be in the past")
     private String mappaScreenedDate;
     private String mappaScreenedDate_day;
     private String mappaScreenedDate_month;
     private String mappaScreenedDate_year;
 
-    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA category", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA category", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue = "yes")
     @JsonProperty("MAPPA_CATEGORY")
     private String mappaCategory;
 
-    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA level", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 10, message = "Select the prisoner's current MAPPA level", onlyIfField = "eligibleForMappa", onlyIfFieldMatchValue = "yes")
     @JsonProperty("MAPPA_LEVEL")
     private String mappaLevel;
 
@@ -336,7 +364,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RISK_ASSESSMENT_MATRIX2000_COMPLETED")
     private String riskAssessmentMatrix2000AssessmentCompleted;
 
-    @RequiredOnPage(value = 11, message = "Select the Risk Matrix 2000 score", onlyIfField = "riskAssessmentMatrix2000AssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 11, message = "Select the Risk Matrix 2000 score", onlyIfField = "riskAssessmentMatrix2000AssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RISK_ASSESSMENT_MATRIX2000_SCORE")
     private String riskAssessmentMatrix2000Score;
 
@@ -344,7 +372,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RISK_ASSESSMENT_SARA_COMPLETED")
     private String riskAssessmentSpousalAssaultAssessmentCompleted;
 
-    @RequiredOnPage(value = 11, message = "Select the SARA score", onlyIfField = "riskAssessmentSpousalAssaultAssessmentCompleted", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 11, message = "Select the SARA score", onlyIfField = "riskAssessmentSpousalAssaultAssessmentCompleted", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RISK_ASSESSMENT_SARA_SCORE")
     private String riskAssessmentSpousalAssaultScore;
 
@@ -428,7 +456,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RISK_OF_ABSCONDING")
     private String riskOfAbsconding;
 
-    @RequiredOnPage(value = 15, message = "Enter the details of the absconding risk", onlyIfField = "riskOfAbsconding", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 15, message = "Enter the details of the absconding risk", onlyIfField = "riskOfAbsconding", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RISK_OF_ABSCONDING_DETAILS")
     private String riskOfAbscondingDetails;
 
@@ -437,35 +465,35 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RISK_MANAGEMENT_PLAN_REQUIRED")
     private String riskManagementPlanRequired;
 
-    @RequiredOnPage(value = 16, message = "Enter the current situation (Agencies)", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 16, message = "Enter the current situation (Agencies)", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("AGENCIES")
     private String agencies;
 
-    @RequiredOnPage(value = 16, message = "Enter the support", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 16, message = "Enter the support", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("SUPPORT")
     private String support;
 
-    @RequiredOnPage(value = 16, message = "Enter the control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 16, message = "Enter the control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("CONTROL")
     private String control;
 
-    @RequiredOnPage(value = 16, message = "Enter the added measures for specific risks", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 16, message = "Enter the added measures for specific risks", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RISK_MEASURES")
     private String riskMeasures;
 
-    @RequiredOnPage(value = 16, message = "Enter the agency actions", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 16, message = "Enter the agency actions", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("AGENCY_ACTIONS")
     private String agencyActions;
 
-    @RequiredOnPage(value = 16, message = "Enter the additional conditions or requirements", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 16, message = "Enter the additional conditions or requirements", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("ADDITIONAL_CONDITIONS")
     private String additionalConditions;
 
-    @RequiredOnPage(value = 16, message = "Enter the level of contact", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 16, message = "Enter the level of contact", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("LEVEL_OF_CONTACT")
     private String levelOfContact;
 
-    @RequiredOnPage(value = 16, message = "Enter the contingency plan", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 16, message = "Enter the contingency plan", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("CONTINGENCY_PLAN")
     private String contingencyPlan;
 
@@ -474,7 +502,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RESETTLEMENT_PLAN")
     private String resettlementPlan;
 
-    @RequiredOnPage(value = 17, message = "Enter the resettlement plan for release", onlyIfField = "resettlementPlan", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 17, message = "Enter the resettlement plan for release", onlyIfField = "resettlementPlan", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RESETTLEMENT_PLAN_DETAIL")
     private String resettlementPlanDetail;
 
@@ -483,7 +511,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SUPERVISION_PLAN_REQUIRED")
     private String supervisionPlanRequired;
 
-    @RequiredOnPage(value = 18, message = "Enter the supervision plan for release", onlyIfField = "supervisionPlanRequired", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 18, message = "Enter the supervision plan for release", onlyIfField = "supervisionPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("SUPERVISION_PLAN_DETAIL")
     private String supervisionPlanDetail;
 
@@ -542,7 +570,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SOURCES_LIMITATIONS")
     private String sourceLimitations;
 
-    @RequiredOnPage(value = 21, message = "Enter the explanation", onlyIfField = "sourceLimitations", onlyIfFieldMatchValue= "yes")
+    @RequiredOnPage(value = 21, message = "Enter the explanation", onlyIfField = "sourceLimitations", onlyIfFieldMatchValue = "yes")
     @JsonProperty("SOURCES_LIMITATIONS_DETAIL")
     private String sourceLimitationsDetail;
 
@@ -586,7 +614,6 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String signatureDate_month;
     private String signatureDate_year;
 
-
     private static Optional<Integer> asInteger(String value) {
         try {
             return Optional.ofNullable(value).filter(StringUtils::isNumeric).map(Integer::valueOf);
@@ -601,6 +628,90 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
+    }
+
+    protected List<Function<Map<String, Object>, Stream<ValidationError>>> reportSpecificValidators() {
+        return ImmutableList.of(
+                this::notWithinRangeRequiredDateErrors,
+                this::notWithinRangeDateErrors
+        );
+    }
+
+    private Stream<ValidationError> notWithinRangeRequiredDateErrors(Map<String, Object> options) {
+
+        return requiredDateFields().
+                filter(this::requiredDateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && suppliedDateNotWithinRange(field, field.getAnnotation(RequiredDateOnPage.class).minDate(), field.getAnnotation(RequiredDateOnPage.class).maxDate())).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).outOfRangeMessage()));
+
+    }
+
+    private Stream<ValidationError> notWithinRangeDateErrors(Map<String, Object> options) {
+
+        return dateFields().
+                filter(this::dateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && suppliedDateNotWithinRange(field, field.getAnnotation(DateOnPage.class).minDate(), field.getAnnotation(DateOnPage.class).maxDate())).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).outOfRangeMessage()));
+
+    }
+
+    private boolean suppliedDateNotWithinRange(Field field, String minDate, String maxDate) {
+
+        boolean hasError;
+        boolean minDatePresent = !minDate.isEmpty();
+        boolean maxDatePresent = !maxDate.isEmpty();
+
+        if (!minDatePresent && !maxDatePresent) {
+            return false;
+        }
+
+        try {
+            String formattedDate = dateFieldValues(field).collect(Collectors.joining("/"));
+            SimpleDateFormat dateFormat = getValidatorDateFormat();
+
+            Date parsedDate = dateFormat.parse(formattedDate);
+            Date fromDate = minDatePresent ? getRequiredDate(minDate) : null;
+            Date toDate = maxDatePresent ? getRequiredDate(maxDate) : null;
+
+            if (minDatePresent && maxDatePresent) {
+                hasError = !(parsedDate.compareTo(fromDate) >= 0 && parsedDate.compareTo(toDate) <= 0);
+            } else if (minDatePresent) {
+                hasError = !(parsedDate.compareTo(fromDate) >= 0);
+            } else {
+                hasError = !(parsedDate.compareTo(toDate) <= 0);
+            }
+        } catch (ParseException e) {
+            return true;
+        }
+
+        return hasError;
+    }
+
+    private Date getRequiredDate(String date) {
+        Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
+
+        if (date.equals("LAST_YEAR")) {
+            cal.add(Calendar.YEAR, -1);
+            cal.add(Calendar.DATE, -1);
+            return cal.getTime();
+        }
+        if (date.equals("MAPPA_MAX_DATE")) {
+            if (prisonerDetailsParoleEligibilityDate != null) {
+                try {
+                    Date paroleDate = getValidatorDateFormat().parse(prisonerDetailsParoleEligibilityDate);
+                    cal.setTime(paroleDate);
+                    cal.add(Calendar.MONTH, -6);
+                    return cal.getTime().before(today) ? cal.getTime() : today;
+                } catch (ParseException e) {
+                    // continue
+                }
+            }
+        }
+
+        return today;
     }
 
 }
