@@ -70,7 +70,7 @@ public class StubOffenderApi implements OffenderApi {
                 .surname("Jones")
                 .middleNames(ImmutableList.of("Jane", "Suzi"))
                 .dateOfBirth("1980-12-01")
-                .otherIds(otherIds())
+                .otherIds(otherIds("F987654C"))
                 .contactDetails(contactDetails())
                 .gender("Female")
                 .build());
@@ -80,7 +80,7 @@ public class StubOffenderApi implements OffenderApi {
                 .surname("Jones")
                 .middleNames(ImmutableList.of("Henry", "James"))
                 .dateOfBirth("2000-06-22")
-                .otherIds(otherIds())
+                .otherIds(otherIds("A3597AEX"))
                 .contactDetails(contactDetails())
                 .gender("Male")
                 .build());
@@ -198,8 +198,8 @@ public class StubOffenderApi implements OffenderApi {
         return ContactDetails.builder().addresses(addresses()).build();
     }
 
-    private ImmutableMap<String, String> otherIds() {
-        return ImmutableMap.of("pncNumber", "2018/123456N", "nomsNumber", "A3597AEX");
+    private ImmutableMap<String, String> otherIds(String nomisNumber) {
+        return ImmutableMap.of("pncNumber", "2018/123456N", "nomsNumber", nomisNumber);
     }
 
     private ImmutableList<OffenderAddress> addresses() {
