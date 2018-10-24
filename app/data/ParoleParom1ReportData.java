@@ -698,6 +698,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             cal.add(Calendar.DATE, -1);
             return cal.getTime();
         }
+        // @TODO: Using data input from a separate screen for validation is problematic
         if (date.equals("MAPPA_MAX_DATE")) {
             if (prisonerDetailsParoleEligibilityDate != null) {
                 try {

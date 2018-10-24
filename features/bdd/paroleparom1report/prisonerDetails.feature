@@ -101,3 +101,21 @@ Feature: Parole Report
       | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
+
+  Scenario: Delius user enters dates in the past for Parole Eligibility and Automatic release date / non parole eligibility date
+
+    Given they select the "Determinate" option on the "Sentence type"
+    And they enter the date "YESTERDAY" for "Parole eligibility date"
+    And they enter the date "YESTERDAY" for "Automatic release date/non parole eligibility date"
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | Parole eligibility date | The parole eligibility date must be in the future |
+      | Automatic release date/non parole eligibility date | The automatic release date/non parole eligibility date must be in the future |
+
+  Scenario: Delius user enters a date in the past for Tariff expiry
+
+    Given they select the "Indeterminate" option on the "Sentence type"
+    And they enter the date "YESTERDAY" for "Tariff expiry date"
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | Tariff expiry date | The tariff expiry date must be in the future |

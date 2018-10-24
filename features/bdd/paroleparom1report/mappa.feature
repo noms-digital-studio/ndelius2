@@ -21,11 +21,19 @@ Feature: Parole Report - Prisoner contact
   Scenario: Delius user wants to enter the Multi Agency Public Protection Arrangements (MAPPA) information
 
     Given they select the radio button with id "eligibleForMappa_yes"
-    When they enter the date "07/08/2018" for "When was the prisoner screened for MAPPA (MAPPA Q completed)?"
+    When they enter the date "YESTERDAY" for "When was the prisoner screened for MAPPA (MAPPA Q completed)?"
     And they select the radio button with id "mappaCategory_1"
     And they select the radio button with id "mappaLevel_2"
     When they select the "Continue" button
     Then the user should be directed to the "Current risk assessment scores" UI
+
+  Scenario: Delius user specifies a future date for the MAPPA Q completion date
+
+    Given they select the radio button with id "eligibleForMappa_yes"
+    And they enter the date "TOMORROW" for "When was the prisoner screened for MAPPA (MAPPA Q completed)?"
+    When  they select the "Continue" button
+    Then  the following error messages are displayed
+      | When was the prisoner screened for MAPPA (MAPPA Q completed)? | The MAPPA date must be at least 6 months prior to the Parole Eligibility date and must be in the past |
 
   Scenario: Delius user specifies prisoner is not eligible for MAPPA
 
