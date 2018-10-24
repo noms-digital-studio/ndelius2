@@ -266,8 +266,8 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             invalidMessage = "Enter a real date when the prisoner was screened for MAPPA",
             onlyIfField = "eligibleForMappa",
             onlyIfFieldMatchValue = "yes",
-            maxDate = "MAPPA_MAX_DATE",
-            outOfRangeMessage = "The MAPPA date must be at least 6 months prior to the Parole Eligibility date and must be in the past")
+            maxDate = "TODAY",
+            outOfRangeMessage = "The date when the prisoner was screened for MAPPA must be in the past")
     private String mappaScreenedDate;
     private String mappaScreenedDate_day;
     private String mappaScreenedDate_month;
@@ -697,19 +697,6 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             cal.add(Calendar.YEAR, -1);
             cal.add(Calendar.DATE, -1);
             return cal.getTime();
-        }
-        // @TODO: Using data input from a separate screen for validation is problematic
-        if (date.equals("MAPPA_MAX_DATE")) {
-            if (prisonerDetailsParoleEligibilityDate != null) {
-                try {
-                    Date paroleDate = getValidatorDateFormat().parse(prisonerDetailsParoleEligibilityDate);
-                    cal.setTime(paroleDate);
-                    cal.add(Calendar.MONTH, -6);
-                    return cal.getTime().before(today) ? cal.getTime() : today;
-                } catch (ParseException e) {
-                    // continue
-                }
-            }
         }
 
         return today;

@@ -33,7 +33,7 @@ Feature: Parole Report - Prisoner contact
     And they enter the date "TOMORROW" for "When was the prisoner screened for MAPPA (MAPPA Q completed)?"
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | When was the prisoner screened for MAPPA (MAPPA Q completed)? | The MAPPA date must be at least 6 months prior to the Parole Eligibility date and must be in the past |
+      | When was the prisoner screened for MAPPA (MAPPA Q completed)? | The date when the prisoner was screened for MAPPA must be in the past |
 
   Scenario: Delius user specifies prisoner is not eligible for MAPPA
 
