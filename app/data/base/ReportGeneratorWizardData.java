@@ -41,7 +41,4 @@ public class ReportGeneratorWizardData extends WizardData {
     @JsonProperty("_WATERMARK_")
     private String watermark;
 
-    protected List<Function<Map<String, Object>, Stream<ValidationError>>> reportSpecificValidators() {
-        return ImmutableList.of();
-    }
 }

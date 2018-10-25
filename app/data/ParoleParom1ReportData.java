@@ -1,7 +1,6 @@
 package data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
 import data.annotations.DateOnPage;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
@@ -14,16 +13,11 @@ import lombok.EqualsAndHashCode;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import play.data.validation.ValidationError;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -84,7 +78,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             invalidMessage = "Enter a real tariff expiry date",
             onlyIfField = "prisonerDetailsSentenceType",
             onlyIfFieldMatchValue = "indeterminate",
-            minDate = "TODAY",
+            minDate = "Today",
             outOfRangeMessage = "The tariff expiry date must be in the future")
     private String prisonerDetailsTariffExpiryDate;
     private String prisonerDetailsTariffExpiryDate_day;
@@ -100,7 +94,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             invalidMessage = "Enter a real parole eligibility date",
             onlyIfField = "prisonerDetailsSentenceType",
             onlyIfFieldMatchValue = "determinate",
-            minDate = "TODAY",
+            minDate = "Today",
             outOfRangeMessage = "The parole eligibility date must be in the future")
     private String prisonerDetailsParoleEligibilityDate;
     private String prisonerDetailsParoleEligibilityDate_day;
@@ -116,7 +110,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             invalidMessage = "Enter a real automatic release date",
             onlyIfField = "prisonerDetailsSentenceType",
             onlyIfFieldMatchValue = "determinate",
-            minDate = "TODAY",
+            minDate = "Today",
             outOfRangeMessage = "The automatic release date/non parole eligibility date must be in the future")
     private String prisonerDetailsAutoReleaseDate;
     private String prisonerDetailsAutoReleaseDate_day;
@@ -207,8 +201,8 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @RequiredDateOnPage(value = 5, message = "Enter the date you contacted the VLO",
             incompleteMessage = "Enter the date you contacted the VLO and include a day, month and year",
             invalidMessage = "Enter a real date you contacted the VLO",
-            minDate = "LAST_YEAR",
-            maxDate = "TODAY",
+            minDate = "-1 Year",
+            maxDate = "Today",
             outOfRangeMessage = "The VLO date must be within the last year")
     private String victimsVLOContactDate;
     private String victimsVLOContactDate_day;
@@ -266,7 +260,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             invalidMessage = "Enter a real date when the prisoner was screened for MAPPA",
             onlyIfField = "eligibleForMappa",
             onlyIfFieldMatchValue = "yes",
-            maxDate = "TODAY",
+            maxDate = "{type: 'before', arguments: [18, 'years']}",
             outOfRangeMessage = "The date when the prisoner was screened for MAPPA must be in the past")
     private String mappaScreenedDate;
     private String mappaScreenedDate_day;
@@ -629,77 +623,4 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             return Optional.empty();
         }
     }
-
-    protected List<Function<Map<String, Object>, Stream<ValidationError>>> reportSpecificValidators() {
-        return ImmutableList.of(
-                this::notWithinRangeRequiredDateErrors,
-                this::notWithinRangeDateErrors
-        );
-    }
-
-    private Stream<ValidationError> notWithinRangeRequiredDateErrors(Map<String, Object> options) {
-
-        return requiredDateFields().
-                filter(this::requiredDateFieldEnforced).
-                filter(field -> mustValidateField(options, field)).
-                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && suppliedDateNotWithinRange(field, field.getAnnotation(RequiredDateOnPage.class).minDate(), field.getAnnotation(RequiredDateOnPage.class).maxDate())).
-                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).outOfRangeMessage()));
-
-    }
-
-    private Stream<ValidationError> notWithinRangeDateErrors(Map<String, Object> options) {
-
-        return dateFields().
-                filter(this::dateFieldEnforced).
-                filter(field -> mustValidateField(options, field)).
-                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && suppliedDateNotWithinRange(field, field.getAnnotation(DateOnPage.class).minDate(), field.getAnnotation(DateOnPage.class).maxDate())).
-                map(field -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).outOfRangeMessage()));
-
-    }
-
-    private boolean suppliedDateNotWithinRange(Field field, String minDate, String maxDate) {
-
-        boolean hasError;
-        boolean minDatePresent = !minDate.isEmpty();
-        boolean maxDatePresent = !maxDate.isEmpty();
-
-        if (!minDatePresent && !maxDatePresent) {
-            return false;
-        }
-
-        try {
-            String formattedDate = dateFieldValues(field).collect(Collectors.joining("/"));
-            SimpleDateFormat dateFormat = getValidatorDateFormat();
-
-            Date parsedDate = dateFormat.parse(formattedDate);
-            Date fromDate = minDatePresent ? getRequiredDate(minDate) : null;
-            Date toDate = maxDatePresent ? getRequiredDate(maxDate) : null;
-
-            if (minDatePresent && maxDatePresent) {
-                hasError = !(parsedDate.compareTo(fromDate) >= 0 && parsedDate.compareTo(toDate) <= 0);
-            } else if (minDatePresent) {
-                hasError = !(parsedDate.compareTo(fromDate) >= 0);
-            } else {
-                hasError = !(parsedDate.compareTo(toDate) <= 0);
-            }
-        } catch (ParseException e) {
-            return true;
-        }
-
-        return hasError;
-    }
-
-    private Date getRequiredDate(String date) {
-        Calendar cal = Calendar.getInstance();
-        Date today = cal.getTime();
-
-        if (date.equals("LAST_YEAR")) {
-            cal.add(Calendar.YEAR, -1);
-            cal.add(Calendar.DATE, -1);
-            return cal.getTime();
-        }
-
-        return today;
-    }
-
 }
