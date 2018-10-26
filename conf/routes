@@ -14,8 +14,6 @@ GET     /analytics/pageVisits                       controllers.AnalyticsControl
 GET     /analytics/recent/:limit                    controllers.AnalyticsController.recentEvents(limit: Integer)
 
 GET     /nationalSearch                             controllers.NationalSearchController.index(user: String, t: String)
-+ nocsrf
-POST    /nationalSearch/recordSearchOutcome         controllers.NationalSearchController.recordSearchOutcome
 GET     /searchOffender/:searchTerm                 controllers.NationalSearchController.searchOffender(searchTerm, searchType: String, areasFilter: java.util.Optional[String], pageSize: Int ?=10, pageNumber: Int ?=1)
 GET     /nationalSearch/analytics                   controllers.NationalSearchAnalyticsController.index
 GET     /nationalSearch/analytics/filterCounts      controllers.NationalSearchAnalyticsController.filterCounts(from: String ?= null)

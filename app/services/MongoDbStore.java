@@ -12,7 +12,6 @@ import lombok.val;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.joda.time.DateTime;
-import play.Logger;
 import services.helpers.MongoUtils;
 
 import javax.inject.Inject;
@@ -44,15 +43,6 @@ public class MongoDbStore implements AnalyticsStore {
 
         events = mongoClient.getDatabase(databaseName).getCollection(collectionName);
         database = mongoClient.getDatabase(databaseName);
-    }
-
-    @Override
-    public void recordEvent(Map<String, Object> data) {
-
-        events.insertOne(new Document(data)).subscribe(
-                success -> { },
-                error -> Logger.error("Analytics Error", error)
-        );
     }
 
     @Override
@@ -787,10 +777,6 @@ public class MongoDbStore implements AnalyticsStore {
 
     private Document _divide(Object first, Object second) {
         return new Document(ImmutableMap.of("$divide", asList(first, second)));
-    }
-
-    private Document _multiply(Object first, Object second) {
-        return new Document(ImmutableMap.of("$multiply", asList(first, second)));
     }
 
     private Document _unwind(String field) {

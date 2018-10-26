@@ -8,7 +8,6 @@ import data.viewModel.PageStatus;
 import helpers.Encryption;
 import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
-import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import lombok.val;
 import org.joda.time.DateTime;
@@ -28,11 +27,7 @@ import scala.compat.java8.functionConverterImpls.FromJavaFunction;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
@@ -48,7 +43,6 @@ import static helpers.FluentHelper.content;
 
 public abstract class WizardController<T extends WizardData> extends Controller implements ParamsValidator {
 
-    private final AnalyticsStore analyticsStore;
     private final List<String> encryptedFields;
     private final Environment environment;
 
@@ -65,7 +59,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
                                WebJarsUtil webJarsUtil,
                                Config configuration,
                                Environment environment,
-                               AnalyticsStore analyticsStore,
                                EncryptedFormFactory formFactory,
                                Class<T> wizardType,
                                OffenderApi offenderApi) {
@@ -74,7 +67,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         this.webJarsUtil = webJarsUtil;
         this.environment = environment;
         this.configuration = configuration;
-        this.analyticsStore = analyticsStore;
         this.offenderApi = offenderApi;
 
         wizardForm = formFactory.form(wizardType, this::decryptParams);
@@ -212,8 +204,6 @@ public abstract class WizardController<T extends WizardData> extends Controller 
         };
 
         Logger.info("Session: " + eventData.get("sessionId") + " - Page: " + eventData.get("pageNumber") + " - " + eventData.get("dateTime"));
-
-        analyticsStore.recordEvent(eventData);
     }
 
     protected BiFunction<Form<T>, Map<Integer, PageStatus>, Content> formRenderer(String viewName) {

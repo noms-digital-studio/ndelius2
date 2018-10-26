@@ -8,7 +8,6 @@ import data.base.ReportGeneratorWizardData;
 import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
 import helpers.ThrowableHelper;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderApi.Offender;
@@ -25,12 +24,7 @@ import play.twirl.api.Content;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
@@ -38,9 +32,7 @@ import java.util.function.Function;
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.not;
 import static helpers.FluentHelper.value;
-import static helpers.JsonHelper.badRequestJson;
-import static helpers.JsonHelper.okJson;
-import static helpers.JsonHelper.serverUnavailableJson;
+import static helpers.JsonHelper.*;
 import static helpers.JwtHelper.principal;
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.max;
@@ -54,14 +46,13 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
                                               WebJarsUtil webJarsUtil,
                                               Config configuration,
                                               Environment environment,
-                                              AnalyticsStore analyticsStore,
                                               EncryptedFormFactory formFactory,
                                               Class<T> wizardType,
                                               PdfGenerator pdfGenerator,
                                               DocumentStore documentStore,
                                               OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, wizardType, offenderApi);
+        super(ec, webJarsUtil, configuration, environment, formFactory, wizardType, offenderApi);
 
         this.pdfGenerator = pdfGenerator;
         this.documentStore = documentStore;

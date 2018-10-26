@@ -5,7 +5,6 @@ import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ShortFormatPreSentenceReportData;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderApi.CourtAppearances;
@@ -47,7 +46,6 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   WebJarsUtil webJarsUtil,
                                                   Config configuration,
                                                   Environment environment,
-                                                  AnalyticsStore analyticsStore,
                                                   EncryptedFormFactory formFactory,
                                                   PdfGenerator pdfGenerator,
                                                   DocumentStore documentStore,
@@ -55,7 +53,7 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                   views.html.shortFormatPreSentenceReport.completed completedTemplate,
                                                   OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, offenderApi);
+        super(ec, webJarsUtil, configuration, environment, formFactory, ShortFormatPreSentenceReportData.class, pdfGenerator, documentStore, offenderApi);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
     }
