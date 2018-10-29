@@ -23,7 +23,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,6 +35,8 @@ import java.util.stream.Stream;
 @Data
 @Validate
 public abstract class WizardData implements Validatable<List<ValidationError>> {
+
+    private static final String VALID_DATE_FORMAT = "d/M/yyyy";
 
     @Encrypted
     @RequiredOnPage(1)
@@ -258,56 +264,41 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
     }
 
     private SimpleDateFormat getValidatorDateFormat() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(VALID_DATE_FORMAT);
         dateFormat.setLenient(false);
         return dateFormat;
     }
 
     private boolean composedDateBitsAreInvalid(Field field) {
         try {
-            String formattedDate = dateFieldValues(field).collect(Collectors.joining("/"));
-            SimpleDateFormat dateFormat = getValidatorDateFormat();
-            dateFormat.parse(formattedDate);
+            getValidatorDateFormat().parse(dateStringFromFieldValuesOf(field));
             return false;
         } catch (ParseException e) {
             return true;
         }
+    }
+
+    private String dateStringFromFieldValuesOf(Field field) {
+        return dateFieldValues(field).collect(Collectors.joining("/"));
     }
 
     private boolean suppliedDateNotWithinRange(Field field, String minDate, String maxDate) {
 
-        boolean hasError;
-        boolean minDatePresent = !minDate.isEmpty();
-        boolean maxDatePresent = !maxDate.isEmpty();
-
-        if (!minDatePresent && !maxDatePresent) {
+        if (minDate.isEmpty() && maxDate.isEmpty()) {
             return false;
         }
 
-        try {
-            String formattedDate = dateFieldValues(field).collect(Collectors.joining("/"));
-            SimpleDateFormat dateFormat = getValidatorDateFormat();
+        LocalDate parsedDate = LocalDate.parse(dateStringFromFieldValuesOf(field), DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
 
-            Date parsedDate = dateFormat.parse(formattedDate);
-            Date fromDate = minDatePresent ? getRequiredDate(minDate) : null;
-            Date toDate = maxDatePresent ? getRequiredDate(maxDate) : null;
-
-            if (minDatePresent && maxDatePresent) {
-                hasError = !(parsedDate.compareTo(fromDate) >= 0 && parsedDate.compareTo(toDate) <= 0);
-            } else if (minDatePresent) {
-                hasError = !(parsedDate.compareTo(fromDate) >= 0);
-            } else {
-                hasError = !(parsedDate.compareTo(toDate) <= 0);
-            }
-        } catch (ParseException e) {
+        if (!minDate.isEmpty() && parsedDate.isBefore(getRequiredDate(minDate))) {
             return true;
         }
 
-        return hasError;
+        return !maxDate.isEmpty() && parsedDate.isAfter(getRequiredDate(maxDate));
+
     }
 
-    private Date getRequiredDate(String sequence) {
-        Calendar cal = Calendar.getInstance();
+    private LocalDate getRequiredDate(String sequence) {
         String[] parts = sequence.split(" ");
 
         if (parts.length == 2) {
@@ -315,19 +306,14 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
             switch (parts[1].toUpperCase()) {
                 case "DAY":
                 case "DAYS":
-                    cal.add(Calendar.DATE, value);
-                    break;
+                    return LocalDate.now().plusDays(value);
                 case "YEAR":
                 case "YEARS":
-                    cal.add(Calendar.YEAR, value);
-                    if (value < 0) {
-                        cal.add(Calendar.DATE, -1);
-                    }
-                    break;
+                    return LocalDate.now().plusYears(value);
             }
         }
 
-        return cal.getTime();
+        return LocalDate.now();
     }
 
     protected String formattedDateFromDateParts(String fieldName) {
@@ -335,9 +321,7 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
     }
 
     private String formattedDateFromDateParts(Field field) {
-        return composedDateBitsAreInvalid(field) ?
-                "" :
-                dateFieldValues(field).collect(Collectors.joining("/"));
+        return composedDateBitsAreInvalid(field) ? "" : dateStringFromFieldValuesOf(field);
     }
 
     private Stream<String> dateFieldValues(Field field) {

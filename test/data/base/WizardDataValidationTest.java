@@ -1,6 +1,5 @@
 package data.base;
 
-import com.google.common.collect.ImmutableList;
 import data.annotations.DateOnPage;
 import data.annotations.OnPage;
 import data.annotations.RequiredDateOnPage;
@@ -13,10 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import play.data.validation.ValidationError;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import java.time.LocalDate;
 
 import static data.base.WizardData.fieldPage;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -93,12 +89,34 @@ public class WizardDataValidationTest {
         @OnPage(15)
         private String ifOnlyDob3Field;
 
+        @RequiredDateOnPage(value = 16,
+                            minDate = "-1 Year",
+                            maxDate = "+1 Year",
+                            outOfRangeMessage = "Out of range message. Both limits in years")
+        private String page16;
+        private String page16_day;
+        private String page16_month;
+        private String page16_year;
+
+        @RequiredDateOnPage(value = 17,
+                            minDate = "-1 Year",
+                            outOfRangeMessage = "Out of range message. Min limit only in years")
+        private String page17;
+        private String page17_day;
+        private String page17_month;
+        private String page17_year;
+
+        @RequiredDateOnPage(value = 18,
+                            maxDate = "+1 Year",
+                            outOfRangeMessage = "Out of range message. Max limit only years")
+        private String page18;
+        private String page18_day;
+        private String page18_month;
+        private String page18_year;
+
         @OnPage(99)
         private String dummyFinalPageField;
 
-        protected List<Function<Map<String, Object>, Stream<ValidationError>>> reportSpecificValidators() {
-            return ImmutableList.of();
-        }
     }
 
     private MyTestData data;
@@ -420,5 +438,110 @@ public class WizardDataValidationTest {
         data.setDob3_year("2003");
         assertThat(data.validate()).isEmpty();
     }
+
+    @Test
+    public void requiredDateFieldUsesMessageWhenDateIsBelowMinYearsDateAndBothBoundsAreSet() {
+        LocalDate now = LocalDate.now();
+        LocalDate oneYearAgoAndOneDay = now.minusYears(1).minusDays(1);
+
+        data.setPageNumber(16);
+        data.setPage16_day(String.valueOf(oneYearAgoAndOneDay.getDayOfMonth()));
+        data.setPage16_month(String.valueOf(oneYearAgoAndOneDay.getMonthValue()));
+        data.setPage16_year(String.valueOf(oneYearAgoAndOneDay.getYear()));
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("page16", "Out of range message. Both limits in years"));
+    }
+
+    @Test
+    public void requiredDateFieldUsesMessageWhenDateIsAboveMaxYearsDateAndBothBoundsAreSet() {
+        LocalDate now = LocalDate.now();
+        LocalDate oneYearAndOneDayInFuture = now.plusYears(1).plusDays(1);
+
+        data.setPageNumber(16);
+        data.setPage16_day(String.valueOf(oneYearAndOneDayInFuture.getDayOfMonth()));
+        data.setPage16_month(String.valueOf(oneYearAndOneDayInFuture.getMonthValue()));
+        data.setPage16_year(String.valueOf(oneYearAndOneDayInFuture.getYear()));
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("page16", "Out of range message. Both limits in years"));
+    }
+
+    @Test
+    public void requiredDateFieldNoErrorsWhenDateIsOnLowerBoundAndBothBoundsAreSet() {
+        LocalDate now = LocalDate.now();
+        LocalDate oneYearAgo = now.minusYears(1);
+
+        data.setPageNumber(16);
+        data.setPage16_day(String.valueOf(oneYearAgo.getDayOfMonth()));
+        data.setPage16_month(String.valueOf(oneYearAgo.getMonthValue()));
+        data.setPage16_year(String.valueOf(oneYearAgo.getYear()));
+        assertThat(data.validate()).isEmpty();
+    }
+
+    @Test
+    public void requiredDateFieldNoErrorsWhenDateIsOnUpperBoundAndBothBoundsAreSet() {
+        LocalDate now = LocalDate.now();
+        LocalDate oneYearInFuture = now.plusYears(1);
+
+        data.setPageNumber(16);
+        data.setPage16_day(String.valueOf(oneYearInFuture.getDayOfMonth()));
+        data.setPage16_month(String.valueOf(oneYearInFuture.getMonthValue()));
+        data.setPage16_year(String.valueOf(oneYearInFuture.getYear()));
+        assertThat(data.validate()).isEmpty();
+    }
+
+    // -------------
+
+    @Test
+    public void requiredDateFieldUsesMessageWhenDateIsBelowMinYearsDateAndOnlyMinLimitSet() {
+        LocalDate now = LocalDate.now();
+        LocalDate oneYearAgoAndOneDay = now.minusYears(1).minusDays(1);
+
+        data.setPageNumber(17);
+        data.setPage17_day(String.valueOf(oneYearAgoAndOneDay.getDayOfMonth()));
+        data.setPage17_month(String.valueOf(oneYearAgoAndOneDay.getMonthValue()));
+        data.setPage17_year(String.valueOf(oneYearAgoAndOneDay.getYear()));
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("page17", "Out of range message. Min limit only in years"));
+    }
+
+    @Test
+    public void requiredDateFieldNoErrorsWhenDateIsOnLowerBoundAndOnlyMinLimitSet() {
+        LocalDate now = LocalDate.now();
+        LocalDate oneYearAgo = now.minusYears(1);
+
+        data.setPageNumber(17);
+        data.setPage17_day(String.valueOf(oneYearAgo.getDayOfMonth()));
+        data.setPage17_month(String.valueOf(oneYearAgo.getMonthValue()));
+        data.setPage17_year(String.valueOf(oneYearAgo.getYear()));
+        assertThat(data.validate()).isEmpty();
+    }
+
+    // -------------
+
+    @Test
+    public void requiredDateFieldUsesMessageWhenDateIsAboveMaxYearsDateAndOnlyMaxLimitSet() {
+        LocalDate now = LocalDate.now();
+        LocalDate oneYearAndOneDayInFuture = now.plusYears(1).plusDays(1);
+
+        data.setPageNumber(18);
+        data.setPage18_day(String.valueOf(oneYearAndOneDayInFuture.getDayOfMonth()));
+        data.setPage18_month(String.valueOf(oneYearAndOneDayInFuture.getMonthValue()));
+        data.setPage18_year(String.valueOf(oneYearAndOneDayInFuture.getYear()));
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("page18", "Out of range message. Max limit only years"));
+    }
+
+    @Test
+    public void requiredDateFieldNoErrorsWhenDateIsOnUpperBoundAndOnlyMaxLimitSet() {
+        LocalDate now = LocalDate.now();
+        LocalDate oneYearInFuture = now.plusYears(1);
+
+        data.setPageNumber(18);
+        data.setPage18_day(String.valueOf(oneYearInFuture.getDayOfMonth()));
+        data.setPage18_month(String.valueOf(oneYearInFuture.getMonthValue()));
+        data.setPage18_year(String.valueOf(oneYearInFuture.getYear()));
+        assertThat(data.validate()).isEmpty();
+    }
+
 
 }
