@@ -61,9 +61,6 @@ public class NationalSearchControllerTest extends WithApplication {
     @Mock
     private OffenderApi offenderApi;
 
-    @Mock
-    private AnalyticsStore analyticsStore;
-
     @Captor
     private ArgumentCaptor<Map<String, Object>> analyticsEventCaptor;
 
@@ -117,47 +114,7 @@ public class NationalSearchControllerTest extends WithApplication {
         assertThat(contentAsString(result)).contains("{\"N01\":\"N01 Area\",\"N02\":\"N02 Area\"}");
     }
 
-    @Test
-    public void analyticsSearchIndexEventRecordedWhenLogonSucceeds() throws UnsupportedEncodingException {
-        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(generateTokenWithSubject("cn=fake.user,cn=Users,dc=moj,dc=com")));
-        route(app, buildIndexPageRequest(59));
 
-        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
-
-        assertThat(analyticsEventCaptor.getValue()).containsKeys("correlationId", "sessionId", "type", "username", "dateTime");
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-index"));
-    }
-
-    @Test
-    public void analyticsContainClientAgentData() throws UnsupportedEncodingException {
-        when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(generateToken()));
-        route(app, buildIndexPageRequest(59).header(
-                "User-Agent",
-                "Mozilla/5.0 (iPhone; CPU iPhone OS 5_1_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B206 Safari/7534.48.3"));
-
-        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
-
-        assertThat(analyticsEventCaptor.getValue()).containsKey("client");
-        val client = (Map<String, Map<String, String>>)analyticsEventCaptor.getValue().get("client");
-        assertThat(client).containsKeys("device", "os", "user_agent");
-        assertThat(client.get("user_agent")).contains(
-                entry("family", "Mobile Safari"),
-                entry("major", "5"),
-                entry("minor", "1"),
-                entry("patch", "")
-        );
-        assertThat(client.get("device")).contains(
-                entry("family", "iPhone")
-        );
-        assertThat(client.get("os")).contains(
-                entry("family", "iOS"),
-                entry("major", "5"),
-                entry("minor", "1"),
-                entry("patch", "1"),
-                entry("patch_minor", "")
-        );
-    }
 
     @Test
     public void returnsServerErrorWhenLogonFails() throws UnsupportedEncodingException {
@@ -194,61 +151,7 @@ public class NationalSearchControllerTest extends WithApplication {
         );
     }
 
-    @Test
-    public void analyticsSearchRequestEventRecordedBeforeAndAfterWhenSearchCalled() {
-        val request = new Http.RequestBuilder().
-                session("offenderApiBearerToken", generateTokenWithSubject("cn=fake.user,cn=Users,dc=moj,dc=com")).
-                session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith?searchType=exact");
-        route(app, request);
 
-        verify(analyticsStore, times(2)).recordEvent(analyticsEventCaptor.capture());
-
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("searchType", "exact"));
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("correlationId", "999-aaa-888"));
-
-        assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
-        assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("type", "search-results"));
-        assertEquals(0, analyticsEventCaptor.getAllValues().get(1).get("total"));
-        assertThat(analyticsEventCaptor.getAllValues().get(1)).contains(entry("correlationId", "999-aaa-888"));
-
-    }
-
-    @Test
-    public void zeroFilterCountsRecordedWithSearchRequestAnalyticsEventWhenNoFilterPresent() {
-        val request = new Http.RequestBuilder().
-                session("offenderApiBearerToken", generateTokenWithProbationAreaCodes(ImmutableList.of("N01", "N02"))).
-                session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith?searchType=broad&areasFilter=");
-        route(app, request);
-
-
-        verify(analyticsStore, atLeastOnce()).recordEvent(analyticsEventCaptor.capture());
-
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("searchType", "broad"));
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("filter", ImmutableMap.of("myProviderSelectedCount", 0L, "otherProviderSelectedCount", 0L, "myProviderCount", 2L)));
-
-    }
-
-    @Test
-    public void filterCountsRecordedAgainstProviderCategoriesWithSearchRequestAnalyticsEvent() {
-        val request = new Http.RequestBuilder().
-                session("offenderApiBearerToken", generateTokenWithProbationAreaCodes(ImmutableList.of("N01", "N02"))).
-                session("searchAnalyticsGroupId", "999-aaa-888").
-                method(GET).uri("/searchOffender/smith?searchType=broad&areasFilter=N01,N02,N03,N04,N05");
-        route(app, request);
-
-
-        verify(analyticsStore, atLeastOnce()).recordEvent(analyticsEventCaptor.capture());
-
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("type", "search-request"));
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("searchType", "broad"));
-        assertThat(analyticsEventCaptor.getAllValues().get(0)).contains(entry("filter", ImmutableMap.of("myProviderSelectedCount", 2L, "otherProviderSelectedCount", 3L, "myProviderCount", 2L)));
-
-    }
 
     @Test
     public void searchingWithoutABearerTokenReturns401() {
@@ -354,27 +257,6 @@ public class NationalSearchControllerTest extends WithApplication {
         assertEquals(OK, result.status());
     }
 
-    @Test
-    public void recordsSearchOutcomeEventWithData() {
-        val request = new Http.
-                RequestBuilder().
-                method(POST).
-                session("offenderApiBearerToken", generateTokenWithSubject("cn=fake.user,cn=Users,dc=moj,dc=com")).
-                session("searchAnalyticsGroupId", "999-aaa-888").
-                uri("/nationalSearch/recordSearchOutcome").
-                bodyJson(Json.toJson(ImmutableMap.of("type", "search-offender-details", "rankIndex", 23)));
-        val result = route(app, request);
-
-        assertEquals(CREATED, result.status());
-
-        verify(analyticsStore).recordEvent(analyticsEventCaptor.capture());
-
-        assertThat(analyticsEventCaptor.getValue()).containsKeys("correlationId", "sessionId", "type", "username", "dateTime", "rankIndex");
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("username", "cn=fake.user,cn=Users,dc=moj,dc=com"));
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("type", "search-offender-details"));
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("rankIndex", 23));
-        assertThat(analyticsEventCaptor.getValue()).contains(entry("correlationId", "999-aaa-888"));
-    }
 
 
     @Test
@@ -423,7 +305,7 @@ public class NationalSearchControllerTest extends WithApplication {
             overrides(
                 bind(OffenderSearch.class).toInstance(elasticOffenderSearch),
                 bind(OffenderApi.class).toInstance(offenderApi),
-                bind(AnalyticsStore.class).toInstance(analyticsStore),
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                 bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                 bind(MongoClient.class).toInstance(mock(MongoClient.class))
             )

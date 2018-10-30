@@ -1,19 +1,14 @@
 package controllers;
 
-import com.github.coveo.ua_parser.Parser;
-import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
-import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
-import org.joda.time.DateTime;
 import play.Logger;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;
 
@@ -40,7 +35,6 @@ public class NationalSearchController extends Controller implements ParamsValida
     private final views.html.nationalSearchMaintenance maintenanceTemplate;
     private final OffenderSearch offenderSearch;
     private final OffenderApi offenderApi;
-    private final AnalyticsStore analyticsStore;
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
     private final boolean inMaintenanceMode;
@@ -54,15 +48,13 @@ public class NationalSearchController extends Controller implements ParamsValida
             views.html.nationalSearch template,
             views.html.nationalSearchMaintenance maintenanceTemplate,
             OffenderSearch offenderSearch,
-            OffenderApi offenderApi,
-            AnalyticsStore analyticsStore) {
+            OffenderApi offenderApi) {
 
         this.ec = ec;
         this.template = template;
         this.maintenanceTemplate = maintenanceTemplate;
         this.offenderSearch = offenderSearch;
         this.offenderApi = offenderApi;
-        this.analyticsStore = analyticsStore;
         this.configuration = configuration;
 
         inMaintenanceMode = configuration.getBoolean("maintenance.offender.search");
@@ -91,10 +83,6 @@ public class NationalSearchController extends Controller implements ParamsValida
             session(OFFENDER_API_BEARER_TOKEN, bearerToken);
             session(SEARCH_ANALYTICS_GROUP_ID, UUID.randomUUID().toString());
 
-            analyticsStore.recordEvent(ImmutableMap.<String, Object>builder()
-                    .put("type", "search-index")
-                    .putAll(analyticsContext())
-                    .putAll(agentAnalytics(request())).build());
             return bearerToken;
 
         }, ec.current())
@@ -117,42 +105,17 @@ public class NationalSearchController extends Controller implements ParamsValida
                 });
     }
 
-    private Map<String, Object> agentAnalytics(Http.Request request) {
-        return request.getHeaders().get(USER_AGENT).map(userAgent -> {
-            try {
-                Parser uaParser = new Parser();
-                return ImmutableMap.<String, Object>of(
-                        "client",
-                        JsonHelper.jsonToObjectMap(uaParser.parse(userAgent).toString()));
-            } catch (Exception e) {
-                Logger.warn("Unable to parse client agent", e);
-                return ImmutableMap.<String, Object>of();
-            }
-
-        }).orElseGet(ImmutableMap::of);
-    }
-
     public CompletionStage<Result> searchOffender(String searchTerm, String searchType, Optional<String> areasFilter, int pageSize, int pageNumber) {
 
         return Optional.ofNullable(session(OFFENDER_API_BEARER_TOKEN)).map(bearerToken -> {
 
             Logger.info("AUDIT:{}: Search performed with term '{}'", principal(bearerToken), searchTerm);
-            analyticsStore.recordEvent(combine(analyticsContext(), ImmutableMap.of(
-                    "type", "search-request",
-                    "filter", ImmutableMap.of(
-                            "myProviderCount", (long)probationAreaCodes(bearerToken).size(),
-                            "myProviderSelectedCount", myProviderCount(probationAreaCodes(bearerToken), toList(areasFilter)),
-                            "otherProviderSelectedCount", otherProviderCount(probationAreaCodes(bearerToken), toList(areasFilter))
-                            ),
-                    "searchType", searchType)));
-
             return offenderSearch.search(bearerToken,
                                             toList(areasFilter),
                                             searchTerm,
                                             pageSize,
                                             pageNumber,
                                             "exact".equals(searchType) ? MUST : SHOULD).
-                                thenApplyAsync(this::recordSearchResultsAnalytics, ec.current()).
                                 thenApply(JsonHelper::okJson).
                                 thenApply(result -> result.withHeader(CACHE_CONTROL, "no-cache, no-store, must-revalidate")).
                                 thenApply(result -> result.withHeader(PRAGMA, "no-cache")).
@@ -166,14 +129,6 @@ public class NationalSearchController extends Controller implements ParamsValida
         });
     }
 
-    private long myProviderCount(List<String> myProviders, List<String> filter) {
-        return filter.stream().filter(myProviders::contains).count();
-    }
-
-    private long otherProviderCount(List<String> myProviders, List<String> filter) {
-        return filter.stream().filter(not(myProviders::contains)).count();
-    }
-
     private List<String> toList(Optional<String> areasFilter) {
         return areasFilter
                 .map(filter -> Arrays.stream(filter.split(",")).filter(not(String::isEmpty)).collect(Collectors.toList()))
@@ -181,29 +136,4 @@ public class NationalSearchController extends Controller implements ParamsValida
 
     }
 
-    public Result recordSearchOutcome() {
-
-        analyticsStore.recordEvent(combine(analyticsContext(), JsonHelper.jsonToObjectMap(request().body().asJson())));
-        return created();
-    }
-
-    private Map<String, Object> analyticsContext() {
-
-        return ImmutableMap.of(
-                "correlationId", session(SEARCH_ANALYTICS_GROUP_ID),
-                "username", principal(session(OFFENDER_API_BEARER_TOKEN)),
-                "sessionId", Optional.ofNullable(session("id")).orElseGet(() -> UUID.randomUUID().toString()),
-                "dateTime", DateTime.now().toDate()
-        );
-    }
-
-    private Map<String, Object> recordSearchResultsAnalytics(Map<String, Object> results) {
-
-        analyticsStore.recordEvent(combine(analyticsContext(), ImmutableMap.of("type", "search-results", "total", results.get("total"))));
-        return results;
-    }
-
-    private Map<String, Object> combine(Map<String, Object> map, Map<String, Object> other) {
-        return ImmutableMap.<String, Object>builder().putAll(map).putAll(other).build();
-    }
 }

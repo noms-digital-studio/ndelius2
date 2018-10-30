@@ -46,8 +46,6 @@ public class ReportGeneratorWizardController_GetPdf_Test extends WithApplication
     private DocumentStore alfrescoDocumentStore;
     @Mock
     private PdfGenerator pdfGenerator;
-    @Mock
-    private AnalyticsStore analyticsStore;
 
     @Captor
     private ArgumentCaptor<ShortFormatPreSentenceReportData> reportData;
@@ -119,7 +117,7 @@ public class ReportGeneratorWizardController_GetPdf_Test extends WithApplication
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                bind(AnalyticsStore.class).toInstance(analyticsStore),
+                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                 bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                 bind(MongoClient.class).toInstance(mock(MongoClient.class))
             )

@@ -4,7 +4,6 @@ import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ParoleParom1ReportData;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
@@ -32,7 +31,6 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                                         WebJarsUtil webJarsUtil,
                                         Config configuration,
                                         Environment environment,
-                                        AnalyticsStore analyticsStore,
                                         EncryptedFormFactory formFactory,
                                         PdfGenerator pdfGenerator,
                                         DocumentStore documentStore,
@@ -41,7 +39,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                                         views.html.paroleParom1Report.tester analyticsTesterTemplate,
                                         OffenderApi offenderApi) {
 
-        super(ec, webJarsUtil, configuration, environment, analyticsStore, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore, offenderApi);
+        super(ec, webJarsUtil, configuration, environment, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore, offenderApi);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
         this.analyticsTesterTemplate = analyticsTesterTemplate;

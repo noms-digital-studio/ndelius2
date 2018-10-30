@@ -7,7 +7,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface AnalyticsStore {
 
-    void recordEvent(Map<String, Object> data);
 
     CompletableFuture<List<Map<String, Object>>> recentEvents(int limit);
 

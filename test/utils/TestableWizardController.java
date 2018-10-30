@@ -16,7 +16,6 @@ public class TestableWizardController extends ShortFormatPreSentenceReportContro
                 null,
                 ConfigFactory.load(),
                 null,
-                null,
                 new EncryptedFormFactory(null, null, null),
                 pdfGenerator,
                 documentStore,
