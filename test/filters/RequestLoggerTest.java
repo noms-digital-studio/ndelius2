@@ -89,7 +89,7 @@ public class RequestLoggerTest {
 
         val logLine = RequestLogger.requestLogLine(0, requestHeader, result);
 
-        assertThat(logLine.get()).contains("'Mobile Safari 5'");
+        assertThat(logLine.get().getContext().get("agent")).contains("Mobile Safari 5");
     }
 
     @Test
@@ -98,7 +98,7 @@ public class RequestLoggerTest {
 
         val logLine = RequestLogger.requestLogLine(0, requestHeader, result);
 
-        assertThat(logLine.get()).contains("'unknown browser'");
+        assertThat(logLine.get().getContext().get("agent")).contains("unknown browser");
     }
 
     @Test
@@ -110,14 +110,14 @@ public class RequestLoggerTest {
 
         val logLine = RequestLogger.requestLogLine(0, requestHeader, result);
 
-        assertThat(logLine.get()).contains("rodger");
+        assertThat(logLine.get().getContext().get("user")).contains("rodger");
     }
 
     @Test
     public void unknownUserIsLoggedWhenUserNotPresent() {
         val logLine = RequestLogger.requestLogLine(0, requestHeader, result);
 
-        assertThat(logLine.get()).contains("unknown user");
+        assertThat(logLine.get().getContext().get("user")).contains("unknown user");
     }
 
 

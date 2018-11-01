@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
@@ -78,7 +79,7 @@ public class NationalSearchController extends Controller implements ParamsValida
 
         final Supplier<CompletionStage<Result>> renderedPage = () -> offenderApi.logon(username).thenApplyAsync(bearerToken -> {
 
-            Logger.info("AUDIT:{}: Successful logon for user {}", principal(bearerToken), username);
+            Logger.info("AUDIT:{}: Successful logon for user {}", principal(bearerToken), username, ImmutableMap.of("user", principal(bearerToken) ));
 
             session(OFFENDER_API_BEARER_TOKEN, bearerToken);
             session(SEARCH_ANALYTICS_GROUP_ID, UUID.randomUUID().toString());

@@ -22,7 +22,7 @@ public class LoggingFilter extends Filter {
         val startTime = System.currentTimeMillis();
 
         return nextFilter.apply(requestHeader).thenApply(result -> {
-            RequestLogger.requestLogLine(startTime, requestHeader, result).ifPresent(Logger::info);
+            RequestLogger.requestLogLine(startTime, requestHeader, result).ifPresent(logEntry -> Logger.info(logEntry.getMessage(), logEntry.getContext()));
             return result;
         });
     }

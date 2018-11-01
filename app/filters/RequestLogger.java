@@ -2,7 +2,10 @@ package filters;
 
 import com.github.coveo.ua_parser.Parser;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import helpers.JwtHelper;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.val;
 import play.Logger;
 import play.mvc.Http;
@@ -10,6 +13,7 @@ import play.mvc.Result;
 import scala.collection.JavaConverters;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
@@ -20,7 +24,14 @@ import static play.mvc.Http.MimeTypes.JSON;
 class RequestLogger {
     private static List<String> loggableContent = ImmutableList.of(HTML, JSON, "application/pdf");
 
-    static Optional<String> requestLogLine(long startTime, Http.RequestHeader requestHeader, Result result) {
+    @Data
+    @AllArgsConstructor
+    public static class LogEntry {
+        private final String message;
+        private final Map<String, String> context;
+    }
+
+    static Optional<LogEntry> requestLogLine(long startTime, Http.RequestHeader requestHeader, Result result) {
         val session = session(requestHeader);
 
         val endTime = System.currentTimeMillis();
@@ -29,14 +40,16 @@ class RequestLogger {
         return result.contentType()
                 .filter(RequestLogger::shouldLog)
                 .map(notUsed ->
-                        String.format("%s; %s; '%s'; %s; %s; %s; %dms",
-                                id(session),
-                                userId(session),
-                                browser(requestHeader),
-                                requestHeader.method(),
-                                requestHeader.uri(),
-                                result.status(),
-                                requestTime));
+                        new LogEntry(
+                                String.format("%s %s", requestHeader.method(), requestHeader.uri()),
+                                new ImmutableMap.Builder<String, String>()
+                                        .put("sessionId", Optional.ofNullable(id(session)).orElse("unknown"))
+                                        .put("user", userId(session))
+                                        .put("agent",browser(requestHeader))
+                                        .put("status", String.format("%d", result.status()))
+                                        .put("duration", String.format("%dms", requestTime))
+                                        .build()));
+
 
     }
     private static boolean shouldLog(String contentType) {

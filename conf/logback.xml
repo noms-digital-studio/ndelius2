@@ -5,8 +5,10 @@
 
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <file>${app.log.directory:-./}${app.log.name:-application.log}</file>
-    <encoder>
-      <pattern>%date [%level] from %logger in %thread - %message%n%xException</pattern>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <includeContext>false</includeContext>
+      <enableContextMap>true</enableContextMap>
+      <includeCallerInfo>true</includeCallerInfo>
     </encoder>
   </appender>
 
