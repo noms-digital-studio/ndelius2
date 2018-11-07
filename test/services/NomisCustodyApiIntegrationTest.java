@@ -34,6 +34,11 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
     public void beforeEach() {
 
         wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomsoffender/offender_G8020GG.json"))));
+
+        wireMock.stubFor(
                 post(urlEqualTo("/auth/oauth/token"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomsoffender/token.json"))));
@@ -231,6 +236,72 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
         wireMock.verify( getRequestedFor(urlMatching("/custodyapi/api/offenders/nomsId/.*/images")).withHeader("Authorization", equalTo(String.format("Bearer %s", tokenFromFakeAuthResponse))));
         wireMock.verify( getRequestedFor(urlMatching("/custodyapi/api/offenders/nomsId/.*/images/.*/thumbnail")).withHeader("Authorization", equalTo(String.format("Bearer %s", tokenFromFakeAuthResponse))));
 
+    }
+
+    @Test
+    public void tokenIsRetrievePriorToRetrievingAnOffender() {
+        prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        wireMock.verify(
+                postRequestedFor(urlEqualTo("/auth/oauth/token")));
+
+    }
+
+    @Test
+    public void nomsNumberIsUsedWhenRetrievingAnOffender() {
+        prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        wireMock.verify(
+                getRequestedFor(urlEqualTo("/custodyapi/api/offenders/nomsId/G8020GG")));
+
+    }
+
+    @Test
+    public void agencyLocationDescriptionUsedForInstitutionDescription() {
+        /**
+         * Fragment:
+         *
+         *   "bookings": [
+         *     {
+         *       "bookingId": 4692,
+         *       "activeFlag": true,
+         *       "agencyLocation": {
+         *         "description": "GHOST HOLDING ESTABLISHMENT",
+         */
+        wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomsoffender/offender_G8020GG.json"))));
+
+
+
+        val offender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(offender.getInstitution().getDescription()).isEqualTo("GHOST HOLDING ESTABLISHMENT");
+    }
+
+    @Test
+    public void agencyLocationDescriptionUsedForInstitutionDescriptionEvenForInactiveBookings() {
+        /**
+         * Fragment:
+         *
+         *   "bookings": [
+         *     {
+         *       "bookingId": 4692,
+         *       "activeFlag": false,
+         *       "agencyLocation": {
+         *         "description": "GHOST HOLDING ESTABLISHMENT",
+         */
+        wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomsoffender/offender_noactive_booking.json"))));
+
+
+
+        val offender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(offender.getInstitution().getDescription()).isEqualTo("GHOST HOLDING ESTABLISHMENT");
     }
 
     @Override

@@ -7,6 +7,7 @@ import data.ParoleParom1ReportData;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
+import interfaces.PrisonerApi;
 import lombok.val;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
@@ -17,6 +18,9 @@ import play.twirl.api.Content;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import static java.util.Optional.ofNullable;
 
@@ -25,6 +29,8 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     private final views.html.paroleParom1Report.cancelled cancelledTemplate;
     private final views.html.paroleParom1Report.completed completedTemplate;
     private final views.html.paroleParom1Report.tester analyticsTesterTemplate;
+    private final PrisonerApi prisonerApi;
+
 
     @Inject
     public ParoleParom1ReportController(HttpExecutionContext ec,
@@ -37,12 +43,14 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                                         views.html.paroleParom1Report.cancelled cancelledTemplate,
                                         views.html.paroleParom1Report.completed completedTemplate,
                                         views.html.paroleParom1Report.tester analyticsTesterTemplate,
-                                        OffenderApi offenderApi) {
+                                        OffenderApi offenderApi,
+                                        PrisonerApi prisonerApi) {
 
         super(ec, webJarsUtil, configuration, environment, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore, offenderApi);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
         this.analyticsTesterTemplate = analyticsTesterTemplate;
+        this.prisonerApi = prisonerApi;
     }
 
     @Override
@@ -61,10 +69,40 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     }
 
     @Override
+    protected CompletionStage<Map<String, String>> initialParams() {
+        return super.initialParams().thenCompose(params -> {
+            val nomisNumber = params.get("prisonerDetailsNomisNumber");
+            val prisonerFuture = Optional.ofNullable(prisonerApi.getOffenderByNomsNumber(nomisNumber).toCompletableFuture()).orElseThrow(() -> new RuntimeException("No NOMS number for offender"));
+
+            return CompletableFuture.allOf(prisonerFuture)
+                    .thenApply(notUsed ->
+                            storeCustodyData(
+                                    params,
+                                    prisonerFuture.join()));
+        });
+    }
+
+    private Map<String, String> storeCustodyData(Map<String, String> params, PrisonerApi.Offender offender) {
+        return params;
+    }
+
+
+    @Override
     protected String templateName() {
 
         return "paroleParom1Report";
     }
+
+    @Override
+    protected String documentEntityType() {
+        return "INSTITUTIONALREPORT";
+    }
+
+    @Override
+    protected String documentTableName() {
+        return "INSTITUTIONAL_REPORT";
+    }
+
 
     @Override
     protected Content renderCancelledView() {

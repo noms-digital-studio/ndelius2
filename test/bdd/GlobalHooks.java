@@ -1,6 +1,7 @@
 package bdd;
 
 import bdd.wiremock.AlfrescoStoreMock;
+import bdd.wiremock.CustodyApiMock;
 import bdd.wiremock.OffenderApiMock;
 import bdd.wiremock.PdfGeneratorMock;
 import com.mongodb.rx.client.MongoClient;
@@ -28,6 +29,8 @@ public class GlobalHooks extends WithChromeBrowser {
     private PdfGeneratorMock pdfGeneratorMock;
     @Inject
     private OffenderApiMock offenderApiMock;
+    @Inject
+    private CustodyApiMock custodyApiMock;
 
     @Before
     public void before() {
@@ -35,6 +38,7 @@ public class GlobalHooks extends WithChromeBrowser {
         pdfGeneratorMock.start().stubDefaults();
         offenderApiMock.start().stubDefaults();
         alfrescoStoreMock.start().stubDefaults();
+        custodyApiMock.start().stubDefaults();
 
         createBrowser();
     }
@@ -44,6 +48,7 @@ public class GlobalHooks extends WithChromeBrowser {
         pdfGeneratorMock.stop();
         alfrescoStoreMock.stop();
         offenderApiMock.stop();
+        custodyApiMock.stop();
         stopServer();
         quitBrowser();
     }
@@ -65,6 +70,10 @@ public class GlobalHooks extends WithChromeBrowser {
                 .configure("pdf.generator.url", String.format("http://localhost:%d/", Ports.PDF.getPort()))
                 .configure("store.alfresco.url", String.format("http://localhost:%d/", Ports.ALFRESCO.getPort()))
                 .configure("offender.api.url", String.format("http://localhost:%d/", Ports.OFFENDER_API.getPort()))
+                .configure("nomis.api.url", String.format("http://localhost:%d/", Ports.CUSTODY_API.getPort()))
+                .configure("prisoner.api.provider", "custody")
+                .configure("custody.api.auth.username", "username")
+                .configure("custody.api.auth.password", "password")
                 .build();
     }
 

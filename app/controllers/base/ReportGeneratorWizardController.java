@@ -300,7 +300,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
             result = documentStore.uploadNewPdf(
                     document,
-                    filename,
+                    new DocumentStore.DocumentEntity(filename, documentTableName(), documentEntityType()),
                     data.getOnBehalfOfUser(),
                     metaData,
                     data.getCrn(),
@@ -321,6 +321,10 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
             return stored;
         });
     }
+
+    protected abstract String documentEntityType();
+
+    protected abstract String documentTableName();
 
     private Map<String, Object> convertDataToMap(T data) {
         BeanMap beanMap = BeanMap.create(data);

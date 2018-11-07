@@ -39,6 +39,7 @@ POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSe
 POST    /report/shortFormatPreSentenceReport/save   controllers.ShortFormatPreSentenceReportController.reportPost
 GET     /report/shortFormatPreSentenceReport/get    controllers.ShortFormatPreSentenceReportController.getPdf(documentId: String, onBehalfOfUser: String)
 
+GET     /report/paroleReport                      controllers.ParoleParom1ReportController.wizardGet
 GET     /report/paroleParom1Report                      controllers.ParoleParom1ReportController.wizardGet
 POST    /report/paroleParom1Report                      controllers.ParoleParom1ReportController.wizardPost
 POST    /report/paroleParom1Report/save                 controllers.ParoleParom1ReportController.reportPost

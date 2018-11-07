@@ -5,6 +5,7 @@ import interfaces.PrisonerApi;
 import play.inject.Injector;
 import services.NomisCustodyApi;
 import services.NomisPrisonerApi;
+import services.stubs.StubPrisonerApi;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -23,6 +24,9 @@ public class PrisonerApiProvider implements Provider<PrisonerApi> {
     @Override
     public PrisonerApi get() {
         return "legacy".equals(prisonerApiProvider) ?
-            injector.instanceOf(NomisPrisonerApi.class) : injector.instanceOf(NomisCustodyApi.class);
+                injector.instanceOf(NomisPrisonerApi.class) :
+                "stub".equals(prisonerApiProvider) ?
+                        injector.instanceOf(StubPrisonerApi.class) :
+                        injector.instanceOf(NomisCustodyApi.class);
     }
 }

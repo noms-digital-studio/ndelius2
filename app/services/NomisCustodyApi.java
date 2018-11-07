@@ -76,6 +76,39 @@ public class NomisCustodyApi  implements PrisonerApi {
 
     }
 
+    @Override
+    public CompletionStage<Offender> getOffenderByNomsNumber(String nomsNumber) {
+        Function<WSResponse, WSResponse> checkForValidOffenceResponse = (wsResponse) -> checkForValidResponse(wsResponse, () -> String.format("No offender found in NOMIS - check the noms number %s is correct", nomsNumber));
+
+        return apiToken
+                .getAsync()
+                .thenCompose(token -> wsClient
+                        .url(String.format("%scustodyapi/api/offenders/nomsId/%s", apiBaseUrl, nomsNumber))
+                        .addHeader(AUTHORIZATION, "Bearer " + token)
+                        .get()
+                        .thenApply(checkForValidOffenceResponse)
+                        .thenApply(WSResponse::getBody)
+                        .thenApply(body -> toOffender(readValue(body, OffenderEntity.class))));
+    }
+
+    private Offender toOffender(OffenderEntity offenderEntity) {
+        String institutionDescription = offenderEntity.getBookings()
+                .stream()
+                .filter(booking -> booking.getBookingSequence() == 1)
+                .findFirst()
+                .map(booking -> booking.getAgencyLocation().getDescription())
+                .orElseThrow(() -> new RuntimeException("No bookinging for offender"));
+        return Offender
+                .builder()
+                .institution(
+                        Institution
+                                .builder()
+                                .description(institutionDescription)
+                                .build())
+                .build();
+    }
+
+
     private WSResponse checkForValidResponse(WSResponse wsResponse, Supplier<String> notFoundMessage) {
         switch (wsResponse.getStatus()) {
             case OK:
@@ -129,5 +162,20 @@ public class NomisCustodyApi  implements PrisonerApi {
                     Logger.error("Error while checking Custody API connectivity", throwable);
                     return unhealthy(throwable.getLocalizedMessage());
                 });
+    }
+
+    @Value
+    static class AgencyLocation {
+        private String description;
+    }
+    @Value
+    static class Booking {
+        private AgencyLocation agencyLocation;
+        private int bookingSequence;
+
+    }
+    @Value
+    static class OffenderEntity {
+        private List<Booking> bookings;
     }
 }

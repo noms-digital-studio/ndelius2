@@ -70,7 +70,7 @@ public class StubOffenderApi implements OffenderApi {
                 .surname("Jones")
                 .middleNames(ImmutableList.of("Jane", "Suzi"))
                 .dateOfBirth("1980-12-01")
-                .otherIds(otherIds("F987654C"))
+                .otherIds(otherIds("G8020GG"))
                 .contactDetails(contactDetails())
                 .gender("Female")
                 .build());
@@ -80,7 +80,7 @@ public class StubOffenderApi implements OffenderApi {
                 .surname("Jones")
                 .middleNames(ImmutableList.of("Henry", "James"))
                 .dateOfBirth("2000-06-22")
-                .otherIds(otherIds("A3597AEX"))
+                .otherIds(otherIds("G8678GG"))
                 .contactDetails(contactDetails())
                 .gender("Male")
                 .build());
