@@ -6,14 +6,14 @@ import org.fluentlenium.core.FluentPage;
 import static org.openqa.selenium.By.id;
 
 public class OffenceDetailsPage extends FluentPage {
-    private final SourcesOfInformationPage sourcesOfInformationPage;
+    private final SentencingCourtDetailsPage sentencingCourtDetailsPage;
     public OffenceDetailsPage(FluentControl control) {
         super(control);
-        sourcesOfInformationPage = new SourcesOfInformationPage(control);
+        sentencingCourtDetailsPage = new SentencingCourtDetailsPage(control);
     }
 
     public OffenceDetailsPage navigateHere() {
-        sourcesOfInformationPage.navigateHere().gotoNext();
+        sentencingCourtDetailsPage.navigateHere().gotoNext();
         return this;
     }
 

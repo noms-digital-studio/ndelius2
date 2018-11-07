@@ -9,14 +9,19 @@
 @import menu._
 @import fragment._
 
-
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Sources of information - Short Format Pre Sentence Report", true, Some(4)) {
+@summaryHint = {
+    <p>Describe the offence or the incident. In this summary, judges and magistrates need to know where your information is coming from. You need to be clear when it’s from CPS, probation or from the offender.</p>
+    <p>Details should be provided for any basis of plea. Reference should also be made as to whether the report is following a guilty plea or a finding of guilt after trial. The summary should provide the reader with a sound overview of the offence.</p>
+    <p>Remember to highlight domestic abuse, safeguarding or any other significant features. Diversity considerations may also be relevant here, both in terms of the offender and the victim.</p>
+}
 
-    <h1 class="heading-xlarge">Sources of information</h1>
+@main("Offence details - Short Format Pre Sentence Report", true, Some(4)) {
+
+    <h1 class="heading-xlarge">Offence details</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -36,46 +41,32 @@
                 </div>
             }
 
-            <fieldset>
+            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+                @CSRF.formField
 
-                <legend class="lede margin-bottom medium">Select the relevant options</legend>
+                @commonFields(reportForm, encrypter)
+                @page2Fields(reportForm, encrypter)
+                @page3Fields(reportForm, encrypter)
 
-                @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
-                    @CSRF.formField
+                @textarea(reportForm("mainOffence"), '_label -> "Main offence and date", 'class -> "wide force-border", 'required -> "true")
 
-                    @commonFields(reportForm, encrypter)
-                    @page2Fields(reportForm, encrypter)
-                    @page3Fields(reportForm, encrypter)
+                <hr />
 
-                    @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
-                    @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service records")
-                    @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS summary")
-                    @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys assessments")
-                    @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous convictions")
-                    @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim statement")
-                    @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Safeguarding checks")
-                    @checkbox(reportForm("policeInformationSource"), '_label -> "Police information")
-                    @checkbox(reportForm("sentencingGuidelinesInformationSource"), '_label -> "Sentencing guidelines")
-                    @checkbox(reportForm("domesticAbuseInformationSource"), '_label -> "Domestic abuse call out information")
-                    @checkbox(reportForm("otherInformationSource"), '_label -> "Other (please specify below)", Symbol("data-target") -> "other-information")
+                @textarea(reportForm("otherOffences"), '_label -> "Other offences and dates (if applicable)", 'class -> "wide force-border")
 
-                    <div class="panel panel-border-narrow moj-reveal moj-reveal-reduce js-hidden" id="other-information">
-                    @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information", 'class -> "wide")
-                    </div>
+                <hr />
 
-                    <div class="margin-top large"></div>
+                @textarea(reportForm("offenceSummary"), '_label -> "Brief summary of the offence", '_hint -> summaryHint, 'class -> "wide", 'required -> "true")
 
-                    @page5Fields(reportForm)
-                    @page6Fields(reportForm)
-                    @page7Fields(reportForm)
-                    @page8Fields(reportForm)
-                    @page9Fields(reportForm)
-                    @page11Fields(reportForm, encrypter)
+                @page5Fields(reportForm)
+                @page6Fields(reportForm)
+                @page7Fields(reportForm)
+                @page8Fields(reportForm)
+                @page9Fields(reportForm)
+                @page11Fields(reportForm, encrypter)
 
-                    @footer(4, reportForm, encrypter)
-                }
-
-            </fieldset>
+                @footer(4, reportForm, encrypter)
+            }
 
         </div>
     </div>

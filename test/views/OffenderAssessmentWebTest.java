@@ -126,7 +126,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
     public void legacyReportWithDrugsIssueBecomesSubstanceMisuse() {
         when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
-                        ImmutableMap.of("issueDrugs", "true", "pageNumber", "7")));
+                        ImmutableMap.of("issueDrugs", "true", "pageNumber", "6")));
 
         startPage.navigateWithExistingReport().gotoNext();
 
@@ -138,7 +138,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
     public void legacyReportWithAlcoholIssueDetailsBecomesOtherIssueWithDetails() {
         when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
-                        ImmutableMap.of("issueAlcohol", "true", "pageNumber", "7")));
+                        ImmutableMap.of("issueAlcohol", "true", "pageNumber", "6")));
 
         startPage.navigateWithExistingReport().gotoNext();
 
@@ -150,7 +150,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
     public void legacyReportWithAlcoholIssueBecomesSubstanceMisuse() {
         when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
-                        ImmutableMap.of("offenderAssessment", "some offender assessment", "pageNumber", "7")));
+                        ImmutableMap.of("offenderAssessment", "some offender assessment", "pageNumber", "6")));
 
         startPage.navigateWithExistingReport().gotoNext();
 
@@ -164,7 +164,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
         when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.<String, Object>builder().
-                                put("pageNumber", "7").
+                                put("pageNumber", "6").
                                 put("issueAccommodation", "false").
                                 put("issueAccommodationDetails", "").
                                 put("issueEmployment", "false").
@@ -194,7 +194,7 @@ public class OffenderAssessmentWebTest extends WithIE8Browser {
         when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(legacyReportWith(
                         ImmutableMap.<String, Object>builder().
-                                put("pageNumber", "7").
+                                put("pageNumber", "6").
                                 put("issueAccommodation", "true").
                                 put("issueAccommodationDetails", "Accommodation details").
                                 put("issueEmployment", "true").

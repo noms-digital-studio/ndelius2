@@ -14,26 +14,20 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@analysisHint = {
-    <p>Your analysis needs to go beyond the facts provided by the CPS. It needs to reflect motivation and the person’s own understanding of their behaviour.</p>
-    <p>Consider the offender’s account and attitude, and make links to any previous offending behaviour and previous reports, interventions and periods of supervision.</p>
-    <p>Do they accept responsibility? Is the offence admitted or denied? It is important to be clear where lack of remorse differs from any inability to show remorse. There could be a reason for an inability to show remorse, for example, autism, or learning disability. People who have suffered trauma may also present very differently, so it is important to consider a person’s history and the impact of any trauma.</p>
-    <p>To what extent is the offender aware of the impact on the victim? Reference should be made to lasting impacts, whether physical, psychological or emotional. Has there been any deliberate targeting of specific groups? Is there repeat victimisation?</p>
-    <p>Outline the emotional or cognitive factors that underpin the crime. Were there sexual motivations, financial gains or addictions? What level of premeditation or planning was involved? Are there any patterns suggesting likelihood of similar offending?</p>
-    <p>Is there any evidence of discrimination in their attitude or behaviour?</p>
-    <p>Consider whether the offender’s own experience as a victim of others is relevant to their commission of this offence. Has this person been a victim of domestic abuse? What impact has that had? Has this person been subject to racism? Have they suffered trauma in their past that has impacted upon their ability to engage and respond?</p>
-    <p>If this report is about a person aged 18-24, consider whether their maturity is an issue in this offence. Are they easily led or influenced by a peer group?</p>
-    <p>This section should lead to some potential considerations of rehabilitative interventions.</p>
+@traumaGuidance = {
+    <p>Trauma can affect an offender's ability to engage and make decisions. Detail the offender's experience of trauma. How has it affected their offending? Has it affected their engagement with rehabilitative interventions?</p>
 }
 
-@patternsHint = {
-    <p>Previous behaviour is an indicator of future behaviour. Specify if this is an escalation in severity.</p>
-    <p>Detail any gaps in offending, consider lapse and relapse in any addictions and make clear the triggers that initiate the behaviours.</p>
+@caringResponsibilitiesGuidance = {
+    <p>Detail the offender’s current and past caring responsibilities.</p>
+    <p class="margin-top">Take account of caring for both children and adults.</p>
+    <p class="margin-top">How have those responsibilities affected their offending?</p>
+    <p class="margin-top">Have they affected their engagement with rehabilitative interventions?</p>
+    <p class="margin-top">Remember that evidence shows that imprisonment of mothers has significant impacts on those that they care for.</p>
 }
+@main("Offender assessment - Short Format Pre Sentence Report", true, Some(6)) {
 
-@main("Offence analysis - Short Format Pre Sentence Report", true, Some(6)) {
-
-    <h1 class="heading-xlarge">Offence analysis</h1>
+    <h1 class="heading-xlarge">Offender assessment</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -48,12 +42,39 @@
                     <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
 
                     <ul class="govuk-list govuk-error-summary__list">
-                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
+                        @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
                     </ul>
                 </div>
             }
 
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+            <h2 class="lede no-margin-top no-margin-bottom">Select the underlying issues that are relevant as motivators or drivers for the main offence</h2>
+
+            <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">Offender assessment guidance</span>
+                </summary>
+                <div class="govuk-details__text panel panel-border-narrow">
+
+                    <p>You should consider diversity issues for each factor in terms of the offender’s own experiences or protected characteristics.</p>
+                    <p>Key aspects of the person’s circumstances should be detailed. Those which are linked to their offending behaviour should be highlighted.</p>
+                    <p>Make sure that you select all of the factors that have impacted on offending, and that may impact on future risk of re offending.</p>
+                    <p>Also, consider if there are factors that are not directly linked. These may cause difficulties for the offender and impact on their desistance from crime.</p>
+
+                </div>
+            </details>
+
+            <div class="notice">
+                <i class="icon icon-important">
+                    <span class="visually-hidden">Warning</span>
+                </i>
+                <strong class="font-small">
+                    By not selecting an issue you are indicating it is not relevant
+                </strong>
+            </div>
+
+            <p>&nbsp;</p>
+
+            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
                 @CSRF.formField
 
                 @commonFields(reportForm, encrypter)
@@ -62,13 +83,67 @@
                 @page4Fields(reportForm)
                 @page5Fields(reportForm)
 
-                @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", '_hint -> analysisHint, 'class -> "wide", 'required -> "true", Symbol("data-limit") -> "4000")
+                <div class="form-group@if(reportForm.allErrors.stream.anyMatch(_.key.contains("issue"))) { form-group-error}">
+                @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
+                @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment for employment")
+                @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment for finance")
+                @checkboxDetailsField(reportForm, "issueRelationships", "Relationships", "Provide a brief assessment for relationships")
+                @checkboxDetailsField(reportForm, "issueSubstanceMisuse", "Substance misuse", "Provide a brief assessment for substance misuse")
+                @checkboxDetailsField(reportForm, "issueHealth", "Physical & mental health", "Provide a brief assessment for physical & mental health")
+                @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment for behaviour")
+                @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues")
+                </div>
 
                 <hr />
 
-                @textarea(reportForm("patternOfOffending"), '_label -> "Patterns of offending behaviour (if applicable)", '_hint -> patternsHint, 'class -> "wide", Symbol("data-limit") -> "1000")
+                <div class="form-group">
+                    <fieldset>
+                        <legend class="margin-bottom medium">
+                            <span class="form-label-bold">Is there evidence of the offender experiencing trauma?</span>
+                        </legend>
 
-                <div class="margin-top large"></div>
+                        @inputRadioGroup(
+                            reportForm("experienceTrauma"),
+                            options(
+                                "yes" -> "Yes",
+                                "no" -> "No"
+                            ),
+                            Symbol("_inline") -> "true",
+                            Symbol("data-target") -> "experienceTrauma-details",
+                            Symbol("data-ignore") -> "no"
+                        )
+                    </fieldset>
+
+                    <div class="panel panel-border-narrow js-hidden moj-reveal margin-top" id="experienceTrauma-details">
+                    @textarea(reportForm("experienceTraumaDetails"), '_label -> "Experience of trauma", '_hint -> traumaGuidance, 'class -> "wide")
+                    </div>
+                </div>
+
+
+                <hr />
+
+                <div class="form-group">
+                    <fieldset>
+                        <legend class="margin-bottom medium">
+                            <span class="form-label-bold">Does the offender have caring responsibilities for children or adults, or have they ever had caring responsibilities for children or adults?</span>
+                        </legend>
+
+                        @inputRadioGroup(
+                            reportForm("caringResponsibilities"),
+                            options(
+                                "yes" -> "Yes",
+                                "no" -> "No"
+                            ),
+                            Symbol("_inline") -> "true",
+                            Symbol("data-target") -> "caringResponsibilities-details",
+                            Symbol("data-ignore") -> "no"
+                        )
+                    </fieldset>
+
+                    <div class="panel panel-border-narrow moj-reveal js-hidden" id="caringResponsibilities-details">
+                    @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance, 'class -> "wide")
+                    </div>
+                </div>
 
                 @page7Fields(reportForm)
                 @page8Fields(reportForm)
@@ -80,5 +155,4 @@
 
         </div>
     </div>
-
 }
