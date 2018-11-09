@@ -7,7 +7,6 @@ Feature: Parole Report
 
     Given that the delius user want to enter for Female prisoner who has Indeterminate sentence
     And they input the following information
-      | Prison or Young Offender Institution | York       |
       | Prison number                        | P98793-123 |
     And they select the "Restricted" option on the "Current prison category"
     And they enter the following information
@@ -18,7 +17,7 @@ Feature: Parole Report
       | Tariff length | 5 years |
     And they enter the date "29/06/2019" for "Tariff expiry date"
     Then the following information should be saved in the prisoner parole report
-      | prisonerDetailsPrisonInstitution | York               |
+      | prisonerDetailsPrisonInstitution | HMP Humber         |
       | prisonerDetailsPrisonersFullName | Jane lizzy Doe     |
       | prisonerDetailsPrisonNumber      | P98793-123         |
       | prisonerDetailsNomisNumber       | F123456            |
@@ -33,7 +32,6 @@ Feature: Parole Report
 
     Given that the delius user want to enter for Female prisoner who has Determinate sentence
     And they input the following information
-      | Prison or Young Offender Institution | York       |
       | Prison number                        | P98793-123 |
     And they select the "A" option on the "Current prison category"
     And they enter the following information
@@ -42,7 +40,7 @@ Feature: Parole Report
     And they select the "Determinate" option on the "Sentence type"
     And they enter the date "08/12/2021" for "Parole eligibility date"
     Then the following information should be saved in the prisoner parole report
-      | prisonerDetailsPrisonInstitution     | York               |
+      | prisonerDetailsPrisonInstitution     | HMP Humber         |
       | prisonerDetailsPrisonersFullName     | Jane lizzy Doe     |
       | prisonerDetailsPrisonNumber          | P98793-123         |
       | prisonerDetailsNomisNumber           | F123456            |

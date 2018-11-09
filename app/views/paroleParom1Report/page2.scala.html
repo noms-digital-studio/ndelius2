@@ -13,7 +13,7 @@
 
 @popup(reportForm, encrypter, "Prisoner details", 2) {
 
-    @inputText(reportForm("prisonerDetailsPrisonInstitution"), '_label -> "Prison or Young Offender Institution", 'required -> "true")
+    @readOnlyField(reportForm("prisonerDetailsPrisonInstitution"), "Prison or Young Offender Institution")
 
     @readOnlyField(reportForm("prisonerDetailsPrisonersFullName"), "Prisoner`s full name")
 

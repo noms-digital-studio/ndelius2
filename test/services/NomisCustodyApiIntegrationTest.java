@@ -6,7 +6,9 @@ import com.google.common.io.ByteStreams;
 import helpers.JsonHelper;
 import interfaces.PrisonerApi;
 import lombok.val;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import play.Application;
 import play.Environment;
 import play.Mode;
@@ -257,51 +259,31 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
     }
 
     @Test
-    public void agencyLocationDescriptionUsedForInstitutionDescription() {
-        /**
-         * Fragment:
-         *
-         *   "bookings": [
-         *     {
-         *       "bookingId": 4692,
-         *       "activeFlag": true,
-         *       "agencyLocation": {
-         *         "description": "GHOST HOLDING ESTABLISHMENT",
-         */
+    public void prisonerOffenderIsReturnedWhenFound() {
         wireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                get(urlMatching("/custodyapi/api/offenders/nomsId/G8020GG"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomsoffender/offender_G8020GG.json"))));
 
 
 
-        val offender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
 
-        assertThat(offender.getInstitution().getDescription()).isEqualTo("GHOST HOLDING ESTABLISHMENT");
+        assertThat(maybeOffender.isPresent()).isTrue();
     }
 
     @Test
-    public void agencyLocationDescriptionUsedForInstitutionDescriptionEvenForInactiveBookings() {
-        /**
-         * Fragment:
-         *
-         *   "bookings": [
-         *     {
-         *       "bookingId": 4692,
-         *       "activeFlag": false,
-         *       "agencyLocation": {
-         *         "description": "GHOST HOLDING ESTABLISHMENT",
-         */
+    public void prisonerOffenderIsNotReturnedWhenNotFound() {
         wireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                get(urlMatching("/custodyapi/api/offenders/nomsId/G8020GG"))
                         .willReturn(
-                                okForContentType("application/json", loadResource("/nomsoffender/offender_noactive_booking.json"))));
+                                notFound()));
 
 
 
-        val offender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
 
-        assertThat(offender.getInstitution().getDescription()).isEqualTo("GHOST HOLDING ESTABLISHMENT");
+        assertThat(maybeOffender.isPresent()).isFalse();
     }
 
     @Override

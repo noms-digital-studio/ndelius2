@@ -4,6 +4,7 @@ import interfaces.HealthCheckResult;
 import interfaces.PrisonerApi;
 import play.Logger;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -23,10 +24,10 @@ public class StubPrisonerApi implements PrisonerApi {
     }
 
     @Override
-    public CompletionStage<Offender> getOffenderByNomsNumber(String nomsNumber) {
-        return CompletableFuture.completedFuture(Offender
+    public CompletionStage<Optional<Offender>> getOffenderByNomsNumber(String nomsNumber) {
+        return CompletableFuture.completedFuture(Optional.ofNullable(Offender
                 .builder()
                 .institution(Institution.builder().description("HMP Leeds").build())
-                .build());
+                .build()));
     }
 }

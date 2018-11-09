@@ -41,4 +41,7 @@ public class AlfrescoDocumentBuilder {
         return toJson(document).toString();
     }
 
+    public String userData() {
+        return JsonHelper.stringify(ImmutableMap.of("values", values));
+    }
 }

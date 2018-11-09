@@ -30,7 +30,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("GENDER")
     private String gender;
 
-    @RequiredOnPage(value = 2, message = "Enter the prison or Young Offender Institution")
+    @RequiredOnPage(value = 2, message = "The NOMS Number must be set for this offender and match a prisoner")
     @JsonProperty("PRISONER_DETAILS_PRISON_INSTITUTION")
     private String prisonerDetailsPrisonInstitution;
 

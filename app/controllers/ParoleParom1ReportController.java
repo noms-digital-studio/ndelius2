@@ -71,8 +71,10 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
         return super.initialParams().thenCompose(params -> {
-            val nomisNumber = params.get("prisonerDetailsNomisNumber");
-            val prisonerFuture = Optional.ofNullable(prisonerApi.getOffenderByNomsNumber(nomisNumber).toCompletableFuture()).orElseThrow(() -> new RuntimeException("No NOMS number for offender"));
+            val prisonerDetailsNomisNumber = params.get("prisonerDetailsNomisNumber");
+            val prisonerFuture = Optional.ofNullable(prisonerDetailsNomisNumber)
+                    .map(nomsNumber -> prisonerApi.getOffenderByNomsNumber(nomsNumber).toCompletableFuture())
+                    .orElseGet(() -> CompletableFuture.completedFuture(Optional.empty()));
 
             return CompletableFuture.allOf(prisonerFuture)
                     .thenApply(notUsed ->
@@ -82,7 +84,10 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
         });
     }
 
-    private Map<String, String> storeCustodyData(Map<String, String> params, PrisonerApi.Offender offender) {
+    private Map<String, String> storeCustodyData(Map<String, String> params, Optional<PrisonerApi.Offender> maybeOffender) {
+        maybeOffender.ifPresent(offender -> {
+            params.put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription());
+        });
         return params;
     }
 

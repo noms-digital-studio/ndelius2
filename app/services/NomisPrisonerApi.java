@@ -99,7 +99,7 @@ public class NomisPrisonerApi implements PrisonerApi {
         }
 
     @Override
-    public CompletionStage<Offender> getOffenderByNomsNumber(String nomsNumber) {
+    public CompletionStage<Optional<Offender>> getOffenderByNomsNumber(String nomsNumber) {
         throw new NotImplementedException("This API is deprecated use NomisCustodyApi instead");
     }
 }

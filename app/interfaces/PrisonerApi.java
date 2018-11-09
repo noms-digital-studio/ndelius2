@@ -1,20 +1,21 @@
 package interfaces;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 public interface PrisonerApi {
 
-    @Data
+    @Value
     @Builder(toBuilder = true)
     class Institution {
         private String description;
 
     }
 
-    @Data
+    @Value
     @Builder(toBuilder = true)
     class Offender {
         private Institution institution;
@@ -25,5 +26,5 @@ public interface PrisonerApi {
 
     CompletionStage<HealthCheckResult> isHealthy();
 
-    CompletionStage<Offender> getOffenderByNomsNumber(String nomsNumber);
+    CompletionStage<Optional<Offender>> getOffenderByNomsNumber(String nomsNumber);
 }
