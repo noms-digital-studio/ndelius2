@@ -198,7 +198,7 @@ public class StubOffenderApi implements OffenderApi {
 
         val institutionalReports = InstitutionalReport.builder()
             .conviction(Conviction.builder()
-                .mainOffence(aMainOffence())
+                .offences(ImmutableList.of(aMainOffence()))
                 .build())
             .build();
 

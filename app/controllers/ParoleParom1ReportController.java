@@ -107,8 +107,8 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     private Map<String, String> storeOffenderData(Map<String, String> params, OffenderApi.InstitutionalReport institutionalReport) {
         Logger.info("institutionalReport: " + institutionalReport);
         Logger.info("Params: " + params);
-        if (params.containsKey("createJourney")) {
-            params.put("prisonerDetailsOffence", institutionalReport.getConviction().getMainOffence().offenceDescription());
+        if (params.containsKey("createJourney") && institutionalReport.getConviction().getMainOffence().isPresent()) {
+            params.put("prisonerDetailsOffence", institutionalReport.getConviction().getMainOffence().get().offenceDescription());
         }
         return params;
     }
