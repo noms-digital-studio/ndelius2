@@ -27,6 +27,7 @@ public class StubPrisonerApi implements PrisonerApi {
     public CompletionStage<Optional<Offender>> getOffenderByNomsNumber(String nomsNumber) {
         return CompletableFuture.completedFuture(Optional.ofNullable(Offender
                 .builder()
+                .mostRecentPrisonerNumber("4815")
                 .institution(Institution.builder().description("HMP Leeds").build())
                 .build()));
     }

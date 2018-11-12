@@ -49,7 +49,9 @@ public class NomisCustodyApi  implements PrisonerApi {
     @Builder(toBuilder = true)
     static class Booking {
         private AgencyLocation agencyLocation;
-        private int bookingSequence;
+        private long bookingSequence;
+        private long bookingId;
+        private String bookingNo;
         private boolean activeFlag;
     }
     @Value
@@ -125,7 +127,7 @@ public class NomisCustodyApi  implements PrisonerApi {
             case FORBIDDEN:
                 apiToken.clearToken();
                 Logger.error("NOMIS authentication token has expired or is invalid");
-                throw new RuntimeException(String.format("NOMIS authentication token has expired or is invalid"));
+                throw new RuntimeException("NOMIS authentication token has expired or is invalid");
             default:
                 Logger.error("Failed to retrieve offender record from NOMIS. Status code {}", wsResponse.getStatus());
                 throw new RuntimeException(String.format("Failed to retrieve offender record from NOMIS. Status code %d", wsResponse.getStatus()));
@@ -142,7 +144,7 @@ public class NomisCustodyApi  implements PrisonerApi {
             case FORBIDDEN:
                 apiToken.clearToken();
                 Logger.error("NOMIS authentication token has expired or is invalid");
-                throw new RuntimeException(String.format("NOMIS authentication token has expired or is invalid"));
+                throw new RuntimeException("NOMIS authentication token has expired or is invalid");
             default:
                 Logger.error("Failed to retrieve offender record from NOMIS. Status code {}", wsResponse.getStatus());
                 throw new RuntimeException(String.format("Failed to retrieve offender record from NOMIS. Status code %d", wsResponse.getStatus()));
@@ -189,18 +191,18 @@ public class NomisCustodyApi  implements PrisonerApi {
 
     static class OffenderTransformer {
         static Offender offenderOf(OffenderEntity offenderEntity) {
-            String institutionDescription = offenderEntity.getBookings()
+            val mostRecentBooking = offenderEntity.getBookings()
                     .stream()
                     .filter(booking -> booking.getBookingSequence() == 1)
                     .findFirst()
-                    .map(booking -> booking.getAgencyLocation().getDescription())
                     .orElseThrow(() -> new RuntimeException("No current booking for offender found"));
             return Offender
                     .builder()
+                    .mostRecentPrisonerNumber(String.valueOf(mostRecentBooking.getBookingNo()))
                     .institution(
                             Institution
                                     .builder()
-                                    .description(institutionDescription)
+                                    .description(mostRecentBooking.getAgencyLocation().getDescription())
                                     .build())
                     .build();
 

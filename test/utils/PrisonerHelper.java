@@ -5,9 +5,22 @@ import interfaces.PrisonerApi.Offender;
 
 public class PrisonerHelper {
     public static Offender offenderInPrison() {
-        return offenderAtPrison("HMP Wandsworth");
+        return aBasicOffender();
     }
     public static Offender offenderAtPrison(String prison) {
-        return Offender.builder().institution(PrisonerApi.Institution.builder().description(prison).build()).build();
+        return aBasicOffender().toBuilder().institution(PrisonerApi.Institution.builder().description(prison).build()).build();
+    }
+    public static Offender offenderWithMostRecentPrisonerNumber(String mostRecentPrisonerNumber) {
+        return aBasicOffender().toBuilder().mostRecentPrisonerNumber(mostRecentPrisonerNumber).build();
+    }
+
+    private static Offender aBasicOffender() {
+        return Offender.builder()
+                .mostRecentPrisonerNumber("4815")
+                .institution(PrisonerApi.Institution.builder()
+                        .description("HMP Wandsworth")
+                        .build())
+                .build();
+
     }
 }

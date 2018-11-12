@@ -6,8 +6,6 @@ Feature: Parole Report
   Scenario: Delius user wants to enter details for Female prisoner whom has Indeterminate sentence
 
     Given that the delius user want to enter for Female prisoner who has Indeterminate sentence
-    And they input the following information
-      | Prison number                        | P98793-123 |
     And they select the "Restricted" option on the "Current prison category"
     And they enter the following information
       | Sentence | 5 years            |
@@ -18,7 +16,7 @@ Feature: Parole Report
     Then the following information should be saved in the prisoner parole report
       | prisonerDetailsPrisonInstitution | HMP Humber         |
       | prisonerDetailsPrisonersFullName | Jane lizzy Doe     |
-      | prisonerDetailsPrisonNumber      | P98793-123         |
+      | prisonerDetailsPrisonNumber      | LH5058             |
       | prisonerDetailsNomisNumber       | F123456            |
       | prisonerDetailsPrisonersCategory | restricted         |
       | prisonerDetailsOffence           | Stealing the limelight (code123) - 08/11/2018 |
@@ -30,8 +28,6 @@ Feature: Parole Report
   Scenario: Delius user wants to enter details for Female prisoner whom has Determinate sentence
 
     Given that the delius user want to enter for Female prisoner who has Determinate sentence
-    And they input the following information
-      | Prison number                        | P98793-123 |
     And they select the "A" option on the "Current prison category"
     And they enter the following information
       | Sentence | 20 years           |
@@ -40,7 +36,7 @@ Feature: Parole Report
     Then the following information should be saved in the prisoner parole report
       | prisonerDetailsPrisonInstitution     | HMP Humber         |
       | prisonerDetailsPrisonersFullName     | Jane lizzy Doe     |
-      | prisonerDetailsPrisonNumber          | P98793-123         |
+      | prisonerDetailsPrisonNumber          | LH5058             |
       | prisonerDetailsNomisNumber           | F123456            |
       | prisonerDetailsPrisonersCategory     | a                  |
       | prisonerDetailsOffence               | Stealing the limelight (code123) - 08/11/2018 |

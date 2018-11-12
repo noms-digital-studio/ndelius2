@@ -98,6 +98,8 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     private Map<String, String> storeCustodyData(Map<String, String> params, Optional<PrisonerApi.Offender> maybeOffender) {
         maybeOffender.ifPresent(offender -> {
             params.put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription());
+            params.put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber());
+
         });
         return params;
     }

@@ -19,6 +19,7 @@ public interface PrisonerApi {
     @Builder(toBuilder = true)
     class Offender {
         private Institution institution;
+        private String mostRecentPrisonerNumber;
 
     }
 
