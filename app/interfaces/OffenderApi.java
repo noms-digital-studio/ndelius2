@@ -175,7 +175,7 @@ public interface OffenderApi {
         private String offenceDate;
         private OffenceDetail detail;
 
-        String offenceDescription() {
+        public String offenceDescription() {
             return Optional.ofNullable(offenceDate)
                 .map(ignored -> String.format("%s (%s) - %s",
                     detail.getSubCategoryDescription(),
@@ -197,6 +197,19 @@ public interface OffenderApi {
         private String subCategoryCode;
         private String subCategoryDescription;
     }
+
+    @Value
+    @Builder
+    class InstitutionalReport {
+        private Conviction conviction;
+    }
+
+    @Value
+    @Builder
+    class Conviction {
+        private Offence mainOffence;
+    }
+
 
     static String joinList(String delimiter, List<String> list) {
         return String.join(delimiter,
@@ -228,4 +241,6 @@ public interface OffenderApi {
     CompletionStage<Offences> getOffencesByCrn(String bearerToken, String crn);
 
     CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url);
+
+    CompletionStage<InstitutionalReport> getInstitutionalReport(String session, String crn, String institutionalReportId);
 }

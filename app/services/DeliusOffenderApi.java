@@ -246,6 +246,18 @@ public class DeliusOffenderApi implements OffenderApi {
             });
     }
 
+    @Override
+    public CompletionStage<InstitutionalReport> getInstitutionalReport(String bearerToken, String crn, String institutionalReportId) {
+
+        val url = String.format(offenderApiBaseUrl + "offenders/crn/%s/institutionalReports/%s", crn, institutionalReportId);
+        return wsClient.url(url)
+            .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+            .get()
+            .thenApply(response -> assertOkResponse(response, "getInstitutionalReport"))
+            .thenApply(WSResponse::getBody)
+            .thenApply(body -> readValue(body, InstitutionalReport.class));
+    }
+
     String queryParamsFrom(Map<String, String> params) {
 
         return "?" + String.join("&", params.entrySet().stream().

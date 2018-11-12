@@ -144,19 +144,7 @@ public class StubOffenderApi implements OffenderApi {
         }
 
         val offences = Offences.builder()
-            .items(ImmutableList.of(Offence.builder()
-                .mainOffence(true)
-                .offenceId("M1")
-                .offenceDate("2018-09-03T00:00:00")
-                .detail(OffenceDetail.builder()
-                    .code("05331")
-                    .description("Obtaining a money transfer by deception - 05331")
-                    .mainCategoryCode("053")
-                    .mainCategoryDescription("Other frauds (Category)")
-                    .subCategoryCode("31")
-                    .subCategoryDescription("Obtaining a money transfer by deception")
-                    .build())
-                .build(),
+            .items(ImmutableList.of(aMainOffence(),
                 Offence.builder()
                     .mainOffence(false)
                     .offenceId("A1")
@@ -189,9 +177,48 @@ public class StubOffenderApi implements OffenderApi {
 
         return CompletableFuture.completedFuture(offences);
     }
-  
+
     public CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
         return CompletableFuture.completedFuture(NullNode.instance);
+    }
+
+    @Override
+    public CompletionStage<InstitutionalReport> getInstitutionalReport(String bearerToken, String crn, String institutionalReportId) {
+        if (isBlank(bearerToken)) {
+            throw new RuntimeException("getOffencesByCrn called with blank bearerToken");
+        }
+
+        if (isBlank(crn)) {
+            throw new RuntimeException("getOffencesByCrn called with blank CRN");
+        }
+
+        if (isBlank(institutionalReportId)) {
+            throw new RuntimeException("getOffencesByCrn called with blank institutionalReportId");
+        }
+
+        val institutionalReports = InstitutionalReport.builder()
+            .conviction(Conviction.builder()
+                .mainOffence(aMainOffence())
+                .build())
+            .build();
+
+        return CompletableFuture.completedFuture(institutionalReports);
+    }
+
+    private Offence aMainOffence() {
+        return Offence.builder()
+            .mainOffence(true)
+            .offenceId("M1")
+            .offenceDate("2018-09-03T00:00:00")
+            .detail(OffenceDetail.builder()
+                .code("05331")
+                .description("Obtaining a money transfer by deception - 05331")
+                .mainCategoryCode("053")
+                .mainCategoryDescription("Other frauds (Category)")
+                .subCategoryCode("31")
+                .subCategoryDescription("Obtaining a money transfer by deception")
+                .build())
+            .build();
     }
 
     private ContactDetails contactDetails() {

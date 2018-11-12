@@ -1,14 +1,23 @@
 package bdd.wiremock;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.google.common.collect.ImmutableMap;
 import lombok.val;
+import play.libs.Json;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.okForContentType;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static play.libs.Json.toJson;
 
 public class AlfrescoStoreMock {
@@ -44,15 +53,46 @@ public class AlfrescoStoreMock {
         return this;
     }
 
-    public boolean verifySavedDocumentContainsValues(Map<String, String> values) {
-        val match = postRequestedFor(urlMatching("/noms-spg/updatemetadata/.*"));
-        // build matcher adding each tuple as JSON body match
-        values.forEach((key, text) -> match.withRequestBody(matching(String.format(".*\"%s\":.*%s.*.*", key, text))));
-        val hasMatched = alfrescofWireMock.findAll(match).size() > 0;
-        if (!hasMatched) {
-            System.out.println(alfrescofWireMock.findAllNearMissesFor(match));
+    /*
+        getBodyAsString() call returns a string within which is the nested JSON that we want to assert on.
+
+        e.g.
+
+        --MXimuNKTEgoTtC3OT4
+        Content-Disposition: form-data; name="userData"
+        Content-Type: text/plain
+
+        {
+        "templateName":"paroleParom1Report","values":
+            {
+                "prisonerDetailsPrisonersFullName":"Jimmy Jammy Fizz",
+                "prisonerDetailsOffence":"Sub cat desc (code123) - 08/11/2018",
+                ...
+            }
         }
-        return hasMatched;
+        --MXimuNKTEgoTtC3OT4--
+     */
+    public boolean verifySavedDocumentContainsValues(Map<String, String> values) {
+        List<LoggedRequest> requests = alfrescofWireMock.findAll(postRequestedFor(urlMatching("/noms-spg/updatemetadata/.*")));
+        // We need to look at the last request that Wiremock received
+        val body = requests.get(requests.size()-1).getBodyAsString();
+        val jsonFromBody = body.substring(body.indexOf("{"), body.lastIndexOf("}") + 1);
+        val documentMetaData = Json.parse(jsonFromBody).get("values");
+
+        Map<String, Boolean> results = values.entrySet().stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                e -> documentMetaData.get(e.getKey()).asText().contains(e.getValue())
+            ));
+
+        boolean result = results.values().stream()
+            .allMatch(aBoolean -> aBoolean);
+
+        if (!result) {
+            System.out.println(results);
+        }
+
+        return result;
     }
 
     public AlfrescoStoreMock stubExistingDocument(String documentId, String document) {

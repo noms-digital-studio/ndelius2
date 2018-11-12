@@ -67,6 +67,11 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                         .willReturn(
                                 okForContentType("application/json",  loadResource("/deliusoffender/offences.json"))));
 
+        wireMock.stubFor(
+            get(urlEqualTo("/offenders/crn/X12345/institutionalReports/999"))
+                .willReturn(
+                    okForContentType("application/json",  loadResource("/deliusoffender/institutionalReports.json"))));
+
         offenderApi = instanceOf(OffenderApi.class);
     }
 
@@ -179,6 +184,13 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(offences.getItems().get(0).getDetail().getCode()).isEqualTo("00101");
 
         wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/offences")));
+    }
+
+    @Test
+    public void getsInstitutionalReports() {
+        val institutionalReport = offenderApi.getInstitutionalReport("ABC", "X12345", "999").toCompletableFuture().join();
+
+        assertThat(institutionalReport.getConviction().getMainOffence().offenceDescription()).isEqualTo("Fraud subcategory description (00102) - 02/11/2018");
     }
 
     private static Map.Entry<String, String> entry(String code, String description) {

@@ -10,7 +10,6 @@ Feature: Parole Report
       | Prison number                        | P98793-123 |
     And they select the "Restricted" option on the "Current prison category"
     And they enter the following information
-      | Offence  | Aggravated assault |
       | Sentence | 5 years            |
     And they select the "Indeterminate" option on the "Sentence type"
     And they input the following information
@@ -22,7 +21,7 @@ Feature: Parole Report
       | prisonerDetailsPrisonNumber      | P98793-123         |
       | prisonerDetailsNomisNumber       | F123456            |
       | prisonerDetailsPrisonersCategory | restricted         |
-      | prisonerDetailsOffence           | Aggravated assault |
+      | prisonerDetailsOffence           | Stealing the limelight (code123) - 08/11/2018 |
       | prisonerDetailsSentence          | 5 years            |
       | prisonerDetailsSentenceType      | indeterminate      |
       | prisonerDetailsTariffLength      | 5 years            |
@@ -35,7 +34,6 @@ Feature: Parole Report
       | Prison number                        | P98793-123 |
     And they select the "A" option on the "Current prison category"
     And they enter the following information
-      | Offence  | Aggravated assault |
       | Sentence | 20 years           |
     And they select the "Determinate" option on the "Sentence type"
     And they enter the date "08/12/2021" for "Parole eligibility date"
@@ -45,7 +43,7 @@ Feature: Parole Report
       | prisonerDetailsPrisonNumber          | P98793-123         |
       | prisonerDetailsNomisNumber           | F123456            |
       | prisonerDetailsPrisonersCategory     | a                  |
-      | prisonerDetailsOffence               | Aggravated assault |
+      | prisonerDetailsOffence               | Stealing the limelight (code123) - 08/11/2018 |
       | prisonerDetailsSentence              | 20 years           |
       | prisonerDetailsSentenceType          | determinate        |
       | prisonerDetailsParoleEligibilityDate | 08/12/2021         |
