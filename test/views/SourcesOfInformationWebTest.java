@@ -118,7 +118,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
         when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(existingReportWith(
                         ImmutableMap.<String, Object>builder().
-                                put("pageNumber", "4").
+                                put("pageNumber", "9").
                                 put("interviewInformationSource", "false").
                                 put("serviceRecordsInformationSource", "false").
                                 put("cpsSummaryInformationSource", "false").
@@ -143,7 +143,7 @@ public class SourcesOfInformationWebTest extends WithIE8Browser {
         when(documentStore.retrieveOriginalData(any(), any())).
                 thenReturn(existingReportWith(
                         ImmutableMap.<String, Object>builder().
-                                put("pageNumber", "4").
+                                put("pageNumber", "9").
                                 put("interviewInformationSource", "true").
                                 put("serviceRecordsInformationSource", "true").
                                 put("cpsSummaryInformationSource", "true").

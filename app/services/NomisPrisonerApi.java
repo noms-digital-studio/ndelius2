@@ -7,6 +7,7 @@ import interfaces.HealthCheckResult;
 import interfaces.PrisonerApi;
 import interfaces.PrisonerApiToken;
 import lombok.val;
+import org.apache.commons.lang3.NotImplementedException;
 import play.Logger;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
@@ -96,4 +97,9 @@ public class NomisPrisonerApi implements PrisonerApi {
                     return unhealthy(throwable.getLocalizedMessage());
                 });
         }
+
+    @Override
+    public CompletionStage<Optional<Offender>> getOffenderByNomsNumber(String nomsNumber) {
+        throw new NotImplementedException("This API is deprecated use NomisCustodyApi instead");
+    }
 }

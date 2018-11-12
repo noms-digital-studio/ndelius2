@@ -54,26 +54,26 @@ public class AlfrescoStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser, String originalData, String crn, Long entityId) {
+    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, DocumentEntity documentEntity, String onBehalfOfUser, String originalData, String crn, Long entityId) {
 
         val parameters = new HashMap<String, String>() {
             {
                 put("CRN", crn);
                 put("author", onBehalfOfUser);
-                put("entityType", "COURTREPORT");
+                put("entityType", documentEntity.getEntityName());
                 put("entityId", Optional.ofNullable(entityId).map(Object::toString).orElse(""));
                 put("docType", "DOCUMENT");
                 put("userData", originalData);
             }
         };
 
-        return postFileUpload(filename, document, onBehalfOfUser, "uploadnew", parameters).thenCompose(stored -> {
+        return postFileUpload(documentEntity.getFilename(), document, onBehalfOfUser, "uploadnew", parameters).thenCompose(stored -> {
 
             val documentId = stored.get("ID");
 
             if (Strings.isNullOrEmpty(documentId)) {
 
-                val errorMessage = "No Alfresco Document ID retrieved for document: " + filename ;
+                val errorMessage = "No Alfresco Document ID retrieved for document: " + documentEntity.getFilename() ;
 
                 Logger.error(errorMessage);
                 stored.put("errorMessage", errorMessage);
@@ -87,9 +87,9 @@ public class AlfrescoStore implements DocumentStore {
                         put("alfrescoId", documentId);
                         put("alfrescoUser", onBehalfOfUser);
                         put("probationAreaCode", alfrescoUser);
-                        put("documentName", filename);
+                        put("documentName", documentEntity.getFilename());
                         put("crn", crn);
-                        put("tableName", "COURT_REPORT");
+                        put("tableName", documentEntity.getTableName());
                         put("entityId", Optional.ofNullable(entityId).map(Object::toString).orElse(""));
                     }
                 };

@@ -6,7 +6,9 @@ import com.google.common.io.ByteStreams;
 import helpers.JsonHelper;
 import interfaces.PrisonerApi;
 import lombok.val;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import play.Application;
 import play.Environment;
 import play.Mode;
@@ -32,6 +34,11 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
 
     @Before
     public void beforeEach() {
+
+        wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomsoffender/offender_G8020GG.json"))));
 
         wireMock.stubFor(
                 post(urlEqualTo("/auth/oauth/token"))
@@ -231,6 +238,52 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
         wireMock.verify( getRequestedFor(urlMatching("/custodyapi/api/offenders/nomsId/.*/images")).withHeader("Authorization", equalTo(String.format("Bearer %s", tokenFromFakeAuthResponse))));
         wireMock.verify( getRequestedFor(urlMatching("/custodyapi/api/offenders/nomsId/.*/images/.*/thumbnail")).withHeader("Authorization", equalTo(String.format("Bearer %s", tokenFromFakeAuthResponse))));
 
+    }
+
+    @Test
+    public void tokenIsRetrievePriorToRetrievingAnOffender() {
+        prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        wireMock.verify(
+                postRequestedFor(urlEqualTo("/auth/oauth/token")));
+
+    }
+
+    @Test
+    public void nomsNumberIsUsedWhenRetrievingAnOffender() {
+        prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        wireMock.verify(
+                getRequestedFor(urlEqualTo("/custodyapi/api/offenders/nomsId/G8020GG")));
+
+    }
+
+    @Test
+    public void prisonerOffenderIsReturnedWhenFound() {
+        wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/G8020GG"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomsoffender/offender_G8020GG.json"))));
+
+
+
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(maybeOffender.isPresent()).isTrue();
+    }
+
+    @Test
+    public void prisonerOffenderIsNotReturnedWhenNotFound() {
+        wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/G8020GG"))
+                        .willReturn(
+                                notFound()));
+
+
+
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(maybeOffender.isPresent()).isFalse();
     }
 
     @Override

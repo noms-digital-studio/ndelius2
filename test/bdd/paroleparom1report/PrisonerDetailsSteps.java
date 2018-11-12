@@ -51,8 +51,6 @@ public class PrisonerDetailsSteps {
 
     @Given("^that the Delius user has completed all the relevant fields within the \"Prisoner details\" UI$")
     public void thatTheDeliusUserHasCompletedAllTheRelevantFieldsWithinTheUI() throws Throwable {
-        page.fillInput("Prison or Young Offender Institution", "Doncaster");
-        page.fillInput("Prison number", "P98793-123");
         page.clickRadioButtonWithLabelWithinLegend("A", "Current prison category");
         page.fillTextArea("Offence", "Aggravated assault");
         page.fillTextArea("Sentence", "20 years");

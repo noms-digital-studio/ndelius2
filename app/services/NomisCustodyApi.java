@@ -6,6 +6,7 @@ import com.typesafe.config.Config;
 import interfaces.HealthCheckResult;
 import interfaces.PrisonerApi;
 import interfaces.PrisonerApiToken;
+import lombok.Builder;
 import lombok.Value;
 import lombok.val;
 import play.Logger;
@@ -14,6 +15,7 @@ import play.libs.ws.WSResponse;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -37,6 +39,27 @@ public class NomisCustodyApi  implements PrisonerApi {
         private String imageViewType;
         private boolean activeFlag;
     }
+
+    @Value
+    @Builder(toBuilder = true)
+    static class AgencyLocation {
+        private String description;
+    }
+    @Value
+    @Builder(toBuilder = true)
+    static class Booking {
+        private AgencyLocation agencyLocation;
+        private long bookingSequence;
+        private long bookingId;
+        private String bookingNo;
+        private boolean activeFlag;
+    }
+    @Value
+    @Builder(toBuilder = true)
+    static class OffenderEntity {
+        private List<Booking> bookings;
+    }
+
 
 
 
@@ -76,6 +99,24 @@ public class NomisCustodyApi  implements PrisonerApi {
 
     }
 
+    @Override
+    public CompletionStage<Optional<Offender>> getOffenderByNomsNumber(String nomsNumber) {
+
+        return apiToken
+                .getAsync()
+                .thenCompose(token -> wsClient
+                        .url(String.format("%scustodyapi/api/offenders/nomsId/%s", apiBaseUrl, nomsNumber))
+                        .addHeader(AUTHORIZATION, "Bearer " + token)
+                        .get()
+                        .thenApply(this::checkForMaybeResponse)
+                        .thenApply(maybeResponse ->
+                                maybeResponse.map(this::transformOffenderResponse)));
+    }
+
+    private Offender transformOffenderResponse(WSResponse response) {
+        return OffenderTransformer.offenderOf(readValue(response.getBody(), OffenderEntity.class));
+    }
+
     private WSResponse checkForValidResponse(WSResponse wsResponse, Supplier<String> notFoundMessage) {
         switch (wsResponse.getStatus()) {
             case OK:
@@ -86,7 +127,24 @@ public class NomisCustodyApi  implements PrisonerApi {
             case FORBIDDEN:
                 apiToken.clearToken();
                 Logger.error("NOMIS authentication token has expired or is invalid");
-                throw new RuntimeException(String.format("NOMIS authentication token has expired or is invalid"));
+                throw new RuntimeException("NOMIS authentication token has expired or is invalid");
+            default:
+                Logger.error("Failed to retrieve offender record from NOMIS. Status code {}", wsResponse.getStatus());
+                throw new RuntimeException(String.format("Failed to retrieve offender record from NOMIS. Status code %d", wsResponse.getStatus()));
+        }
+    }
+
+    private Optional<WSResponse> checkForMaybeResponse(WSResponse wsResponse) {
+        switch (wsResponse.getStatus()) {
+            case OK:
+                return Optional.of(wsResponse);
+            case NOT_FOUND:
+                return Optional.empty();
+            case UNAUTHORIZED:
+            case FORBIDDEN:
+                apiToken.clearToken();
+                Logger.error("NOMIS authentication token has expired or is invalid");
+                throw new RuntimeException("NOMIS authentication token has expired or is invalid");
             default:
                 Logger.error("Failed to retrieve offender record from NOMIS. Status code {}", wsResponse.getStatus());
                 throw new RuntimeException(String.format("Failed to retrieve offender record from NOMIS. Status code %d", wsResponse.getStatus()));
@@ -129,5 +187,25 @@ public class NomisCustodyApi  implements PrisonerApi {
                     Logger.error("Error while checking Custody API connectivity", throwable);
                     return unhealthy(throwable.getLocalizedMessage());
                 });
+    }
+
+    static class OffenderTransformer {
+        static Offender offenderOf(OffenderEntity offenderEntity) {
+            val mostRecentBooking = offenderEntity.getBookings()
+                    .stream()
+                    .filter(booking -> booking.getBookingSequence() == 1)
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("No current booking for offender found"));
+            return Offender
+                    .builder()
+                    .mostRecentPrisonerNumber(String.valueOf(mostRecentBooking.getBookingNo()))
+                    .institution(
+                            Institution
+                                    .builder()
+                                    .description(mostRecentBooking.getAgencyLocation().getDescription())
+                                    .build())
+                    .build();
+
+        }
     }
 }

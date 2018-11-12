@@ -9,30 +9,14 @@
 @import menu._
 @import fragment._
 
+
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@proposalHint = {
-    <p>Have you considered what equality and diversity issues are present and how they can help inform your proposal?</p>
-    <p>Have you used the effective proposal tool?</p>
-    <p>Be aware of the sentencing guidelines and relevant legislation. Remember to reference the sentencing intentions of the court, if they were made clear.</p>
-    <p>Consider all possible sentencing options, and whether or not the offender is past the custody threshold or suitable for a community order.</p>
-    <p>Consider and describe both aggravating or mitigating factors.</p>
-    <p>Consider whether specific needs such as gender, maturity, diversity make particular sentences more appropriate.</p>
-    <p>In cases of women, ensure that you think about women only disposals and that your proposal gives a robust community option.</p>
-    <p>Make clear how your proposals will manage risk.</p>
-    <p>What will the impact of the sentence be on the offender?</p>
-    <p>How will the proposed sentence affect the offender’s family and anyone for whom they have caring responsibilities?</p>
-    <p>Remember that evidence shows that imprisonment of mothers has significant impacts on those that they care for.</p>
-    <p>If relevant, what is not suitable in this case?</p>
-    <p>Are there any relevant alternative requirements that the offender may have been eligible for, but circumstances have made them unsuitable for participation?</p>
-    <p>Remember that your proposal should be commensurate with risk and need. Proposals should not be made for suspended sentence orders.</p>
-}
+@main("Sources of information - Short Format Pre Sentence Report", true, Some(9)) {
 
-@main("Conclusion - Short Format Pre Sentence Report", true, Some(9)) {
-
-    <h1 class="heading-xlarge">Proposal</h1>
+    <h1 class="heading-xlarge">Sources of information</h1>
 
     <div class="grid-row">
         <div class="column-one-third">
@@ -52,24 +36,46 @@
                 </div>
             }
 
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-                @CSRF.formField
+            <fieldset>
 
-                @commonFields(reportForm, encrypter)
-                @page2Fields(reportForm, encrypter)
-                @page3Fields(reportForm, encrypter)
-                @page4Fields(reportForm)
-                @page5Fields(reportForm)
-                @page6Fields(reportForm)
-                @page7Fields(reportForm)
-                @page8Fields(reportForm)
+                <legend class="lede margin-bottom medium">Select the relevant options</legend>
 
-                @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_hint -> proposalHint, 'class -> "wide", Symbol("data-limit") -> "3000", 'required -> "true")
+                @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
+                    @CSRF.formField
 
-                @page11Fields(reportForm, encrypter)
+                    @commonFields(reportForm, encrypter)
+                    @page2Fields(reportForm, encrypter)
+                    @page3Fields(reportForm, encrypter)
 
-                @footer(9, reportForm, encrypter)
-            }
+                    @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
+                    @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service records")
+                    @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS summary")
+                    @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys assessments")
+                    @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous convictions")
+                    @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim statement")
+                    @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Safeguarding checks")
+                    @checkbox(reportForm("policeInformationSource"), '_label -> "Police information")
+                    @checkbox(reportForm("sentencingGuidelinesInformationSource"), '_label -> "Sentencing guidelines")
+                    @checkbox(reportForm("domesticAbuseInformationSource"), '_label -> "Domestic abuse call out information")
+                    @checkbox(reportForm("otherInformationSource"), '_label -> "Other (please specify below)", Symbol("data-target") -> "other-information")
+
+                    <div class="panel panel-border-narrow moj-reveal moj-reveal-reduce js-hidden" id="other-information">
+                    @textarea(reportForm("otherInformationDetails"), '_label -> "Other Source(s) of Information", 'class -> "wide")
+                    </div>
+
+                    <div class="margin-top large"></div>
+
+                    @page4Fields(reportForm)
+                    @page5Fields(reportForm)
+                    @page6Fields(reportForm)
+                    @page7Fields(reportForm)
+                    @page8Fields(reportForm)
+                    @page11Fields(reportForm, encrypter)
+
+                    @footer(9, reportForm, encrypter)
+                }
+
+            </fieldset>
 
         </div>
     </div>

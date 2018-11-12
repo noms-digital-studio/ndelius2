@@ -24,6 +24,7 @@ public class AlfrescoDocumentBuilder {
         builder.document.put("lastModifiedDate", "2007-12-03T10:15:30+01:00");
         builder.values.put("pageNumber", "2");
         builder.values.put("crn", "X12345");
+        builder.values.put("entityId", "12345");
         return builder;
     }
 
@@ -41,4 +42,7 @@ public class AlfrescoDocumentBuilder {
         return toJson(document).toString();
     }
 
+    public String userData() {
+        return JsonHelper.stringify(ImmutableMap.of("values", values));
+    }
 }

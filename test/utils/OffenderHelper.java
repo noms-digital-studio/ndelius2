@@ -47,6 +47,11 @@ public class OffenderHelper {
                 .build();
     }
 
+    public static Offender anOffenderWithNoOtherIds() {
+        return aBasicOffender().toBuilder().otherIds(ImmutableMap.of()).build();
+    }
+
+
     public static ContactDetails emptyContactDetails() {
         return ContactDetails.builder().build();
     }

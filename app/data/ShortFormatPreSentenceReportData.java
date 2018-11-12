@@ -78,188 +78,186 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
 
     // Page 4
 
-    @OnPage(4)
-    @JsonProperty("INTERVIEW_INFORMATION_SOURCE")
-    private boolean interviewInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("SERVICE_RECORDS_INFORMATION_SOURCE")
-    private boolean serviceRecordsInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("CPS_SUMMARY_INFORMATION_SOURCE")
-    private boolean cpsSummaryInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("OASYS_ASSESSMENTS_INFORMATION_SOURCE")
-    private boolean oasysAssessmentsInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("PREVIOUS_CONVICTIONS_INFORMATION_SOURCE")
-    private boolean previousConvictionsInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("VICTIM_STATEMENT_INFORMATION_SOURCE")
-    private boolean victimStatementInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("CHILDREN_SERVICES_INFORMATION_SOURCE")
-    private boolean childrenServicesInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("POLICE_INFORMATION_SOURCE")
-    private boolean policeInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("SENTENCING_GUIDELINES_INFORMATION_SOURCE")
-    private boolean sentencingGuidelinesInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("DOMESTIC_ABUSE_INFORMATION_SOURCE")
-    private boolean domesticAbuseInformationSource;
-
-    @OnPage(4)
-    @JsonProperty("OTHER_INFORMATION_SOURCE")
-    private boolean otherInformationSource;
-
-    @RequiredOnPage(value = 4, message = "Enter the other information source details", onlyIfField = "otherInformationSource")
-    @JsonProperty("OTHER_INFORMATION_DETAILS")
-    private String otherInformationDetails;
-
-
-    // Page 5
-
-    @RequiredOnPage(value = 5, message = "Enter the main offence and date")
+    @RequiredOnPage(value = 4, message = "Enter the main offence and date")
     @JsonProperty("MAIN_OFFENCE")
     private String mainOffence;
 
-    @OnPage(5)
+    @OnPage(4)
     @JsonProperty("OTHER_OFFENCE")
     private String otherOffences;
 
-    @RequiredOnPage(value = 5, message = "Enter a brief summary of the offence")
+    @RequiredOnPage(value = 4, message = "Enter a brief summary of the offence")
     @JsonProperty("OFFENCE_SUMMARY")
     private String offenceSummary;
 
 
-    // Page 6
+    // Page 5
 
-    @RequiredOnPage(value = 6, message = "Enter your analysis of the offence")
+    @RequiredOnPage(value = 5, message = "Enter your analysis of the offence")
     @JsonProperty("OFFENCE_ANALYSIS")
     private String offenceAnalysis;
 
-    @OnPage(6)
+    @OnPage(5)
     @JsonProperty("PATTERN_OF_OFFENDING")
     private String patternOfOffending;
 
 
-    // Page 7
+    // Page 6
 
-    @RequiredGroupOnPage(value = 7, message = "Select underlying issues from the options below")
+    @RequiredGroupOnPage(value = 6, message = "Select underlying issues from the options below")
     @JsonProperty("ISSUE_ACCOMMODATION")
     private boolean issueAccommodation;
 
-    @OnPage(value = 7)
+    @OnPage(value = 6)
     @JsonProperty("ISSUE_ACCOMMODATION_DETAILS")
     private String issueAccommodationDetails;
 
-    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_EMPLOYMENT")
     private boolean issueEmployment;
 
-    @OnPage(value = 7)
+    @OnPage(value = 6)
     @JsonProperty("ISSUE_EMPLOYMENT_DETAILS")
     private String issueEmploymentDetails;
 
-    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_FINANCE")
     private boolean issueFinance;
 
-    @OnPage(value = 7)
+    @OnPage(value = 6)
     @JsonProperty("ISSUE_FINANCE_DETAILS")
     private String issueFinanceDetails;
 
-    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_RELATIONSHIPS")
     private boolean issueRelationships;
 
-    @OnPage(value = 7)
+    @OnPage(value = 6)
     @JsonProperty("ISSUE_RELATIONSHIPS_DETAILS")
     private String issueRelationshipsDetails;
 
-    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_SUBSTANCE_MISUSE")
     private boolean issueSubstanceMisuse;
 
-    @OnPage(value = 7)
+    @OnPage(value = 6)
     @JsonProperty("ISSUE_SUBSTANCE_MISUSE_DETAILS")
     private String issueSubstanceMisuseDetails;
 
-    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_HEALTH")
     private boolean issueHealth;
 
-    @OnPage(value = 7)
+    @OnPage(value = 6)
     @JsonProperty("ISSUE_HEALTH_DETAILS")
     private String issueHealthDetails;
 
-    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_BEHAVIOUR")
     private boolean issueBehaviour;
 
-    @OnPage(value = 7)
+    @OnPage(value = 6)
     @JsonProperty("ISSUE_BEHAVIOUR_DETAILS")
     private String issueBehaviourDetails;
 
-    @RequiredGroupOnPage(value = 7, errorWhenInvalid = false)
+    @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_OTHER")
     private boolean issueOther;
 
-    @OnPage(value = 7)
+    @OnPage(value = 6)
     @JsonProperty("ISSUE_OTHER_DETAILS")
     private String issueOtherDetails;
 
-
-    @RequiredOnPage(value = 7, message = "Specify whether there is evidence of the offender experiencing trauma")
+    @RequiredOnPage(value = 6, message = "Specify whether there is evidence of the offender experiencing trauma")
     @JsonProperty("EXPERIENCE_TRAUMA")
     private String experienceTrauma;
 
-    @RequiredOnPage(value = 7, message = "Enter the experience of trauma", onlyIfField = "experienceTrauma", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 6, message = "Enter the experience of trauma", onlyIfField = "experienceTrauma", onlyIfFieldMatchValue = "yes")
     @JsonProperty("EXPERIENCE_TRAUMA_DETAILS")
     private String experienceTraumaDetails;
 
-    @RequiredOnPage(value = 7, message = "Specify whether the offender has caring responsibilities for children or adults")
+    @RequiredOnPage(value = 6, message = "Specify whether the offender has caring responsibilities for children or adults")
     @JsonProperty("CARING_RESPONSIBILITIES")
     private String caringResponsibilities;
 
-    @RequiredOnPage(value = 7, message = "Enter the caring responsibilities", onlyIfField = "caringResponsibilities", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 6, message = "Enter the caring responsibilities", onlyIfField = "caringResponsibilities", onlyIfFieldMatchValue = "yes")
     @JsonProperty("CARING_RESPONSIBILITIES_DETAILS")
     private String caringResponsibilitiesDetails;
 
 
-    // Page 8
+    // Page 7
 
-    @RequiredOnPage(value = 8, message = "Enter the likelihood of further offending")
+    @RequiredOnPage(value = 7, message = "Enter the likelihood of further offending")
     @JsonProperty("LIKELIHOOD_OF_RE_OFFENDING")
     private String likelihoodOfReOffending;
 
-    @RequiredOnPage(value = 8, message = "Enter the risk of serious harm")
+    @RequiredOnPage(value = 7, message = "Enter the risk of serious harm")
     @JsonProperty("RISK_OF_SERIOUS_HARM")
     private String riskOfSeriousHarm;
 
-    @RequiredOnPage(value = 8, message = "Enter the response to previous supervision")
+    @RequiredOnPage(value = 7, message = "Enter the response to previous supervision")
     @JsonProperty("PREVIOUS_SUPERVISION_RESPONSE")
     private String previousSupervisionResponse;
 
-    @OnPage(8)
+    @OnPage(7)
     @JsonProperty("ADDITIONAL_PREVIOUS_SUPERVISION")
     private String additionalPreviousSupervision;
 
-    // Page 9
+    // Page 8
 
-    @RequiredOnPage(value = 9, message = "Enter your proposed sentence")
+    @RequiredOnPage(value = 8, message = "Enter your proposed sentence")
     @JsonProperty("PROPOSAL")
     private String proposal;
+
+    // Page 9
+
+    @OnPage(9)
+    @JsonProperty("INTERVIEW_INFORMATION_SOURCE")
+    private boolean interviewInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("SERVICE_RECORDS_INFORMATION_SOURCE")
+    private boolean serviceRecordsInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("CPS_SUMMARY_INFORMATION_SOURCE")
+    private boolean cpsSummaryInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("OASYS_ASSESSMENTS_INFORMATION_SOURCE")
+    private boolean oasysAssessmentsInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("PREVIOUS_CONVICTIONS_INFORMATION_SOURCE")
+    private boolean previousConvictionsInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("VICTIM_STATEMENT_INFORMATION_SOURCE")
+    private boolean victimStatementInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("CHILDREN_SERVICES_INFORMATION_SOURCE")
+    private boolean childrenServicesInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("POLICE_INFORMATION_SOURCE")
+    private boolean policeInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("SENTENCING_GUIDELINES_INFORMATION_SOURCE")
+    private boolean sentencingGuidelinesInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("DOMESTIC_ABUSE_INFORMATION_SOURCE")
+    private boolean domesticAbuseInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("OTHER_INFORMATION_SOURCE")
+    private boolean otherInformationSource;
+
+    @RequiredOnPage(value = 9, message = "Enter the other information source details", onlyIfField = "otherInformationSource")
+    @JsonProperty("OTHER_INFORMATION_DETAILS")
+    private String otherInformationDetails;
 
     // Page 10
 

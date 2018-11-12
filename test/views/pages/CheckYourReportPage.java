@@ -9,17 +9,17 @@ import static org.openqa.selenium.By.id;
 import static org.openqa.selenium.By.xpath;
 
 public class CheckYourReportPage extends FluentPage {
-    private final ConclusionPage conclusionPage;
+    private final SourcesOfInformationPage sourcesOfInformationPage;
     public static final String PAGE_NUMBER = "10";
 
 
     public CheckYourReportPage(FluentControl control) {
         super(control);
-        conclusionPage = new ConclusionPage(control);
+        sourcesOfInformationPage = new SourcesOfInformationPage(control);
     }
 
     public CheckYourReportPage navigateHere() {
-        conclusionPage.navigateHere().gotoNext();
+        sourcesOfInformationPage.navigateHere().gotoNext();
         return this;
     }
 

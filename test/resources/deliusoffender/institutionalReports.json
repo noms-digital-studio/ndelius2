@@ -1,0 +1,30 @@
+{
+  "institutionalReportId": 999,
+  "offenderId": 1,
+  "conviction": {
+    "convictionId": 4,
+    "active": true,
+    "convictionDate": "2018-03-01",
+    "mainOffence": {
+      "offenceId": "M52",
+      "mainOffence": true,
+      "detail": {
+        "code": "00102",
+        "description": "Fraud - 00102",
+        "mainCategoryCode": "001",
+        "mainCategoryDescription": "Fraud",
+        "mainCategoryAbbreviation": "Fraud",
+        "ogrsOffenceCategory": "CODE_DESCRIPTION",
+        "subCategoryCode": "02",
+        "subCategoryDescription": "Fraud subcategory description"
+      },
+      "offenceDate": "2018-11-02T00:00:00",
+      "offenceCount": 1,
+      "tics": 3,
+      "verdict": "G",
+      "offenderId": 1,
+      "createdDatetime": "2017-01-01T00:00:00",
+      "lastUpdatedDatetime": "2017-01-01T00:00:00"
+    }
+  }
+}

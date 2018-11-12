@@ -10,14 +10,14 @@ import static org.openqa.selenium.By.id;
 import static org.openqa.selenium.By.xpath;
 
 public class SourcesOfInformationPage extends FluentPage {
-    private final SentencingCourtDetailsPage sentencingCourtDetailsPage;
+    private final ConclusionPage conclusionPage;
     public SourcesOfInformationPage(FluentControl control) {
         super(control);
-        sentencingCourtDetailsPage = new SentencingCourtDetailsPage(control);
+        conclusionPage = new ConclusionPage(control);
     }
 
     public SourcesOfInformationPage navigateHere() {
-        sentencingCourtDetailsPage.navigateHere().gotoNext();
+        conclusionPage.navigateHere().gotoNext();
         return this;
     }
 

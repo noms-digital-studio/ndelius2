@@ -65,6 +65,16 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
     }
 
     @Override
+    protected String documentEntityType() {
+        return "COURTREPORT";
+    }
+
+    @Override
+    protected String documentTableName() {
+        return "COURT_REPORT";
+    }
+
+    @Override
     protected Map<String, String> storeOffenderDetails(Map<String, String> params, Offender offender) {
 
         params.put("name", offender.displayName());

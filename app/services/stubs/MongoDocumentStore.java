@@ -41,7 +41,7 @@ public class MongoDocumentStore implements DocumentStore {
     }
 
     @Override
-    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, String filename, String onBehalfOfUser,
+    public CompletionStage<Map<String, String>> uploadNewPdf(Byte[] document, DocumentEntity documentEntity, String onBehalfOfUser,
                                                              String originalData, String crn, Long entityId) {
         val documentBytes = ArrayUtils.toPrimitive(document);
         val doc = Base64.toBase64String(documentBytes);
@@ -49,7 +49,7 @@ public class MongoDocumentStore implements DocumentStore {
         val parameters = new HashMap<String, Object>() {
             {
                 put("document", doc);
-                put("filename", filename);
+                put("filename", documentEntity.getFilename());
                 put("onBehalfOfUser", onBehalfOfUser);
                 put("originalData", originalData);
                 put("entityId", Optional.ofNullable(entityId).map(Object::toString).orElse(""));

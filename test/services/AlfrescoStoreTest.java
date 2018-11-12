@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigValueFactory;
+import interfaces.DocumentStore;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
@@ -113,7 +114,7 @@ public class AlfrescoStoreTest {
 
         val document = Byte.parseByte("1");
         Byte[] documentBytes = { document };
-        val result = alfrescoStore.uploadNewPdf(documentBytes, "filename.pdf",
+        val result = alfrescoStore.uploadNewPdf(documentBytes, new DocumentStore.DocumentEntity("filename.pdf", "COURT_REPORT", "COURTREPORT"),
             "johny userman",  "user data", "crn123", 12345L)
                          .toCompletableFuture().join();
         val entry = new AbstractMap.SimpleEntry<String, String>("ID", "309db0bf-f8bb-4ac0-b325-5dbc368e2636");

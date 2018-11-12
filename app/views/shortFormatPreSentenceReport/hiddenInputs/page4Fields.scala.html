@@ -2,15 +2,7 @@
 
 @(reportForm: Form[_])
 
-@inputHidden(reportForm("interviewInformationSource"))
-@inputHidden(reportForm("serviceRecordsInformationSource"))
-@inputHidden(reportForm("cpsSummaryInformationSource"))
-@inputHidden(reportForm("oasysAssessmentsInformationSource"))
-@inputHidden(reportForm("previousConvictionsInformationSource"))
-@inputHidden(reportForm("victimStatementInformationSource"))
-@inputHidden(reportForm("childrenServicesInformationSource"))
-@inputHidden(reportForm("policeInformationSource"))
-@inputHidden(reportForm("sentencingGuidelinesInformationSource"))
-@inputHidden(reportForm("domesticAbuseInformationSource"))
-@inputHidden(reportForm("otherInformationSource"))
-@inputHidden(reportForm("otherInformationDetails"))
+
+@inputHidden(reportForm("mainOffence"))
+@inputHidden(reportForm("otherOffences"))
+@inputHidden(reportForm("offenceSummary"))
