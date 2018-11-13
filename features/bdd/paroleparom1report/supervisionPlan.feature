@@ -8,8 +8,8 @@ Scenario: Delius user wants to enter Resettlement details for an offender within
   Given they select the "Yes" option on the "Does the prisoner require a supervision plan for release?"
   And  they enter the following information
     | Detail the supervision plan for release  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
-  Then this information should be saved in the prisoner parole report
-  And the following information should be saved in the prisoner parole report
+  Then this information should be saved in the report
+  And the following information should be saved in the report
     | supervisionPlanRequired        | yes  |
 
 Scenario: User does not select an option on the "Supervision plan for release" UI

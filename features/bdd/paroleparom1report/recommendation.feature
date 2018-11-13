@@ -21,7 +21,7 @@ Scenario:   Delius user wants to close the Parole Report
 
     Given  they enter the following information
       | What is your recommendation?  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
-    Then this information should be saved in the prisoner parole report
+    Then this information should be saved in the report
 
 
   Scenario: User does not enter a recommendation
