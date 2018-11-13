@@ -207,7 +207,13 @@ public interface OffenderApi {
     @Value
     @Builder
     class Conviction {
-        private Offence mainOffence;
+        private List<Offence> offences;
+
+        public Optional<Offence> getMainOffence() {
+            return offences.stream()
+                .filter(offence -> offence.mainOffence)
+                .findFirst();
+        }
     }
 
 

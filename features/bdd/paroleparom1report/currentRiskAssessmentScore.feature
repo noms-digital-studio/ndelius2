@@ -14,7 +14,7 @@ Feature: Parole Report
       | riskAssessmentOGRS3ReoffendingProbability | 23   |
       | riskAssessmentOGPReoffendingProbability   | 23   |
       | riskAssessmentOVPReoffendingProbability   | 24   |
-    Then the following information should be saved in the prisoner parole report
+    Then the following information should be saved in the report
       | riskAssessmentMatrix2000AssessmentCompleted     | yes       |
       | riskAssessmentMatrix2000Score                   | very_high |
       | riskAssessmentSpousalAssaultAssessmentCompleted | yes       |
@@ -48,7 +48,7 @@ Feature: Parole Report
       | riskAssessmentOGRS3ReoffendingProbability | 23   |
       | riskAssessmentOGPReoffendingProbability   | 23   |
       | riskAssessmentOVPReoffendingProbability   | 24   |
-    Then the following information should be saved in the prisoner parole report
+    Then the following information should be saved in the report
       | riskAssessmentMatrix2000AssessmentCompleted     | no |
       | riskAssessmentSpousalAssaultAssessmentCompleted | no |
 

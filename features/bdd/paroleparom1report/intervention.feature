@@ -9,7 +9,7 @@ Feature: Parole report Intervention UI
     When  they enter the following information
       | Detail the interventions the prisoner has completed | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.|
       | Interventions summary| Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. |
-    Then this information should be saved in the prisoner parole report
+    Then this information should be saved in the report
 
 
   Scenario: Delius user wants to leave the "Interventions" screen without putting any details in the free text fields
