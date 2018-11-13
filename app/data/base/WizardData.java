@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.Validatable;
 import play.data.validation.Constraints.Validate;
@@ -105,9 +106,11 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
                 this::partialRequiredDateErrors,
                 this::invalidRequiredDateErrors,
                 this::notWithinRangeRequiredDateErrors,
+                this::beforeEarliestRequiredDateErrors,
                 this::partialDateErrors,
                 this::invalidDateErrors,
                 this::notWithinRangeDateErrors,
+                this::beforeEarliestDateErrors,
                 this::mandatoryGroupErrors
         );
     }
@@ -209,6 +212,26 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
 
     }
 
+    private Stream<ValidationError> beforeEarliestRequiredDateErrors(Map<String, Object> options) {
+
+        return requiredDateFields().
+                filter(this::requiredDateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && !suppliedDateNotWithinRange(field, field.getAnnotation(RequiredDateOnPage.class).minDate(), field.getAnnotation(RequiredDateOnPage.class).maxDate()) && suppliedDateBeforeEarliestDate(field, field.getAnnotation(RequiredDateOnPage.class).earliestDateField())).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).beforeEarliestDateMessage()));
+
+    }
+
+    private Stream<ValidationError> beforeEarliestDateErrors(Map<String, Object> options) {
+
+        return dateFields().
+                filter(this::dateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && !suppliedDateNotWithinRange(field, field.getAnnotation(DateOnPage.class).minDate(), field.getAnnotation(DateOnPage.class).maxDate()) && suppliedDateBeforeEarliestDate(field, field.getAnnotation(DateOnPage.class).earliestDateField())).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).beforeEarliestDateMessage()));
+
+    }
+
     private boolean requiredEnforced(String onlyIfName, String onlyIfFieldMatchValue) {
         val matcher = Optional.of(onlyIfFieldMatchValue)
                 .filter(StringUtils::isNotBlank)
@@ -295,7 +318,20 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
         }
 
         return !maxDate.isEmpty() && parsedDate.isAfter(getRequiredDate(maxDate));
+    }
 
+    private boolean suppliedDateBeforeEarliestDate(Field field, String earliestDateField) {
+
+        Field earliestField = this.getField(earliestDateField).orElse(null);
+
+        if (earliestField == null) {
+            return false;
+        }
+
+        LocalDate fieldDate =  LocalDate.parse(dateStringFromFieldValuesOf(field), DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
+        LocalDate earliestDate = LocalDate.parse(this.getStringValue(earliestField).orElse(""));
+
+        return fieldDate.isBefore(earliestDate);
     }
 
     private LocalDate getRequiredDate(String sequence) {

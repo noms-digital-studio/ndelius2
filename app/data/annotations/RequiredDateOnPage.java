@@ -21,7 +21,9 @@ public @interface RequiredDateOnPage {
     String incompleteMessage() default Constraints.RequiredValidator.message;
     String invalidMessage() default Constraints.RequiredValidator.message;
     String outOfRangeMessage() default Constraints.RequiredValidator.message;
+    String beforeEarliestDateMessage() default Constraints.RequiredValidator.message;
 
+    String earliestDateField() default "";
     String minDate() default "";
     String maxDate() default "";
 }
