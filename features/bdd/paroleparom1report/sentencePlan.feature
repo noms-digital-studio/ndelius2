@@ -10,7 +10,7 @@ Feature: Parole Report
 
       | Detail the prisoner`s current sentence plan objectives, including their response | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
 
-    Then this information should be saved in the report
+    Then this information should be saved in the prisoner parole report
 
   Scenario: Delius User does not enter any text into "Detail the prisoner`s current sentence plan objectives, including their response" free text field
 

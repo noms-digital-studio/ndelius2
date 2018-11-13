@@ -1,24 +1,21 @@
-package views.pages.shortformatpresentencereport;
+package views.pages;
 
+import org.fluentlenium.core.FluentControl;
+import org.fluentlenium.core.FluentPage;
 import org.openqa.selenium.By;
-import play.test.TestBrowser;
-
-import javax.inject.Inject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.By.id;
 
-public class DraftSavedConfirmationPage extends ShortFormatPreSentencePopupReportPage {
-    private final LandingPage landingPage;
-
-    @Inject
-    public DraftSavedConfirmationPage(TestBrowser control, LandingPage landingPage) {
+public class DraftSavedConfirmationPage extends FluentPage {
+    private final StartPage startPage;
+    public DraftSavedConfirmationPage(FluentControl control) {
         super(control);
-        this.landingPage = landingPage;
+        startPage = new StartPage(control);
     }
 
     public DraftSavedConfirmationPage navigateHere() {
-        landingPage.navigateHere().next();
+        startPage.navigateHere().gotoNext();
         return saveAsDraft();
     }
 
