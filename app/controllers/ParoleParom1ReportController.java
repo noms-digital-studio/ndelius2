@@ -4,6 +4,7 @@ import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ParoleParom1ReportData;
+import helpers.DateTimeHelper;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
@@ -107,9 +108,14 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     private Map<String, String> storeOffenderData(Map<String, String> params, OffenderApi.InstitutionalReport institutionalReport) {
         Logger.info("institutionalReport: " + institutionalReport);
         Logger.info("Params: " + params);
+
         if (params.containsKey("createJourney") && institutionalReport.getConviction().getMainOffence().isPresent()) {
             params.put("prisonerDetailsOffence", institutionalReport.getConviction().getMainOffence().get().offenceDescription());
         }
+
+        Optional.ofNullable(institutionalReport.getConviction().getConvictionDate())
+            .map(dateString -> params.put("convictionDate", DateTimeHelper.format(institutionalReport.getConviction().getConvictionDate())));
+
         return params;
     }
 

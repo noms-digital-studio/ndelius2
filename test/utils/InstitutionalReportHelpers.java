@@ -7,6 +7,7 @@ public class InstitutionalReportHelpers {
     public static OffenderApi.InstitutionalReport anInstitutionalReport() {
         return OffenderApi.InstitutionalReport.builder()
             .conviction(OffenderApi.Conviction.builder()
+                .convictionDate("2018-12-20")
                 .offences(ImmutableList.of(OffenderApi.Offence.builder()
                     .offenceId("123")
                     .mainOffence(true)
@@ -23,6 +24,7 @@ public class InstitutionalReportHelpers {
     public static OffenderApi.InstitutionalReport anInstitutionalReportWithOffence(String desc, String code, String date) {
         return OffenderApi.InstitutionalReport.builder()
             .conviction(OffenderApi.Conviction.builder()
+                .convictionDate("2018-12-20")
                 .offences(ImmutableList.of(OffenderApi.Offence.builder()
                     .offenceId("123")
                     .mainOffence(true)
