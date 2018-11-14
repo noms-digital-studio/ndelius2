@@ -12,7 +12,7 @@ Feature: Parole Report - Prisoner contact
       | What contact have you had with the prisoner`s family, partners or significant others? | Mauris cursus mattis molestie a iaculis at. Ullamcorper a lacus vestibulum sed arcu non odio euismod lacinia. Ullamcorper morbi tincidunt ornare massa.                                          |
       | What contact have you had with other relevant agencies about the prisoner?  | Enim blandit volutpat maecenas volutpat blandit aliquam etiam. Et malesuada fames ac turpis egestas sed. Elementum tempus egestas sed sed risus. Vestibulum lorem sed risus ultricies tristique. |
 
-    Then this information should be saved in the report
+    Then this information should be saved in the prisoner parole report
 
 
   Scenario: Delius user wants to leave the "Offender manager: prisoner contact" UI without putting any details in the free text fields

@@ -1,26 +1,23 @@
-package views.pages.shortformatpresentencereport;
+package views.pages;
 
-import play.test.TestBrowser;
+import org.fluentlenium.core.FluentControl;
+import org.fluentlenium.core.FluentPage;
 
-import javax.inject.Inject;
 import java.util.List;
 
 import static org.openqa.selenium.By.cssSelector;
 import static org.openqa.selenium.By.id;
 import static org.openqa.selenium.By.xpath;
 
-public class SourcesOfInformationPage extends ShortFormatPreSentencePopupReportPage {
-    private final OffenderDetailsPage offenderDetailsPage;
-
-    @Inject
-    public SourcesOfInformationPage(OffenderDetailsPage offenderDetailsPage, TestBrowser control) {
+public class SourcesOfInformationPage extends FluentPage {
+    private final ConclusionPage conclusionPage;
+    public SourcesOfInformationPage(FluentControl control) {
         super(control);
-        this.offenderDetailsPage = offenderDetailsPage;
+        conclusionPage = new ConclusionPage(control);
     }
 
     public SourcesOfInformationPage navigateHere() {
-        offenderDetailsPage.navigateHere();
-        jumpTo(Page.SOURCES_OF_INFORMATION);
+        conclusionPage.navigateHere().gotoNext();
         return this;
     }
 

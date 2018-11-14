@@ -11,7 +11,7 @@ Feature: Parole report
       | Detail the prisoner`s behaviour whilst in prison  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
       | RoTL summary                                      | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.                                                                             |
 
-    Then this information should be saved in the report
+    Then this information should be saved in the prisoner parole report
 
   Scenario: Delius user wants to leave the "Behaviour in Prison" page without entering any details into the "Detail the prisoner`s behaviour whilst in prison" free text fields
 

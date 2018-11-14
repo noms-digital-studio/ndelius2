@@ -1,4 +1,4 @@
-package bdd;
+package bdd.paroleparom1report;
 
 import bdd.wiremock.AlfrescoStoreMock;
 import cucumber.api.DataTable;
@@ -6,9 +6,8 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import lombok.val;
-import org.assertj.core.api.Assertions;
 import play.test.TestBrowser;
-import views.pages.ReportPage;
+import views.pages.paroleparom1report.ParoleParom1PopupReportPage;
 
 import javax.inject.Inject;
 import java.text.ParseException;
@@ -24,8 +23,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class GlobalSteps {
     @Inject
-    private ReportPage page;
-
+    private ParoleParom1PopupReportPage page;
     @Inject
     private TestBrowser control;
     @Inject
@@ -110,14 +108,14 @@ public class GlobalSteps {
         return page.fieldNameFromLabel(label);
     }
 
-    @Then("^this information should be saved in the report$")
-    public void thisInformationShouldBeSavedInTheReport() {
+    @Then("^this information should be saved in the prisoner parole report$")
+    public void thisInformationShouldBeSavedInThePrisonerParoleReport() {
         control.await().atMost(SAVE_THROTTLE_TIME_SECONDS + 1, TimeUnit.SECONDS).until(unused ->
                 alfrescoStoreMock.verifySavedDocumentContainsValues(fieldNameToValues));
     }
 
-    @Then("^the following information should be saved in the report$")
-    public void theFollowingInformationShouldBeSavedInTheReport(DataTable fieldNameToValuesTable) throws Throwable {
+    @Then("^the following information should be saved in the prisoner parole report$")
+    public void theFollowingInformationShouldBeSavedInThePrisonerParoleReport(DataTable fieldNameToValuesTable) throws Throwable {
         control.await().atMost(SAVE_THROTTLE_TIME_SECONDS + 1, TimeUnit.SECONDS).until(unused ->
                 alfrescoStoreMock.verifySavedDocumentContainsValues(fieldNameToValuesTable.asMap(String.class, String.class)));
     }
@@ -181,24 +179,9 @@ public class GlobalSteps {
         page.clickSpanWithSiblingLabel(text, whatToIncludeFieldLabel);
     }
 
-    @Given("^that the Delius user is unclear to what information they need to include for the \"([^\"]*)\" radio group$")
-    public void thatTheDeliusUserIsUnclearToWhatInformationTheyNeedToAddToTheRadioGroup(String label) {
-        this.whatToIncludeFieldLabel = label;
-    }
-
-    @When("^they select \"([^\"]*)\" hyperlink within the radio group$")
-    public void theySelectHyperlinkWithinRadioGroup(String text) {
-        page.clickSpanWithSiblingLegend(text, whatToIncludeFieldLabel);
-    }
-
     @Then("^the UI should expand to show additional content to the end user$")
     public void theUIShouldExpandToShowAdditionalContentToTheEndUser() {
         assertThat(page.whatToIncludeContentVisibleWithSiblingLabel(whatToIncludeFieldLabel)).isTrue();
-    }
-
-    @Then("^the UI should expand to show additional content within a radio group to the end user$")
-    public void theUIShouldExpandToShowAdditionalContentWithinRadioGroupToTheEndUser() {
-        assertThat(page.whatToIncludeContentVisibleWithSiblingLegend(whatToIncludeFieldLabel)).isTrue();
     }
 
     @When("^they select \"([^\"]*)\" hyperlink from the UI$")
@@ -214,16 +197,6 @@ public class GlobalSteps {
     @Then("^they must be directed to \"([^\"]*)\" UI$")
     public void theyMustBeDirectedToUI(String pageTitle) {
         page.isAt(pageTitle);
-    }
-
-    @Then("^the button for \"([^\"]*)\" must display \"([^\"]*)\"$")
-    public void theButtonForMustDisplay(String pageName, String buttonText) {
-        Assertions.assertThat(page.statusTextForPage(pageName)).isEqualTo(buttonText);
-    }
-
-    @Given("^Delius User closes the Report")
-    public void deliusUserCompletesThePageWithinTheReport() throws Throwable {
-        page.clickButton("Close");
     }
 
 }

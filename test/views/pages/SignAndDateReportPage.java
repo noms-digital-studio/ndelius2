@@ -1,23 +1,21 @@
-package views.pages.shortformatpresentencereport;
+package views.pages;
 
-import play.test.TestBrowser;
-
-import javax.inject.Inject;
+import org.fluentlenium.core.FluentControl;
+import org.fluentlenium.core.FluentPage;
 
 import static org.openqa.selenium.By.id;
 
-public class SignAndDateReportPage extends ShortFormatPreSentencePopupReportPage {
-    private final OffenderDetailsPage offenderDetailsPage;
 
-    @Inject
-    public SignAndDateReportPage(OffenderDetailsPage offenderDetailsPage, TestBrowser control) {
+public class SignAndDateReportPage extends FluentPage {
+    private final CheckYourReportPage checkYourReportPage;
+
+    public SignAndDateReportPage(FluentControl control) {
         super(control);
-        this.offenderDetailsPage = offenderDetailsPage;
+        checkYourReportPage = new CheckYourReportPage(control);
     }
 
     public SignAndDateReportPage navigateHere() {
-        offenderDetailsPage.navigateHere();
-        jumpTo(Page.SIGNATURE);
+        checkYourReportPage.navigateHere().gotoNext();
         return this;
     }
 

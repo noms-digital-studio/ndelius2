@@ -11,8 +11,8 @@ Feature: Parole Report - Sources UI
     When  they enter the following information
       | List all of the reports, assessments and directions you have used for this PAROM 1  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
       | Provide an explanation                                                              | Pharetra pharetra massa massa ultricies mi. Aenean euismod elementum nisi quis eleifend quam adipiscing vitae proin.        |
-    Then this information should be saved in the report
-    And the following information should be saved in the report
+    Then this information should be saved in the prisoner parole report
+    And the following information should be saved in the prisoner parole report
       | sourcesPreviousConvictions        | true  |
       | sourcesCPSDocuments               | false |
       | sourcesJudgesComments             | true  |
