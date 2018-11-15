@@ -76,7 +76,7 @@ public class ParoleParom1ReportController_RetrieveOffenderData_Test extends With
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertThat(content).contains("name=\"prisonerDetailsOffence\" value=\"desc (code123) - 11/12/2018\"");
+        assertThat(content).contains("name=\"prisonerDetailsOffence\" value=\"desc - 11/12/2018\"");
     }
 
     @Test

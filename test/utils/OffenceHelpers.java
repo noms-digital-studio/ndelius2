@@ -31,4 +31,35 @@ public class OffenceHelpers {
                 ))
             .build();
     }
+
+    public static Offences onlyAMainOffence() {
+
+        return Offences.builder().items(
+            ImmutableList.of(
+                Offence.builder()
+                    .offenceId("M1")
+                    .mainOffence(true)
+                    .detail(OffenceDetail.builder()
+                        .code("00101")
+                        .subCategoryDescription("Sub")
+                        .build())
+                    .build()
+            )).build();
+    }
+
+    public static Offences additionalOffences() {
+
+        return Offences.builder().items(
+            ImmutableList.of(
+                Offence.builder()
+                    .offenceId("A1")
+                    .mainOffence(false)
+                    .detail(OffenceDetail.builder()
+                        .code("00102")
+                        .subCategoryDescription("Sub")
+                        .build())
+                    .build()
+            )).build();
+    }
+
 }

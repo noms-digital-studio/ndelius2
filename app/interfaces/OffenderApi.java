@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.val;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 import static helpers.DateTimeHelper.formatDateTime;
+import static helpers.FluentHelper.not;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
@@ -159,7 +161,7 @@ public interface OffenderApi {
 
         public String otherOffenceDescriptionsForIds(List<String> otherOffenceIds) {
             return items.stream()
-                .filter(offence -> !offence.mainOffence)
+                .filter(not(Offence::getMainOffence))
                 .filter(offence -> Optional.ofNullable(offence.getOffenceId()).isPresent())
                 .filter(offence -> otherOffenceIds.contains(offence.getOffenceId()))
                 .map(Offence::offenceDescription)
@@ -185,6 +187,14 @@ public interface OffenderApi {
                     detail.getSubCategoryDescription(),
                     detail.getCode()));
         }
+
+        public String offenceShortDescription() {
+            return Optional.ofNullable(offenceDate)
+                .map(ignored -> String.format("%s - %s",
+                    detail.getSubCategoryDescription(),
+                    formatDateTime(offenceDate)))
+                .orElse(detail.getSubCategoryDescription());
+        }
     }
 
     @Value
@@ -209,10 +219,28 @@ public interface OffenderApi {
     class Conviction {
         private List<Offence> offences;
 
-        public Optional<Offence> getMainOffence() {
+        public String mainOffenceDescription() {
             return offences.stream()
                 .filter(offence -> offence.mainOffence)
-                .findFirst();
+                .findFirst()
+                .map(Offence::offenceShortDescription)
+                .orElse("");
+        }
+
+        public List<String> additionalOffenceDescriptions() {
+             return offences.stream()
+                 .filter(not(Offence::getMainOffence))
+                 .sorted(Comparator.comparing(Offence::getOffenceDate).reversed())
+                 .map(Offence::offenceShortDescription)
+                 .collect(toList());
+        }
+
+        public String allOffenceDescriptions() {
+            val descriptions = ImmutableList.<String>builder()
+                .add(mainOffenceDescription())
+                .addAll(additionalOffenceDescriptions()).build();
+
+            return joinList("<br>", descriptions);
         }
     }
 
