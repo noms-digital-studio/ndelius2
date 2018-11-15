@@ -65,7 +65,6 @@ Feature: Parole Report
       | Offence  | |
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
       | Sentence type                        | Select the sentence type                       |
@@ -77,7 +76,6 @@ Feature: Parole Report
       | Offence  | |
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
       | Tariff length                        | Enter the tariff length                        |
@@ -90,6 +88,5 @@ Feature: Parole Report
       | Offence  | |
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |

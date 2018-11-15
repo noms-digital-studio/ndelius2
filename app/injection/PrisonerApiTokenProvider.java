@@ -3,7 +3,6 @@ package injection;
 import com.typesafe.config.Config;
 import interfaces.PrisonerApiToken;
 import play.inject.Injector;
-import services.JwtNomisPrisonerApi;
 import services.NomisCustodyAuthenticationApi;
 import services.stubs.StubPrisonerApiToken;
 
@@ -23,9 +22,7 @@ public class PrisonerApiTokenProvider implements Provider<PrisonerApiToken> {
 
     @Override
     public PrisonerApiToken get() {
-        return "legacy".equals(prisonerApiProvider) ?
-                injector.instanceOf(JwtNomisPrisonerApi.class) :
-                "stub".equals(prisonerApiProvider) ?
+        return "stub".equals(prisonerApiProvider) ?
                         injector.instanceOf(StubPrisonerApiToken.class) :
                         injector.instanceOf(NomisCustodyAuthenticationApi.class);
 

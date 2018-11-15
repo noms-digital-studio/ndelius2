@@ -1,0 +1,264 @@
+{
+  "bookingId": 4692,
+  "bookingNo": "LH5058",
+  "offenderNo": "G8020GG",
+  "firstName": "YLQRENHAR",
+  "lastName": "CUHBCEOLE",
+  "agencyId": "ZZGHI",
+  "assignedLivingUnitId": 6601,
+  "activeFlag": true,
+  "religion": "XXsfRXXsf",
+  "alertsCodes": [
+    "P",
+    "X"
+  ],
+  "activeAlertCount": 2,
+  "inactiveAlertCount": 7,
+  "alerts": [
+    {
+      "alertId": 9,
+      "alertType": "X",
+      "alertTypeDescription": "Security",
+      "alertCode": "XSO",
+      "alertCodeDescription": "Sex Offender",
+      "dateCreated": "2006-12-10",
+      "expired": false,
+      "active": true,
+      "addedByFirstName": "XTAG",
+      "addedByLastName": "XTAG",
+      "expiredByFirstName": "ADMIN&ONB",
+      "expiredByLastName": "CNOMIS",
+      "rnum": 1
+    },
+    {
+      "alertId": 5,
+      "alertType": "P",
+      "alertTypeDescription": "MAPPP Case",
+      "alertCode": "P0",
+      "alertCodeDescription": "MAPPA Nominal",
+      "dateCreated": "2005-10-26",
+      "expired": false,
+      "active": true,
+      "addedByFirstName": "XTAG",
+      "addedByLastName": "XTAG",
+      "expiredByFirstName": "ADMIN&ONB",
+      "expiredByLastName": "CNOMIS",
+      "rnum": 2
+    },
+    {
+      "alertId": 4,
+      "alertType": "H",
+      "alertTypeDescription": "Self Harm",
+      "alertCode": "HC",
+      "alertCodeDescription": "Self Harm - Custody",
+      "dateCreated": "2006-02-01",
+      "dateExpires": "2006-02-10",
+      "expired": true,
+      "active": false,
+      "addedByFirstName": "XTAG",
+      "addedByLastName": "XTAG",
+      "expiredByFirstName": "ADMIN&ONB",
+      "expiredByLastName": "CNOMIS",
+      "rnum": 3
+    },
+    {
+      "alertId": 7,
+      "alertType": "H",
+      "alertTypeDescription": "Self Harm",
+      "alertCode": "HC",
+      "alertCodeDescription": "Self Harm - Custody",
+      "dateCreated": "2005-11-08",
+      "dateExpires": "2005-11-15",
+      "expired": true,
+      "active": false,
+      "addedByFirstName": "XTAG",
+      "addedByLastName": "XTAG",
+      "expiredByFirstName": "ADMIN&ONB",
+      "expiredByLastName": "CNOMIS",
+      "rnum": 4
+    },
+    {
+      "alertId": 6,
+      "alertType": "H",
+      "alertTypeDescription": "Self Harm",
+      "alertCode": "HC",
+      "alertCodeDescription": "Self Harm - Custody",
+      "dateCreated": "2005-08-28",
+      "dateExpires": "2005-08-29",
+      "expired": true,
+      "active": false,
+      "addedByFirstName": "XTAG",
+      "addedByLastName": "XTAG",
+      "expiredByFirstName": "ADMIN&ONB",
+      "expiredByLastName": "CNOMIS",
+      "rnum": 5
+    },
+    {
+      "alertId": 8,
+      "alertType": "H",
+      "alertTypeDescription": "Self Harm",
+      "alertCode": "HC",
+      "alertCodeDescription": "Self Harm - Custody",
+      "dateCreated": "2004-10-20",
+      "dateExpires": "2004-12-29",
+      "expired": true,
+      "active": false,
+      "addedByFirstName": "XTAG",
+      "addedByLastName": "XTAG",
+      "expiredByFirstName": "ADMIN&ONB",
+      "expiredByLastName": "CNOMIS",
+      "rnum": 6
+    },
+    {
+      "alertId": 3,
+      "alertType": "H",
+      "alertTypeDescription": "Self Harm",
+      "alertCode": "HC",
+      "alertCodeDescription": "Self Harm - Custody",
+      "dateCreated": "2004-05-27",
+      "dateExpires": "2004-06-16",
+      "expired": true,
+      "active": false,
+      "addedByFirstName": "XTAG",
+      "addedByLastName": "XTAG",
+      "expiredByFirstName": "ADMIN&ONB",
+      "expiredByLastName": "CNOMIS",
+      "rnum": 7
+    },
+    {
+      "alertId": 2,
+      "alertType": "H",
+      "alertTypeDescription": "Self Harm",
+      "alertCode": "HC",
+      "alertCodeDescription": "Self Harm - Custody",
+      "dateCreated": "2004-04-01",
+      "dateExpires": "2004-04-14",
+      "expired": true,
+      "active": false,
+      "addedByFirstName": "XTAG",
+      "addedByLastName": "XTAG",
+      "expiredByFirstName": "ADMIN&ONB",
+      "expiredByLastName": "CNOMIS",
+      "rnum": 8
+    },
+    {
+      "alertId": 1,
+      "alertType": "H",
+      "alertTypeDescription": "Self Harm",
+      "alertCode": "HC",
+      "alertCodeDescription": "Self Harm - Custody",
+      "dateCreated": "2004-01-12",
+      "dateExpires": "2004-02-25",
+      "expired": true,
+      "active": false,
+      "addedByFirstName": "XTAG",
+      "addedByLastName": "XTAG",
+      "expiredByFirstName": "ADMIN&ONB",
+      "expiredByLastName": "CNOMIS",
+      "rnum": 9
+    }
+  ],
+  "assignedLivingUnit": {
+    "agencyId": "ZZGHI",
+    "locationId": 6601,
+    "description": "RECP",
+    "agencyName": "Ghost Holding Establishment"
+  },
+  "facialImageId": 1373,
+  "dateOfBirth": "1973-08-12",
+  "age": 45,
+  "physicalAttributes": {
+    "gender": "Male",
+    "raceCode": "B2",
+    "ethnicity": "Black/Black British: African",
+    "heightFeet": 5,
+    "heightInches": 8,
+    "heightMetres": 1.72,
+    "heightCentimetres": 172,
+    "weightPounds": 143,
+    "weightKilograms": 65,
+    "sexCode": "M"
+  },
+  "physicalCharacteristics": [
+    {
+      "type": "HAIR",
+      "characteristic": "Hair Colour",
+      "detail": "aMaM"
+    },
+    {
+      "type": "R_EYE_C",
+      "characteristic": "Right Eye Colour",
+      "detail": "CwxCw"
+    },
+    {
+      "type": "L_EYE_C",
+      "characteristic": "Left Eye Colour",
+      "detail": "zXKzX"
+    },
+    {
+      "type": "FACIAL_HAIR",
+      "characteristic": "Facial Hair",
+      "detail": "imoLCVimoLCV"
+    },
+    {
+      "type": "FACE",
+      "characteristic": "Shape of Face",
+      "detail": "jiji"
+    },
+    {
+      "type": "BUILD",
+      "characteristic": "Build",
+      "detail": "uUvuUv"
+    }
+  ],
+  "profileInformation": [
+    {
+      "type": "YOUTH",
+      "question": "Youth Offender?",
+      "resultValue": "ZZ"
+    },
+    {
+      "type": "MARITAL",
+      "question": "Domestic Status",
+      "resultValue": "KspkxRhawbACpJevKspkxRhawbACpJe"
+    },
+    {
+      "type": "RELF",
+      "question": "Religion",
+      "resultValue": "XXsfRXXsf"
+    },
+    {
+      "type": "NAT",
+      "question": "Nationality?",
+      "resultValue": "LEfzALEfz"
+    }
+  ],
+  "physicalMarks": [
+    {
+      "type": "Other",
+      "bodyPart": "Head",
+      "comment": "dUdGiPdUdGiP"
+    },
+    {
+      "type": "Other",
+      "bodyPart": "Torso",
+      "comment": "iLfrflKKnSIiLfrflKKnSI"
+    }
+  ],
+  "assessments": [
+    {
+      "bookingId": 4692,
+      "classificationCode": "C",
+      "classification": "Cat C",
+      "assessmentCode": "CATEGORY",
+      "assessmentDescription": "Categorisation",
+      "cellSharingAlertFlag": false,
+      "assessmentDate": "2006-12-10",
+      "nextReviewDate": "2007-06-08"
+    }
+  ],
+  "csra": "Cat C",
+  "category": "Cat C",
+  "categoryCode": "C",
+  "assignedOfficerId": 5669
+}

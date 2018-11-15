@@ -2,6 +2,7 @@ package utils;
 
 import interfaces.PrisonerApi;
 import interfaces.PrisonerApi.Offender;
+import interfaces.PrisonerCategoryApi.Category;
 
 public class PrisonerHelper {
     public static Offender offenderInPrison() {
@@ -22,5 +23,12 @@ public class PrisonerHelper {
                         .build())
                 .build();
 
+    }
+
+    public static Category offenderCategory() {
+        return offenderCategory("A", "Cat A");
+    }
+    public static Category offenderCategory(String code, String description) {
+        return Category.builder().code(code).description(description).build();
     }
 }

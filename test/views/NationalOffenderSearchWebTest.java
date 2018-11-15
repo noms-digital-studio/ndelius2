@@ -2,7 +2,7 @@ package views;
 
 import com.google.common.collect.ImmutableMap;
 import helpers.FutureListener;
-import helpers.JwtHelperTest;
+import interfaces.PrisonerApi;
 import lombok.val;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -16,7 +16,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import services.DeliusOffenderApi;
-import services.NomisPrisonerApi;
 import views.pages.NationalSearchPage;
 
 import java.util.concurrent.CompletableFuture;
@@ -39,7 +38,7 @@ public class NationalOffenderSearchWebTest extends WithChromeBrowser {
     @Mock
     private SearchResponse searchResponse;
     @Mock
-    private NomisPrisonerApi nomisPrisonerApi;
+    private PrisonerApi prisonerApi;
 
     @Before
     public void before() {
@@ -50,7 +49,7 @@ public class NationalOffenderSearchWebTest extends WithChromeBrowser {
             return null;
         }).when(restHighLevelClient).searchAsync(any(), any());
 
-        when(nomisPrisonerApi.getImage(any())).thenReturn(CompletableFuture.completedFuture(new byte[]{}));
+        when(prisonerApi.getImage(any())).thenReturn(CompletableFuture.completedFuture(new byte[]{}));
 
         nationalSearchPage = new NationalSearchPage(browser);
         nationalSearchPage.navigateHere();
@@ -103,7 +102,7 @@ public class NationalOffenderSearchWebTest extends WithChromeBrowser {
             overrides(
                 bind(RestHighLevelClient.class).toInstance(restHighLevelClient),
                 bind(DeliusOffenderApi.class).toInstance(deliusOffenderApi),
-                bind(NomisPrisonerApi.class).toInstance(nomisPrisonerApi)
+                bind(PrisonerApi.class).toInstance(prisonerApi)
             ).configure("params.user.token.valid.duration", "100000d")
             .build();
     }

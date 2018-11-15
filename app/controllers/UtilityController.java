@@ -53,6 +53,7 @@ public class UtilityController extends Controller {
                              OffenderSearch offenderSearch,
                              OffenderApi offenderApi,
                              PrisonerApi prisonerApi,
+                             PrisonerCategoryApi prisonerCategoryApi,
                              PrisonerApiToken prisonerApiToken,
                              Config configuration) {
 
@@ -65,6 +66,7 @@ public class UtilityController extends Controller {
                 put(definition("offender-search", true), () -> offenderSearch.isHealthy().toCompletableFuture()).
                 put(definition("offender-api", true), () -> offenderApi.isHealthy().toCompletableFuture()).
                 put(definition("custody-api", true), () -> prisonerApi.isHealthy().toCompletableFuture()).
+                put(definition("elite2-api", true), () -> prisonerCategoryApi.isHealthy().toCompletableFuture()).
                 put(definition("nomis-authentication-api", true), () -> prisonerApiToken.isHealthy().toCompletableFuture()).
                 build();
 

@@ -4,10 +4,7 @@ import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ParoleParom1ReportData;
-import interfaces.DocumentStore;
-import interfaces.OffenderApi;
-import interfaces.PdfGenerator;
-import interfaces.PrisonerApi;
+import interfaces.*;
 import lombok.val;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
@@ -32,6 +29,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     private final views.html.paroleParom1Report.completed completedTemplate;
     private final views.html.paroleParom1Report.tester analyticsTesterTemplate;
     private final PrisonerApi prisonerApi;
+    private final PrisonerCategoryApi prisonerCategoryApi;
 
 
     @Inject
@@ -46,13 +44,15 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                                         views.html.paroleParom1Report.completed completedTemplate,
                                         views.html.paroleParom1Report.tester analyticsTesterTemplate,
                                         OffenderApi offenderApi,
-                                        PrisonerApi prisonerApi) {
+                                        PrisonerApi prisonerApi,
+                                        PrisonerCategoryApi prisonerCategoryApi) {
 
         super(ec, webJarsUtil, configuration, environment, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore, offenderApi);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
         this.analyticsTesterTemplate = analyticsTesterTemplate;
         this.prisonerApi = prisonerApi;
+        this.prisonerCategoryApi = prisonerCategoryApi;
     }
 
     @Override
@@ -78,15 +78,20 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                     .map(nomsNumber -> prisonerApi.getOffenderByNomsNumber(nomsNumber).toCompletableFuture())
                     .orElseGet(() -> CompletableFuture.completedFuture(Optional.empty()));
 
+            val prisonerCategoryFuture = Optional.ofNullable(prisonerDetailsNomisNumber)
+                    .map(nomsNumber -> prisonerCategoryApi.getOffenderCategoryByNomsNumber(nomsNumber).toCompletableFuture())
+                    .orElseGet(() -> CompletableFuture.completedFuture(Optional.empty()));
+
             val crn = params.get("crn");
             val institutionalReportId = params.get("entityId");
             val institutionalReportFuture = offenderApi.getInstitutionalReport(session(OFFENDER_API_BEARER_TOKEN), crn, institutionalReportId).toCompletableFuture();
 
-            return CompletableFuture.allOf(prisonerFuture, institutionalReportFuture)
+            return CompletableFuture.allOf(prisonerFuture, institutionalReportFuture, prisonerCategoryFuture)
                     .thenApply(notUsed ->
                             storeCustodyData(
                                     params,
-                                    prisonerFuture.join()))
+                                    prisonerFuture.join(),
+                                    prisonerCategoryFuture.join()))
                     .thenApply(notUsed ->
                             storeOffenderData(
                                     params,
@@ -95,19 +100,26 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
         }, ec.current());
     }
 
-    private Map<String, String> storeCustodyData(Map<String, String> params, Optional<PrisonerApi.Offender> maybeOffender) {
+    private Map<String, String> storeCustodyData(Map<String, String> params, Optional<PrisonerApi.Offender> maybeOffender, Optional<PrisonerCategoryApi.Category> maybeCategory) {
         maybeOffender.ifPresent(offender -> {
             params.put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription());
             params.put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber());
 
         });
+        maybeCategory
+                .filter(notUsed -> isCreateJourney(params))
+                .ifPresent(category -> params.put("prisonerDetailsPrisonersCategory", category.getCode().toLowerCase()));
         return params;
+    }
+
+    private static boolean isCreateJourney(Map<String, String> params) {
+        return params.containsKey("createJourney");
     }
 
     private Map<String, String> storeOffenderData(Map<String, String> params, OffenderApi.InstitutionalReport institutionalReport) {
         Logger.info("institutionalReport: " + institutionalReport);
         Logger.info("Params: " + params);
-        if (params.containsKey("createJourney") && institutionalReport.getConviction().getMainOffence().isPresent()) {
+        if (isCreateJourney(params) && institutionalReport.getConviction().getMainOffence().isPresent()) {
             params.put("prisonerDetailsOffence", institutionalReport.getConviction().getMainOffence().get().offenceDescription());
         }
         return params;

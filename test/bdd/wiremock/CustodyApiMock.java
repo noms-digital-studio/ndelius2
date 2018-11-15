@@ -36,6 +36,11 @@ public class CustodyApiMock {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomsoffender/offender_G8020GG.json"))));
 
+        custodyApiWireMock.stubFor(
+                get(urlMatching("/elite2api/api/bookings/offenderNo/.*"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG.json"))));
+
 
         return this;
     }

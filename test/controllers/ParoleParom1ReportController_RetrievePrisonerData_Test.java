@@ -38,9 +38,7 @@ import static play.test.Helpers.route;
 import static utils.InstitutionalReportHelpers.anInstitutionalReport;
 import static utils.OffenderHelper.anOffenderWithMultipleAddresses;
 import static utils.OffenderHelper.anOffenderWithNoOtherIds;
-import static utils.PrisonerHelper.offenderAtPrison;
-import static utils.PrisonerHelper.offenderInPrison;
-import static utils.PrisonerHelper.offenderWithMostRecentPrisonerNumber;
+import static utils.PrisonerHelper.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends WithApplication {
@@ -50,6 +48,8 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
     private OffenderApi offenderApi;
     @Mock
     private PrisonerApi prisonerApi;
+    @Mock
+    private PrisonerCategoryApi prisonerCategoryApi;
     @Mock
     private PdfGenerator pdfGenerator;
 
@@ -63,7 +63,9 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
         given(offenderApi.getInstitutionalReport(any(), any(), any())).willReturn(CompletableFuture.completedFuture(anInstitutionalReport()));
         given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderInPrison())));
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        given(prisonerCategoryApi.getOffenderCategoryByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderCategory())));
     }
+
 
     @Test
     public void newReportsContainInstitutionName() {
@@ -150,7 +152,42 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
         assertThat(content).contains("name=\"prisonerDetailsPrisonNumber\" value=\"\"");
     }
 
+    @Test
+    public void newReportsContainPrisonersCategory() {
+        given(prisonerCategoryApi.getOffenderCategoryByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderCategory("B", "Cat B"))));
 
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonersCategory\" value=\"b\"");
+    }
+
+    @Test
+    public void newReportsWithMissingCategoryLeavesCategoryBlank() {
+        given(prisonerCategoryApi.getOffenderCategoryByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.empty()));
+
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonersCategory\" value=\"\"");
+    }
+
+    @Test
+    public void existingReportsDoNotUpdateCategoryValue() throws UnsupportedEncodingException {
+        given(prisonerCategoryApi.getOffenderCategoryByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderCategory("B", "Cat B"))));
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(
+                () -> new DocumentStore.OriginalData(
+                        AlfrescoDocumentBuilder.standardDocument().withValuesItem("prisonerDetailsPrisonersCategory", "a").userData(), OffsetDateTime.now())));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri(String.format("/report/paroleParom1Report?documentId=%s&onBehalfOfUser=%s&user=lJqZBRO%%2F1B0XeiD2PhQtJg%%3D%%3D&t=T2DufYh%%2B%%2F%%2F64Ub6iNtHDGg%%3D%%3D", URLEncoder.encode(encryptor.apply("12345"), "UTF-8"), URLEncoder.encode(encryptor.apply("JohnSmithNPS"), "UTF-8"))));
+
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonersCategory\" value=\"a\"");
+    }
 
 
     @Override
@@ -162,6 +199,7 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
                         bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(OffenderApi.class).toInstance(offenderApi),
                         bind(PrisonerApi.class).toInstance(prisonerApi),
+                        bind(PrisonerCategoryApi.class).toInstance(prisonerCategoryApi),
                         bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                         bind(MongoClient.class).toInstance(mock(MongoClient.class))
                 )
