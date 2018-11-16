@@ -165,6 +165,18 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
     }
 
     @Test
+    public void newReportsContainPrisonersCategoryForFemalePrisoners() {
+        given(prisonerCategoryApi.getOffenderCategoryByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderCategory("T", "Fem Open"))));
+
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonersCategory\" value=\"open\"");
+    }
+
+    @Test
     public void newReportsWithMissingCategoryLeavesCategoryBlank() {
         given(prisonerCategoryApi.getOffenderCategoryByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.empty()));
 

@@ -108,8 +108,22 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
         });
         maybeCategory
                 .filter(notUsed -> isCreateJourney(params))
-                .ifPresent(category -> params.put("prisonerDetailsPrisonersCategory", category.getCode().toLowerCase()));
+                .map(category -> categoryCodeToFormValue(category.getCode()))
+                .ifPresent(code -> params.put("prisonerDetailsPrisonersCategory", code));
         return params;
+    }
+
+    static String categoryCodeToFormValue(String code) {
+        switch(code) {
+            case "T":
+                return "open";
+            case "R":
+                return "closed";
+            case "Q":
+                return "restricted";
+            default:
+                return code.toLowerCase();
+        }
     }
 
     private static boolean isCreateJourney(Map<String, String> params) {
