@@ -173,7 +173,6 @@ public class StubOffenderApi implements OffenderApi {
         return Offence.builder()
             .mainOffence(false)
             .offenceId("A2")
-            .offenceDate("2018-08-25T00:00:00")
             .detail(OffenceDetail.builder()
                 .code("05333")
                 .description("Dishonest representation for obtaining benefit etc - 05333")

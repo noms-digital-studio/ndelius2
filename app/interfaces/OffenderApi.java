@@ -18,6 +18,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public interface OffenderApi {
 
@@ -228,11 +229,11 @@ public interface OffenderApi {
         }
 
         public List<String> additionalOffenceDescriptions() {
-             return offences.stream()
-                 .filter(not(Offence::getMainOffence))
-                 .sorted(Comparator.comparing(Offence::getOffenceDate).reversed())
-                 .map(Offence::offenceShortDescription)
-                 .collect(toList());
+
+            return ImmutableList.<String>builder()
+                .addAll(descriptionsForAdditionalOffencesWithDates())
+                .addAll(descriptionsForAdditionalOffencesWithoutDates())
+                .build();
         }
 
         public String allOffenceDescriptions() {
@@ -241,6 +242,23 @@ public interface OffenderApi {
                 .addAll(additionalOffenceDescriptions()).build();
 
             return joinList("<br>", descriptions);
+        }
+
+        private List<String> descriptionsForAdditionalOffencesWithDates() {
+            return offences.stream()
+                .filter(not(Offence::getMainOffence))
+                .filter(not(offence -> isBlank(offence.offenceDate)))
+                .sorted(Comparator.comparing(Offence::getOffenceDate).reversed())
+                .map(Offence::offenceShortDescription)
+                .collect(toList());
+        }
+
+        private List<String> descriptionsForAdditionalOffencesWithoutDates() {
+            return offences.stream()
+                .filter(not(Offence::getMainOffence))
+                .filter(offence -> isBlank(offence.offenceDate))
+                .map(Offence::offenceShortDescription)
+                .collect(toList());
         }
     }
 
