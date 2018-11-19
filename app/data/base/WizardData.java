@@ -14,7 +14,6 @@ import lombok.Data;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.data.validation.Constraints.Validatable;
 import play.data.validation.Constraints.Validate;
@@ -43,10 +42,6 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
     @RequiredOnPage(1)
     @JsonIgnore
     private String onBehalfOfUser;
-
-    @Required
-    @JsonIgnore
-    private String convictionDate;
 
     @Required
     @JsonIgnore
