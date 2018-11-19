@@ -72,4 +72,16 @@ public class LandingPage extends FluentPage {
     public String lastUpdatedText() {
         return $(By.id("lastUpdated")).text();
     }
+
+    public boolean verifyHasImage() {
+       return $(By.tagName("img")).present();
+    }
+
+    public String fullNameText() {
+        return $(By.className("qa-fullname")).text();
+    }
+
+    public String mainWarningMessage() {
+        return $(By.className("qa-warning-message")).text();
+    }
 }

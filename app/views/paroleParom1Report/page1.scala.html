@@ -16,61 +16,115 @@
 @mainV2("Start a PAROM1") {
 
     <div class="moj-interrupt ">
-        <h1 class="govuk-heading-xl govuk-!-margin-top-6 moj-!-color-white">Start a PAROM 1</h1>
+
+
+        <h1 class="govuk-heading-xl govuk-!-margin-top-6 moj-!-color-white">
+            @reportForm("prisonerStatus").getValue.map(  {
+                case "ok" => "Start a PAROM 1"
+                case _ => "Before you start"
+            }).orElse("")
+        </h1>
 
         <span class="govuk-!-font-weight-bold govuk-body  moj-!-color-white">@reportForm("lastUpdated").getValue.map( _ => "This draft report was last saved:").orElse("")</span>
         <span class="govuk-body moj-!-color-white" id="lastUpdated">@reportForm("lastUpdated").getValue.map( dateTime => asDuration(dateTime)).orElse("")</span>
 
-        <h2 class="govuk-caption-xl moj-!-color-white">With this service you can:</h2>
-        <ul class="govuk-list govuk-list--bullet moj-!-color-white govuk-!-margin-top-4">
-            <li>complete the report in your preferred order</li>
-            <li>save and close the report at any point - it also saves as you write</li>
-            <li>check the progress of your report</li>
-        </ul>
+        @if(reportForm("prisonerStatus").getValue.orElse("").equals("ok")) {
+            <h2 class="govuk-caption-xl moj-!-color-white">With this service you can:</h2>
+            <ul class="govuk-list govuk-list--bullet moj-!-color-white govuk-!-margin-top-4">
+                <li>complete the report in your preferred order</li>
+                <li>save and close the report at any point - it also saves as you write</li>
+                <li>check the progress of your report</li>
+            </ul>
 
-        <div class="govuk-warning-text govuk-!-margin-top-4">
-            <span aria-hidden="true" class="govuk-warning-text__icon moj-warning-text__icon--interrupt">!</span>
-            <strong class="govuk-warning-text__text moj-warning-text__text--interrupt">
-                <span class="govuk-warning-text__assistive">Warning</span> This report will be disclosed to the prisoner
-            </strong>
-        </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-three-quarters">
+                    <h2 class="govuk-caption-xl moj-!-color-white">You will be writing a PAROM1 report for <span class="qa-fullname">@reportForm("prisonerDetailsPrisonersFullName").getValue.orElse("")</span></h2>
 
-        <div>
-        @helper.form(action = relative(routes.ParoleParom1ReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-            @CSRF.formField
+                    <div class="govuk-warning-text govuk-!-margin-top-4">
+                        <span aria-hidden="true" class="govuk-warning-text__icon moj-warning-text__icon--interrupt">!</span>
+                        <strong class="govuk-warning-text__text moj-warning-text__text--interrupt">
+                            <span class="govuk-warning-text__assistive">Warning</span> This report will be disclosed to the prisoner
+                        </strong>
+                    </div>
+                </div>
 
-            @commonFields(reportForm, encrypter)
-            @page2Fields(reportForm)
-            @page3Fields(reportForm)
-            @page4Fields(reportForm)
-            @page5Fields(reportForm)
-            @page6Fields(reportForm)
-            @page7Fields(reportForm)
-            @page8Fields(reportForm)
-            @page9Fields(reportForm)
-            @page10Fields(reportForm)
-            @page11Fields(reportForm)
-            @page12Fields(reportForm)
-            @page13Fields(reportForm)
-            @page14Fields(reportForm)
-            @page15Fields(reportForm)
-            @page16Fields(reportForm)
-            @page17Fields(reportForm)
-            @page18Fields(reportForm)
-            @page19Fields(reportForm)
-            @page20Fields(reportForm)
-            @page21Fields(reportForm)
-            @page22Fields(reportForm)
-            @page23Fields(reportForm)
+                <div class="govuk-grid-column-one-quarter">
+                    <img class="offender-image" src="@relative(routes.OffenderController.image(reportForm("prisonerImageOneTimeRef").getValue.orElse("")))">
+                </div>
+            </div>
+            @helper.form(action = relative(routes.ParoleParom1ReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+                @CSRF.formField
 
-            @pageNumber(
-                reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
-                Some(reportForm("originalPageNumber").getValue.fold(("Start now", None))(_ => ("Continue now", None))),
-                Some("popup-launcher"),
-                reportForm("originalPageNumber").getValue)
-            <div class="new-window"><span class="govuk-body-s moj-!-color-white ">Launches in a separate window</span></div>
+                @commonFields(reportForm, encrypter)
+                @page2Fields(reportForm)
+                @page3Fields(reportForm)
+                @page4Fields(reportForm)
+                @page5Fields(reportForm)
+                @page6Fields(reportForm)
+                @page7Fields(reportForm)
+                @page8Fields(reportForm)
+                @page9Fields(reportForm)
+                @page10Fields(reportForm)
+                @page11Fields(reportForm)
+                @page12Fields(reportForm)
+                @page13Fields(reportForm)
+                @page14Fields(reportForm)
+                @page15Fields(reportForm)
+                @page16Fields(reportForm)
+                @page17Fields(reportForm)
+                @page18Fields(reportForm)
+                @page19Fields(reportForm)
+                @page20Fields(reportForm)
+                @page21Fields(reportForm)
+                @page22Fields(reportForm)
+                @page23Fields(reportForm)
+
+                @pageNumber(
+                    reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
+                    Some(reportForm("originalPageNumber").getValue.fold(("Start now", None))(_ => ("Continue now", None))),
+                    Some("popup-launcher"),
+                    reportForm("originalPageNumber").getValue)
+                <div class="new-window"><span class="govuk-body-s moj-!-color-white ">
+                    Launches in a separate window</span></div>
+            }
         }
-        </div>
+
+        @if(reportForm("prisonerStatus").getValue.orElse("").equals("notFound")) {
+            <h2 class="govuk-caption-xl moj-!-color-white">You will be writing a PAROM1 report for <span class="qa-fullname">@reportForm("prisonerDetailsPrisonersFullName").getValue.orElse("")</span></h2>
+
+            <div class="govuk-warning-text govuk-!-margin-top-4">
+                <span aria-hidden="true" class="govuk-warning-text__icon moj-warning-text__icon--interrupt">!</span>
+                <strong class="govuk-warning-text__text moj-warning-text__text--interrupt">
+                    <span class="govuk-warning-text__assistive">Warning</span> <span class="qa-warning-message">Update the prisoner's NOMS number in Delius</span>
+                </strong>
+                <div class="govuk-warning-text__text moj-warning-text__text--interrupt">The NOMS number in Delius must match NOMIS</div>
+            </div>
+        }
+
+        @if(reportForm("prisonerStatus").getValue.orElse("").equals("noNOMSNumber")) {
+            <h2 class="govuk-caption-xl moj-!-color-white">You will be writing a PAROM1 report for <span class="qa-fullname">@reportForm("prisonerDetailsPrisonersFullName").getValue.orElse("")</span></h2>
+
+            <div class="govuk-warning-text govuk-!-margin-top-4">
+                <span aria-hidden="true" class="govuk-warning-text__icon moj-warning-text__icon--interrupt">!</span>
+                <strong class="govuk-warning-text__text moj-warning-text__text--interrupt">
+                    <span class="govuk-warning-text__assistive">Warning</span> <span class="qa-warning-message">Add the prisoner's NOMS number to Delius</span>
+                </strong>
+            </div>
+        }
+
+        @if(reportForm("prisonerStatus").getValue.orElse("").equals("unavailable")) {
+            <div class="govuk-warning-text govuk-!-margin-top-4">
+                <span aria-hidden="true" class="govuk-warning-text__icon moj-warning-text__icon--interrupt">!</span>
+                <strong class="govuk-warning-text__text moj-warning-text__text--interrupt">
+                    <span class="govuk-warning-text__assistive">Warning</span> <span class="qa-warning-message">Unfortunately, we cannot connect you to the prisoner's information at the moment</span>
+                </strong>
+            </div>
+            <div class="govuk-warning-text govuk-!-margin-top-4">
+                <strong class="govuk-warning-text__text moj-warning-text__text--interrupt">
+                    Please try later
+                </strong>
+            </div>
+        }
     </div>
     <a class="govuk-back-link" tabindex="1" href="javascript:documentList()">Back to document list</a>
 

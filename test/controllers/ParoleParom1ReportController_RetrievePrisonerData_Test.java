@@ -1,6 +1,7 @@
 package controllers;
 
 import bdd.wiremock.AlfrescoDocumentBuilder;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import helpers.Encryption;
@@ -88,7 +89,7 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertThat(content).contains("name=\"prisonerDetailsPrisonInstitution\" value=\"\"");
+        assertThat(content).doesNotContain("name=\"prisonerDetailsPrisonInstitution\"");
     }
 
     @Test
@@ -100,7 +101,7 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertThat(content).contains("name=\"prisonerDetailsPrisonInstitution\" value=\"\"");
+        assertThat(content).doesNotContain("name=\"prisonerDetailsPrisonInstitution\"");
     }
 
     @Test
@@ -149,7 +150,7 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertThat(content).contains("name=\"prisonerDetailsPrisonNumber\" value=\"\"");
+        assertThat(content).doesNotContain("name=\"prisonerDetailsPrisonNumber\"");
     }
 
     @Test
@@ -201,6 +202,84 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
         assertThat(content).contains("name=\"prisonerDetailsPrisonersCategory\" value=\"a\"");
     }
 
+    @Test
+    public void newReportsSourceFullNameFromNOMISWhenPrisonerFound() {
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(
+                anOffenderWithMultipleAddresses()
+                        .toBuilder()
+                        .firstName("Dave")
+                        .surname("Delius")
+                        .middleNames(ImmutableList.of())
+                        .build()));
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(
+                CompletableFuture.completedFuture(Optional.of(offenderInPrison()
+                        .toBuilder()
+                        .firstName("Norman")
+                        .surname("Nomis")
+                        .build())));
+
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonersFullName\" value=\"Norman Nomis\"");
+        assertThat(content).contains("Start a PAROM 1");
+    }
+
+    @Test
+    public void newReportsSourceFullnameFromDeliusWhenPrisonerNotFound() {
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(
+                anOffenderWithMultipleAddresses()
+                        .toBuilder()
+                        .firstName("Dave")
+                        .surname("Delius")
+                        .middleNames(ImmutableList.of())
+                        .build()));
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(
+                CompletableFuture.completedFuture(Optional.empty()));
+
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("Dave Delius");
+        assertThat(content).contains("Before you start");
+    }
+
+    @Test
+    public void prisonerStatusIsMarkedAsUnavailableWhenNOMISIsDown() {
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.supplyAsync(() -> {
+            throw new RuntimeException("NOMIS IS DOWN!!");
+        }));
+
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("Before you start");
+    }
+
+    @Test
+    public void existingReportsHaveFullNameUpdatedFromNOMIS() throws UnsupportedEncodingException {
+        given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(
+                CompletableFuture.completedFuture(Optional.of(offenderInPrison()
+                        .toBuilder()
+                        .firstName("Norman")
+                        .surname("Nomis")
+                        .build())));
+
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(
+                () -> new DocumentStore.OriginalData(
+                        AlfrescoDocumentBuilder.standardDocument().withValuesItem("prisonerDetailsPrisonersFullName", "Dave Delius").userData(), OffsetDateTime.now())));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri(String.format("/report/paroleParom1Report?documentId=%s&onBehalfOfUser=%s&user=lJqZBRO%%2F1B0XeiD2PhQtJg%%3D%%3D&t=T2DufYh%%2B%%2F%%2F64Ub6iNtHDGg%%3D%%3D", URLEncoder.encode(encryptor.apply("12345"), "UTF-8"), URLEncoder.encode(encryptor.apply("JohnSmithNPS"), "UTF-8"))));
+
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsPrisonersFullName\" value=\"Norman Nomis\"");
+    }
 
     @Override
     protected Application provideApplication() {

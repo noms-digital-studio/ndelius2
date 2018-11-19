@@ -1,7 +1,8 @@
 Feature: Parole Report
 
   Background: Delius user is on the "Prisoner details" UI within the Parole Report
-    Given that the Delius user is on the "Prisoner details" page within the Parole Report
+    Given the prisoner named "Jimmy Fizz" has a valid NOMS number in NOMIS where he is known as "Jimmy Fizz"
+    And that the Delius user is on the "Prisoner details" page within the Parole Report
 
   Scenario: Delius user wants to continue writing the Parole report
 
@@ -21,7 +22,7 @@ Feature: Parole Report
     And they enter the date "29/06/2019" for "Tariff expiry date"
     Then the following information should be saved in the prisoner parole report
       | prisonerDetailsPrisonInstitution | HMP Humber         |
-      | prisonerDetailsPrisonersFullName | Jimmy Jammy Fizz   |
+      | prisonerDetailsPrisonersFullName | Jimmy Fizz         |
       | prisonerDetailsPrisonNumber      | LH5058             |
       | prisonerDetailsNomisNumber       | M123456            |
       | prisonerDetailsPrisonersCategory | a                  |
@@ -43,7 +44,7 @@ Feature: Parole Report
     And they enter the date "09/12/2031" for "Automatic release date/non parole eligibility date"
     Then the following information should be saved in the prisoner parole report
       | prisonerDetailsPrisonInstitution     | HMP Humber         |
-      | prisonerDetailsPrisonersFullName     | Jimmy Jammy Fizz   |
+      | prisonerDetailsPrisonersFullName     | Jimmy Fizz         |
       | prisonerDetailsPrisonNumber          | LH5058             |
       | prisonerDetailsNomisNumber           | M123456            |
       | prisonerDetailsPrisonersCategory     | c                  |

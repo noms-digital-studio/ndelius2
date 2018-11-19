@@ -2,6 +2,7 @@ package bdd.paroleparom1report;
 
 import bdd.wiremock.AlfrescoStoreMock;
 import cucumber.api.DataTable;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -36,6 +37,17 @@ public class GlobalSteps {
     public void theySelectTheButton(String button) {
         page.clickButton(button);
     }
+
+    @And("^the user must see the \"([^\"]*)\" button$")
+    public void theUserMustSeeTheButton(String buttonName) {
+        assertThat(page.verifyButton(buttonName)).isTrue();
+    }
+
+    @And("^the user must not see the \"([^\"]*)\" button$")
+    public void theUserMustNotSeeTheButton(String buttonName)  {
+        assertThat(page.verifyButton(buttonName)).isFalse();
+    }
+
 
     @Then("^the user should be directed to the \"([^\"]*)\" UI$")
     public void the_user_should_be_directed_to_UI(String header) {

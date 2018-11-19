@@ -1,9 +1,12 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ParoleParom1ReportData;
+import helpers.JsonHelper;
+import helpers.JwtHelper;
 import interfaces.*;
 import lombok.val;
 import org.webjars.play.WebJarsUtil;
@@ -15,6 +18,7 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -84,28 +88,49 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
 
             val crn = params.get("crn");
             val institutionalReportId = params.get("entityId");
-            val institutionalReportFuture = offenderApi.getInstitutionalReport(session(OFFENDER_API_BEARER_TOKEN), crn, institutionalReportId).toCompletableFuture();
+            val bearerToken = session(OFFENDER_API_BEARER_TOKEN);
+            val institutionalReportFuture = offenderApi.getInstitutionalReport(bearerToken, crn, institutionalReportId).toCompletableFuture();
 
             return CompletableFuture.allOf(prisonerFuture, institutionalReportFuture, prisonerCategoryFuture)
                     .thenApply(notUsed ->
                             storeCustodyData(
                                     params,
+                                    bearerToken,
                                     prisonerFuture.join(),
                                     prisonerCategoryFuture.join()))
                     .thenApply(notUsed ->
                             storeOffenderData(
                                     params,
                                     institutionalReportFuture.join()))
+                    .exceptionally(e -> {
+                        Logger.error(String.format("Unable to retrieve prisoner details for %s", crn), e);
+                        params.put("prisonerStatus", "unavailable");
+                        return params;
+                    })
                 ;
         }, ec.current());
     }
 
-    private Map<String, String> storeCustodyData(Map<String, String> params, Optional<PrisonerApi.Offender> maybeOffender, Optional<PrisonerCategoryApi.Category> maybeCategory) {
-        maybeOffender.ifPresent(offender -> {
-            params.put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription());
-            params.put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber());
+    private Map<String, String> storeCustodyData(Map<String, String> params, String bearerToken, Optional<PrisonerApi.Offender> maybeOffender, Optional<PrisonerCategoryApi.Category> maybeCategory) {
+        val nomsNumber = params.get("prisonerDetailsNomisNumber");
+        params.putAll(maybeOffender
+                .map(offender -> ImmutableMap.<String, String>builder()
+                        .put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription())
+                        .put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber())
+                        .put("prisonerDetailsPrisonersFullName", offender.displayName())
+                        .put("prisonerStatus", "ok")
+                        .put("prisonerImageOneTimeRef", encrypter.apply(JsonHelper.stringify(ImmutableMap.of(
+                                "user", JwtHelper.principal(bearerToken),
+                                "noms", nomsNumber,
+                                "tick", Instant.now().toEpochMilli()
+                        ))))
+                        .build())
+                .orElseGet(() -> ImmutableMap.of(
+                        "prisonerStatus",
+                        Optional.ofNullable(nomsNumber)
+                                .map(notUsed -> "notFound")
+                                .orElse("noNOMSNumber"))));
 
-        });
         maybeCategory
                 .filter(notUsed -> isCreateJourney(params))
                 .map(category -> categoryCodeToFormValue(category.getCode()))

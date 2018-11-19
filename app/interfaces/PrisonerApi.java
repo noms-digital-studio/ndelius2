@@ -18,9 +18,14 @@ public interface PrisonerApi {
     @Value
     @Builder(toBuilder = true)
     class Offender {
+        private String firstName;
+        private String surname;
         private Institution institution;
         private String mostRecentPrisonerNumber;
 
+        public String displayName() {
+            return String.format("%s %s", firstName, surname);
+        }
     }
 
     CompletionStage<byte[]> getImage(String nomsNumber);

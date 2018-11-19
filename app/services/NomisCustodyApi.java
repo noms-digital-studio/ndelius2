@@ -57,6 +57,8 @@ public class NomisCustodyApi  implements PrisonerApi {
     @Value
     @Builder(toBuilder = true)
     static class OffenderEntity {
+        private String firstName;
+        private String surname;
         private List<Booking> bookings;
     }
 
@@ -185,6 +187,8 @@ public class NomisCustodyApi  implements PrisonerApi {
                     .orElseThrow(() -> new RuntimeException("No current booking for offender found"));
             return Offender
                     .builder()
+                    .firstName(offenderEntity.getFirstName())
+                    .surname(offenderEntity.getSurname())
                     .mostRecentPrisonerNumber(String.valueOf(mostRecentBooking.getBookingNo()))
                     .institution(
                             Institution

@@ -17,6 +17,8 @@ public class PrisonerHelper {
 
     private static Offender aBasicOffender() {
         return Offender.builder()
+                .firstName("John")
+                .surname("Smith")
                 .mostRecentPrisonerNumber("4815")
                 .institution(PrisonerApi.Institution.builder()
                         .description("HMP Wandsworth")

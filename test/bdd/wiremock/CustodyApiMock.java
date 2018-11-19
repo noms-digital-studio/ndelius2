@@ -1,6 +1,8 @@
 package bdd.wiremock;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import helpers.JsonHelper;
+import lombok.val;
 import play.Environment;
 import play.Mode;
 
@@ -41,6 +43,35 @@ public class CustodyApiMock {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG.json"))));
 
+
+        return this;
+    }
+
+    public CustodyApiMock stubOffenderWithName(String fullName) {
+        val offender = JsonHelper.jsonToObjectMap(loadResource("/nomsoffender/offender_G8020GG.json"));
+        val firstName = fullName.split(" ")[0];
+        val surname = fullName.split(" ")[1];
+        offender.put("firstName", firstName);
+        offender.put("surname", surname);
+        custodyApiWireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                        .willReturn(ok().withBody(JsonHelper.stringify(offender))));
+
+        return this;
+    }
+
+    public CustodyApiMock stubOffenderNotFound() {
+        custodyApiWireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                        .willReturn(notFound()));
+
+        return this;
+    }
+
+    public CustodyApiMock stubOffenderUnavailable() {
+        custodyApiWireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                        .willReturn(serviceUnavailable()));
 
         return this;
     }
