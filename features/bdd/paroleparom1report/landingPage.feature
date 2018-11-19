@@ -3,10 +3,10 @@ Feature: Parole Report Landing Page
 
   Scenario: Prisoner has a valid NOMIS number in NOMIS
 
-    Given the prisoner named "Keiran Dobson" has a valid NOMS number in NOMIS where he is known as "Keiron Dobson"
+    Given the prisoner named "Bill Dobson" has a valid NOMS number in NOMIS where he is known as "William Dobson"
     When the user is on the Parole Report landing page
     Then the user must see an image of the prisoner
-    And  the user must see the prisoner name "Keiron Dobson"
+    And  the user must see the prisoner name "William Dobson"
     And  the user must see the "Start now" button
 
 
@@ -19,17 +19,17 @@ Feature: Parole Report Landing Page
 
   Scenario: Prisoner does not have a NOMIS number in Delius
 
-    Given the prisoner named "Keiran Dobson" has no NOMS number
+    Given the prisoner named "Bill Dobson" has no NOMS number
     When the user is on the Parole Report landing page
-    Then the user must see the prisoner name "Keiran Dobson"
+    Then the user must see the prisoner name "Bill Dobson"
     And the user must see the message "Add the prisoner's NOMS number to Delius"
     And the user must not see the "Start now" button
 
   Scenario: Prisoner does not have a Valid NOMIS number in NOMIS
 
-    Given the prisoner named "Keiran Dobson" has a NOMS number that matches no prisoner
+    Given the prisoner named "Bill Dobson" has a NOMS number that matches no prisoner
     When the user is on the Parole Report landing page
-    Then the user must see the prisoner name "Keiran Dobson"
+    Then the user must see the prisoner name "Bill Dobson"
     And the user must see the message "Update the prisoner's NOMS number in Delius"
     And the user must not see the "Start now" button
 

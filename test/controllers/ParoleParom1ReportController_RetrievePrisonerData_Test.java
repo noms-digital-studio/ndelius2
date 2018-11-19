@@ -26,7 +26,9 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
+import static helpers.JwtHelperTest.generateToken;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
@@ -279,6 +281,31 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
 
         val content = Helpers.contentAsString(result);
         assertThat(content).contains("name=\"prisonerDetailsPrisonersFullName\" value=\"Norman Nomis\"");
+    }
+
+    @Test
+    public void aValidLinkToThePrisonerImageIsReturned() throws UnsupportedEncodingException {
+        given(offenderApi.getOffenderByCrn(any(), any())).willReturn(CompletableFuture.completedFuture(
+                anOffenderWithMultipleAddresses()
+                        .toBuilder()
+                        .otherIds(ImmutableMap.of("nomsNumber", "M123456"))
+                        .build()));
+
+        given(prisonerApi.getImage("M123456")).willReturn(CompletableFuture.completedFuture(new byte[]{}));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        val linkUrl = extractOffenderImageLink(Helpers.contentAsString(result));
+
+        val imageResult = route(app, new Http.RequestBuilder().session("offenderApiBearerToken", generateToken()).method(GET).uri(linkUrl));
+
+        assertEquals(OK, imageResult.status());
+    }
+
+    private String extractOffenderImageLink(String content) {
+        val relativeImageUrlMatcher = Pattern.compile("(?i)<img class=\"offender-image\" src=\"([^\"]*)\">.*", Pattern.MULTILINE).matcher(content);
+        relativeImageUrlMatcher.find();
+        return relativeImageUrlMatcher.group(1).replace("..", "");
     }
 
     @Override

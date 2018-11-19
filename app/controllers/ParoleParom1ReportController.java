@@ -5,8 +5,6 @@ import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ParoleParom1ReportData;
-import helpers.JsonHelper;
-import helpers.JwtHelper;
 import interfaces.*;
 import lombok.val;
 import org.webjars.play.WebJarsUtil;
@@ -18,7 +16,6 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
-import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -119,11 +116,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                         .put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber())
                         .put("prisonerDetailsPrisonersFullName", offender.displayName())
                         .put("prisonerStatus", "ok")
-                        .put("prisonerImageOneTimeRef", encrypter.apply(JsonHelper.stringify(ImmutableMap.of(
-                                "user", JwtHelper.principal(bearerToken),
-                                "noms", nomsNumber,
-                                "tick", Instant.now().toEpochMilli()
-                        ))))
+                        .put("prisonerImageOneTimeRef", OffenderController.generateOneTimeImageReference(encrypter, nomsNumber, bearerToken))
                         .build())
                 .orElseGet(() -> ImmutableMap.of(
                         "prisonerStatus",
