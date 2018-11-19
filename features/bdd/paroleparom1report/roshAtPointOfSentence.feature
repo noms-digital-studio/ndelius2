@@ -8,9 +8,9 @@ Feature: Parole Report - RoSH at point of sentence
     When they select the "Continue" button
     Then the following error messages are displayed
 
-      | Was a RoSH assessment completed at the point of sentence? | Specify if a RoSH assessment was completed at the point of sentence |
-      | What is the prisoner`s attitude to the index offence? | Enter the prisoner's attitude to the index offence  |
-      | What is the prisoner`s attitude to their previous offending? | Enter the prisoner's attitude to their previous offending  |
+      | Was a RoSH assessment completed at the point of sentence?    | Specify if a RoSH assessment was completed at the point of sentence |
+      | What is the prisoner`s attitude to the index offence?        | Enter the prisoner's attitude to the index offence                  |
+      | What is the prisoner`s attitude to their previous offending? | Enter the prisoner's attitude to their previous offending           |
 
   Scenario: Delius User wants to add details for RoSH at point of sentence WITHOUT a completed assessment and they do not complete the required fields
 
@@ -18,8 +18,8 @@ Feature: Parole Report - RoSH at point of sentence
     And they select the "Continue" button
     Then the following error messages are displayed
 
-      | What is the prisoner`s attitude to the index offence? | Enter the prisoner's attitude to the index offence  |
-      | What is the prisoner`s attitude to their previous offending? | Enter the prisoner's attitude to their previous offending  |
+      | What is the prisoner`s attitude to the index offence?        | Enter the prisoner's attitude to the index offence        |
+      | What is the prisoner`s attitude to their previous offending? | Enter the prisoner's attitude to their previous offending |
 
   Scenario: Delius User wants to add details for RoSH at point of sentence WITH a completed assessment and they do not complete the required fields
 
@@ -27,14 +27,23 @@ Feature: Parole Report - RoSH at point of sentence
     And they select the "Continue" button
     Then the following error messages are displayed
 
-      | When was the RoSH assessment completed? | Enter the date when the RoSH assessment was completed |
-      | Public | Select the risk to the public |
-      | Known adult | Select the risk to any known adult |
-      | Children | Select the risk to children |
-      | Prisoners | Select the risk to prisoners |
-      | Staff | Select the risk to staff |
-      | What is the prisoner`s attitude to the index offence? | Enter the prisoner's attitude to the index offence  |
-      | What is the prisoner`s attitude to their previous offending? | Enter the prisoner's attitude to their previous offending  |
+      | When was the RoSH assessment completed?                      | Enter the date when the RoSH assessment was completed     |
+      | Public                                                       | Select the risk to the public                             |
+      | Known adult                                                  | Select the risk to any known adult                        |
+      | Children                                                     | Select the risk to children                               |
+      | Prisoners                                                    | Select the risk to prisoners                              |
+      | Staff                                                        | Select the risk to staff                                  |
+      | What is the prisoner`s attitude to the index offence?        | Enter the prisoner's attitude to the index offence        |
+      | What is the prisoner`s attitude to their previous offending? | Enter the prisoner's attitude to their previous offending |
+
+  Scenario: Delius User enters the RoSH assessment completion date which is before the conviction date
+
+    When they select the "Yes" option on the "Was a RoSH assessment completed at the point of sentence?"
+    And they enter the month and year "OVER_1_YEAR_AGO" for "When was the RoSH assessment completed?"
+    And they select the "Continue" button
+    Then the following error messages are displayed
+
+      | When was the RoSH assessment completed? | The date when the RoSH assessment was completed must be after the conviction date |
 
   Scenario: Delius User wants to add details for RoSH at point of sentence WITHOUT a completed assessment
 

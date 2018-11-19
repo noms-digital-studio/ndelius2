@@ -46,6 +46,10 @@ public class GlobalSteps {
             case "YESTERDAY":
                 cal.add(Calendar.DATE, -1);
                 break;
+            case "OVER_6_MONTHS_AGO":
+                cal.add(Calendar.MONTH, -6);
+                cal.add(Calendar.DATE, -2);
+                break;
             case "OVER_1_YEAR_AGO":
                 cal.add(Calendar.YEAR, -1);
                 cal.add(Calendar.DATE, -2);
@@ -63,6 +67,11 @@ public class GlobalSteps {
     @Then("^the user should be directed to the \"([^\"]*)\" UI$")
     public void the_user_should_be_directed_to_UI(String header) {
         page.isAt(header);
+    }
+
+    @When("^Delius has the \"([^\"]*)\" stored as \"([^\"]*)\"$")
+    public void deliusHasDateStoredAs(String fieldId, String value) {
+        page.fillInputWithId(fieldId, value);
     }
 
     @When("^they enter the following information$")
@@ -96,6 +105,13 @@ public class GlobalSteps {
     public void theyEnterTheDateFor(String dateText, String legend) throws ParseException {
         Date date = !dateText.contains("/") ? getTestDate(dateText) : new SimpleDateFormat("dd/MM/yyyy").parse(dateText);
         page.fillInputInSectionWithLegend(legend, "Day", new SimpleDateFormat("dd").format(date));
+        page.fillInputInSectionWithLegend(legend, "Month", new SimpleDateFormat("MM").format(date));
+        page.fillInputInSectionWithLegend(legend, "Year", new SimpleDateFormat("yyyy").format(date));
+    }
+
+    @When("^they enter the month and year \"([^\"]*)\" for \"([^\"]*)\"$")
+    public void theyEnterTheMonthAndYearFor(String dateText, String legend) throws ParseException {
+        Date date = !dateText.contains("/") ? getTestDate(dateText) : new SimpleDateFormat("dd/MM/yyyy").parse("1/" + dateText);
         page.fillInputInSectionWithLegend(legend, "Month", new SimpleDateFormat("MM").format(date));
         page.fillInputInSectionWithLegend(legend, "Year", new SimpleDateFormat("yyyy").format(date));
     }

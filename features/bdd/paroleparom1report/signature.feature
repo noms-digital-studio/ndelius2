@@ -70,85 +70,90 @@ Feature: Parole Report - Signature & date
 
     When they select the "Submit" button
     Then the following error messages are displayed
-      | Name                              | Enter the report author                  |
-      | NPS Division and LDU              | Enter the NPS division and LDU           |
-      | Office address                    | Enter the office address                 |
-      | Email address                     | Enter the email address                  |
-      | Telephone number and extension    | Enter the telephone number and extension |
-      | Completion date                   | Enter the completion date                |
+      | Name                           | Enter the report author                  |
+      | NPS Division and LDU           | Enter the NPS division and LDU           |
+      | Office address                 | Enter the office address                 |
+      | Email address                  | Enter the email address                  |
+      | Telephone number and extension | Enter the telephone number and extension |
+      | Completion date                | Enter the completion date                |
+
+  Scenario: Delius User enters the completion date which is before the conviction date
+
+    When they enter the date "OVER_1_YEAR_AGO" for "Completion date"
+    And they select the "Submit" button
+    Then the following error messages are displayed
+      | Completion date | The completion date must be after the conviction date |
 
   Scenario: Delius user wants to sign and date their parole report WITHOUT counter signature
 
     When they input the following information
-      | Name                              | Jane Doe                               |
-      | NPS Division and LDU              | Stafford, Midlands                     |
+      | Name                 | Jane Doe           |
+      | NPS Division and LDU | Stafford, Midlands |
     And they enter the following information into a classic TextArea
-      | Office address                    | 4 Lichfield Road, Stafford ST17 4JX    |
+      | Office address | 4 Lichfield Road, Stafford ST17 4JX |
     And they input the following information
-      | Email address                     | jane.doe@nps.gov.uk                    |
-      | Telephone number and extension    | 0124 5896456                           |
+      | Email address                  | jane.doe@nps.gov.uk |
+      | Telephone number and extension | 0124 5896456        |
     And they enter the date "07/08/2018" for "Completion date"
 
     Then the following information should be saved in the prisoner parole report
-      | signatureName                     | Jane Doe                               |
-      | signatureDivision                 | Stafford, Midlands                     |
-      | signatureOfficeAddress            | 4 Lichfield Road, Stafford ST17 4JX    |
-      | signatureEmail                    | jane.doe@nps.gov.uk                    |
-      | signatureTelephone                | 0124 5896456                           |
-      | signatureDate                     | 07/08/2018                             |
+      | signatureName          | Jane Doe                            |
+      | signatureDivision      | Stafford, Midlands                  |
+      | signatureOfficeAddress | 4 Lichfield Road, Stafford ST17 4JX |
+      | signatureEmail         | jane.doe@nps.gov.uk                 |
+      | signatureTelephone     | 0124 5896456                        |
+      | signatureDate          | 07/08/2018                          |
 
   Scenario: Delius user wants to sign and date their parole report WITH counter signature
 
     When they input the following information
-      | Name                              | Jane Doe                               |
-      | NPS Division and LDU              | Stafford, Midlands                     |
+      | Name                 | Jane Doe           |
+      | NPS Division and LDU | Stafford, Midlands |
     And they enter the following information into a classic TextArea
-      | Office address                    | 4 Lichfield Road, Stafford ST17 4JX    |
+      | Office address | 4 Lichfield Road, Stafford ST17 4JX |
     And they input the following information
-      | Email address                     | jane.doe@nps.gov.uk                    |
-      | Telephone number and extension    | 0124 5896456                           |
-      | Name of countersignature          | Joe Bloggs                             |
-      | Role of countersignature          | SPO                                    |
+      | Email address                  | jane.doe@nps.gov.uk |
+      | Telephone number and extension | 0124 5896456        |
+      | Name of countersignature       | Joe Bloggs          |
+      | Role of countersignature       | SPO                 |
     And they enter the date "07/08/2018" for "Completion date"
 
     Then the following information should be saved in the prisoner parole report
-      | signatureName                     | Jane Doe                               |
-      | signatureDivision                 | Stafford, Midlands                     |
-      | signatureOfficeAddress            | 4 Lichfield Road, Stafford ST17 4JX    |
-      | signatureEmail                    | jane.doe@nps.gov.uk                    |
-      | signatureTelephone                | 0124 5896456                           |
-      | signatureCounterName              | Joe Bloggs                             |
-      | signatureCounterRole              | SPO                                    |
-      | signatureDate                     | 07/08/2018                             |
+      | signatureName          | Jane Doe                            |
+      | signatureDivision      | Stafford, Midlands                  |
+      | signatureOfficeAddress | 4 Lichfield Road, Stafford ST17 4JX |
+      | signatureEmail         | jane.doe@nps.gov.uk                 |
+      | signatureTelephone     | 0124 5896456                        |
+      | signatureCounterName   | Joe Bloggs                          |
+      | signatureCounterRole   | SPO                                 |
+      | signatureDate          | 07/08/2018                          |
 
   Scenario: Delius user wants to submit their Parole report WITHOUT counter signature
 
     When they input the following information
-      | Name                              | Jane Doe                               |
-      | NPS Division and LDU              | Stafford, Midlands                     |
-      | Office address                    | 4 Lichfield Road, Stafford ST17 4JX    |
+      | Name                 | Jane Doe                            |
+      | NPS Division and LDU | Stafford, Midlands                  |
+      | Office address       | 4 Lichfield Road, Stafford ST17 4JX |
     And they enter the following information into a classic TextArea
-      | Email address                     | jane.doe@nps.gov.uk                    |
+      | Email address | jane.doe@nps.gov.uk |
     And they input the following information
-      | Telephone number and extension    | 0124 5896456                           |
-    And they enter the date "07/08/2018" for "Completion date"
-
+      | Telephone number and extension | 0124 5896456 |
+    And they enter the date "TODAY" for "Completion date"
     And they select the "Submit" button
     Then the user should be directed to the "Report saved" UI
 
   Scenario: Delius user wants to submit their Parole report WITH counter signature
 
     When they input the following information
-      | Name                              | Jane Doe                               |
-      | NPS Division and LDU              | Stafford, Midlands                     |
+      | Name                 | Jane Doe           |
+      | NPS Division and LDU | Stafford, Midlands |
     And they enter the following information into a classic TextArea
-      | Office address                    | 4 Lichfield Road, Stafford ST17 4JX    |
+      | Office address | 4 Lichfield Road, Stafford ST17 4JX |
     And they input the following information
-      | Email address                     | jane.doe@nps.gov.uk                    |
-      | Telephone number and extension    | 0124 5896456                           |
-      | Name of countersignature          | Joe Bloggs                             |
-      | Role of countersignature          | SPO                                    |
-    And they enter the date "07/08/2018" for "Completion date"
-
+      | Email address                  | jane.doe@nps.gov.uk |
+      | Telephone number and extension | 0124 5896456        |
+      | Name of countersignature       | Joe Bloggs          |
+      | Role of countersignature       | SPO                 |
+    And they enter the date "TODAY" for "Completion date"
     And they select the "Submit" button
     Then the user should be directed to the "Report saved" UI

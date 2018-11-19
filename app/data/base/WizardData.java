@@ -46,6 +46,10 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
 
     @Required
     @JsonIgnore
+    private String convictionDate;
+
+    @Required
+    @JsonIgnore
     private Integer pageNumber;
 
     @JsonIgnore
@@ -328,8 +332,14 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
             return false;
         }
 
+        String earliestDateValue = this.getStringValue(earliestField).orElse("");
+
+        if (earliestDateValue.isEmpty()) {
+            return false;
+        }
+
         LocalDate fieldDate =  LocalDate.parse(dateStringFromFieldValuesOf(field), DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
-        LocalDate earliestDate = LocalDate.parse(this.getStringValue(earliestField).orElse(""));
+        LocalDate earliestDate = LocalDate.parse(earliestDateValue, DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
 
         return fieldDate.isBefore(earliestDate);
     }

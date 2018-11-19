@@ -3,11 +3,19 @@ package utils;
 import com.google.common.collect.ImmutableList;
 import interfaces.OffenderApi;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class InstitutionalReportHelpers {
+
+    private static String getConvictionDate() {
+        return LocalDate.now().plusMonths(-6).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
     public static OffenderApi.InstitutionalReport anInstitutionalReport() {
         return OffenderApi.InstitutionalReport.builder()
             .conviction(OffenderApi.Conviction.builder()
-                .convictionDate("2018-12-20")
+                .convictionDate(getConvictionDate())
                 .offences(ImmutableList.of(OffenderApi.Offence.builder()
                     .offenceId("123")
                     .mainOffence(true)
@@ -24,7 +32,7 @@ public class InstitutionalReportHelpers {
     public static OffenderApi.InstitutionalReport anInstitutionalReportWithOffence(String desc, String code, String date) {
         return OffenderApi.InstitutionalReport.builder()
             .conviction(OffenderApi.Conviction.builder()
-                .convictionDate("2018-12-20")
+                .convictionDate(getConvictionDate())
                 .offences(ImmutableList.of(OffenderApi.Offence.builder()
                     .offenceId("123")
                     .mainOffence(true)

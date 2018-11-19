@@ -79,9 +79,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             onlyIfField = "prisonerDetailsSentenceType",
             onlyIfFieldMatchValue = "indeterminate",
             minDate = "Today",
-            outOfRangeMessage = "The tariff expiry date must be in the future",
-            earliestDateField ="convictionDate",
-            beforeEarliestDateMessage = "The tariff expiry date must be after the conviction date")
+            outOfRangeMessage = "The tariff expiry date must be in the future")
     private String prisonerDetailsTariffExpiryDate;
     private String prisonerDetailsTariffExpiryDate_day;
     private String prisonerDetailsTariffExpiryDate_month;
@@ -97,9 +95,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             onlyIfField = "prisonerDetailsSentenceType",
             onlyIfFieldMatchValue = "determinate",
             minDate = "Today",
-            outOfRangeMessage = "The parole eligibility date must be in the future",
-            earliestDateField ="convictionDate",
-            beforeEarliestDateMessage = "The parole eligibility date must be after the conviction date")
+            outOfRangeMessage = "The parole eligibility date must be in the future")
     private String prisonerDetailsParoleEligibilityDate;
     private String prisonerDetailsParoleEligibilityDate_day;
     private String prisonerDetailsParoleEligibilityDate_month;
@@ -115,9 +111,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             onlyIfField = "prisonerDetailsSentenceType",
             onlyIfFieldMatchValue = "determinate",
             minDate = "Today",
-            outOfRangeMessage = "The automatic release date/non parole eligibility date must be in the future",
-            earliestDateField ="convictionDate",
-            beforeEarliestDateMessage = "The automatic release date/non parole eligibility date must be after the conviction date")
+            outOfRangeMessage = "The automatic release date/non parole eligibility date must be in the future")
     private String prisonerDetailsAutoReleaseDate;
     private String prisonerDetailsAutoReleaseDate_day;
     private String prisonerDetailsAutoReleaseDate_month;
@@ -160,7 +154,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             invalidMessage = "Enter a real date when the RoSH assessment was completed",
             onlyIfField = "roshAtPosAssessmentCompleted",
             onlyIfFieldMatchValue = "yes",
-            earliestDateField ="convictionDate",
+            earliestDateField = "convictionDate",
             beforeEarliestDateMessage = "The date when the RoSH assessment was completed must be after the conviction date")
     private String roshAtPosDate;
     private String roshAtPosDate_day;
@@ -212,7 +206,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             minDate = "-1 Year",
             maxDate = "Today",
             outOfRangeMessage = "The VLO date must be within the last year",
-            earliestDateField ="convictionDate",
+            earliestDateField = "convictionDate",
             beforeEarliestDateMessage = "The VLO date must be after the conviction date")
     private String victimsVLOContactDate;
     private String victimsVLOContactDate_day;
@@ -272,7 +266,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             onlyIfFieldMatchValue = "yes",
             maxDate = "{type: 'before', arguments: [18, 'years']}",
             outOfRangeMessage = "The date when the prisoner was screened for MAPPA must be in the past",
-            earliestDateField ="convictionDate",
+            earliestDateField = "convictionDate",
             beforeEarliestDateMessage = "The date when the prisoner was screened for MAPPA must be after the conviction date")
     private String mappaScreenedDate;
     private String mappaScreenedDate_day;
@@ -618,7 +612,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             message = "Enter the completion date",
             incompleteMessage = "Enter the completion date and include a day, month and year",
             invalidMessage = "Enter a real completion date",
-            earliestDateField ="convictionDate",
+            earliestDateField = "convictionDate",
             beforeEarliestDateMessage = "The completion date must be after the conviction date")
     private String signatureDate;
     private String signatureDate_day;
