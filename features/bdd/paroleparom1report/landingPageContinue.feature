@@ -19,3 +19,12 @@ Feature: Parole Report Landing Page - Continue
       | 60      | 1 hour ago |
       | 1440    | 1 day ago |
       | 144000  | 100 days ago |
+
+  Scenario: Delius user wants to resume writing the Parole Report
+
+    Given the prisoner named "Bill Dobson" has a valid NOMS number in NOMIS where he is known as "William Dobson"
+    When the user is on the Parole Report landing page for an existing report
+    Then the user must see an image of the prisoner
+    And  the user must see the prisoner name "William Dobson"
+    And  the user must see the "Continue now" button
+
