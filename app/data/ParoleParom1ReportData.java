@@ -496,13 +496,13 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RISK_MANAGEMENT_PLAN_REQUIRED")
     private String riskManagementPlanRequired;
 
-    @RequiredOnPage(value = 16, message = "Enter the current situation (Agencies)", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("AGENCIES")
-    private String agencies;
+    @RequiredOnPage(value = 16, message = "Enter the current situation", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("CURRENT_SITUATION")
+    private String currentSituation;
 
-    @RequiredOnPage(value = 16, message = "Enter the support", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("SUPPORT")
-    private String support;
+    @RequiredOnPage(value = 16, message = "Enter the supporting agencies", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("SUPPORTING_AGENCIES")
+    private String supportingAgencies;
 
     @RequiredOnPage(value = 16, message = "Enter the control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("CONTROL")

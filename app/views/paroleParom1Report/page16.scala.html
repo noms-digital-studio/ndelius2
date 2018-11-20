@@ -13,7 +13,7 @@
     FieldConstructor(govukElements.f)
 }
 
-@agenciesHint = {
+@currentSituationHint = {
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
         <li>Sentence details, relevant risk assessment scores (OGRS, OGP, OVP and RSR) and other specialist assessments such as RM2k, HCR-20, SARN and SARA.</li>
         <li>A summary of the RoSH scores for all victims and groups - include risk to self.</li>
@@ -21,12 +21,12 @@
     </ul>
 }
 
-@supportHint = {
+@supportingAgenciesHint = {
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
         <li>All agencies working with the prisoner, now and in the future - failure to account for all agencies will have a negative impact on the rest of the RMP.</li>
         <li>Agency and service contact names and details, if disclosable. Include the specific service of the supporting agency with time frames.</li>
         <li>Actions for agencies supporting MAPPA, if disclosable.</li>
-        <li>Cases registered with the VCS and if the victims are participating - you must not disclose VLO name or details.</li>
+        <li>Cases registered with the Victim Contact Service and if the victims are participating - not VLO name or details.</li>
     </ul>
 }
 
@@ -145,35 +145,35 @@
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="risk-management-plan-yes">
 
-            @textarea(reportForm("agencies"), '_label -> "Current situation (Agencies)", '_hint -> agenciesHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the current situation (Agencies)")
+            @textarea(reportForm("currentSituation"), '_label -> "Current situation", '_hint -> currentSituationHint, 'class -> "wide")
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            @textarea(reportForm("support"), '_label -> "Support", '_hint -> supportHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the support")
+            @textarea(reportForm("supportingAgencies"), '_label -> "Supporting agencies", '_hint -> supportingAgenciesHint, 'class -> "wide")
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            @textarea(reportForm("control"), '_label -> "Control", '_hint -> controlHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the support")
+            @textarea(reportForm("control"), '_label -> "Control", '_hint -> controlHint, 'class -> "wide")
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            @textarea(reportForm("riskMeasures"), '_label -> "Added measures for specific risks", '_hint -> riskMeasuresHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the added measures for specific risks")
+            @textarea(reportForm("riskMeasures"), '_label -> "Added measures for specific risks", '_hint -> riskMeasuresHint, 'class -> "wide")
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            @textarea(reportForm("agencyActions"), '_label -> "Agency actions", '_hint -> agencyActionsHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the agency actions")
+            @textarea(reportForm("agencyActions"), '_label -> "Agency actions", '_hint -> agencyActionsHint, 'class -> "wide")
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            @textarea(reportForm("additionalConditions"), '_label -> "Additional conditions or requirements", '_hint -> additionalConditionsHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the additional conditions or requirements")
+            @textarea(reportForm("additionalConditions"), '_label -> "Additional conditions or requirements", '_hint -> additionalConditionsHint, 'class -> "wide")
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            @textarea(reportForm("levelOfContact"), '_label -> "Level of contact", '_hint -> levelOfContactHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the level of contact")
+            @textarea(reportForm("levelOfContact"), '_label -> "Level of contact", '_hint -> levelOfContactHint, 'class -> "wide")
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            @textarea(reportForm("contingencyPlan"), '_label -> "Contingency plan", '_hint -> contingencyPlanHint, 'class -> "wide", 'required -> "true", '_error -> "Enter the contingency plan")
+            @textarea(reportForm("contingencyPlan"), '_label -> "Contingency plan", '_hint -> contingencyPlanHint, 'class -> "wide")
 
         </div>
     </div>
