@@ -13,13 +13,13 @@
 
 @popup(reportForm, encrypter, "Prisoner details", 2) {
 
-    @readOnlyField(reportForm("prisonerDetailsPrisonInstitution"), "Prison or Young Offender Institution")
-
     @readOnlyField(reportForm("prisonerDetailsPrisonersFullName"), "Prisoner`s full name")
+
+    @readOnlyField(reportForm("prisonerDetailsPrisonInstitution"), "Prison or Young Offender Institution")
 
     @readOnlyField(reportForm("prisonerDetailsPrisonNumber"), "Prison number")
 
-    @readOnlyField(reportForm("prisonerDetailsNomisNumber"), "NOMIS number")
+    @readOnlyField(reportForm("prisonerDetailsNomisNumber"), "NOMS number")
 
     <div class="govuk-form-group" data-module="radios" >
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
