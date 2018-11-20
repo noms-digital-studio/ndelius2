@@ -6,7 +6,7 @@ import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ParoleParom1ReportData;
 import helpers.DateTimeHelper;
-interfaces.*;
+import interfaces.*;
 import lombok.val;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
