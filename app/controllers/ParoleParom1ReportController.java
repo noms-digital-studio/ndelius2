@@ -5,6 +5,7 @@ import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ParoleParom1ReportData;
+import helpers.DateTimeHelper;
 import interfaces.*;
 import lombok.val;
 import org.webjars.play.WebJarsUtil;
@@ -151,9 +152,14 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     private Map<String, String> storeOffenderData(Map<String, String> params, OffenderApi.InstitutionalReport institutionalReport) {
         Logger.info("institutionalReport: " + institutionalReport);
         Logger.info("Params: " + params);
+
         if (isCreateJourney(params)) {
             params.put("prisonerDetailsOffence", institutionalReport.getConviction().allOffenceDescriptions());
         }
+
+        Optional.ofNullable(institutionalReport.getConviction().getConvictionDate())
+            .ifPresent(dateString -> params.put("convictionDate", DateTimeHelper.format(institutionalReport.getConviction().getConvictionDate())));
+
         return params;
     }
 

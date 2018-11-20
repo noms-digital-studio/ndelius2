@@ -14,6 +14,8 @@ import javax.inject.Inject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +34,31 @@ public class GlobalSteps {
     private String whatToIncludeFieldLabel;
 
     private static int SAVE_THROTTLE_TIME_SECONDS = 5;
+
+    private Date getTestDate(String date) {
+        Date today = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(today);
+
+        switch (date) {
+            case "TOMORROW":
+                cal.add(Calendar.DATE, 1);
+                break;
+            case "YESTERDAY":
+                cal.add(Calendar.DATE, -1);
+                break;
+            case "OVER_6_MONTHS_AGO":
+                cal.add(Calendar.MONTH, -6);
+                cal.add(Calendar.DATE, -2);
+                break;
+            case "OVER_1_YEAR_AGO":
+                cal.add(Calendar.YEAR, -1);
+                cal.add(Calendar.DATE, -2);
+                break;
+        }
+
+        return cal.getTime();
+    }
 
     @When("^they select the \"([^\"]*)\" button$")
     public void theySelectTheButton(String button) {
@@ -52,6 +79,11 @@ public class GlobalSteps {
     @Then("^the user should be directed to the \"([^\"]*)\" UI$")
     public void the_user_should_be_directed_to_UI(String header) {
         page.isAt(header);
+    }
+
+    @When("^Delius has the \"([^\"]*)\" stored as \"([^\"]*)\"$")
+    public void deliusHasDateStoredAs(String fieldId, String value) {
+        page.fillInputWithId(fieldId, value);
     }
 
     @When("^they enter the following information$")
@@ -83,12 +115,19 @@ public class GlobalSteps {
 
     @When("^they enter the date \"([^\"]*)\" for \"([^\"]*)\"$")
     public void theyEnterTheDateFor(String dateText, String legend) throws ParseException {
-        val date = new SimpleDateFormat("dd/MM/yyyy").parse(dateText);
-
+        Date date = !dateText.contains("/") ? getTestDate(dateText) : new SimpleDateFormat("dd/MM/yyyy").parse(dateText);
         page.fillInputInSectionWithLegend(legend, "Day", new SimpleDateFormat("dd").format(date));
         page.fillInputInSectionWithLegend(legend, "Month", new SimpleDateFormat("MM").format(date));
         page.fillInputInSectionWithLegend(legend, "Year", new SimpleDateFormat("yyyy").format(date));
     }
+
+    @When("^they enter the month and year \"([^\"]*)\" for \"([^\"]*)\"$")
+    public void theyEnterTheMonthAndYearFor(String dateText, String legend) throws ParseException {
+        Date date = !dateText.contains("/") ? getTestDate(dateText) : new SimpleDateFormat("dd/MM/yyyy").parse("1/" + dateText);
+        page.fillInputInSectionWithLegend(legend, "Month", new SimpleDateFormat("MM").format(date));
+        page.fillInputInSectionWithLegend(legend, "Year", new SimpleDateFormat("yyyy").format(date));
+    }
+
     private Map<String, String> toNameValues(Map<String, String> labelTextMap) {
         return labelTextMap.keySet().stream().map(label -> new SimpleEntry<>(nameFromLabel(label), labelTextMap.get(label))).collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
     }
@@ -114,14 +153,17 @@ public class GlobalSteps {
     public void theUserDoesNotAnyEnterAnyCharactersInTheFreeTextFieldsOnThePage() {
         // no page action required
     }
+
     @Given("^that the user does not select an option on the page$")
     public void thatTheUserDoesNotSelectAnOptionOnThePage() {
         // no page action required
     }
+
     @Given("^that the user enters no information on the page$")
     public void thatTheUserEntersNoInformationOnThePage() {
         // no page action required
     }
+
     @When("^they don't enter text into the \"([^\"]*)\"$")
     public void theyDonTEnterTextIntoThe(String label) {
         // no page action required
@@ -140,13 +182,13 @@ public class GlobalSteps {
     }
 
     @When("^they select the radio button with id \"([^\"]*)\"$")
-    public void theySelectTheOptionWithTheId(String id)  {
+    public void theySelectTheOptionWithTheId(String id) {
         page.clickElementWithId(id);
     }
 
 
     @When("^they select the \"([^\"]*)\" option on the \"([^\"]*)\"$")
-    public void theySelectTheOptionOnThe(String label, String legend)  {
+    public void theySelectTheOptionOnThe(String label, String legend) {
         page.clickRadioButtonWithLabelWithinLegend(label, legend);
     }
 

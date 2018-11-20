@@ -23,6 +23,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +34,9 @@ import java.util.stream.Stream;
 
 @Data
 @Validate
-public class WizardData implements Validatable<List<ValidationError>> {
+public abstract class WizardData implements Validatable<List<ValidationError>> {
+
+    private static final String VALID_DATE_FORMAT = "d/M/yyyy";
 
     @Encrypted
     @RequiredOnPage(1)
@@ -100,8 +104,12 @@ public class WizardData implements Validatable<List<ValidationError>> {
                 this::mandatoryDateErrors,
                 this::partialRequiredDateErrors,
                 this::invalidRequiredDateErrors,
+                this::notWithinRangeRequiredDateErrors,
+                this::beforeEarliestRequiredDateErrors,
                 this::partialDateErrors,
                 this::invalidDateErrors,
+                this::notWithinRangeDateErrors,
+                this::beforeEarliestDateErrors,
                 this::mandatoryGroupErrors
         );
     }
@@ -183,6 +191,46 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return requiredEnforced(field.getAnnotation(DateOnPage.class).onlyIfField(), field.getAnnotation(DateOnPage.class).onlyIfFieldMatchValue());
     }
 
+    private Stream<ValidationError> notWithinRangeRequiredDateErrors(Map<String, Object> options) {
+
+        return requiredDateFields().
+                filter(this::requiredDateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && suppliedDateNotWithinRange(field, field.getAnnotation(RequiredDateOnPage.class).minDate(), field.getAnnotation(RequiredDateOnPage.class).maxDate())).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).outOfRangeMessage()));
+
+    }
+
+    private Stream<ValidationError> notWithinRangeDateErrors(Map<String, Object> options) {
+
+        return dateFields().
+                filter(this::dateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && suppliedDateNotWithinRange(field, field.getAnnotation(DateOnPage.class).minDate(), field.getAnnotation(DateOnPage.class).maxDate())).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).outOfRangeMessage()));
+
+    }
+
+    private Stream<ValidationError> beforeEarliestRequiredDateErrors(Map<String, Object> options) {
+
+        return requiredDateFields().
+                filter(this::requiredDateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && !suppliedDateNotWithinRange(field, field.getAnnotation(RequiredDateOnPage.class).minDate(), field.getAnnotation(RequiredDateOnPage.class).maxDate()) && suppliedDateBeforeEarliestDate(field, field.getAnnotation(RequiredDateOnPage.class).earliestDateField())).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(RequiredDateOnPage.class).beforeEarliestDateMessage()));
+
+    }
+
+    private Stream<ValidationError> beforeEarliestDateErrors(Map<String, Object> options) {
+
+        return dateFields().
+                filter(this::dateFieldEnforced).
+                filter(field -> mustValidateField(options, field)).
+                filter(field -> allDateFieldsAreSupplied(field) && !composedDateBitsAreInvalid(field) && !suppliedDateNotWithinRange(field, field.getAnnotation(DateOnPage.class).minDate(), field.getAnnotation(DateOnPage.class).maxDate()) && suppliedDateBeforeEarliestDate(field, field.getAnnotation(DateOnPage.class).earliestDateField())).
+                map(field -> new ValidationError(field.getName(), field.getAnnotation(DateOnPage.class).beforeEarliestDateMessage()));
+
+    }
+
     private boolean requiredEnforced(String onlyIfName, String onlyIfFieldMatchValue) {
         val matcher = Optional.of(onlyIfFieldMatchValue)
                 .filter(StringUtils::isNotBlank)
@@ -195,7 +243,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
         return Boolean.parseBoolean(options.getOrDefault("checkAll", false).toString());
     }
 
-    private boolean mustValidateField(Map<String, Object> options, Field field) {
+    protected boolean mustValidateField(Map<String, Object> options, Field field) {
         // Check all pages if on last page and clicking next
         // Check current page if clicking next and not jumping
         // If jumping don't perform any validation
@@ -236,16 +284,77 @@ public class WizardData implements Validatable<List<ValidationError>> {
     private boolean someDateFieldsAreEmpty(Field field) {
         return !allDateFieldsAreEmpty(field) && !allDateFieldsAreSupplied(field);
     }
+
+    private SimpleDateFormat getValidatorDateFormat() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(VALID_DATE_FORMAT);
+        dateFormat.setLenient(false);
+        return dateFormat;
+    }
+
     private boolean composedDateBitsAreInvalid(Field field) {
         try {
-            String formattedDate = dateFieldValues(field).collect(Collectors.joining("/"));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("d/M/yyyy");
-            dateFormat.setLenient(false);
-            dateFormat.parse(formattedDate);
+            getValidatorDateFormat().parse(dateStringFromFieldValuesOf(field));
             return false;
         } catch (ParseException e) {
             return true;
         }
+    }
+
+    private String dateStringFromFieldValuesOf(Field field) {
+        return dateFieldValues(field).collect(Collectors.joining("/"));
+    }
+
+    private boolean suppliedDateNotWithinRange(Field field, String minDate, String maxDate) {
+
+        if (minDate.isEmpty() && maxDate.isEmpty()) {
+            return false;
+        }
+
+        LocalDate parsedDate = LocalDate.parse(dateStringFromFieldValuesOf(field), DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
+
+        if (!minDate.isEmpty() && parsedDate.isBefore(getRequiredDate(minDate))) {
+            return true;
+        }
+
+        return !maxDate.isEmpty() && parsedDate.isAfter(getRequiredDate(maxDate));
+    }
+
+    private boolean suppliedDateBeforeEarliestDate(Field field, String earliestDateField) {
+
+        Field earliestField = this.getField(earliestDateField).orElse(null);
+
+        if (earliestField == null) {
+            return false;
+        }
+
+        String earliestDateValue = this.getStringValue(earliestField).orElse("");
+
+        if (earliestDateValue.isEmpty()) {
+            return false;
+        }
+
+        LocalDate fieldDate =  LocalDate.parse(dateStringFromFieldValuesOf(field), DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
+        LocalDate earliestDate = LocalDate.parse(earliestDateValue, DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
+
+        return fieldDate.isBefore(earliestDate);
+    }
+
+    private LocalDate getRequiredDate(String sequence) {
+        String[] parts = sequence.split(" ");
+
+        if (parts.length == 2) {
+            int value = Integer.parseInt(parts[0]);
+            switch (parts[1].toUpperCase()) {
+                case "DAY":
+                case "DAYS":
+                    return LocalDate.now().plusDays(value);
+                case "YEAR":
+                case "YEARS":
+                    return LocalDate.now().plusYears(value);
+            }
+        }
+
+        return LocalDate.now();
     }
 
     protected String formattedDateFromDateParts(String fieldName) {
@@ -253,9 +362,7 @@ public class WizardData implements Validatable<List<ValidationError>> {
     }
 
     private String formattedDateFromDateParts(Field field) {
-        return composedDateBitsAreInvalid(field) ?
-                "" :
-                dateFieldValues(field).collect(Collectors.joining("/"));
+        return composedDateBitsAreInvalid(field) ? "" : dateStringFromFieldValuesOf(field);
     }
 
     private Stream<String> dateFieldValues(Field field) {

@@ -6,6 +6,10 @@ import views.pages.paroleparom1report.VictimsPage;
 
 import javax.inject.Inject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class VictimsSteps {
@@ -29,10 +33,15 @@ public class VictimsSteps {
 
     @Given("^Delius User completes the \"Victims\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        Date date = cal.getTime();
+
         page.fillTextArea("Analyse the impact of the offence on the victims", "Victims impact detail text");
-        page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Day", "19");
-        page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Month", "07");
-        page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Year", "2018");
+        page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Day", new SimpleDateFormat("dd").format(date));
+        page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Month", new SimpleDateFormat("MM").format(date));
+        page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Year", new SimpleDateFormat("yyyy").format(date));
         page.clickRadioButtonWithLabelWithinLegend("Yes", "Are the victims engaged in the Victim Contact Scheme (VCS)?");
         page.clickRadioButtonWithLabelWithinLegend("Yes", "Do the victims wish to submit a Victim Personal Statement (VPS)?");
         page.clickButton("Continue");

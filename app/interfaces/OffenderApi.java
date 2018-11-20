@@ -218,6 +218,7 @@ public interface OffenderApi {
     @Value
     @Builder
     class Conviction {
+        private String convictionDate;
         private List<Offence> offences;
 
         public String mainOffenceDescription() {
