@@ -144,38 +144,44 @@ public class StubOffenderApi implements OffenderApi {
         }
 
         val offences = Offences.builder()
-            .items(ImmutableList.of(aMainOffence(),
-                Offence.builder()
-                    .mainOffence(false)
-                    .offenceId("A1")
-                    .offenceDate("2018-08-01T00:00:00")
-                    .detail(OffenceDetail.builder()
-                        .code("05332")
-                        .description("Dishonestly retaining a wrongful credit - 05332")
-                        .mainCategoryCode("053")
-                        .mainCategoryDescription("Other frauds (Category)")
-                        .subCategoryCode("32")
-                        .subCategoryDescription("Dishonestly retaining a wrongful credit")
-                        .build())
-                    .build(),
-                Offence.builder()
-                    .mainOffence(false)
-                    .offenceId("A2")
-                    .offenceDate("2018-08-25T00:00:00")
-                    .detail(OffenceDetail.builder()
-                        .code("05333")
-                        .description("Dishonest representation for obtaining benefit etc - 05333")
-                        .mainCategoryCode("053")
-                        .mainCategoryDescription("Other frauds (Category)")
-                        .subCategoryCode("33")
-                        .subCategoryDescription("Dishonest representation for obtaining benefit etc")
-                        .build())
-                    .build()
-                )
-
+            .items(ImmutableList.of(
+                aMainOffence(),
+                additionalOffence1(),
+                additionalOffence2())
             ).build();
 
         return CompletableFuture.completedFuture(offences);
+    }
+
+    private Offence additionalOffence1() {
+        return Offence.builder()
+            .mainOffence(false)
+            .offenceId("A1")
+            .offenceDate("2018-08-01T00:00:00")
+            .detail(OffenceDetail.builder()
+                .code("05332")
+                .description("Dishonestly retaining a wrongful credit - 05332")
+                .mainCategoryCode("053")
+                .mainCategoryDescription("Other frauds (Category)")
+                .subCategoryCode("32")
+                .subCategoryDescription("Dishonestly retaining a wrongful credit")
+                .build())
+            .build();
+    }
+
+    private Offence additionalOffence2() {
+        return Offence.builder()
+            .mainOffence(false)
+            .offenceId("A2")
+            .detail(OffenceDetail.builder()
+                .code("05333")
+                .description("Dishonest representation for obtaining benefit etc - 05333")
+                .mainCategoryCode("053")
+                .mainCategoryDescription("Other frauds (Category)")
+                .subCategoryCode("33")
+                .subCategoryDescription("Dishonest representation for obtaining benefit etc")
+                .build())
+            .build();
     }
 
     public CompletionStage<JsonNode> callOffenderApi(String bearerToken, String url) {
@@ -198,7 +204,12 @@ public class StubOffenderApi implements OffenderApi {
 
         val institutionalReports = InstitutionalReport.builder()
             .conviction(Conviction.builder()
-                .offences(ImmutableList.of(aMainOffence()))
+                .offences(
+                    ImmutableList.of(
+                        aMainOffence(),
+                        additionalOffence1(),
+                        additionalOffence2())
+                )
                 .build())
             .build();
 

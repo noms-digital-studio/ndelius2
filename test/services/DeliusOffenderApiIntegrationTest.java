@@ -190,7 +190,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
     public void getsInstitutionalReports() {
         val institutionalReport = offenderApi.getInstitutionalReport("ABC", "X12345", "999").toCompletableFuture().join();
 
-        assertThat(institutionalReport.getConviction().getMainOffence().get().offenceDescription()).isEqualTo("Fraud subcategory description (00102) - 02/11/2018");
+        assertThat(institutionalReport.getConviction().mainOffenceDescription()).isEqualTo("Fraud subcategory description - 02/11/2018");
     }
 
     private static Map.Entry<String, String> entry(String code, String description) {

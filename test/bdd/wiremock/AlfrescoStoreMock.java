@@ -86,10 +86,15 @@ public class AlfrescoStoreMock {
             ));
 
         boolean result = results.values().stream()
-            .allMatch(aBoolean -> aBoolean);
+            .allMatch(passed -> passed);
 
         if (!result) {
-            System.out.println(results);
+            results.entrySet().stream()
+                .filter(entry -> !entry.getValue())
+                .forEach(entry -> System.err.println(String.format("\nField: [%s] \nExpected [%s] \nto contain [%s]",
+                    entry.getKey(),
+                    documentMetaData.get(entry.getKey()).asText(),
+                    values.get(entry.getKey()))));
         }
 
         return result;

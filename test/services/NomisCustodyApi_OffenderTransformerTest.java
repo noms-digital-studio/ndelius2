@@ -75,6 +75,33 @@ public class NomisCustodyApi_OffenderTransformerTest {
         assertThat(offender.getMostRecentPrisonerNumber()).isEqualTo("D88666");
     }
 
+    @Test
+    public void firstNameIsCopied() {
+
+        val offenderEntity =
+                aOffenderEntity()
+                        .toBuilder()
+                        .firstName("Rodger")
+                        .build();
+
+        val offender = offenderOf(offenderEntity);
+
+        assertThat(offender.getFirstName()).isEqualTo("Rodger");
+    }
+    @Test
+    public void surnameIsCopied() {
+
+        val offenderEntity =
+                aOffenderEntity()
+                        .toBuilder()
+                        .surname("Smiles")
+                        .build();
+
+        val offender = offenderOf(offenderEntity);
+
+        assertThat(offender.getSurname()).isEqualTo("Smiles");
+    }
+
 
     @Test
     public void exceptionWhenNoCurrentBooking() {
@@ -90,7 +117,10 @@ public class NomisCustodyApi_OffenderTransformerTest {
     }
 
     private NomisCustodyApi.OffenderEntity aOffenderEntity() {
-        return NomisCustodyApi.OffenderEntity.builder().bookings(someBookings()).build();
+        return NomisCustodyApi.OffenderEntity.builder()
+                .firstName("Tommy")
+                .surname("Blacks")
+                .bookings(someBookings()).build();
     }
 
     private List<NomisCustodyApi.Booking> someBookings() {

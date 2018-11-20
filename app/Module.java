@@ -26,6 +26,7 @@ public class Module extends AbstractModule {
         bind(AnalyticsStore.class).to(MongoDbStore.class);
 
         bind(PrisonerApi.class).toProvider(PrisonerApiProvider.class);
+        bind(PrisonerCategoryApi.class).toProvider(PrisonerCategoryApiProvider.class);
         bind(PrisonerApiToken.class).toProvider(PrisonerApiTokenProvider.class);
         bind(DocumentStore.class).toProvider(DocumentStoreProvider.class);
         bind(OffenderApi.class).toProvider(OffenderApiProvider.class);

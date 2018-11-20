@@ -1,7 +1,10 @@
 package bdd.wiremock;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
+import lombok.val;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -56,4 +59,38 @@ public class OffenderApiMock {
         return this;
     }
 
+    public OffenderApiMock stubOffenderWithName(String fullName) {
+        val firstName = fullName.split(" ")[0];
+        val surname = fullName.split(" ")[1];
+        offenderApiWireMock.stubFor(
+                get(urlEqualTo("/offenders/crn/X12345/all"))
+                        .willReturn(ok().withBody(JsonHelper.stringify(
+                                anOffenderWithNoContactDetails()
+                                        .toBuilder()
+                                        .firstName(firstName)
+                                        .surname(surname)
+                                        .middleNames(ImmutableList.of())
+                                        .build()
+                        ))));
+
+        return this;
+    }
+
+    public OffenderApiMock stubOffenderWithNameAndNoNomsNumber(String fullName) {
+        val firstName = fullName.split(" ")[0];
+        val surname = fullName.split(" ")[1];
+        offenderApiWireMock.stubFor(
+                get(urlEqualTo("/offenders/crn/X12345/all"))
+                        .willReturn(ok().withBody(JsonHelper.stringify(
+                                anOffenderWithNoContactDetails()
+                                        .toBuilder()
+                                        .firstName(firstName)
+                                        .surname(surname)
+                                        .middleNames(ImmutableList.of())
+                                        .otherIds(ImmutableMap.of())
+                                        .build()
+                        ))));
+
+        return this;
+    }
 }

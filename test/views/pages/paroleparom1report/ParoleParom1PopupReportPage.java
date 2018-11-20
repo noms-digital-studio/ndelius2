@@ -27,6 +27,10 @@ public class ParoleParom1PopupReportPage extends FluentPage {
         $(By.xpath(String.format("//button[contains(text(),'%s')]", button))).click();
     }
 
+    public boolean verifyButton(String button) {
+        return $(By.xpath(String.format("//button[contains(text(),'%s')]", button))).present();
+    }
+
     public void jumpTo(Page page) {
         String linkSelector = String.format("//a[@data-target='%s']", page.getPageNumber());
         control.await().until(driver -> driver.find(By.xpath(linkSelector)).size() == 1);

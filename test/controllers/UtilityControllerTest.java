@@ -1,6 +1,5 @@
 package controllers;
 
-import bdd.Ports;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableMap;
@@ -53,6 +52,9 @@ public class UtilityControllerTest extends WithApplication {
     private PrisonerApi prisonerApi;
 
     @Mock
+    private PrisonerCategoryApi prisonerCategoryApi;
+
+    @Mock
     private PrisonerApiToken prisonerApiToken;
 
     @Before
@@ -63,6 +65,7 @@ public class UtilityControllerTest extends WithApplication {
         when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
         when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
         when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
+        when(prisonerCategoryApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
         when(prisonerApiToken.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
     }
 
@@ -278,6 +281,44 @@ public class UtilityControllerTest extends WithApplication {
         assertThat(dependencies(result)).contains(entry("custody-api", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
     }
+    @Test
+    public void healthEndpointIndicatesOkWhenPrisonerCategoryApiIsHealthy() {
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependencies(result)).contains(entry("elite2-api", "OK"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
+    @Test
+    public void healthEndpointIndicatesOkWithDetailWhenPrisonerCategoryApiIsHealthy() {
+        when(prisonerCategoryApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(() -> HealthCheckResult.healthy("some detail")));
+        val request = new RequestBuilder().method(GET).uri("/healthcheck?detail=true");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependenciesWithDetail(result))
+                .contains(entry(
+                        "elite2-api",
+                        ImmutableMap.of("healthy", Boolean.TRUE, "detail", "some detail")));
+        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
+    }
+
+    @Test
+    public void healthEndpointIndicatesFailedWhenPrisonerCategoryApiIsUnhealthy() {
+        when(prisonerCategoryApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::unhealthy));
+
+        val request = new RequestBuilder().method(GET).uri("/healthcheck");
+
+        val result = route(app, request);
+
+        assertEquals(OK, result.status());
+        assertThat(dependencies(result)).contains(entry("elite2-api", "FAILED"));
+        assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
+    }
 
     @Test
     public void healthEndpointIndicatesOkWhenPrisonerApiTokenIsHealthy() {
@@ -361,6 +402,7 @@ public class UtilityControllerTest extends WithApplication {
                 bind(AnalyticsStore.class).toInstance(analyticsStore),
                 bind(OffenderSearch.class).toInstance(offenderSearch),
                 bind(PrisonerApi.class).toInstance(prisonerApi),
+                bind(PrisonerCategoryApi.class).toInstance(prisonerCategoryApi),
                 bind(PrisonerApiToken.class).toInstance(prisonerApiToken),
                 bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                 bind(MongoClient.class).toInstance(mock(MongoClient.class))

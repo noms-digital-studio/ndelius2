@@ -1,14 +1,12 @@
 package controllers;
 
+import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ParoleParom1ReportData;
 import helpers.DateTimeHelper;
-import interfaces.DocumentStore;
-import interfaces.OffenderApi;
-import interfaces.PdfGenerator;
-import interfaces.PrisonerApi;
+interfaces.*;
 import lombok.val;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
@@ -33,6 +31,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     private final views.html.paroleParom1Report.completed completedTemplate;
     private final views.html.paroleParom1Report.tester analyticsTesterTemplate;
     private final PrisonerApi prisonerApi;
+    private final PrisonerCategoryApi prisonerCategoryApi;
 
 
     @Inject
@@ -47,13 +46,15 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                                         views.html.paroleParom1Report.completed completedTemplate,
                                         views.html.paroleParom1Report.tester analyticsTesterTemplate,
                                         OffenderApi offenderApi,
-                                        PrisonerApi prisonerApi) {
+                                        PrisonerApi prisonerApi,
+                                        PrisonerCategoryApi prisonerCategoryApi) {
 
         super(ec, webJarsUtil, configuration, environment, formFactory, ParoleParom1ReportData.class, pdfGenerator, documentStore, offenderApi);
         this.cancelledTemplate = cancelledTemplate;
         this.completedTemplate = completedTemplate;
         this.analyticsTesterTemplate = analyticsTesterTemplate;
         this.prisonerApi = prisonerApi;
+        this.prisonerCategoryApi = prisonerCategoryApi;
     }
 
     @Override
@@ -79,38 +80,81 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
                     .map(nomsNumber -> prisonerApi.getOffenderByNomsNumber(nomsNumber).toCompletableFuture())
                     .orElseGet(() -> CompletableFuture.completedFuture(Optional.empty()));
 
+            val prisonerCategoryFuture = Optional.ofNullable(prisonerDetailsNomisNumber)
+                    .map(nomsNumber -> prisonerCategoryApi.getOffenderCategoryByNomsNumber(nomsNumber).toCompletableFuture())
+                    .orElseGet(() -> CompletableFuture.completedFuture(Optional.empty()));
+
             val crn = params.get("crn");
             val institutionalReportId = params.get("entityId");
-            val institutionalReportFuture = offenderApi.getInstitutionalReport(session(OFFENDER_API_BEARER_TOKEN), crn, institutionalReportId).toCompletableFuture();
+            val bearerToken = session(OFFENDER_API_BEARER_TOKEN);
+            val institutionalReportFuture = offenderApi.getInstitutionalReport(bearerToken, crn, institutionalReportId).toCompletableFuture();
 
-            return CompletableFuture.allOf(prisonerFuture, institutionalReportFuture)
+            return CompletableFuture.allOf(prisonerFuture, institutionalReportFuture, prisonerCategoryFuture)
                     .thenApply(notUsed ->
                             storeCustodyData(
                                     params,
-                                    prisonerFuture.join()))
+                                    bearerToken,
+                                    prisonerFuture.join(),
+                                    prisonerCategoryFuture.join()))
                     .thenApply(notUsed ->
                             storeOffenderData(
                                     params,
                                     institutionalReportFuture.join()))
+                    .exceptionally(e -> {
+                        Logger.error(String.format("Unable to retrieve prisoner details for %s", crn), e);
+                        params.put("prisonerStatus", "unavailable");
+                        return params;
+                    })
                 ;
         }, ec.current());
     }
 
-    private Map<String, String> storeCustodyData(Map<String, String> params, Optional<PrisonerApi.Offender> maybeOffender) {
-        maybeOffender.ifPresent(offender -> {
-            params.put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription());
-            params.put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber());
+    private Map<String, String> storeCustodyData(Map<String, String> params, String bearerToken, Optional<PrisonerApi.Offender> maybeOffender, Optional<PrisonerCategoryApi.Category> maybeCategory) {
+        val nomsNumber = params.get("prisonerDetailsNomisNumber");
+        params.putAll(maybeOffender
+                .map(offender -> ImmutableMap.<String, String>builder()
+                        .put("prisonerDetailsPrisonInstitution", offender.getInstitution().getDescription())
+                        .put("prisonerDetailsPrisonNumber", offender.getMostRecentPrisonerNumber())
+                        .put("prisonerDetailsPrisonersFullName", offender.displayName())
+                        .put("prisonerStatus", "ok")
+                        .put("prisonerImageOneTimeRef", OffenderController.generateOneTimeImageReference(encrypter, nomsNumber, bearerToken))
+                        .build())
+                .orElseGet(() -> ImmutableMap.of(
+                        "prisonerStatus",
+                        Optional.ofNullable(nomsNumber)
+                                .map(notUsed -> "notFound")
+                                .orElse("noNOMSNumber"))));
 
-        });
+        maybeCategory
+                .filter(notUsed -> isCreateJourney(params))
+                .map(category -> categoryCodeToFormValue(category.getCode()))
+                .ifPresent(code -> params.put("prisonerDetailsPrisonersCategory", code));
         return params;
+    }
+
+    static String categoryCodeToFormValue(String code) {
+        switch(code) {
+            case "T":
+                return "open";
+            case "R":
+                return "closed";
+            case "Q":
+                return "restricted";
+            default:
+                return code.toLowerCase();
+        }
+    }
+
+    private static boolean isCreateJourney(Map<String, String> params) {
+        return params.containsKey("createJourney");
     }
 
     private Map<String, String> storeOffenderData(Map<String, String> params, OffenderApi.InstitutionalReport institutionalReport) {
         Logger.info("institutionalReport: " + institutionalReport);
         Logger.info("Params: " + params);
 
-        if (params.containsKey("createJourney") && institutionalReport.getConviction().getMainOffence().isPresent()) {
-            params.put("prisonerDetailsOffence", institutionalReport.getConviction().getMainOffence().get().offenceDescription());
+        if (isCreateJourney(params)) {
+            params.put("prisonerDetailsOffence", institutionalReport.getConviction().allOffenceDescriptions());
         }
 
         Optional.ofNullable(institutionalReport.getConviction().getConvictionDate())

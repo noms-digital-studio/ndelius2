@@ -1,9 +1,11 @@
 package controllers;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
+import helpers.JwtHelper;
 import interfaces.PrisonerApi;
 import lombok.val;
 import play.Environment;
@@ -41,6 +43,14 @@ public class OffenderController extends Controller {
 
         decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey).orElseThrow(() -> new RuntimeException("Decrypt failed"));
         noPhotoResult = () -> Optional.ofNullable(noPhotoImage(environment)).map(Results::ok).orElseGet(Results::badRequest);
+    }
+
+    public static String generateOneTimeImageReference(Function<String, String> encrypter, String nomisId, String bearerToken) {
+        return encrypter.apply(JsonHelper.stringify(ImmutableMap.of(
+                "user", JwtHelper.principal(bearerToken),
+                "noms", nomisId,
+                "tick", Instant.now().toEpochMilli()
+        )));
     }
 
     public CompletionStage<Result> image(String oneTimeNomisRef) { // Can only be used by the user that generated a search result just now

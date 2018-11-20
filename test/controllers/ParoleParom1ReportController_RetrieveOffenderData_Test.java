@@ -5,11 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
-import interfaces.DocumentStore;
-import interfaces.OffenderApi;
-import interfaces.PdfGenerator;
-import interfaces.PrisonerApi;
+import interfaces.*;
 import lombok.val;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
@@ -42,6 +38,7 @@ import static play.test.Helpers.GET;
 import static play.test.Helpers.route;
 import static utils.InstitutionalReportHelpers.anInstitutionalReport;
 import static utils.OffenderHelper.anOffenderWithMultipleAddresses;
+import static utils.PrisonerHelper.offenderCategory;
 import static utils.PrisonerHelper.offenderInPrison;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -52,6 +49,8 @@ public class ParoleParom1ReportController_RetrieveOffenderData_Test extends With
     private OffenderApi offenderApi;
     @Mock
     private PrisonerApi prisonerApi;
+    @Mock
+    private PrisonerCategoryApi prisonerCategoryApi;
     @Mock
     private PdfGenerator pdfGenerator;
 
@@ -65,6 +64,7 @@ public class ParoleParom1ReportController_RetrieveOffenderData_Test extends With
         given(offenderApi.getInstitutionalReport(any(), any(), any())).willReturn(CompletableFuture.completedFuture(anInstitutionalReport()));
         given(prisonerApi.getOffenderByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderInPrison())));
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any())).willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
+        given(prisonerCategoryApi.getOffenderCategoryByNomsNumber(any())).willReturn(CompletableFuture.completedFuture(Optional.of(offenderCategory())));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class ParoleParom1ReportController_RetrieveOffenderData_Test extends With
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
-        assertThat(content).contains("name=\"prisonerDetailsOffence\" value=\"desc (code123) - 11/12/2018\"");
+        assertThat(content).contains("name=\"prisonerDetailsOffence\" value=\"desc - 11/12/2018\"");
     }
 
     @Test
@@ -104,6 +104,7 @@ public class ParoleParom1ReportController_RetrieveOffenderData_Test extends With
                         bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(OffenderApi.class).toInstance(offenderApi),
                         bind(PrisonerApi.class).toInstance(prisonerApi),
+                        bind(PrisonerCategoryApi.class).toInstance(prisonerCategoryApi),
                         bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                         bind(MongoClient.class).toInstance(mock(MongoClient.class))
                 )

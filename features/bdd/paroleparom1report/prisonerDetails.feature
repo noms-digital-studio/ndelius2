@@ -1,7 +1,8 @@
 Feature: Parole Report
 
   Background: Delius user is on the "Prisoner details" UI within the Parole Report
-    Given that the Delius user is on the "Prisoner details" page within the Parole Report
+    Given the prisoner named "Jimmy Fizz" has a valid NOMS number in NOMIS where he is known as "Jimmy Fizz"
+    And that the Delius user is on the "Prisoner details" page within the Parole Report
 
   Scenario: Delius user wants to continue writing the Parole report
 
@@ -21,11 +22,11 @@ Feature: Parole Report
     And they enter the date "29/06/2019" for "Tariff expiry date"
     Then the following information should be saved in the prisoner parole report
       | prisonerDetailsPrisonInstitution | HMP Humber         |
-      | prisonerDetailsPrisonersFullName | Jimmy Jammy Fizz   |
+      | prisonerDetailsPrisonersFullName | Jimmy Fizz         |
       | prisonerDetailsPrisonNumber      | LH5058             |
       | prisonerDetailsNomisNumber       | M123456            |
       | prisonerDetailsPrisonersCategory | a                  |
-      | prisonerDetailsOffence           | Stealing the limelight (code123) - 08/11/2018 |
+      | prisonerDetailsOffence           | <p>Stealing the limelight - 08/11/2018</p><p>Interrupting - 07/07/2017</p><p>Jumping the queue - 06/06/2016</p> |
       | prisonerDetailsSentence          | 4 years            |
       | prisonerDetailsSentenceType      | indeterminate      |
       | prisonerDetailsTariffLength      | 5 years            |
@@ -43,11 +44,11 @@ Feature: Parole Report
     And they enter the date "09/12/2031" for "Automatic release date/non parole eligibility date"
     Then the following information should be saved in the prisoner parole report
       | prisonerDetailsPrisonInstitution     | HMP Humber         |
-      | prisonerDetailsPrisonersFullName     | Jimmy Jammy Fizz   |
+      | prisonerDetailsPrisonersFullName     | Jimmy Fizz         |
       | prisonerDetailsPrisonNumber          | LH5058             |
       | prisonerDetailsNomisNumber           | M123456            |
       | prisonerDetailsPrisonersCategory     | c                  |
-      | prisonerDetailsOffence               | Stealing the limelight (code123) - 08/11/2018 |
+      | prisonerDetailsOffence               | <p>Stealing the limelight - 08/11/2018</p><p>Interrupting - 07/07/2017</p><p>Jumping the queue - 06/06/2016</p> |
       | prisonerDetailsSentence              | 20 years           |
       | prisonerDetailsSentenceType          | determinate        |
       | prisonerDetailsParoleEligibilityDate | 08/11/2031         |
@@ -65,7 +66,6 @@ Feature: Parole Report
       | Offence  | |
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
       | Sentence type                        | Select the sentence type                       |
@@ -77,7 +77,6 @@ Feature: Parole Report
       | Offence  | |
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
       | Tariff length                        | Enter the tariff length                        |
@@ -90,7 +89,6 @@ Feature: Parole Report
       | Offence  | |
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Current prison category              | Select the current prison category             |
       | Offence                              | Enter the offence                              |
       | Sentence                             | Enter the sentence                             |
 
