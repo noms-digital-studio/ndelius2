@@ -8,7 +8,6 @@ import data.annotations.OnPage;
 import data.annotations.RequiredDateOnPage;
 import data.annotations.RequiredGroupOnPage;
 import data.annotations.RequiredOnPage;
-import play.data.validation.Constraints.Required;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,7 +24,6 @@ import java.util.*;
 @EqualsAndHashCode(callSuper = false)
 public class ParoleParom1ReportData extends ReportGeneratorWizardData {
 
-    @Required
     @JsonIgnore
     private String convictionDate;
 
