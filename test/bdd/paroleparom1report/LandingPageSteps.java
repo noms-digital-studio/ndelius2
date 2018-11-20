@@ -44,6 +44,7 @@ public class LandingPageSteps {
 
 
     @Given("^that the user is on the Parole Report landing page for an existing report$")
+    @When("^the user is on the Parole Report landing page for an existing report$")
     public void thatTheUserIsOnTheParoleReportLandingPageForAnExistingReport() {
         val documentId = "12345";
         alfrescoStoreMock.stubExistingDocument(
