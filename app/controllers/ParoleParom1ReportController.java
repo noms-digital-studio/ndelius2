@@ -158,7 +158,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
         }
 
         Optional.ofNullable(institutionalReport.getConviction().getConvictionDate())
-            .map(dateString -> params.put("convictionDate", DateTimeHelper.format(institutionalReport.getConviction().getConvictionDate())));
+            .ifPresent(dateString -> params.put("convictionDate", DateTimeHelper.format(institutionalReport.getConviction().getConvictionDate())));
 
         return params;
     }

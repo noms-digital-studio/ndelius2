@@ -268,7 +268,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             invalidMessage = "Enter a real date when the prisoner was screened for MAPPA",
             onlyIfField = "eligibleForMappa",
             onlyIfFieldMatchValue = "yes",
-            maxDate = "{type: 'before', arguments: [18, 'years']}",
+            maxDate = "Today",
             outOfRangeMessage = "The date when the prisoner was screened for MAPPA must be in the past",
             earliestDateField = "convictionDate",
             beforeEarliestDateMessage = "The date when the prisoner was screened for MAPPA must be after the conviction date")
