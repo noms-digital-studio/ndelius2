@@ -11,13 +11,25 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@opdGuidance = {
+    <p>If eligible, the prisoner should be screened before you finish the parole report as this links to pathway planning.</p>
+    <p>Include OPD information in the relevant sections of the report if:</p>
+    <ul>
+        <li>the prisoner has been screened</li>
+        <li>the OM has received consultation or advice from OPD pathway staff</li>
+        <li>the prisoner is engaged with OPD services</li>
+    </ul>
+    <p>For example, if an intervention has been assessed as appropriate to manage risk include it in the RMP and sentence plan.</p>
+    <p>If the prisoner is eligible and has not been screened enter the reasons for this and when it will happen.</p>
+    <p>You can enter these details when you select ‘No’ to the OPD question.</p>
+}
+
 @popup(reportForm, encrypter, "OPD pathway", 6) {
     <div class="form-group" data-module="radios" >
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
                 Has the prisoner met the OPD screening criteria and been considered for OPD pathway services?
             </legend>
-            <span class="govuk-hint" id="opdPathway-hint">Select Yes even if OPD services have only been asked for advice.</span>
 
             @inputRadioGroup(
                 reportForm("consideredForOPDPathwayServices"),
@@ -25,15 +37,31 @@
                     "yes" -> "Yes",
                     "no" -> "No"
                 ),
+                '_hint -> opdGuidance,
+                '_hintLabel -> "OPD guidance",
                 Symbol("data-aria-controls") -> "opd-pathway-details",
                 Symbol("_inline") -> "true"
             )
         </fieldset>
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="opd-pathway-details-yes">
-            <p class="govuk-body">Record any OPD pathway information about the prisoner in the relevant sections of the
-                report. For example, if an intervention has been assessed as appropriate to manage risk include this in
-                the RMP and sentence plan sections.</p>
+
+            @inputText(
+                reportForm("opdScreenedDate"),
+                '_label -> "Date of OPD screening",
+                'required -> "true",
+                '_date -> "true",
+                '_form_hint -> "For example, 31 3 1980",
+                '_day -> reportForm("opdScreenedDate_day").getValue.orElse(""),
+                '_month -> reportForm("opdScreenedDate_month").getValue.orElse(""),
+                '_year -> reportForm("opdScreenedDate_year").getValue.orElse(""))
+
+        </div>
+
+        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="opd-pathway-details-no">
+
+            @textarea(reportForm("notScreenedForOpdReason"), '_label -> "Detail the reasons why the prisoner has not been screened including when it will happen", 'class -> "wide")
+
         </div>
     </div>
 }

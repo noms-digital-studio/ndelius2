@@ -17,19 +17,12 @@ public class OPDPathwaySteps {
         page.navigateHere();
     }
 
-    @Then("^the screen should expand to show additional OPD Pathway content to the user$")
-    public void theScreenShouldExpandToShowAdditionalOPDPathwayContentToTheUser()  {
-        assertThat(page.isOPDPathwayAdviceContentPresent()).isTrue();
-    }
 
-    @Then("^the screen should hide additional OPD Pathway content to the user$")
-    public void theScreenShouldHideAdditionalOPDPathwayContentToTheUser() {
-        assertThat(page.isNotOPDPathwayAdviceContentPresent()).isTrue();
-    }
 
     @Given("^Delius User completes the \"OPD Pathway\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
-        page.clickRadioButtonWithLabelWithinLegend("Yes", "Has the prisoner met the OPD screening criteria and been considered for OPD pathway services?");
+        page.clickRadioButtonWithLabelWithinLegend("No", "Has the prisoner met the OPD screening criteria and been considered for OPD pathway services?");
+        page.fillTextArea("Detail the reasons why the prisoner has not been screened including when it will happen", "Some reason for not screening the prisoner text");
         page.clickButton("Continue");
     }
 }
