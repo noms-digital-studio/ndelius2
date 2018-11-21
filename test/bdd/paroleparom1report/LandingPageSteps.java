@@ -123,4 +123,8 @@ public class LandingPageSteps {
         assertThat(landingPage.mainWarningMessage()).isEqualTo(message);
     }
 
+    @And("^the prisoner has a category of \"([^\"]*)\"$")
+    public void thePrisonerHasACategoryOf(String categoryCodeDescription)  {
+        custodyApiMock.stubPrisonCategory(categoryCodeDescription);
+    }
 }

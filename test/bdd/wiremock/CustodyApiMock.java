@@ -81,4 +81,16 @@ public class CustodyApiMock {
     }
 
 
+    public CustodyApiMock stubPrisonCategory(String categoryCodeDescription) {
+        val offender = JsonHelper.jsonToObjectMap(loadResource("/nomselite2offender/offender_G8020GG.json"));
+        val code = categoryCodeDescription.split(",")[0];
+        val description = categoryCodeDescription.split(",")[1];
+        offender.put("categoryCode", code);
+        offender.put("category", description);
+        custodyApiWireMock.stubFor(
+                get(urlMatching("/elite2api/api/bookings/offenderNo/.*"))
+                        .willReturn(ok().withBody(JsonHelper.stringify(offender))));
+
+        return this;
+    }
 }

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import static interfaces.HealthCheckResult.healthy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static play.libs.Json.toJson;
+import static services.stubs.StubPrisonerApi.NOMS_NUMBER_OF_FEMALE;
 
 public class StubOffenderApi implements OffenderApi {
 
@@ -70,7 +71,7 @@ public class StubOffenderApi implements OffenderApi {
                 .surname("Jones")
                 .middleNames(ImmutableList.of("Jane", "Suzi"))
                 .dateOfBirth("1980-12-01")
-                .otherIds(otherIds("G8020GG"))
+                .otherIds(otherIds(NOMS_NUMBER_OF_FEMALE))
                 .contactDetails(contactDetails())
                 .gender("Female")
                 .build());

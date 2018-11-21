@@ -2,12 +2,12 @@ Feature: Parole Report
 
   Background: Delius user is on the "Prisoner details" UI within the Parole Report
     Given the prisoner named "Jane Doe" has a valid NOMS number in NOMIS where he is known as "Jane Doe"
+    And the prisoner has a category of "Q, Fem Restricted"
     And that the Delius user is on the "Prisoner details" page within the Parole Report for a female prisoner
 
   Scenario: Delius user wants to enter details for Female prisoner whom has Indeterminate sentence
 
     Given that the delius user want to enter for Female prisoner who has Indeterminate sentence
-    And they select the "Restricted" option on the "Current prison category"
     And they enter the following information
       | Sentence | 5 years            |
     And they select the "Indeterminate" option on the "Sentence type"
@@ -29,7 +29,7 @@ Feature: Parole Report
   Scenario: Delius user wants to enter details for Female prisoner whom has Determinate sentence
 
     Given that the delius user want to enter for Female prisoner who has Determinate sentence
-    And they select the "A" option on the "Current prison category"
+    And they select the "Closed" option on the "Current prison category"
     And they enter the following information
       | Sentence | 20 years           |
     And they select the "Determinate" option on the "Sentence type"
@@ -39,7 +39,7 @@ Feature: Parole Report
       | prisonerDetailsPrisonersFullName     | Jane Doe           |
       | prisonerDetailsPrisonNumber          | LH5058             |
       | prisonerDetailsNomisNumber           | F123456            |
-      | prisonerDetailsPrisonersCategory     | a                  |
+      | prisonerDetailsPrisonersCategory     | closed             |
       | prisonerDetailsOffence               | <p>Stealing the limelight - 08/11/2018</p><p>Interrupting - 07/07/2017</p><p>Jumping the queue - 06/06/2016</p> |
       | prisonerDetailsSentence              | 20 years           |
       | prisonerDetailsSentenceType          | determinate        |

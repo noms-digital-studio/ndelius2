@@ -15,6 +15,8 @@ import java.util.concurrent.CompletionStage;
 
 public class StubPrisonerApi implements PrisonerApi, PrisonerCategoryApi {
 
+    public static String NOMS_NUMBER_OF_FEMALE  = "G8020GG";
+
     public StubPrisonerApi() {
         Logger.info("Running with stub NomisPrisonerAPI");
     }
@@ -30,6 +32,15 @@ public class StubPrisonerApi implements PrisonerApi, PrisonerCategoryApi {
 
     @Override
     public CompletionStage<Optional<Offender>> getOffenderByNomsNumber(String nomsNumber) {
+        if (NOMS_NUMBER_OF_FEMALE.equals(nomsNumber)) {
+            return CompletableFuture.completedFuture(Optional.ofNullable(Offender
+                    .builder()
+                    .firstName("Jane")
+                    .surname("Suzi")
+                    .mostRecentPrisonerNumber("4815")
+                    .institution(Institution.builder().description("HMP Leeds").build())
+                    .build()));
+        }
         return CompletableFuture.completedFuture(Optional.ofNullable(Offender
                 .builder()
                 .firstName("Sam")
@@ -41,6 +52,9 @@ public class StubPrisonerApi implements PrisonerApi, PrisonerCategoryApi {
 
     @Override
     public CompletionStage<Optional<Category>> getOffenderCategoryByNomsNumber(String nomsNumber) {
+        if (NOMS_NUMBER_OF_FEMALE.equals(nomsNumber)) {
+            return CompletableFuture.completedFuture(Optional.of(Category.builder().code("T").description("Fem Open").build()));
+        }
         return CompletableFuture.completedFuture(Optional.of(Category.builder().code("A").description("Cat A").build()));
     }
 
