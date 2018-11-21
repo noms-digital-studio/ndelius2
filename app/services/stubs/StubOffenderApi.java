@@ -9,6 +9,8 @@ import interfaces.OffenderApi;
 import lombok.val;
 import play.libs.Json;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -189,6 +191,10 @@ public class StubOffenderApi implements OffenderApi {
         return CompletableFuture.completedFuture(NullNode.instance);
     }
 
+    private String getConvictionDate() {
+        return LocalDate.now().plusMonths(-6).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
     @Override
     public CompletionStage<InstitutionalReport> getInstitutionalReport(String bearerToken, String crn, String institutionalReportId) {
         if (isBlank(bearerToken)) {
@@ -211,6 +217,7 @@ public class StubOffenderApi implements OffenderApi {
                         additionalOffence1(),
                         additionalOffence2())
                 )
+                .convictionDate(getConvictionDate())
                 .build())
             .build();
 
