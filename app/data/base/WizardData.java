@@ -292,8 +292,14 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
     }
 
     private boolean composedDateBitsAreInvalid(Field field) {
+        String dateString = dateStringFromFieldValuesOf(field);
+
+        if (dateString.substring(dateString.lastIndexOf("/") + 1).length() < 4) {
+            return true;
+        }
+
         try {
-            getValidatorDateFormat().parse(dateStringFromFieldValuesOf(field));
+            getValidatorDateFormat().parse(dateString);
             return false;
         } catch (ParseException e) {
             return true;
