@@ -3,7 +3,7 @@
 @import com.typesafe.config.Config
 @import helpers.CallHelper.relative
 
-@(title: String, banner: Boolean = true)(content: Html)(implicit webJarsUtil: WebJarsUtil, configuration: Config)
+@(title: String, banner: Boolean = true, hashName: Option[Any] = None)(content: Html)(implicit webJarsUtil: WebJarsUtil, configuration: Config)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +18,7 @@
         <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
         <link rel="stylesheet" type="text/css" media="all" href='@relative(routes.Assets.versioned("stylesheets/vendor/quill.snow.css"))' />
 
-        @googleAnalyticsHead()
+        @googleAnalyticsHead(hashName)
 
     </head>
     <body class="govuk-template__body">
