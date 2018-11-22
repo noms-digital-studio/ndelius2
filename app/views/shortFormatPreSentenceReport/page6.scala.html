@@ -47,7 +47,7 @@
                 </div>
             }
 
-            <h2 class="lede no-margin-top no-margin-bottom">Select the underlying issues that are relevant as motivators or drivers for the main offence</h2>
+            <h2 class="lede no-margin-top no-margin-bottom">Select the factors relating to offending behaviour and offender need. Include protective factors.</h2>
 
             <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
                 <summary class="govuk-details__summary">
@@ -59,20 +59,11 @@
                     <p>Key aspects of the person’s circumstances should be detailed. Those which are linked to their offending behaviour should be highlighted.</p>
                     <p>Make sure that you select all of the factors that have impacted on offending, and that may impact on future risk of re offending.</p>
                     <p>Also, consider if there are factors that are not directly linked. These may cause difficulties for the offender and impact on their desistance from crime.</p>
+                    <p>Include information on protective factors that may support desistance.</p>
+                    <p>Provide an explanation of the offender's motivation and readiness to change.</p>
 
                 </div>
             </details>
-
-            <div class="notice">
-                <i class="icon icon-important">
-                    <span class="visually-hidden">Warning</span>
-                </i>
-                <strong class="font-small">
-                    By not selecting an issue you are indicating it is not relevant
-                </strong>
-            </div>
-
-            <p>&nbsp;</p>
 
             @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
                 @CSRF.formField
