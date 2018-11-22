@@ -41,6 +41,9 @@ public class GlobalSteps {
         cal.setTime(today);
 
         switch (date) {
+            case "NEXT_MONTH":
+                cal.add(Calendar.MONTH, 1);
+                break;
             case "TOMORROW":
                 cal.add(Calendar.DATE, 1);
                 break;

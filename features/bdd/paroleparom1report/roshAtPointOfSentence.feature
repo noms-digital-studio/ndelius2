@@ -39,11 +39,11 @@ Feature: Parole Report - RoSH at point of sentence
   Scenario: Delius User enters the RoSH assessment completion date which is before the conviction date
 
     When they select the "Yes" option on the "Was a RoSH assessment completed at the point of sentence?"
-    And they enter the month and year "OVER_1_YEAR_AGO" for "When was the RoSH assessment completed?"
+    And they enter the month and year "NEXT_MONTH" for "When was the RoSH assessment completed?"
     And they select the "Continue" button
     Then the following error messages are displayed
 
-      | When was the RoSH assessment completed? | The date when the RoSH assessment was completed must be after the conviction date |
+      | When was the RoSH assessment completed? | The date when the RoSH assessment was completed must be in the past |
 
   Scenario: Delius User wants to add details for RoSH at point of sentence WITHOUT a completed assessment
 

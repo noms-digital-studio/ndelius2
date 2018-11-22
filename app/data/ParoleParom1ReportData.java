@@ -156,10 +156,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @RequiredDateOnPage(value = 4, message = "Enter the date when the RoSH assessment was completed",
             incompleteMessage = "Enter the date when the RoSH assessment was completed",
             invalidMessage = "Enter a real date when the RoSH assessment was completed",
+            outOfRangeMessage = "The date when the RoSH assessment was completed must be in the past",
+            maxDate = "Today",
             onlyIfField = "roshAtPosAssessmentCompleted",
-            onlyIfFieldMatchValue = "yes",
-            earliestDateField = "convictionDate",
-            beforeEarliestDateMessage = "The date when the RoSH assessment was completed must be after the conviction date")
+            onlyIfFieldMatchValue = "yes")
     private String roshAtPosDate;
     private String roshAtPosDate_day;
     private String roshAtPosDate_month;
