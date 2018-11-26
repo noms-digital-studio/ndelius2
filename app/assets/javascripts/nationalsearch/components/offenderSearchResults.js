@@ -1,3 +1,4 @@
+import React from 'react'
 import OffenderSearchSummary from '../containers/offenderSearchSummaryContainer';
 import RestrictedOffenderSearchSummary from '../containers/restrictedOffenderSearchSummaryContainer'
 import SearchResultsTitle from '../containers/searchResultsTitleContainer';

@@ -1,4 +1,5 @@
-import {Link} from 'react-router'
+import React from 'react'
+import {Link} from 'react-router-dom'
 
 import OffenderSearchResults from '../containers/offenderSearchResultsContainer';
 import OffenderSearch from '../containers/offenderSearchContainer';

@@ -1,3 +1,4 @@
+import React from 'react'
 import PropTypes from 'prop-types'
 import OffenderSummaryTitle from '../containers/offenderSummaryTitleContainer'
 import MT from '../containers/markableTextContainer'

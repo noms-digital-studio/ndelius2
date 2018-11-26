@@ -1,3 +1,5 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
 import OffenderSearchPage from './containers/offenderSearchPageContainer';
 
 import HelpPage from './components/helpPage';
@@ -7,17 +9,19 @@ import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import reducer from './reducers'
 import thunkMiddleware from 'redux-thunk'
-import { Router, Route, hashHistory} from 'react-router'
+import {BrowserRouter as Router, Route} from 'react-router-dom'
 
 const store = createStore(reducer, applyMiddleware(thunkMiddleware))
 
 ReactDOM.render(
     <Provider store={store}>
-        <Router history={hashHistory}>
-            <Route path="/help" component={HelpPage}/>
-            <Route path="/analytics" component={AnalyticsPage}/>
-            <Route path="/satisfaction" component={SatisfactionPage}/>
-            <Route path="/*" component={OffenderSearchPage}/>
+        <Router>
+            <div>
+                <Route path="/help" component={HelpPage}/>
+                <Route path="/analytics" component={AnalyticsPage}/>
+                <Route path="/satisfaction" component={SatisfactionPage}/>
+                <Route path="/*" component={OffenderSearchPage}/>
+            </div>
         </Router>
     </Provider>,
     document.getElementById('content')

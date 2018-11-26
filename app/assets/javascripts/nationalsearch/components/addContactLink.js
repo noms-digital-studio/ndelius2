@@ -1,3 +1,4 @@
+import React from 'react'
 import PropTypes from 'prop-types'
 
 const AddContactLink = ({offenderId, rankIndex, surname, firstName, addContact, highlight, tabIndex}) => (

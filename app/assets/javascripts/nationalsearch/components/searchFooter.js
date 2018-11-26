@@ -1,3 +1,4 @@
+import React from 'react'
 const SearchFooter = () => (
     <div>
         <div className="background-box">

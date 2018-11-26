@@ -1,3 +1,4 @@
+import React from 'react'
 import FeedbackLink from './feedbackLink';
 import LegacySearchLink from '../containers/legacySearchLinkContainer';
 

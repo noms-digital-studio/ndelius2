@@ -1,3 +1,4 @@
+import React from 'react'
 import {Component} from 'react'
 import UniqueVisitsCounts from '../containers/uniqueVisitsCountContainer';
 import AllVisitsCounts from '../containers/allVisitsCountContainer';
@@ -14,7 +15,7 @@ import SearchTypeCountsChart from '../containers/searchTypeCountsChart';
 import GovUkPhaseBanner from './govukPhaseBanner';
 import {LAST_HOUR, TODAY, THIS_WEEK, LAST_SEVEN_DAYS, LAST_THIRTY_DAYS, THIS_YEAR, ALL} from '../actions/analytics'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 class AnalyticsPage extends Component {
     constructor(props) {

@@ -1,8 +1,9 @@
+import React from 'react'
 import {Component} from 'react'
 import GovUkPhaseBanner from './govukPhaseBanner';
 import PropTypes from 'prop-types'
 import moment from 'moment'
-import {Link} from 'react-router'
+import {Link} from 'react-router-dom'
 import {range} from '../../helpers/streams'
 
 class SatisfactionPage extends Component {

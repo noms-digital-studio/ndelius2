@@ -1,3 +1,4 @@
+import React from 'react'
 import PropTypes from 'prop-types'
 import AddContactLink from '../containers/addContactLinkContainer'
 import {provider, officer} from "../../helpers/offenderManagerHelper";

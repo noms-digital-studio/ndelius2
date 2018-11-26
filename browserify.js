@@ -7,7 +7,7 @@ var browserify = require('browserify');
 
 browserify(source)
     .transform("babelify", {
-        global: true
+        global: false
     })
     .bundle()
     .pipe(fs.createWriteStream(bundle));
