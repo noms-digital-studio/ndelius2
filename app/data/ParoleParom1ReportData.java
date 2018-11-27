@@ -275,7 +275,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String interventionsSummary;
 
     // Page 9 - Current sentence plan and response
-    @RequiredOnPage(value = 9, message = "Enter the prisoner's current sentence plan objectives, including their response")
+    @RequiredOnPage(value = 9, message = "Enter the prison sentence plan and include their response")
     @JsonProperty("SENTENCE_PLAN")
     private String sentencePlan;
 

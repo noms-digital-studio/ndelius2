@@ -8,7 +8,7 @@ public enum Page {
     OPD_PATHWAY("6", "OPD pathway"),
     BEHAVIOUR_IN_PRISON("7", "Behaviour in prison"),
     INTERVENTION("8", "Interventions"),
-    SENTENCE_PLAN("9", "Current sentence plan and response"),
+    SENTENCE_PLAN("9", "Prison sentence plan and response"),
     MAPPA("10", "Multi Agency Public Protection Arrangements (MAPPA)"),
     CURRENT_RISK_ASSESSMENT_SCORES("11", "Current risk assessment scores"),
     CURRENT_ROSH_COMMUNITY("12", "Current RoSH: community"),

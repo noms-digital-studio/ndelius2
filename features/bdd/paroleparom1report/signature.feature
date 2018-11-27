@@ -15,8 +15,8 @@ Feature: Parole Report - Signature & date
     And Delius User completes the "Behaviour in prison" UI within the Parole Report
     Then the user should be directed to the "Interventions" UI
     And Delius User completes the "Interventions" UI within the Parole Report
-    Then the user should be directed to the "Current sentence plan and response" UI
-    And Delius User completes the "Current sentence plan and response" UI within the Parole Report
+    Then the user should be directed to the "Prison sentence plan and response" UI
+    And Delius User completes the "Prison sentence plan and response" UI within the Parole Report
     Then the user should be directed to the "Multi Agency Public Protection Arrangements (MAPPA)" UI
     And Delius User completes the "MAPPA" UI within the Parole Report
     Then the user should be directed to the "Current risk assessment scores" UI
@@ -49,7 +49,7 @@ Feature: Parole Report - Signature & date
     And the button for "OPD pathway" must display "SAVED"
     And the button for "Behaviour in prison" must display "SAVED"
     And the button for "Interventions" must display "SAVED"
-    And the button for "Current sentence plan" must display "SAVED"
+    And the button for "Prison sentence plan" must display "SAVED"
     And the button for "MAPPA" must display "SAVED"
     And the button for "Current risk assessment" must display "SAVED"
     And the button for "Current RoSH: community" must display "SAVED"

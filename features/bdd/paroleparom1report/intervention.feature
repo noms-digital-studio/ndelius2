@@ -24,7 +24,7 @@ Feature: Parole report Intervention UI
 
     Given that the Delius user has entered details into "Detail the interventions the prisoner has completed" and "Interventions summary" field
     When  they select the "Continue" button
-    Then  the user should be directed to the "Current sentence plan and response" UI
+    Then  the user should be directed to the "Prison sentence plan and response" UI
 
   Scenario: Delius user wants to close the report
 

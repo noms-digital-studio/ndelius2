@@ -8,7 +8,7 @@ Feature: Parole Report
     Given that the Delius user wants to enter details of the current sentence plan in the offender parole report
     When  they enter the following information
 
-      | Detail the prisoner`s current sentence plan objectives, including their response | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
+      | Detail their prison sentence plan. Include their response | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
 
     Then this information should be saved in the prisoner parole report
 
@@ -18,13 +18,13 @@ Feature: Parole Report
     When  they select the "Continue" button
     Then  the following error messages are displayed
 
-      | Detail the prisoner`s current sentence plan objectives, including their response | Enter the prisoner's current sentence plan objectives, including their response |
+      | Detail their prison sentence plan. Include their response | Enter the prison sentence plan and include their response |
 
   Scenario: Delius user wants to continue writing the Parole Report
 
     Given they enter the following information
 
-      | Detail the prisoner`s current sentence plan objectives, including their response | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Bibendum est ultricies integer quis.                                 |
+      | Detail their prison sentence plan. Include their response | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Bibendum est ultricies integer quis.                                 |
 
     When  they select the "Continue" button
     Then  the user should be directed to the "Multi Agency Public Protection Arrangements (MAPPA)" UI
