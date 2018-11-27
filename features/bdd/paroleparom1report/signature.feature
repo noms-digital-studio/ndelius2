@@ -96,7 +96,7 @@ Feature: Parole Report - Signature & date
       | Telephone number and extension | 0124 5896456        |
     And they enter the date "07/08/2018" for "Completion date"
 
-    Then the following information should be saved in the prisoner parole report
+    Then the following information should be saved in the report
       | signatureName          | Jane Doe                            |
       | signatureDivision      | Stafford, Midlands                  |
       | signatureOfficeAddress | 4 Lichfield Road, Stafford ST17 4JX |
@@ -118,7 +118,7 @@ Feature: Parole Report - Signature & date
       | Role of countersignature       | SPO                 |
     And they enter the date "07/08/2018" for "Completion date"
 
-    Then the following information should be saved in the prisoner parole report
+    Then the following information should be saved in the report
       | signatureName          | Jane Doe                            |
       | signatureDivision      | Stafford, Midlands                  |
       | signatureOfficeAddress | 4 Lichfield Road, Stafford ST17 4JX |

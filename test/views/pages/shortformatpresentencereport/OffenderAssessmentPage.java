@@ -1,23 +1,26 @@
-package views.pages;
+package views.pages.shortformatpresentencereport;
 
-import org.fluentlenium.core.FluentControl;
-import org.fluentlenium.core.FluentPage;
+import play.test.TestBrowser;
 
+import javax.inject.Inject;
 import java.util.List;
 
 import static org.openqa.selenium.By.cssSelector;
 import static org.openqa.selenium.By.id;
 import static org.openqa.selenium.By.xpath;
 
-public class OffenderAssessmentPage extends FluentPage {
-    private final OffenceAnalysisPage offenceAnalysisPage;
-    public OffenderAssessmentPage(FluentControl control) {
+public class OffenderAssessmentPage extends ShortFormatPreSentencePopupReportPage {
+    private final OffenderDetailsPage offenderDetailsPage;
+
+    @Inject
+    public OffenderAssessmentPage(OffenderDetailsPage offenderDetailsPage, TestBrowser control) {
         super(control);
-        offenceAnalysisPage = new OffenceAnalysisPage(control);
+        this.offenderDetailsPage = offenderDetailsPage;
     }
 
     public OffenderAssessmentPage navigateHere() {
-        offenceAnalysisPage.navigateHere().gotoNext();
+        offenderDetailsPage.navigateHere();
+        jumpTo(Page.OFFENDER_ASSESSMENT);
         return this;
     }
 

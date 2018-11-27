@@ -31,7 +31,7 @@ Feature: Parole Report
       | Additional conditions or requirements | Some additional conditions or requirements text |
       | Level of contact                      | Some level of contact text                      |
       | Contingency plan                      | Some contingency plan text                      |
-    Then the following information should be saved in the prisoner parole report
+    Then the following information should be saved in the report
       | currentSituation     | Some current situation text                     |
       | supportingAgencies   | Some supporting agencies text                   |
       | support              | Some support text                               |

@@ -13,7 +13,7 @@ Feature:Parole Report - Victims
 
       | Analyse the impact of the offence on the victims | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi scelerisque eu. |
 
-    Then the following information should be saved in the prisoner parole report
+    Then the following information should be saved in the report
 
       | victimsEngagedInVCS   | yes                                                                                                                                                                                     |
       | victimsSubmitVPS      | no                                                                                                                                                                                      |

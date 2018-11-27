@@ -1,20 +1,23 @@
-package views.pages;
+package views.pages.shortformatpresentencereport;
 
-import org.fluentlenium.core.FluentControl;
-import org.fluentlenium.core.FluentPage;
+import play.test.TestBrowser;
+
+import javax.inject.Inject;
 
 import static org.openqa.selenium.By.id;
 
-public class RiskAssessmentPage extends FluentPage {
-    private final OffenderAssessmentPage offenderAssessmentPage;
-    public RiskAssessmentPage(FluentControl control) {
+public class RiskAssessmentPage extends ShortFormatPreSentencePopupReportPage {
+    private final OffenderDetailsPage offenderDetailsPage;
+
+    @Inject
+    public RiskAssessmentPage(OffenderDetailsPage offenderDetailsPage, TestBrowser control) {
         super(control);
-        offenderAssessmentPage = new OffenderAssessmentPage(control);
+        this.offenderDetailsPage = offenderDetailsPage;
     }
 
     public RiskAssessmentPage navigateHere() {
-        offenderAssessmentPage.navigateHere().gotoNext();
-
+        offenderDetailsPage.navigateHere();
+        jumpTo(Page.RISK_ASSESSMENT);
         return this;
     }
 

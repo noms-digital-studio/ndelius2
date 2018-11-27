@@ -13,11 +13,6 @@ public class CheckYourReportSteps {
     @Inject
     private CheckYourReportPage page;
 
-    @Then("^the button for \"([^\"]*)\" must display \"([^\"]*)\"$")
-    public void theButtonForMustDisplay(String pageName, String buttonText) {
-        assertThat(page.statusTextForPage(pageName)).isEqualTo(buttonText);
-    }
-
     @Given("^the Delius user is on \"Check your report\" UI$")
     public void theDeliusUserIsOnUI() {
         page.navigateHere();

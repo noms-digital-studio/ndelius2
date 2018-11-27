@@ -14,7 +14,7 @@ Feature: Parole Report
     And they input the following information
       | Tariff length | 5 years |
     And they enter the date "29/06/2019" for "Tariff expiry date"
-    Then the following information should be saved in the prisoner parole report
+    Then the following information should be saved in the report
       | prisonerDetailsPrisonInstitution | HMP Humber         |
       | prisonerDetailsPrisonersFullName | Jane Doe           |
       | prisonerDetailsPrisonNumber      | LH5058             |
@@ -34,7 +34,7 @@ Feature: Parole Report
       | Sentence | 20 years           |
     And they select the "Determinate" option on the "Sentence type"
     And they enter the date "08/12/2021" for "Parole eligibility date"
-    Then the following information should be saved in the prisoner parole report
+    Then the following information should be saved in the report
       | prisonerDetailsPrisonInstitution     | HMP Humber         |
       | prisonerDetailsPrisonersFullName     | Jane Doe           |
       | prisonerDetailsPrisonNumber          | LH5058             |
