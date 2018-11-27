@@ -504,6 +504,10 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("SUPPORTING_AGENCIES")
     private String supportingAgencies;
 
+    @RequiredOnPage(value = 16, message = "Enter the support", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("SUPPORT")
+    private String support;
+
     @RequiredOnPage(value = 16, message = "Enter the control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("CONTROL")
     private String control;

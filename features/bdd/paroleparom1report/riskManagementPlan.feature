@@ -10,6 +10,7 @@ Feature: Parole Report
     Then  the following error messages are displayed
       | Current situation                     | Enter the current situation                     |
       | Supporting agencies                   | Enter the supporting agencies                   |
+      | Support                               | Enter the support                               |
       | Control                               | Enter the control                               |
       | Added measures for specific risks     | Enter the added measures for specific risks     |
       | Agency actions                        | Enter the agency actions                        |
@@ -23,6 +24,7 @@ Feature: Parole Report
     And they enter the following information
       | Current situation                     | Some current situation text                     |
       | Supporting agencies                   | Some supporting agencies text                   |
+      | Support                               | Some support text                               |
       | Control                               | Some control text                               |
       | Added measures for specific risks     | Some added measures for specific risks text     |
       | Agency actions                        | Some agency actions text                        |
@@ -32,6 +34,7 @@ Feature: Parole Report
     Then the following information should be saved in the prisoner parole report
       | currentSituation     | Some current situation text                     |
       | supportingAgencies   | Some supporting agencies text                   |
+      | support              | Some support text                               |
       | control              | Some control text                               |
       | riskMeasures         | Some added measures for specific risks text     |
       | agencyActions        | Some agency actions text                        |
