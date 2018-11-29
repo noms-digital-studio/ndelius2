@@ -33,6 +33,12 @@ function openPopup(url, name, top, left) {
             openPopup($(this).attr('href'), 'feedbackForm', 250, 50);
         });
 
+        // Empty the error message list and repopulate with correct ordered list
+        $('.govuk-error-summary__list').empty();
+        $('.govuk-error-message:not(.js-hidden)').each(function (index, element) {
+            $('.govuk-error-summary__list').append('<li><a href="#' + $('[id*="-error"]', $(element).parent()).attr('id') + '">' + $(element).text() + '</a></li>');
+        });
+
         /**
          *
          * @param parent
@@ -99,8 +105,8 @@ function openPopup(url, name, top, left) {
                     type: 'POST',
                     url: $('form').attr('action') + '/save',
                     data: formWithZeroJumpNumber($('form')),
-                    complete: function(response) {
-                        _.delay(endSaveIcon, 500, elem, response.status !== 200)
+                    complete: function (response) {
+                        _.delay(endSaveIcon, 500, elem, response.status !== 200);
                     }
                 });
             }
@@ -127,7 +133,7 @@ function openPopup(url, name, top, left) {
 
 
         // Analytics for 'What to include' links on PAROM1
-        $('summary').click(function() {
+        $('summary').click(function () {
             if (window.location.pathname.indexOf('paroleParom1Report') !== -1) {
                 var details = $(this).parent(),
                     label = details.prev('.govuk-caption-xl').text() || details.prev('span').prev('.form-label-bold').text() || details.prev('.form-label-bold').text() || details.parent().parent().find('legend').text();
@@ -140,24 +146,24 @@ function openPopup(url, name, top, left) {
         });
 
 
-         $('textarea').keyup(function () {
-             var editor = $(this)
-             saveAndUpdateTextLimits(editor, function() {
-                 return editor.val().length
-             })
-        })
+        $('textarea').keyup(function () {
+            var editor = $(this);
+            saveAndUpdateTextLimits(editor, function () {
+                return editor.val().length;
+            });
+        });
 
         $('input[type="text"], input[type="number"]').blur(function () {
-            var editor = $(this)
+            var editor = $(this);
             quietSaveProgress(editor);
-        })
+        });
 
         $('input[type="radio"], input[type="checkbox"]').click(function () {
-            var editor = $(this)
+            var editor = $(this);
             quietSaveProgress(editor);
-        })
+        });
 
-            /**
+        /**
          * Navigation items
          */
         $('.nav-item').click(function (e) {
@@ -172,14 +178,14 @@ function openPopup(url, name, top, left) {
         });
 
         $('#draftReport').click(function (e) {
-            var target = $(this).data('target')
-            var form = $('form')
+            var target = $(this).data('target');
+            var form = $('form');
             $.ajax({
                 type: 'POST',
                 url: form.attr('action') + '/save',
                 data: formWithZeroJumpNumber(form),
-                complete: function(response) {
-                    window.location = target
+                complete: function (response) {
+                    window.location = target;
                 }
             });
         });
@@ -191,7 +197,7 @@ function openPopup(url, name, top, left) {
             $('#jumpNumber').val('');
         });
 
-        $('#consideredQualityDiversity_yes').click(function() {
+        $('#consideredQualityDiversity_yes').click(function () {
             if (typeof gtag === 'function') {
                 gtag('event', 'short-format-equality-diversity-yes', {
                     'event_category': 'report',
@@ -218,7 +224,7 @@ function openPopup(url, name, top, left) {
                 child = $('#' + elem.getAttribute('data-target'));
             parent.attr('aria-controls', elem.getAttribute('data-target'));
             parent.click(function () {
-                showHint(parent, child)
+                showHint(parent, child);
             });
         });
 
@@ -247,40 +253,40 @@ function openPopup(url, name, top, left) {
             // not needing once we upgrade away from HTMLUnit
             if (navigator.userAgent.indexOf('MSIE 8.0') === -1) {
                 $('textarea:not(.classic)').each(function (i, elem) {
-                    convertToEditor($(elem))
-                })
+                    convertToEditor($(elem));
+                });
             }
             // toggle editors back to visible previous hidden while quill initialises
             $('textarea').each(function (i, elem) {
-                $(elem).css('visibility', 'visible')
-            })
+                $(elem).css('visibility', 'visible');
+            });
 
         }
 
         function replaceTextArea(textArea) {
-            var attributesNotToBeCopied = ['name', 'placeholder', 'role']
-            var areaAttributes = attributesNotToBeCopied.reduce(function(accumulator, currentValue) {
-                accumulator[currentValue] = textArea.attr(currentValue)
-                return accumulator
-            }, {})
-            var value = textArea.val()
-            var editor = $('<div>'+value+'</div>')
-            $.each(textArea[0].attributes, function(index, element) {
+            var attributesNotToBeCopied = ['name', 'placeholder', 'role'];
+            var areaAttributes = attributesNotToBeCopied.reduce(function (accumulator, currentValue) {
+                accumulator[currentValue] = textArea.attr(currentValue);
+                return accumulator;
+            }, {});
+            var value = textArea.val();
+            var editor = $('<div>' + value + '</div>');
+            $.each(textArea[0].attributes, function (index, element) {
                 if (attributesNotToBeCopied.indexOf(this.name) === -1) {
-                    editor.attr(this.name, this.value)
+                    editor.attr(this.name, this.value);
                 }
             });
 
-            textArea.replaceWith(editor)
-            editor.after('<input type="hidden" name="'+areaAttributes.name+'" value=""/>')
-            editor.addClass('text-area-editor')
-            return areaAttributes
+            textArea.replaceWith(editor);
+            editor.after('<input type="hidden" name="' + areaAttributes.name + '" value=""/>');
+            editor.addClass('text-area-editor');
+            return areaAttributes;
 
         }
 
         function convertToEditor(textArea) {
-            var id = '#' + textArea.attr('id')
-            var areaAttributes = replaceTextArea(textArea)
+            var id = '#' + textArea.attr('id');
+            var areaAttributes = replaceTextArea(textArea);
 
             var editor = new Quill(id, {
                 placeholder: areaAttributes.placeholder,
@@ -290,102 +296,102 @@ function openPopup(url, name, top, left) {
                     toolbar: [
                         ['bold', 'italic', 'underline'],
                         [{ align: '' }, { align: 'justify' }],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                         ['clean']
                     ]
                 }
-            })
+            });
 
-            $(id).find('.ql-editor').attr('role', areaAttributes.role)
+            $(id).find('.ql-editor').attr('role', areaAttributes.role);
 
             function cleanHtml() {
-                return '<!-- RICH_TEXT -->' +  editor.root.innerHTML.replace(/<br>/gm,'<br/>')
+                return '<!-- RICH_TEXT -->' + editor.root.innerHTML.replace(/<br>/gm, '<br/>');
             }
 
             function hasAnyText() {
-                return editor.getText().trim()
+                return editor.getText().trim();
             }
 
             function transferValueToInput() {
                 if (hasAnyText()) {
-                    $("input[name='"+ areaAttributes.name + "']").val(cleanHtml())
+                    $('input[name=\'' + areaAttributes.name + '\']').val(cleanHtml());
                 } else {
-                    $("input[name='"+ areaAttributes.name + "']").val('')
+                    $('input[name=\'' + areaAttributes.name + '\']').val('');
                 }
             }
 
             function ensureCaretInView() {
-                var footer = $('footer')
-                var footerPosition = footer.offset()
-                var position = $(id).find('.ql-editor').caret('offset')
+                var footer = $('footer');
+                var footerPosition = footer.offset();
+                var position = $(id).find('.ql-editor').caret('offset');
 
                 // ensure caret position doesn't go below footer
                 if (position.top + (position.height * 2) > footerPosition.top) {
                     $('html, body').animate({
                         scrollTop: position.top - footer.height()
-                    }, 100)
+                    }, 100);
                 }
             }
 
             function withModifier(text) {
                 if (/Mac/i.test(navigator.platform)) {
-                    return text
+                    return text;
                 }
-                return text.replace('⌘', 'Ctrl-').replace('⇧', 'Shift-')
+                return text.replace('⌘', 'Ctrl-').replace('⇧', 'Shift-');
             }
 
 
+            editor.on('text-change', function (delta, oldDelta, source) {
+                transferValueToInput();
+            });
 
-            editor.on('text-change', function(delta, oldDelta, source) {
-                transferValueToInput()
-            })
-
-            transferValueToInput()
+            transferValueToInput();
 
             // swap toolbar to below editor
-            var toolbar = $(id).prev()
+            var toolbar = $(id).prev();
             toolbar.before($(id));
 
             function addTooltipsToToolbar() {
-                toolbar.find('button').addClass('tooltip').addClass('moj-tooltip')
+                toolbar.find('button').addClass('tooltip').addClass('moj-tooltip');
                 var tips = [
-                    {selector: '.ql-bold', tooltip: 'Bold (⌘B)'},
-                    {selector: '.ql-italic', tooltip: 'Italic (⌘I)'},
-                    {selector: '.ql-underline', tooltip: 'Underline (⌘U)'},
-                    {selector: '.ql-align[value="justify"]', tooltip: 'Justify (⌘⇧J)'},
-                    {selector: '.ql-align[value=""]', tooltip: 'Align Left (⌘⇧L)'},
-                    {selector: '.ql-list[value="ordered"]', tooltip: 'Numbered List'},
-                    {selector: '.ql-list[value="bullet"]', tooltip: 'Bulleted List'},
-                    {selector: '.ql-clean', tooltip: 'Remove Formatting'}]
+                    { selector: '.ql-bold', tooltip: 'Bold (⌘B)' },
+                    { selector: '.ql-italic', tooltip: 'Italic (⌘I)' },
+                    { selector: '.ql-underline', tooltip: 'Underline (⌘U)' },
+                    { selector: '.ql-align[value="justify"]', tooltip: 'Justify (⌘⇧J)' },
+                    { selector: '.ql-align[value=""]', tooltip: 'Align Left (⌘⇧L)' },
+                    { selector: '.ql-list[value="ordered"]', tooltip: 'Numbered List' },
+                    { selector: '.ql-list[value="bullet"]', tooltip: 'Bulleted List' },
+                    { selector: '.ql-clean', tooltip: 'Remove Formatting' }];
 
                 function addTooltop(tip) {
-                    toolbar.find(tip.selector + ' svg').after(withModifier('<span>'+tip.tooltip+'</span>'))
+                    toolbar.find(tip.selector + ' svg').after(withModifier('<span>' + tip.tooltip + '</span>'));
                 }
-                tips.forEach(addTooltop)
+
+                tips.forEach(addTooltop);
             }
 
             // show/hide toolbar with focus change
-            editor.on('selection-change', function(range) {
+            editor.on('selection-change', function (range) {
                 if (range) {
-                    $(id).next().css('visibility', 'visible')
-                    ensureCaretInView()
+                    $(id).next().css('visibility', 'visible');
+                    ensureCaretInView();
                 } else {
-                    $(id).next().css('visibility', 'hidden')
+                    $(id).next().css('visibility', 'hidden');
                 }
-            })
+            });
 
-            editor.on('text-change', function() {
-                saveAndUpdateTextLimits($(id), function() {
-                    return editor.getText().trim().length
-                })
-                ensureCaretInView()
+            editor.on('text-change', function () {
+                saveAndUpdateTextLimits($(id), function () {
+                    return editor.getText().trim().length;
+                });
+                ensureCaretInView();
             });
 
             // add classes to reduce margins
-            $(id).closest('.form-group').addClass('small-margin-bottom')
-            $(id).closest('.form-group').addClass('govuk-!-margin-bottom-0')
-            $(id).closest('.form-group').next('hr').addClass('small-margin-top')
-            $(id).closest('.form-group').next('hr').addClass('govuk-!-margin-top-0')
+            $(id).closest('.form-group').addClass('small-margin-bottom');
+            $(id).closest('.form-group').addClass('govuk-!-margin-bottom-0');
+            $(id).closest('.form-group').next('hr').addClass('small-margin-top');
+            $(id).closest('.form-group').next('hr').addClass('govuk-!-margin-top-0');
 
             // remove tab key binding for editor, toolbar (and for IE11 svg)
             delete editor.getModule('keyboard').bindings[9];
@@ -393,46 +399,46 @@ function openPopup(url, name, top, left) {
                 key: 'J',
                 shiftKey: true,
                 shortKey: true
-            }, function(range, context) {
+            }, function (range, context) {
                 this.quill.format('align', 'justify');
             });
             editor.getModule('keyboard').addBinding({
                 key: 'L',
                 shiftKey: true,
                 shortKey: true
-            }, function(range, context) {
+            }, function (range, context) {
                 this.quill.format('align', '');
             });
-            toolbar.find(':button').attr('tabindex', '-1')
-            toolbar.find('svg').attr('focusable', 'false')
+            toolbar.find(':button').attr('tabindex', '-1');
+            toolbar.find('svg').attr('focusable', 'false');
 
-            addTooltipsToToolbar()
+            addTooltipsToToolbar();
 
         }
 
 
-        var elementSelector = '.ql-editor,input[type!=hidden],textarea'
+        var elementSelector = '.ql-editor,input[type!=hidden],textarea';
         $('form:first').find(elementSelector).first().focus();
 
         function ensureFieldInView() {
-            var element = $(this)
-            var footer = $('footer')
-            var footerPosition = footer.offset()
-            var position = element.offset()
+            var element = $(this);
+            var footer = $('footer');
+            var footerPosition = footer.offset();
+            var position = element.offset();
 
             // ensure no focused element falls below footer
             if (position.top + element.height() > footerPosition.top) {
                 $('html, body').animate({
                     scrollTop: element.offset().top - footer.height()
-                }, 100)
+                }, 100);
             }
         }
 
 
-        $(elementSelector).focus(ensureFieldInView)
+        $(elementSelector).focus(ensureFieldInView);
 
         // disable back button as a browser back button else report data can easily be lost
-        $(window).keydown(function(event) {
+        $(window).keydown(function (event) {
             if (event.which == '8'
                 && event.target.type != 'text'
                 && event.target.type != 'file'
@@ -449,9 +455,9 @@ function openPopup(url, name, top, left) {
     /**
      * Reveal or hide the other role section when 'Other' is chosen in the role drop down
      */
-    $(document).on('change','#role',function(e){
+    $(document).on('change', '#role', function (e) {
         if ($('#role option:selected').text() === 'Other') {
-            $('#roleother-section').removeClass('js-hidden')
+            $('#roleother-section').removeClass('js-hidden');
         } else {
             $('#roleother-section').addClass('js-hidden');
         }
@@ -459,17 +465,16 @@ function openPopup(url, name, top, left) {
 
     (function (global) {
 
-        if(typeof (global) === "undefined")
-        {
-            throw new Error("window is undefined");
+        if (typeof (global) === 'undefined') {
+            throw new Error('window is undefined');
         }
 
-        var _hash = "!";
+        var _hash = '!';
         var noBackPlease = function () {
-            global.location.href += "#";
+            global.location.href += '#';
 
             global.setTimeout(function () {
-                global.location.href += "!";
+                global.location.href += '!';
             }, 50);
         };
 
