@@ -102,10 +102,10 @@ Feature: Parole Report
       | Parole eligibility date | The parole eligibility date must be in the future |
       | Automatic release date/non parole eligibility date | The automatic release date/non parole eligibility date must be in the future |
 
-  Scenario: Delius user enters a date in the past for Tariff expiry
+  Scenario: Delius user enters a date before the conviction date for Tariff expiry
 
     Given they select the "Indeterminate" option on the "Sentence type"
-    And they enter the date "YESTERDAY" for "Tariff expiry date"
+    And they enter the date "OVER_6_MONTHS_AGO" for "Tariff expiry date"
     When  they select the "Continue" button
     Then  the following error messages are displayed
-      | Tariff expiry date | The tariff expiry date must be in the future |
+      | Tariff expiry date | The tariff expiry date must be after the conviction date |

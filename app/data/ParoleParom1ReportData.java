@@ -82,8 +82,8 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             invalidMessage = "Enter a real tariff expiry date",
             onlyIfField = "prisonerDetailsSentenceType",
             onlyIfFieldMatchValue = "indeterminate",
-            minDate = "Today",
-            outOfRangeMessage = "The tariff expiry date must be in the future")
+            earliestDateField = "convictionDate",
+            beforeEarliestDateMessage = "The tariff expiry date must be after the conviction date")
     private String prisonerDetailsTariffExpiryDate;
     private String prisonerDetailsTariffExpiryDate_day;
     private String prisonerDetailsTariffExpiryDate_month;
