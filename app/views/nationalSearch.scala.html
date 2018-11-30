@@ -9,6 +9,7 @@
 
 @recentSearchMinutes = @{configuration.getInt("recent.search.minutes")}
 @feedbackLink = @{configuration.getString("feedback.search.form.url")}
+@offenderSummaryLink = @{configuration.getString("feedback.search.form.url")}
 
 <!DOCTYPE html>
 
@@ -34,6 +35,8 @@
       window.recentSearchMinutes = @recentSearchMinutes;
       window.probationAreas = @Html(stringify(probationAreas));
       window.feedbackLink = @Html(stringify(feedbackLink));
+      window.offenderSummaryLink = '@relative(routes.OffenderSummaryController.index("", java.util.Optional.empty(), java.util.Optional.empty()))'
+      window.featureOffenderSummary = '@{configuration.getString("feature.offender.summary")}'
     </script>
 
     <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>

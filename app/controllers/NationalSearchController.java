@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
+import static controllers.SessionKeys.USERNAME;
 import static helpers.FluentHelper.not;
 import static helpers.JwtHelper.principal;
 import static helpers.JwtHelper.probationAreaCodes;
@@ -81,6 +82,7 @@ public class NationalSearchController extends Controller implements ParamsValida
             Logger.info("AUDIT:{}: Successful logon for user {}", principal(bearerToken), username);
 
             session(OFFENDER_API_BEARER_TOKEN, bearerToken);
+            session(USERNAME, username);
             session(SEARCH_ANALYTICS_GROUP_ID, UUID.randomUUID().toString());
 
             return bearerToken;

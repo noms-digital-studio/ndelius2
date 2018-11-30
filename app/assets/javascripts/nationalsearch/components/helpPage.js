@@ -10,7 +10,7 @@ const HelpPage = () => {
                 <GovUkPhaseBanner basicVersion={true}/>
                 <div className="key-content">
 
-                    <p className="text-secondary font-xxsmall margin-top medium"><Link to="search"
+                    <p className="text-secondary font-xxsmall margin-top medium"><Link to="nationalSearch"
                                                                                        className="back-link">Back to New
                         Search</Link></p>
 
@@ -75,7 +75,7 @@ const HelpPage = () => {
 
                     <p>&nbsp;</p>
 
-                    <Link to="search" className="no-underline"><span className="icon prev-arrow"/><span
+                    <Link to="nationalSearch" className="no-underline"><span className="icon prev-arrow"/><span
                         className="font-medium">Previous</span><br/><span
                         className="font-xxsmall underline">New Search</span></Link>
 

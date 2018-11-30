@@ -17,4 +17,4 @@ require('chai').use(require('sinon-chai')).use(require('chai-shallow-deep-equal'
 global.parent = {}
 global.top = {}
 global.self = {}
-global.parent = {}
+global.window = {}

@@ -1,3 +1,5 @@
+import feature from '../../feature/feature'
+
 export const ADD_CONTACT = 'ADD_CONTACT'
 export const LEGACY_SEARCH = 'LEGACY_SEARCH'
 export const SHOW_OFFENDER_DETAILS = 'SHOW_OFFENDER_DETAILS'
@@ -15,10 +17,14 @@ const recordSearchOutcome = (data) => {
         virtualPageLoad(data.type.replace('search-', ''))
     }
 }
-export const showOffenderDetails = (offenderId, rankIndex = {}) => (
+export const showOffenderDetails = (cookies, offenderId, rankIndex = {}) => (
     dispatch => {
         recordSearchOutcome({ type: 'search-offender-details', rankIndex })
-        dispatch({type: SHOW_OFFENDER_DETAILS, offenderId})
+        if (feature.isEnabled(cookies, "offenderSummary")) {
+            window.location = window.offenderSummaryLink + offenderId
+        } else {
+            dispatch({type: SHOW_OFFENDER_DETAILS, offenderId})
+        }
     }
 )
 

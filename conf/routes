@@ -41,6 +41,10 @@ POST    /report/paroleParom1Report/save                 controllers.ParoleParom1
 GET     /report/paroleParom1Report/get                  controllers.ParoleParom1ReportController.getPdf(documentId: String, onBehalfOfUser: String)
 GET     /report/analyticsTester                        controllers.ParoleParom1ReportController.analyticsTester
 
+GET     /offenderSummary                             controllers.OffenderSummaryController.index(offenderId: String, user: java.util.Optional[String], t: java.util.Optional[String])
+GET     /features                                    controllers.FeaturesController.index()
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
 ->      /webjars                                webjars.Routes

@@ -26,7 +26,8 @@ describe('OffenderSearchResults component', () => {
         it('should show a normal summary and a restricted summary', () => {
             const results = shallow(<OffenderSearchResults results={[offender(), restrictedAccessOffender()]} byProbationArea={[]}/>)
             expect(results.find('Connect(OffenderSearchSummary)')).to.have.length(1)
-            expect(results.find('Connect(RestrictedOffenderSearchSummary)')).to.have.length(1)
+            // ForwardRef is used because component is wrapped in WithCookies - TODO find a better way of identifying this component
+            expect(results.find('ForwardRef')).to.have.length(1)
 
         })
     })

@@ -1,1 +1,1 @@
-import './nationalsearch/nationalSearch';
+import './router';
