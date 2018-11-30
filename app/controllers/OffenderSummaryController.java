@@ -22,6 +22,7 @@ import static helpers.JwtHelper.principal;
 public class OffenderSummaryController extends Controller implements ParamsValidator {
 
     private final views.html.offenderSummary template;
+    private final views.html.offenderNotAccessibleSummary notAccessibleTemplate;
     private final OffenderApi offenderApi;
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
@@ -33,10 +34,12 @@ public class OffenderSummaryController extends Controller implements ParamsValid
             HttpExecutionContext ec,
             Config configuration,
             views.html.offenderSummary template,
+            views.html.offenderNotAccessibleSummary notAccessibleTemplate,
             OffenderApi offenderApi) {
 
         this.ec = ec;
         this.template = template;
+        this.notAccessibleTemplate = notAccessibleTemplate;
         this.offenderApi = offenderApi;
         this.configuration = configuration;
 
@@ -79,8 +82,14 @@ public class OffenderSummaryController extends Controller implements ParamsValid
             return bearerToken;
 
         }, ec.current())
-        .thenRun(() -> session(OFFENDER_ID, offenderId))
-        .thenApply(notUsed -> template.render())
+        .thenCompose(bearerToken -> offenderApi.canAccess(bearerToken, Long.valueOf(offenderId)))
+        .thenApply(accessible -> {
+            if (accessible) {
+                session(OFFENDER_ID, offenderId);
+            }
+            return accessible;
+        })
+        .thenApply(accessible -> accessible ? template.render() : notAccessibleTemplate.render())
         .thenApply(Results::ok);
     }
 

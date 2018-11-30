@@ -6,6 +6,7 @@ import com.typesafe.config.Config;
 import helpers.Encryption;
 import helpers.JsonHelper;
 import helpers.JwtHelper;
+import interfaces.OffenderApi;
 import interfaces.PrisonerApi;
 import lombok.val;
 import play.Environment;
@@ -25,19 +26,21 @@ import java.util.function.Supplier;
 
 import static helpers.JwtHelper.principal;
 import static helpers.StaticImage.noPhotoImage;
+import static play.mvc.Results.badRequest;
 
 public class OffenderController extends Controller {
 
     private final PrisonerApi prisonerApi;
+    private final OffenderApi offenderApi;
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
     private final Supplier<Result> noPhotoResult;
 
     @Inject
-    public OffenderController(Config configuration, PrisonerApi prisonerApi, HttpExecutionContext ec, Environment environment) {
-
+    public OffenderController(Config configuration, PrisonerApi prisonerApi, OffenderApi offenderApi, HttpExecutionContext ec, Environment environment) {
         this.ec = ec;
         this.prisonerApi = prisonerApi;
+        this.offenderApi = offenderApi;
 
         val paramsSecretKey = configuration.getString("params.secret.key");
 
@@ -58,7 +61,7 @@ public class OffenderController extends Controller {
         val reference = JsonHelper.jsonToMap(decrypter.apply(oneTimeNomisRef)); // Encrypted so cannot be changed from generation in oneTimeNomisRef()
                                                                                 // The associated Offender has already been checked canAccess just now
         val validUser = Optional.ofNullable(reference.get("user")).
-                map(user -> user.equals(principal(session("offenderApiBearerToken")))).     //@TODO: Shared constant
+                map(user -> user.equals(principal(session(SessionKeys.OFFENDER_API_BEARER_TOKEN)))).     //@TODO: Shared constant
                 orElse(false);
                                                                             // oneTimeNomisRef() creation in ElasticOffenderSearch results
         val validTick = Optional.ofNullable(reference.get("tick")).         // is synchronous and fast so does not affect Search performance.
@@ -81,5 +84,14 @@ public class OffenderController extends Controller {
                     Logger.warn("Failed to get Nomis Image due to {}", throwable.getMessage());
                     return noPhotoResult.get();
                 });
+    }
+
+    public CompletionStage<Result> detail() {
+        return Optional.ofNullable(session(SessionKeys.OFFENDER_ID)).
+                map(offenderId ->
+                        offenderApi.getOffenderDetailByOffenderId(session(SessionKeys.OFFENDER_API_BEARER_TOKEN), offenderId).
+                                thenApply(JsonHelper::okJson)).
+                orElse(CompletableFuture.completedFuture(badRequest("no offender found in session")));
+
     }
 }

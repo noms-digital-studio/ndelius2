@@ -1,5 +1,6 @@
 package services;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import com.google.common.collect.ImmutableList;
@@ -12,6 +13,7 @@ import play.Application;
 import play.Environment;
 import play.Mode;
 import play.inject.guice.GuiceApplicationBuilder;
+import play.libs.Json;
 import play.test.WithApplication;
 
 import java.util.AbstractMap;
@@ -49,6 +51,11 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
 
         wireMock.stubFor(
                 get(urlEqualTo("/offenders/crn/X12345/all"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offender.json"))));
+
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/offenderId/12345/all"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/deliusoffender/offender.json"))));
 
@@ -148,6 +155,16 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(offender.getOtherIds()).extracting("pncNumber").contains("2018/123456P");
         assertThat(offender.getContactDetails().mainAddress().get().getStatus().getCode()).isEqualTo("M");
         wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/all")));
+    }
+
+    @Test
+    public void getsOffenderDetailByOffenderId() {
+        val offender = ObjectNode.class.cast(Json.parse(offenderApi.getOffenderDetailByOffenderId("ABC", "12345").toCompletableFuture().join().asText()));
+
+        assertThat(offender.get("firstName").asText()).isEqualTo("John");
+        assertThat(offender.get("surname").asText()).isEqualTo("Smith");
+        assertThat(offender.get("otherIds").get("pncNumber").asText()).isEqualTo("2018/123456P");
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/offenderId/12345/all")));
     }
 
     @Test

@@ -29,6 +29,7 @@ GET     /feedback/nationalSearch                    controllers.FeedbackControll
 GET     /feedback/sfpsr                             controllers.FeedbackController.viewSfpsrFeedback
 
 GET     /offender/oneTimeNomisRef/:reference/image  controllers.OffenderController.image(reference: String)
+GET     /offender/detail                            controllers.OffenderController.detail
 
 GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
 POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost

@@ -34,7 +34,7 @@ public class StubOffenderApi implements OffenderApi {
 
     @Override
     public CompletionStage<Boolean> canAccess(String bearerToken, long offenderId) {
-        return CompletableFuture.completedFuture(false);
+        return CompletableFuture.completedFuture(true);
     }
 
     @Override
@@ -88,6 +88,132 @@ public class StubOffenderApi implements OffenderApi {
                 .gender("Male")
                 .build());
         }
+    }
+
+    @Override
+    public CompletionStage<JsonNode> getOffenderDetailByOffenderId(String bearerToken, String offenderId) {
+        return CompletableFuture.completedFuture(Json.parse("{\n" +
+                "  \"offenderId\": 2500078511,\n" +
+                "  \"title\": \"Mr\",\n" +
+                "  \"firstName\": \"FaySinBB\",\n" +
+                "  \"middleNames\": [\n" +
+                "    \"Adams\",\n" +
+                "    \"ZZ\"\n" +
+                "  ],\n" +
+                "  \"surname\": \"CamMehLL\",\n" +
+                "  \"dateOfBirth\": \"1994-02-16\",\n" +
+                "  \"gender\": \"Female\",\n" +
+                "  \"otherIds\": {\n" +
+                "    \"crn\": \"X069596\",\n" +
+                "    \"pncNumber\": \"2008/7231544V\",\n" +
+                "    \"croNumber\": \"SF68/995833Y\",\n" +
+                "    \"niNumber\": \"AB121354U\"\n" +
+                "  },\n" +
+                "  \"contactDetails\": {\n" +
+                "    \"phoneNumbers\": [\n" +
+                "      {\n" +
+                "        \"type\": \"TELEPHONE\",\n" +
+                "        \"number\": \"01753862474\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"emailAddresses\": [\n" +
+                "      \"Brian.Findus@session.com\"\n" +
+                "    ],\n" +
+                "    \"addresses\": [\n" +
+                "      {\n" +
+                "        \"from\": \"2017-03-30\",\n" +
+                "        \"noFixedAbode\": false,\n" +
+                "        \"addressNumber\": \"322\",\n" +
+                "        \"buildingName\": \"Kirk Lodge\",\n" +
+                "        \"streetName\": \"London Rd\",\n" +
+                "        \"town\": \"Leicester\",\n" +
+                "        \"county\": \"Leicestershire\",\n" +
+                "        \"postcode\": \"LE2 2PJ\",\n" +
+                "        \"telephoneNumber\": \"0116 2708327\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"from\": \"2018-02-02\",\n" +
+                "        \"noFixedAbode\": false,\n" +
+                "        \"addressNumber\": \"25\",\n" +
+                "        \"streetName\": \"Colligiate Cresecent\",\n" +
+                "        \"town\": \"Sheffield\",\n" +
+                "        \"postcode\": \"S10 2BJ\"\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  \"offenderProfile\": {\n" +
+                "    \"offenderLanguages\": {},\n" +
+                "    \"previousConviction\": {},\n" +
+                "    \"riskColour\": \"Amber\"\n" +
+                "  },\n" +
+                "  \"offenderManagers\": [\n" +
+                "    {\n" +
+                "      \"trustOfficer\": {\n" +
+                "        \"forenames\": \"Andy\",\n" +
+                "        \"surname\": \"Dolphin\"\n" +
+                "      },\n" +
+                "      \"staff\": {\n" +
+                "        \"forenames\": \"Andy\",\n" +
+                "        \"surname\": \"Dolphin\"\n" +
+                "      },\n" +
+                "      \"partitionArea\": \"National Data\",\n" +
+                "      \"softDeleted\": false,\n" +
+                "      \"team\": {\n" +
+                "        \"description\": \"OMU A\",\n" +
+                "        \"district\": {\n" +
+                "          \"code\": \"C16CRCA\",\n" +
+                "          \"description\": \"C16 County\"\n" +
+                "        },\n" +
+                "        \"borough\": {\n" +
+                "          \"code\": \"C16100\",\n" +
+                "          \"description\": \"C16 Cluster 1\"\n" +
+                "        }\n" +
+                "      },\n" +
+                "      \"probationArea\": {\n" +
+                "        \"code\": \"C16\",\n" +
+                "        \"description\": \"CPA Thames Valley\"\n" +
+                "      },\n" +
+                "      \"fromDate\": \"2018-02-16\",\n" +
+                "      \"active\": true\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"trustOfficer\": {\n" +
+                "        \"forenames\": \"Unallocated Staff(N04)\",\n" +
+                "        \"surname\": \"Staff\"\n" +
+                "      },\n" +
+                "      \"staff\": {\n" +
+                "        \"forenames\": \"Unallocated Staff(N04)\",\n" +
+                "        \"surname\": \"Staff\"\n" +
+                "      },\n" +
+                "      \"partitionArea\": \"National Data\",\n" +
+                "      \"softDeleted\": false,\n" +
+                "      \"team\": {\n" +
+                "        \"description\": \"Unallocated Team(N04)\",\n" +
+                "        \"district\": {\n" +
+                "          \"code\": \"N04NPSA\",\n" +
+                "          \"description\": \"N04 Division\"\n" +
+                "        },\n" +
+                "        \"borough\": {\n" +
+                "          \"code\": \"N04100\",\n" +
+                "          \"description\": \"N04 Cluster 1\"\n" +
+                "        }\n" +
+                "      },\n" +
+                "      \"probationArea\": {\n" +
+                "        \"code\": \"N04\",\n" +
+                "        \"description\": \"NPS Midlands\"\n" +
+                "      },\n" +
+                "      \"fromDate\": \"1900-01-01\",\n" +
+                "      \"toDate\": \"2018-02-16\",\n" +
+                "      \"active\": false\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"offenderAliases\": [],\n" +
+                "  \"softDeleted\": false,\n" +
+                "  \"currentDisposal\": \"1\",\n" +
+                "  \"partitionArea\": \"National Data\",\n" +
+                "  \"currentRestriction\": false,\n" +
+                "  \"currentExclusion\": false\n" +
+                "}"));
     }
 
     @Override

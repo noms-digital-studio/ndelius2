@@ -15,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
+import play.test.Helpers;
 import play.test.WithApplication;
 
 import java.io.UnsupportedEncodingException;
@@ -41,7 +42,7 @@ public class OffenderSummaryControllerTest extends WithApplication {
     @Before
     public void before()  {
         when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-
+        when(offenderApi.canAccess(any(), anyLong())).thenReturn(CompletableFuture.completedFuture(true));
     }
 
     @Test
@@ -67,6 +68,39 @@ public class OffenderSummaryControllerTest extends WithApplication {
         assertThat(result.status()).isEqualTo(OK);
         assertThat(result.session().get("offenderId")).isEqualTo("321");
     }
+
+    @Test
+    public void indexPageRenderedWhenLogonSucceeds() throws UnsupportedEncodingException {
+        val result = route(app, buildIndexPageRequest());
+
+        assertThat(result.status()).isEqualTo(OK);
+        val content = Helpers.contentAsString(result);
+
+        val offenderSummaryPageContent = "<div id=\"content\"></div>";
+        assertThat(content).contains(offenderSummaryPageContent);
+    }
+
+    @Test
+    public void indexPageSessionDoesNotContainsOffenderIdWhenOffenderIsNotAccessibleToUser() throws UnsupportedEncodingException {
+        when(offenderApi.canAccess(any(), anyLong())).thenReturn(CompletableFuture.completedFuture(false));
+
+        val result = route(app, buildIndexPageRequest("bobby.beats", "321"));
+
+        assertThat(result.status()).isEqualTo(OK);
+        assertThat(result.session().get("offenderId")).isNull();
+    }
+
+    @Test
+    public void notAccessibleIndexPageRenderedWhenOffenderIsNotAccessibleToUser() throws UnsupportedEncodingException {
+        when(offenderApi.canAccess(any(), anyLong())).thenReturn(CompletableFuture.completedFuture(false));
+        val result = route(app, buildIndexPageRequest());
+
+        assertThat(result.status()).isEqualTo(OK);
+        val content = Helpers.contentAsString(result);
+
+        assertThat(content).contains("This offender is not allowed to be viewed");
+    }
+
 
     @Test
     public void returnsServerErrorWhenLogonFails() throws UnsupportedEncodingException {
