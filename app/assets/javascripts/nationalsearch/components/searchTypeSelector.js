@@ -9,7 +9,7 @@ const searchTypeSelector = ({searchType, searchTypeChanged, search, searchTerm, 
         <div className='form-group' style={{marginTop: '15px', marginBottom: '15px'}}>
             <fieldset className='inline'>
                 <div className="multiple-choice">
-                    <input type="radio" id="match-all-terms-yes" name="match-all-terms" value="exact"
+                    <input tabIndex="3" type="radio" id="match-all-terms-yes" name="match-all-terms" value="exact"
                            checked={searchType === 'exact'}
                            onChange={
                                event => {
@@ -21,7 +21,7 @@ const searchTypeSelector = ({searchType, searchTypeChanged, search, searchTerm, 
                     <label htmlFor="match-all-terms-yes">Yes</label>
                 </div>
                 <div className="multiple-choice">
-                    <input type="radio" id="match-all-terms-no" name="match-all-terms" value="broad"
+                    <input tabIndex="3" type="radio" id="match-all-terms-no" name="match-all-terms" value="broad"
                            checked={searchType === 'broad'}
                            onChange={
                                event => {

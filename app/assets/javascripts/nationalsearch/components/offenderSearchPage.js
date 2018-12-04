@@ -34,7 +34,7 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
                                 <h1 className="heading-large margin-bottom medium no-margin-top">Search for an offender</h1>
 
                                 <div className="national-search-add">
-                                    <AddNewOffenderLink tabIndex="1"/>
+                                    <AddNewOffenderLink tabIndex="3"/>
                                 </div>
 
                                 <OffenderSearch/>
@@ -48,7 +48,7 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
                             </div>
 
                             <div className="national-search-help">
-                                <Link to="help" className="bold clickable white">Tips for getting better results</Link>
+                                <Link tabIndex="2" to="help" className="bold clickable white">Tips for getting better results</Link>
                             </div>
 
                         </div>

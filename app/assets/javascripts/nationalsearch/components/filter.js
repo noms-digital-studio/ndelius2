@@ -37,7 +37,7 @@ class Filter extends Component {
             <div className='js-stick-at-top-when-scrolling'>
                 {shouldDisplayFilter(filterValues) &&
                 <div  className='filter'>
-                    <button onClick={() => this.toggleExpanded()} type="button" aria-expanded={expanded} aria-controls={`filters-${name}`} className={expanded ? 'open' : 'closed'}>
+                    <button tabIndex="3" onClick={() => this.toggleExpanded()} type="button" aria-expanded={expanded} aria-controls={`filters-${name}`} className={expanded ? 'open' : 'closed'}>
                         <div id='provider-select-label' className='bold-small'>
                             {title}
                         </div>
@@ -47,7 +47,7 @@ class Filter extends Component {
                         <div>
                         {filterValues.map(filterValue => (
                             <label key={filterValue.code} htmlFor={filterValue.code} className='font-xsmall'>
-                                <input className='filter-option' tabIndex={1} type='checkbox' value={filterValue.code} id={filterValue.code}
+                                <input className='filter-option' tabIndex="3" type='checkbox' value={filterValue.code} id={filterValue.code}
                                        checked={currentFilter.indexOf(filterValue.code) > -1}
                                        onChange={() => toggleFilter(filterValue.code, filterValue.description)}
                                        aria-controls='live-offender-results'
