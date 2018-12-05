@@ -1,5 +1,7 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
@@ -35,6 +37,8 @@ public class OffenderController extends Controller {
     private final HttpExecutionContext ec;
     private final Function<String, String> decrypter;
     private final Supplier<Result> noPhotoResult;
+    private final Function<String, String> encrypter;
+
 
     @Inject
     public OffenderController(Config configuration, PrisonerApi prisonerApi, OffenderApi offenderApi, HttpExecutionContext ec, Environment environment) {
@@ -44,6 +48,7 @@ public class OffenderController extends Controller {
 
         val paramsSecretKey = configuration.getString("params.secret.key");
 
+        encrypter = plainText -> Encryption.encrypt(plainText, paramsSecretKey).orElseThrow(() -> new RuntimeException("Encrypt failed"));
         decrypter = encrypted -> Encryption.decrypt(encrypted, paramsSecretKey).orElseThrow(() -> new RuntimeException("Decrypt failed"));
         noPhotoResult = () -> Optional.ofNullable(noPhotoImage(environment)).map(Results::ok).orElseGet(Results::badRequest);
     }
@@ -87,11 +92,26 @@ public class OffenderController extends Controller {
     }
 
     public CompletionStage<Result> detail() {
+        val bearerToken = session(SessionKeys.OFFENDER_API_BEARER_TOKEN);
         return Optional.ofNullable(session(SessionKeys.OFFENDER_ID)).
                 map(offenderId ->
-                        offenderApi.getOffenderDetailByOffenderId(session(SessionKeys.OFFENDER_API_BEARER_TOKEN), offenderId).
+                        offenderApi.getOffenderDetailByOffenderId(bearerToken, offenderId).
+                                thenApply(jsonNode -> addImageRef(jsonNode, bearerToken)).
                                 thenApply(JsonHelper::okJson)).
-                orElse(CompletableFuture.completedFuture(badRequest("no offender found in session")));
+                orElse(CompletableFuture.completedFuture(badRequest("no offender found in session"))).
+                thenApply(result -> result.withHeader(CACHE_CONTROL, "no-cache, no-store, must-revalidate")).
+                thenApply(result -> result.withHeader(PRAGMA, "no-cache")).
+                thenApply(result -> result.withHeader(EXPIRES, "0"));
+    }
 
+    private ObjectNode addImageRef(JsonNode jsonNode, String bearerToken) {
+        val offender = ObjectNode.class.cast(jsonNode);
+
+        Optional.ofNullable(offender.get("otherIds").get("nomsNumber")).ifPresent(nomsNumberNode -> {
+            offender.put("oneTimeNomisRef", OffenderController.generateOneTimeImageReference(encrypter, nomsNumberNode.asText(), bearerToken));
+        });
+
+
+        return offender;
     }
 }

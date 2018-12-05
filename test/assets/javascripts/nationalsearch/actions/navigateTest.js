@@ -1,7 +1,7 @@
 import {addContact, addNewOffender, showOffenderDetails, legacySearch} from './navigate'
 import {expect} from 'chai';
 import {stub} from 'sinon';
-import feature from '../../feature/feature'
+import featureSwitch from '../../feature/featureSwitch'
 
 
 describe('navigate action', () => {
@@ -15,7 +15,7 @@ describe('navigate action', () => {
         global.gtag = stub()
         global.virtualPageLoad = stub()
         global.window = {}
-        feature.isEnabled = stub()
+        featureSwitch.isEnabled = stub()
     })
 
     describe('on addContact', () => {
@@ -61,7 +61,7 @@ describe('navigate action', () => {
                 global.window = {
                     offenderSummaryLink: 'offenderDetails?offenderId='
                 }
-                feature.isEnabled.withArgs(cookies, 'offenderSummary').returns(true)
+                featureSwitch.isEnabled.withArgs(cookies, 'offenderSummary').returns(true)
                 showOffenderDetails(cookies, 1234567, 2, {firstName: ["Josephina"], surname: ["Se"]})(dispatch)
             })
             it ('sets window location to offender details', () => {
@@ -81,7 +81,7 @@ describe('navigate action', () => {
         context('with offender details feature switched off', () => {
             beforeEach(() => {
                 const cookies = stub();
-                feature.isEnabled.withArgs(cookies, 'offenderSummary').returns(false)
+                featureSwitch.isEnabled.withArgs(cookies, 'offenderSummary').returns(false)
                 showOffenderDetails(cookies,1234567, 2, {firstName: ["Josephina"], surname: ["Se"]})(dispatch)
             })
             it ('dispatches SHOW_OFFENDER_DETAILS', () => {

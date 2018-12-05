@@ -1,4 +1,4 @@
-import feature from '../../feature/feature'
+import featureSwitch from '../../feature/featureSwitch'
 
 export const ADD_CONTACT = 'ADD_CONTACT'
 export const LEGACY_SEARCH = 'LEGACY_SEARCH'
@@ -20,7 +20,7 @@ const recordSearchOutcome = (data) => {
 export const showOffenderDetails = (cookies, offenderId, rankIndex = {}) => (
     dispatch => {
         recordSearchOutcome({ type: 'search-offender-details', rankIndex })
-        if (feature.isEnabled(cookies, "offenderSummary")) {
+        if (featureSwitch.isEnabled(cookies, "offenderSummary")) {
             window.location = window.offenderSummaryLink + offenderId
         } else {
             dispatch({type: SHOW_OFFENDER_DETAILS, offenderId})

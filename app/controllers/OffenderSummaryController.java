@@ -83,12 +83,12 @@ public class OffenderSummaryController extends Controller implements ParamsValid
 
         }, ec.current())
         .thenCompose(bearerToken -> offenderApi.canAccess(bearerToken, Long.valueOf(offenderId)))
-        .thenApply(accessible -> {
+        .thenApplyAsync(accessible -> {
             if (accessible) {
                 session(OFFENDER_ID, offenderId);
             }
             return accessible;
-        })
+        }, ec.current())
         .thenApply(accessible -> accessible ? template.render() : notAccessibleTemplate.render())
         .thenApply(Results::ok);
     }

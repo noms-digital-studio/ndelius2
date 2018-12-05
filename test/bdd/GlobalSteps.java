@@ -1,6 +1,7 @@
 package bdd;
 
 import bdd.wiremock.AlfrescoStoreMock;
+import bdd.wiremock.OffenderApiMock;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -31,6 +32,8 @@ public class GlobalSteps {
     private TestBrowser control;
     @Inject
     private AlfrescoStoreMock alfrescoStoreMock;
+    @Inject
+    private OffenderApiMock offenderApiMock;
 
     private Map<String, String> fieldNameToValues;
     private String whatToIncludeFieldLabel;
@@ -247,8 +250,13 @@ public class GlobalSteps {
     }
 
     @Given("^Delius User closes the Report")
-    public void deliusUserCompletesThePageWithinTheReport() throws Throwable {
+    public void deliusUserCompletesThePageWithinTheReport() {
         page.clickButton("Close");
     }
 
+    @Given("^that the offender has the following offender details in Delius$")
+    public void thatTheOffenderHasTheFollowingOffenderDetailsInDelius(DataTable data) {
+        val offenderDetailsMap = data.asMap(String.class, String.class);
+        offenderApiMock.stubOffenderWithDetails(offenderDetailsMap);
+    }
 }

@@ -161,7 +161,7 @@ public class DeliusOffenderApi implements OffenderApi {
                 .get()
                 .thenApply(response -> assertOkResponse(response, "getOffenderDetailByOffenderId"))
                 .thenApply(WSResponse::getBody)
-                .thenApply(Json::toJson);
+                .thenApply(Json::parse);
     }
 
     @Override

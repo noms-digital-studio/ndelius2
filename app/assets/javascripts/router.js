@@ -10,7 +10,7 @@ import HelpPage from './nationalsearch/components/helpPage';
 import AnalyticsPage from './nationalsearch/containers/analyticsPageContainer'
 import SatisfactionPage from './nationalsearch/containers/satisfactionPageContainer'
 
-import OffenderSummaryPage from './offendersummary/components/offenderSummaryPage';
+import OffenderSummaryPage from './offendersummary/containers/offenderSummaryPageContainer';
 import FeatureSwitchPage from './feature/featureSwitchPage';
 
 import reducer from './reducers'

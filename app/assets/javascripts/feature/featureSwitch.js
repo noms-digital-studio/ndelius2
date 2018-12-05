@@ -1,4 +1,4 @@
-const feature = {
+const featureSwitch = {
     isEnabled: (cookies, feature) => {
         const cookieState = feature => cookies.get(toSwitchValue(feature)) === 'true'
 
@@ -17,4 +17,4 @@ const switchState = feature => window[toSwitchValue(feature)]
 const toSwitchValue = feature => `feature${camelCase(feature)}`
 const camelCase = word => word.charAt(0).toUpperCase() + word.slice(1)
 
-export default feature;
+export default featureSwitch;

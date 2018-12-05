@@ -1,14 +1,27 @@
 package bdd.wiremock;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
+import play.Environment;
+import play.Mode;
+import play.libs.Json;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static scala.io.Source.fromInputStream;
 import static utils.InstitutionalReportHelpers.anInstitutionalReport;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static utils.CourtAppearanceHelpers.aCourtReport;
@@ -72,6 +85,17 @@ public class OffenderApiMock {
                 get(urlEqualTo("/offenders/crn/X54321/institutionalReports/54332"))
                     .willReturn(ok().withBody(JsonHelper.stringify(anInstitutionalReport()))));
 
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/all"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offender.json"))));
+
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/userAccess"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/userAccess.json"))));
+
+
         return this;
     }
 
@@ -109,4 +133,36 @@ public class OffenderApiMock {
 
         return this;
     }
+
+    public OffenderApiMock stubOffenderWithDetails(Map<String, String> offenderDetailsMap) {
+        val offender = ObjectNode.class.cast(Json.parse(loadResource("/deliusoffender/offender.json")));
+
+        offenderDetailsMap.forEach((key, value) -> {
+            val keysSplit = Arrays.asList(key.split("\\."));
+            val branches = keysSplit.subList(0, keysSplit.size() - 1);
+            val leaf = keysSplit.get(keysSplit.size() - 1);
+            final ObjectNode[] context = {offender};
+            branches.forEach(subKey -> {
+                context[0] = ObjectNode.class.cast(context[0].get(subKey));
+            });
+
+            if (StringUtils.isBlank(value)) {
+                context[0].remove(leaf);
+            } else {
+                context[0].put(leaf, value);
+            }
+        });
+
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/all"))
+                        .willReturn(
+                                okForContentType("application/json", Json.stringify(offender))));
+
+        return this;
+    }
+
+    private static String loadResource(String resource) {
+        return fromInputStream(new Environment(Mode.TEST).resourceAsStream(resource), "UTF-8").mkString();
+    }
+
 }

@@ -95,18 +95,19 @@ public class StubOffenderApi implements OffenderApi {
         return CompletableFuture.completedFuture(Json.parse("{\n" +
                 "  \"offenderId\": 2500078511,\n" +
                 "  \"title\": \"Mr\",\n" +
-                "  \"firstName\": \"FaySinBB\",\n" +
+                "  \"firstName\": \"John\",\n" +
                 "  \"middleNames\": [\n" +
                 "    \"Adams\",\n" +
                 "    \"ZZ\"\n" +
                 "  ],\n" +
-                "  \"surname\": \"CamMehLL\",\n" +
+                "  \"surname\": \"Smith\",\n" +
                 "  \"dateOfBirth\": \"1994-02-16\",\n" +
                 "  \"gender\": \"Female\",\n" +
                 "  \"otherIds\": {\n" +
                 "    \"crn\": \"X069596\",\n" +
                 "    \"pncNumber\": \"2008/7231544V\",\n" +
                 "    \"croNumber\": \"SF68/995833Y\",\n" +
+                "    \"nomsNumber\": \"A123456K\",\n" +
                 "    \"niNumber\": \"AB121354U\"\n" +
                 "  },\n" +
                 "  \"contactDetails\": {\n" +

@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mongodb.rx.client.MongoClient;
 import helpers.JwtHelperTest;
 import interfaces.AnalyticsStore;
@@ -56,6 +57,40 @@ public class OffenderControllerTest  extends WithApplication {
     }
 
     @Test
+    public void nomisImageReferenceAddedToResponse() {
+        when(offenderApi.getOffenderDetailByOffenderId(any(), any())).thenReturn(CompletableFuture.completedFuture(loadResource("/deliusoffender/offender.json")));
+
+        val request = new Http.RequestBuilder()
+                .session("offenderApiBearerToken", JwtHelperTest.generateToken())
+                .session("offenderId", "123")
+                .method(GET)
+                .uri("/offender/detail");
+
+        val result = route(app, request);
+        val content = Helpers.contentAsString(result);
+
+        assertThat(result.status()).isEqualTo(OK);
+        assertThat(content).contains("\"oneTimeNomisRef\":");
+    }
+
+    @Test
+    public void nomisImageReferenceNotAddedToResponseWhenNoNOMSNumber() {
+        when(offenderApi.getOffenderDetailByOffenderId(any(), any())).thenReturn(CompletableFuture.completedFuture(removeNOMSNumber(loadResource("/deliusoffender/offender.json"))));
+
+        val request = new Http.RequestBuilder()
+                .session("offenderApiBearerToken", JwtHelperTest.generateToken())
+                .session("offenderId", "123")
+                .method(GET)
+                .uri("/offender/detail");
+
+        val result = route(app, request);
+        val content = Helpers.contentAsString(result);
+
+        assertThat(result.status()).isEqualTo(OK);
+        assertThat(content).doesNotContain("\"oneTimeNomisRef\":");
+    }
+
+    @Test
     public void offenderRetrievedUsingValueInSession() {
         when(offenderApi.getOffenderDetailByOffenderId(any(), any())).thenReturn(CompletableFuture.completedFuture(loadResource("/deliusoffender/offender.json")));
 
@@ -99,6 +134,12 @@ public class OffenderControllerTest  extends WithApplication {
 
     private static JsonNode loadResource(String resource) {
         return Json.parse(fromInputStream(new Environment(Mode.TEST).resourceAsStream(resource), "UTF-8").mkString());
+    }
+
+    private static JsonNode removeNOMSNumber(JsonNode node) {
+        val offender = ObjectNode.class.cast(node);
+        ObjectNode.class.cast(offender.get("otherIds")).remove("nomsNumber");
+        return node;
     }
 
 

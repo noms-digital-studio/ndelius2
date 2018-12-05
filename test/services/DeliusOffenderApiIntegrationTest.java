@@ -159,7 +159,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
 
     @Test
     public void getsOffenderDetailByOffenderId() {
-        val offender = ObjectNode.class.cast(Json.parse(offenderApi.getOffenderDetailByOffenderId("ABC", "12345").toCompletableFuture().join().asText()));
+        val offender = ObjectNode.class.cast(offenderApi.getOffenderDetailByOffenderId("ABC", "12345").toCompletableFuture().join());
 
         assertThat(offender.get("firstName").asText()).isEqualTo("John");
         assertThat(offender.get("surname").asText()).isEqualTo("Smith");

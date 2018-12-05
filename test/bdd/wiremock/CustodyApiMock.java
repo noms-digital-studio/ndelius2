@@ -1,6 +1,7 @@
 package bdd.wiremock;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.common.io.ByteStreams;
 import helpers.JsonHelper;
 import lombok.val;
 import play.Environment;
@@ -9,7 +10,10 @@ import play.Mode;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import java.io.IOException;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static scala.io.Source.fromInputStream;
 
 public class CustodyApiMock {
@@ -42,6 +46,19 @@ public class CustodyApiMock {
                 get(urlMatching("/elite2api/api/bookings/offenderNo/.*"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG.json"))));
+
+        custodyApiWireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*/images"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomsoffender/images_123.json"))));
+
+        custodyApiWireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/.*/images/.*/thumbnail"))
+                        .willReturn(
+                                ok().withHeader(CONTENT_TYPE, "image/jpeg").withBody(loadResourceBytes("/nomsoffender/image_3.jpeg"))));
+
+
+
 
 
         return this;
@@ -78,6 +95,14 @@ public class CustodyApiMock {
 
     private static String loadResource(String resource) {
         return fromInputStream(new Environment(Mode.TEST).resourceAsStream(resource), "UTF-8").mkString();
+    }
+
+    private static byte[] loadResourceBytes(String resource) {
+        try {
+            return ByteStreams.toByteArray(new Environment(Mode.TEST).resourceAsStream(resource));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
