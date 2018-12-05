@@ -5,15 +5,13 @@
 @import helpers.JsonHelper.stringify
 @this(webJarsUtil: WebJarsUtil)(implicit configuration: Config)
 
-
 @feedbackLink = @{configuration.getString("feedback.offender.summary.form.url")}
 
 <!DOCTYPE html>
-
 <html lang="en">
   <head>
 
-    <title>HMPPS - Offender Summary</title>
+    <title>HMPPS - Offender summary</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,8 +22,10 @@
     @googleAnalyticsHead()
 
   </head>
-  <body>
-    <div id="content"></div>
+  <body class="govuk-template__body">
+    <div class="govuk-width-container">
+      <main class="govuk-main-wrapper" id="content" role="main" />
+    </div>
 
     <script type="text/javascript">
       window.feedbackLink = @Html(stringify(feedbackLink));
@@ -35,4 +35,4 @@
     <script type='text/javascript' src='@relative(routes.Assets.versioned("bundle.js"))'></script>
 
   </body>
-  </html>
+</html>
