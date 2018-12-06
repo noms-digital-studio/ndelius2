@@ -3,9 +3,15 @@ package controllers;
 import bdd.wiremock.AlfrescoDocumentBuilder;
 import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
+import helpers.DateTimeHelper;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
-import interfaces.*;
+import interfaces.AnalyticsStore;
+import interfaces.DocumentStore;
+import interfaces.OffenderApi;
+import interfaces.PdfGenerator;
+import interfaces.PrisonerApi;
+import interfaces.PrisonerCategoryApi;
 import lombok.val;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
@@ -37,6 +43,7 @@ import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.GET;
 import static play.test.Helpers.route;
 import static utils.InstitutionalReportHelpers.anInstitutionalReport;
+import static utils.InstitutionalReportHelpers.getConvictionDate;
 import static utils.OffenderHelper.anOffenderWithMultipleAddresses;
 import static utils.PrisonerHelper.offenderCategory;
 import static utils.PrisonerHelper.offenderInPrison;
@@ -77,10 +84,24 @@ public class ParoleParom1ReportController_RetrieveOffenderData_Test extends With
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertThat(content).contains("name=\"prisonerDetailsOffence\" value=\"desc - 11/12/2018\"");
+        assertThat(content).contains(String.format("name=\"convictionDate\" value=\"%s\"", DateTimeHelper.format(getConvictionDate())));
     }
 
     @Test
-    public void existingReportsDoNotOverWriteDocumentContentsWithApi() throws UnsupportedEncodingException {
+    public void newReportsContainOffenceFromApi_whenConvictionDateIsMissing() {
+        given(offenderApi.getInstitutionalReport(any(), any(), any()))
+            .willReturn(CompletableFuture.completedFuture(InstitutionalReportHelpers.anInstitutionalReportWithOffenceButNoConvictionDate("desc", "code123", "2018-12-11")));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsOffence\" value=\"desc - 11/12/2018\"");
+        assertThat(content).contains("name=\"convictionDate\" value=\"\"");
+    }
+
+    @Test
+    public void updatingReportDoesNotOverwriteOffenceWithApiData() throws UnsupportedEncodingException {
         given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(
                 () -> new DocumentStore.OriginalData(
                         AlfrescoDocumentBuilder.standardDocument().withValuesItem("prisonerDetailsOffence", "An offence from the doc store").userData(), OffsetDateTime.now())));
@@ -94,6 +115,32 @@ public class ParoleParom1ReportController_RetrieveOffenderData_Test extends With
         assertThat(content).contains("name=\"prisonerDetailsOffence\" value=\"An offence from the doc store\"");
     }
 
+    @Test
+    public void newReportsContainSentenceFromApi() {
+        given(offenderApi.getInstitutionalReport(any(), any(), any()))
+            .willReturn(CompletableFuture.completedFuture(InstitutionalReportHelpers.anInstitutionalReportWithSentence("Life imprisonment", 24L, "months")));
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri("/report/paroleParom1Report?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+
+        assertEquals(OK, result.status());
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsSentence\" value=\"Life imprisonment, 24 months.\"");
+    }
+
+    @Test
+    public void updatingReportDoesNotOverwriteSentenceWithApiData() throws UnsupportedEncodingException {
+        given(documentStore.retrieveOriginalData(any(), any())).willReturn(CompletableFuture.supplyAsync(
+            () -> new DocumentStore.OriginalData(
+                AlfrescoDocumentBuilder.standardDocument().withValuesItem("prisonerDetailsSentence", "A sentence from the doc store").userData(), OffsetDateTime.now())));
+
+        val documentId = URLEncoder.encode(encryptor.apply("12345"), "UTF-8");
+        val onBehalfOfUser = URLEncoder.encode(encryptor.apply("JohnSmithNPS"), "UTF-8");
+
+        val result = route(app, new Http.RequestBuilder().method(GET).uri(String.format("/report/paroleParom1Report?documentId=%s&onBehalfOfUser=%s&user=lJqZBRO%%2F1B0XeiD2PhQtJg%%3D%%3D&t=T2DufYh%%2B%%2F%%2F64Ub6iNtHDGg%%3D%%3D", documentId, onBehalfOfUser)));
+
+        val content = Helpers.contentAsString(result);
+        assertThat(content).contains("name=\"prisonerDetailsSentence\" value=\"A sentence from the doc store\"");
+    }
 
     @Override
     protected Application provideApplication() {

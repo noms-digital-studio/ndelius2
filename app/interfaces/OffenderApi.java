@@ -213,6 +213,19 @@ public interface OffenderApi {
     @Builder
     class InstitutionalReport {
         private Conviction conviction;
+        private Sentence sentence;
+    }
+
+    @Value
+    @Builder
+    class Sentence {
+         private String description;
+         private Long originalLength;
+         private String originalLengthUnits;
+
+        public String descriptionAndLength() {
+            return String.format("%s, %s %s.", description, originalLength, originalLengthUnits);
+        }
     }
 
     @Value

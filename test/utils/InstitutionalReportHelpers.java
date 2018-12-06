@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 
 public class InstitutionalReportHelpers {
 
-    private static String getConvictionDate() {
+    public static String getConvictionDate() {
         return LocalDate.now().plusMonths(-6).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
@@ -52,17 +52,40 @@ public class InstitutionalReportHelpers {
         return OffenderApi.InstitutionalReport.builder()
             .conviction(OffenderApi.Conviction.builder()
                 .convictionDate(getConvictionDate())
-                .offences(ImmutableList.of(OffenderApi.Offence.builder()
-                    .offenceId("123")
-                    .mainOffence(true)
-                    .offenceDate(date + "T00:00")
-                    .detail(OffenderApi.OffenceDetail.builder()
-                        .subCategoryDescription(desc)
-                        .code(code)
-                        .build())
-                    .build()))
+                .offences(ImmutableList.of(anOffenceWith(desc, code, date)))
                 .build())
             .build();
     }
 
+    public static OffenderApi.InstitutionalReport anInstitutionalReportWithOffenceButNoConvictionDate(String desc, String code, String date) {
+        return OffenderApi.InstitutionalReport.builder()
+            .conviction(OffenderApi.Conviction.builder()
+                .offences(ImmutableList.of(anOffenceWith(desc, code, date)))
+                .build())
+            .build();
+    }
+
+    public static OffenderApi.InstitutionalReport anInstitutionalReportWithSentence(String sentenceDescription,
+                                                                                    Long originalLength,
+                                                                                    String originalLengthUnits) {
+        return OffenderApi.InstitutionalReport.builder()
+            .sentence(OffenderApi.Sentence.builder()
+                .description(sentenceDescription)
+                .originalLength(originalLength)
+                .originalLengthUnits(originalLengthUnits)
+                .build())
+            .build();
+    }
+
+    private static OffenderApi.Offence anOffenceWith(String desc, String code, String date) {
+        return OffenderApi.Offence.builder()
+            .offenceId("123")
+            .mainOffence(true)
+            .offenceDate(date + "T00:00")
+            .detail(OffenderApi.OffenceDetail.builder()
+                .subCategoryDescription(desc)
+                .code(code)
+                .build())
+            .build();
+    }
 }

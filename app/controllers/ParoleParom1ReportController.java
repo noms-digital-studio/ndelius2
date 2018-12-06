@@ -154,11 +154,17 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
         Logger.info("Params: " + params);
 
         if (isCreateJourney(params)) {
-            params.put("prisonerDetailsOffence", institutionalReport.getConviction().allOffenceDescriptions());
+            params.put("prisonerDetailsOffence", Optional.ofNullable(institutionalReport.getConviction())
+                                                    .map(OffenderApi.Conviction::allOffenceDescriptions)
+                                                    .orElse(""));
+            params.put("prisonerDetailsSentence", Optional.ofNullable(institutionalReport.getSentence())
+                                                    .map(OffenderApi.Sentence::descriptionAndLength)
+                                                    .orElse(""));
         }
 
-        Optional.ofNullable(institutionalReport.getConviction().getConvictionDate())
-            .ifPresent(dateString -> params.put("convictionDate", DateTimeHelper.format(institutionalReport.getConviction().getConvictionDate())));
+        Optional.ofNullable(institutionalReport.getConviction())
+            .flatMap(conviction -> Optional.ofNullable(conviction.getConvictionDate()))
+            .map(date -> params.put("convictionDate", DateTimeHelper.format(date)));
 
         return params;
     }

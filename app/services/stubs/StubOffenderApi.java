@@ -346,6 +346,11 @@ public class StubOffenderApi implements OffenderApi {
                 )
                 .convictionDate(getConvictionDate())
                 .build())
+            .sentence(Sentence.builder()
+                .originalLengthUnits("Years")
+                .originalLength(25L)
+                .description("Life imprisonment (Adult)")
+                .build())
             .build();
 
         return CompletableFuture.completedFuture(institutionalReports);
