@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: delius-new-tech
+    environment: delius-new-tech-secure
 environment-defaults:
   delius-new-tech:
     branch: null
