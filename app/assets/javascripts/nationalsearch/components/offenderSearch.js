@@ -10,9 +10,9 @@ const OffenderSearch = ({searchTerm, probationAreasFilter, search, searchType}) 
 
     return (
         <form className="padding-left-right" onSubmit={(event) => onSubmit(event)}>
-            <p className='visually-hidden' id='search-description'>Results will be updated as you type</p>
-            <input tabIndex="1" role='searchbox' aria-label='search' aria-describedby="search-description"
-                   autoFocus={true} name='searchTerms' className="form-control national-search"
+            <label htmlFor="searchTerms" className='visually-hidden'>Results will be updated as you type</label>
+            <input id="searchTerms" name="searchTerms" type="search" tabIndex="1" role='searchbox'
+                   autoFocus={true} className="form-control national-search"
                    placeholder="Any combination of names, dates of birth, ID numbers, towns and postcodes"
                    value={searchTerm}
                    onChange={event => search(event.target.value, searchType, probationAreasFilter)} />

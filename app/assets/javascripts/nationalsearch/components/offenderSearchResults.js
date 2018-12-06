@@ -10,7 +10,7 @@ import SearchTypeSelector from '../containers/searchTypeSelectorContainer';
 import PropTypes from "prop-types";
 
 const OffenderSearchResults = ({results}) => (
-    <div className="key-content">
+    <div className="key-content" aria-live="polite">
         <div className='padded mobile-pad' id='offender-results'>
             <SearchResultsTitle/>
 
