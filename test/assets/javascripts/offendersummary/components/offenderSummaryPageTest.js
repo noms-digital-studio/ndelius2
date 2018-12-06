@@ -19,7 +19,7 @@ describe('OffenderSummaryPage component', () => {
 
         context('when fetching', () => {
             beforeEach(() => {
-                page = shallow(<OffenderSummaryPage getOffenderDetails={stub()} fetching={true} />)
+                page = shallow(<OffenderSummaryPage getOffenderDetails={stub()} fetching={true} error={false} />)
             })
 
             it('no main content is displayed', () => {
@@ -31,7 +31,7 @@ describe('OffenderSummaryPage component', () => {
         })
         context('when finished fetching', () => {
             beforeEach(() => {
-                page = shallow(<OffenderSummaryPage getOffenderDetails={stub()} fetching={false} />)
+                page = shallow(<OffenderSummaryPage getOffenderDetails={stub()} fetching={false} error={false}/>)
             })
 
             it('main content is displayed', () => {
@@ -39,6 +39,21 @@ describe('OffenderSummaryPage component', () => {
             })
             it('offender identity container is displayed', () => {
                 expect(page.find('Connect(OffenderIdentity)').exists()).to.be.true
+            })
+            it('banner is displayed', () => {
+                expect(page.find('GovUkPhaseBanner').exists()).to.be.true
+            })
+        })
+        context('when in error', () => {
+            beforeEach(() => {
+                page = shallow(<OffenderSummaryPage getOffenderDetails={stub()} fetching={false} error={true} />)
+            })
+
+            it('no main content is displayed', () => {
+                expect(page.find('.govuk-grid-row').exists()).to.be.false
+            })
+            it('error is displayed', () => {
+                expect(page.find('ErrorMessage').exists()).to.be.true
             })
             it('banner is displayed', () => {
                 expect(page.find('GovUkPhaseBanner').exists()).to.be.true

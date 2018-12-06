@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import * as PropTypes from 'prop-types'
 import GovUkPhaseBanner from './govukPhaseBanner'
+import ErrorMessage from './errorMessage'
 import OffenderIdentity from '../containers/offenderIdentityContainer'
 
 
@@ -15,17 +16,20 @@ class OffenderSummaryPage extends Component {
     }
 
     render() {
-        const {fetching} = this.props
+        const {fetching, error} = this.props
         return(
             <div>
                 <GovUkPhaseBanner/>
-                {!fetching &&
+                {!fetching && !error &&
                 <div className="govuk-grid-row govuk-!-margin-top-3">
                     <div className="govuk-grid-column-one-half">
                         <OffenderIdentity/>
                     </div>
                     <div className="govuk-grid-column-one-half">&nbsp;</div>
                 </div>
+                }
+                {!fetching && error &&
+                <ErrorMessage message="Unfortunately, we cannot display you the offender's information at the moment. Please try again later."/>
                 }
             </div>
         )
@@ -36,7 +40,8 @@ class OffenderSummaryPage extends Component {
 
 OffenderSummaryPage.propTypes = {
     getOffenderDetails : PropTypes.func,
-    fetching : PropTypes.bool
+    fetching : PropTypes.bool,
+    error : PropTypes.bool
 }
 
 export default OffenderSummaryPage;
