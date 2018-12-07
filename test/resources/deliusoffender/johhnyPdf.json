@@ -1,0 +1,327 @@
+{
+  "offenderId": 2500099840,
+  "title": "General",
+  "firstName": "Johnny",
+  "middleNames": [
+    "Firstmiddlename",
+    "Secondmiddlename"
+  ],
+  "surname": "PDF",
+  "dateOfBirth": "1977-07-26",
+  "gender": "Male",
+  "otherIds": {
+    "crn": "X087946",
+    "pncNumber": "2004/0050290Y",
+    "croNumber": "SF23/12345A",
+    "nomsNumber": "G8678GG"
+  },
+  "contactDetails": {
+    "addresses": [
+      {
+        "from": "2017-07-26",
+        "to": "2018-07-09",
+        "noFixedAbode": false,
+        "addressNumber": "123",
+        "buildingName": "Green Gardens",
+        "streetName": "Fake St",
+        "district": "Hunters Bar",
+        "town": "Sheffield",
+        "county": "South Yorkshire",
+        "postcode": "S11 2XZ",
+        "status": {
+          "code": "P",
+          "description": "Previous"
+        }
+      },
+      {
+        "from": "2018-07-02",
+        "noFixedAbode": false,
+        "addressNumber": "33",
+        "streetName": "High Street",
+        "town": "Sheffield",
+        "postcode": "S10 2SA",
+        "status": {
+          "code": "MA",
+          "description": "Postal"
+        }
+      },
+      {
+        "from": "2018-07-05",
+        "noFixedAbode": false,
+        "buildingName": "My Building",
+        "streetName": "Blood Street",
+        "status": {
+          "code": "S",
+          "description": "Secondary"
+        }
+      },
+      {
+        "from": "2018-07-12",
+        "to": "2018-11-27",
+        "noFixedAbode": false,
+        "streetName": "Bail st 2",
+        "status": {
+          "code": "P",
+          "description": "Previous"
+        }
+      },
+      {
+        "from": "2018-07-06",
+        "noFixedAbode": false,
+        "streetName": "POSTAL",
+        "status": {
+          "code": "MA",
+          "description": "Postal"
+        }
+      },
+      {
+        "from": "2018-07-06",
+        "to": "2018-07-07",
+        "noFixedAbode": false,
+        "addressNumber": "22",
+        "streetName": "Acacia Ave",
+        "town": "Nanaville",
+        "status": {
+          "code": "P",
+          "description": "Previous"
+        }
+      },
+      {
+        "from": "2018-07-13",
+        "to": "2018-07-13",
+        "noFixedAbode": false,
+        "streetName": "new Main address",
+        "status": {
+          "code": "P",
+          "description": "Previous"
+        }
+      },
+      {
+        "from": "2018-07-13",
+        "noFixedAbode": false,
+        "streetName": "Foo st",
+        "postcode": "NF1 1NF",
+        "status": {
+          "code": "MA",
+          "description": "Postal"
+        }
+      },
+      {
+        "from": "2018-07-10",
+        "to": "2018-07-12",
+        "noFixedAbode": false,
+        "addressNumber": "29",
+        "streetName": "Acacia Avenue",
+        "town": "Nuttytown",
+        "county": "Cheshunt",
+        "postcode": "NU2 2TY",
+        "status": {
+          "code": "P",
+          "description": "Previous"
+        }
+      },
+      {
+        "from": "2018-04-01",
+        "to": "2018-07-13",
+        "noFixedAbode": false,
+        "addressNumber": "13",
+        "buildingName": "Building Foo",
+        "streetName": "New MAIN address Street",
+        "postcode": "S66 66D",
+        "status": {
+          "code": "P",
+          "description": "Previous"
+        }
+      },
+      {
+        "from": "2018-07-06",
+        "to": "2018-07-06",
+        "noFixedAbode": false,
+        "addressNumber": "7",
+        "buildingName": "Foo",
+        "streetName": "BAr",
+        "status": {
+          "code": "P",
+          "description": "Previous"
+        }
+      },
+      {
+        "from": "2018-07-06",
+        "to": "2018-07-06",
+        "noFixedAbode": false,
+        "buildingName": "BAIL",
+        "streetName": "BAIL ST",
+        "status": {
+          "code": "P",
+          "description": "Previous"
+        }
+      },
+      {
+        "from": "2018-10-18",
+        "noFixedAbode": false,
+        "addressNumber": "12",
+        "streetName": "High Street",
+        "town": "Sheffield",
+        "postcode": "S1 2BJ",
+        "status": {
+          "code": "M",
+          "description": "Main"
+        }
+      },
+      {
+        "from": "2018-11-27",
+        "noFixedAbode": true,
+        "postcode": "NF1 1NF",
+        "status": {
+          "code": "B",
+          "description": "Bail"
+        }
+      }
+    ]
+  },
+  "offenderProfile": {
+    "offenderLanguages": {},
+    "offenderDetails": "This is the first note\n----------------------------\nThis is the second note\n----------------------------\nLorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a",
+    "remandStatus": "Warrant With Bail",
+    "previousConviction": {
+      "convictionDate": "2018-10-15",
+      "detail": {
+        "documentName": "Target Offender.docx"
+      }
+    }
+  },
+  "offenderAliases": [
+    {
+      "dateOfBirth": "1977-07-26",
+      "firstName": "Jane",
+      "surname": "DOE",
+      "gender": "Female"
+    }
+  ],
+  "offenderManagers": [
+    {
+      "trustOfficer": {
+        "forenames": "Unallocated Staff(N07)",
+        "surname": "Staff"
+      },
+      "staff": {
+        "forenames": "Unallocated Staff(N07)",
+        "surname": "Staff"
+      },
+      "partitionArea": "National Data",
+      "softDeleted": false,
+      "team": {
+        "description": "Unallocated Team(N07)",
+        "district": {
+          "code": "N07NPSA",
+          "description": "N07 Division"
+        },
+        "borough": {
+          "code": "N07100",
+          "description": "N07 Cluster 1"
+        }
+      },
+      "probationArea": {
+        "code": "N07",
+        "description": "NPS London"
+      },
+      "fromDate": "2017-12-21",
+      "active": true
+    },
+    {
+      "trustOfficer": {
+        "forenames": "CRC",
+        "surname": "Created"
+      },
+      "staff": {
+        "forenames": "CRC",
+        "surname": "Created"
+      },
+      "partitionArea": "National Data",
+      "softDeleted": false,
+      "team": {
+        "description": "CRC Created",
+        "district": {
+          "code": "C01UAT",
+          "description": "Unallocated Level 3(C01)"
+        },
+        "borough": {
+          "code": "C01UAT",
+          "description": "Unallocated Level 2(C01)"
+        }
+      },
+      "probationArea": {
+        "code": "C01",
+        "description": "CPA Northumbria"
+      },
+      "fromDate": "2017-07-26",
+      "toDate": "2017-12-21",
+      "active": false
+    },
+    {
+      "trustOfficer": {
+        "forenames": "CRC",
+        "surname": "Created"
+      },
+      "staff": {
+        "forenames": "CRC",
+        "surname": "Created"
+      },
+      "partitionArea": "National Data",
+      "softDeleted": false,
+      "team": {
+        "description": "CRC Created",
+        "district": {
+          "code": "C13UAT",
+          "description": "Unallocated Level 3(C13)"
+        },
+        "borough": {
+          "code": "C13UAT",
+          "description": "Unallocated Level 2(C13)"
+        }
+      },
+      "probationArea": {
+        "code": "C13",
+        "description": "CPA BeNCH"
+      },
+      "fromDate": "2017-07-26",
+      "toDate": "2017-07-26",
+      "active": false
+    },
+    {
+      "trustOfficer": {
+        "forenames": "Unallocated Staff(N02)",
+        "surname": "Staff"
+      },
+      "staff": {
+        "forenames": "Unallocated Staff(N02)",
+        "surname": "Staff"
+      },
+      "partitionArea": "National Data",
+      "softDeleted": false,
+      "team": {
+        "description": "Unallocated Team(N02)",
+        "district": {
+          "code": "N02NPSA",
+          "description": "N02 Division"
+        },
+        "borough": {
+          "code": "N02100",
+          "description": "N02 Cluster 1"
+        }
+      },
+      "probationArea": {
+        "code": "N02",
+        "description": "NPS North East"
+      },
+      "fromDate": "1900-01-01",
+      "toDate": "2017-07-26",
+      "active": false
+    }
+  ],
+  "softDeleted": false,
+  "currentDisposal": "1",
+  "partitionArea": "National Data",
+  "currentRestriction": false,
+  "currentExclusion": false
+}
