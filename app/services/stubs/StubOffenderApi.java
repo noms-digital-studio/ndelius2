@@ -122,15 +122,21 @@ public class StubOffenderApi implements OffenderApi {
                 "    ],\n" +
                 "    \"addresses\": [\n" +
                 "      {\n" +
-                "        \"from\": \"2017-03-30\",\n" +
+                "        \"addressNumber\": \"5\",\n" +
+                "        \"buildingName\": \"Sea View\",\n" +
+                "        \"county\": \"Yorkshire\",\n" +
+                "        \"district\": \"Nether Edge\",\n" +
+                "        \"from\": \"2018-06-22\",\n" +
                 "        \"noFixedAbode\": false,\n" +
-                "        \"addressNumber\": \"322\",\n" +
-                "        \"buildingName\": \"Kirk Lodge\",\n" +
-                "        \"streetName\": \"London Rd\",\n" +
-                "        \"town\": \"Leicester\",\n" +
-                "        \"county\": \"Leicestershire\",\n" +
-                "        \"postcode\": \"LE2 2PJ\",\n" +
-                "        \"telephoneNumber\": \"0116 2708327\"\n" +
+                "        \"notes\": \"\",\n" +
+                "        \"postcode\": \"S10 1EQ\",\n" +
+                "        \"streetName\": \"High Street\",\n" +
+                "        \"telephoneNumber\": \"\",\n" +
+                "        \"town\": \"Sheffield\",\n" +
+                "        \"status\": {\n" +
+                "          \"code\": \"M\",\n" +
+                "          \"description\": \"Main\"\n" +
+                "        }\n" +
                 "      },\n" +
                 "      {\n" +
                 "        \"from\": \"2018-02-02\",\n" +
