@@ -6,6 +6,133 @@ describe('Offender Details component', () => {
 
     let wrapper;
 
+    // CONTACT DETAILS
+
+    describe('Main address section', () => {
+
+        context('when all contact details are recorded', () => {
+
+            const contactDetails = {
+                addresses: [{}],
+                emailAddresses: ['user@host.com'],
+                phoneNumbers: [
+                    {
+                        number: '01753862474',
+                        type: 'TELEPHONE'
+                    },
+                    {
+                        number: '07777123456',
+                        type: 'MOBILE'
+                    }
+                ]
+            };
+
+            beforeEach(() => {
+                wrapper = shallow(<OffenderDetails contactDetails={ contactDetails }/>);
+            });
+
+            it('contains telephone number', () => {
+                expect(wrapper.text()).to.contain('01753862474');
+            });
+            it('contains email address', () => {
+                expect(wrapper.text()).to.contain('user@host.com');
+            });
+            it('contains mobile number', () => {
+                expect(wrapper.text()).to.contain('07777123456');
+            });
+        });
+
+        context('when no email address is recorded', () => {
+
+            const contactDetails = {
+                addresses: [{}],
+                emailAddresses: [],
+                phoneNumbers: [
+                    {
+                        number: '01753862474',
+                        type: 'TELEPHONE'
+                    },
+                    {
+                        number: '07777123456',
+                        type: 'MOBILE'
+                    }
+                ]
+            };
+
+            beforeEach(() => {
+                wrapper = shallow(<OffenderDetails contactDetails={ contactDetails }/>);
+            });
+
+            it('contains telephone number', () => {
+                expect(wrapper.text()).to.contain('01753862474');
+            });
+            it('does not contain email address', () => {
+                expect(wrapper.text()).to.contain('Unknown');
+            });
+            it('contains mobile number', () => {
+                expect(wrapper.text()).to.contain('07777123456');
+            });
+        });
+
+        context('when no telephone number is recorded', () => {
+
+            const contactDetails = {
+                addresses: [{}],
+                emailAddresses: ['user@host.com'],
+                phoneNumbers: [
+                    {
+                        number: '07777123456',
+                        type: 'MOBILE'
+                    }
+                ]
+            };
+
+            beforeEach(() => {
+                wrapper = shallow(<OffenderDetails contactDetails={ contactDetails }/>);
+            });
+
+            it('contains telephone number', () => {
+                expect(wrapper.text()).to.contain('Unknown');
+            });
+            it('does not contain email address', () => {
+                expect(wrapper.text()).to.contain('user@host.com');
+            });
+            it('contains mobile number', () => {
+                expect(wrapper.text()).to.contain('07777123456');
+            });
+        });
+
+        context('when no mobile number is recorded', () => {
+
+            const contactDetails = {
+                addresses: [{}],
+                emailAddresses: ['user@host.com'],
+                phoneNumbers: [
+                    {
+                        number: '01753862474',
+                        type: 'TELEPHONE'
+                    }
+                ]
+            };
+
+            beforeEach(() => {
+                wrapper = shallow(<OffenderDetails contactDetails={ contactDetails }/>);
+            });
+
+            it('contains telephone number', () => {
+                expect(wrapper.text()).to.contain('01753862474');
+            });
+            it('does not contain email address', () => {
+                expect(wrapper.text()).to.contain('user@host.com');
+            });
+            it('contains mobile number', () => {
+                expect(wrapper.text()).to.contain('Unknown');
+            });
+        });
+    });
+
+    // MAIN ADDRESS
+
     describe('Main address section', () => {
 
         context('when a main address is recorded', () => {
@@ -25,7 +152,8 @@ describe('Offender Details component', () => {
                     telephoneNumber: '',
                     town: 'Sheffield'
                 }],
-                emailAddresses: []
+                emailAddresses: [],
+                phoneNumbers: []
             };
 
             beforeEach(() => {
@@ -60,7 +188,8 @@ describe('Offender Details component', () => {
                     noFixedAbode: true,
                     status: { code: 'M', description: 'Main' }
                 }],
-                emailAddresses: []
+                emailAddresses: [],
+                phoneNumbers: []
             };
 
             beforeEach(() => {
@@ -78,7 +207,8 @@ describe('Offender Details component', () => {
                 addresses: [{
                     noFixedAbode: true
                 }],
-                emailAddresses: []
+                emailAddresses: [],
+                phoneNumbers: []
             };
 
             beforeEach(() => {

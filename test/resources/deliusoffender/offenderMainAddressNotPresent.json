@@ -33,15 +33,8 @@
       }
     ],
     "allowSMS": true,
-    "emailAddresses": [
-      "string"
-    ],
-    "phoneNumbers": [
-      {
-        "number": "string",
-        "type": "TELEPHONE"
-      }
-    ]
+    "emailAddresses": [],
+    "phoneNumbers": []
   },
   "currentDisposal": "string",
   "currentExclusion": false,

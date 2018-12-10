@@ -38,12 +38,16 @@
     ],
     "allowSMS": true,
     "emailAddresses": [
-      "string"
+      "Brian.Findus@session.com"
     ],
     "phoneNumbers": [
       {
-        "number": "string",
+        "number": "01753862474",
         "type": "TELEPHONE"
+      },
+      {
+        "number": "07777123456",
+        "type": "MOBILE"
       }
     ]
   },
