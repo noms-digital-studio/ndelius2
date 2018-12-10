@@ -1,47 +1,52 @@
-import React, { Component } from 'react'
-import * as PropTypes from 'prop-types'
-import GovUkPhaseBanner from './govukPhaseBanner'
-import ErrorMessage from './errorMessage'
-import OffenderIdentity from '../containers/offenderIdentityContainer'
-
+import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
+import GovUkPhaseBanner from './govukPhaseBanner';
+import ErrorMessage from './errorMessage';
+import OffenderIdentity from '../containers/offenderIdentityContainer';
+import OffenderDetails from '../containers/offenderDetailsContainer';
 
 class OffenderSummaryPage extends Component {
     constructor(props) {
-        super(props)
+        super(props);
     }
 
     componentWillMount() {
-        const {getOffenderDetails} = this.props
-        getOffenderDetails()
+        const { getOffenderDetails } = this.props;
+        getOffenderDetails();
     }
 
     render() {
-        const {fetching, error} = this.props
-        return(
+        const { fetching, error } = this.props;
+        return (
             <div>
                 <GovUkPhaseBanner/>
-                {!fetching && !error &&
-                <div className="govuk-grid-row govuk-!-margin-top-3">
-                    <div className="govuk-grid-column-one-half">
-                        <OffenderIdentity/>
+                { !fetching && !error &&
+                <div>
+
+                    <div className="govuk-grid-row govuk-!-margin-top-3">
+                        <div className="govuk-grid-column-one-half">
+                            <OffenderIdentity/>
+                        </div>
+                        <div className="govuk-grid-column-one-half">&nbsp;</div>
                     </div>
-                    <div className="govuk-grid-column-one-half">&nbsp;</div>
+
+                    <OffenderDetails/>
+
                 </div>
                 }
-                {!fetching && error &&
-                <ErrorMessage message="Unfortunately, we cannot display you the offender's information at the moment. Please try again later."/>
+                { !fetching && error &&
+                <ErrorMessage
+                    message="Unfortunately, we cannot display you the offender's information at the moment. Please try again later."/>
                 }
             </div>
-        )
+        );
     }
 }
 
-
-
 OffenderSummaryPage.propTypes = {
-    getOffenderDetails : PropTypes.func,
-    fetching : PropTypes.bool,
-    error : PropTypes.bool
-}
+    getOffenderDetails: PropTypes.func,
+    fetching: PropTypes.bool,
+    error: PropTypes.bool
+};
 
 export default OffenderSummaryPage;

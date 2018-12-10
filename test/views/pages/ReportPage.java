@@ -129,7 +129,16 @@ public class ReportPage extends FluentPage {
         return statusCell.text();
     }
 
+    public String getPageTextByClassName(String className) {
+        return $(By.className(className)).text();
+    }
+
     public void clickLink(String linkText) {
         $(By.linkText(linkText)).click();
+    }
+
+    public void clickSpanWithClass(String text, String className) {
+        val parent = $(By.className(className));
+        parent.find(xpath(String.format(".//span[contains(.,'%s')]", text))).click();
     }
 }

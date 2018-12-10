@@ -165,7 +165,7 @@ public class OffenderApiMock {
         offenderApiWireMock.stubFor(
                 get(urlMatching("/offenders/offenderId/.*/all"))
                         .willReturn(
-                                okForContentType("application/json", loadResource(resource))));
+                                okForContentType("application/json", loadResource("/deliusoffender/" + resource))));
 
 
         return this;

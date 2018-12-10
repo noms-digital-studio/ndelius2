@@ -1,0 +1,144 @@
+{
+  "contactDetails": {
+    "addresses": [
+      {
+        "addressNumber": "",
+        "buildingName": "",
+        "county": "",
+        "district": "",
+        "from": "2018-06-22",
+        "noFixedAbode": true,
+        "notes": "",
+        "postcode": "",
+        "streetName": "",
+        "telephoneNumber": "",
+        "town": "",
+        "status": {
+          "code": "M",
+          "description": "Main"
+        }
+      },
+      {
+        "addressNumber": "2",
+        "buildingName": "",
+        "county": "Kent",
+        "district": "East Field",
+        "from": "2016-02-04",
+        "noFixedAbode": false,
+        "notes": "",
+        "postcode": "K44 8SJ",
+        "streetName": "Low Street",
+        "telephoneNumber": "",
+        "town": "Dover",
+        "status": {
+          "code": "B",
+          "description": "Bail"
+        }
+      }
+    ],
+    "allowSMS": true,
+    "emailAddresses": [
+      "string"
+    ],
+    "phoneNumbers": [
+      {
+        "number": "string",
+        "type": "TELEPHONE"
+      }
+    ]
+  },
+  "currentDisposal": "string",
+  "currentExclusion": false,
+  "currentRestriction": false,
+  "dateOfBirth": "1998-06-22",
+  "firstName": "John",
+  "gender": "string",
+  "middleNames": [
+    "string"
+  ],
+  "offenderAliases": [
+    {
+      "firstName": "string",
+      "gender": "string",
+      "middleNames": [
+        "string"
+      ],
+      "surname": "string"
+    }
+  ],
+  "offenderId": 0,
+  "offenderManagers": [
+    {
+      "active": true,
+      "fromDate": "2018-06-22",
+      "partitionArea": "string",
+      "probationArea": {
+        "code": "string",
+        "description": "string"
+      },
+      "providerEmployee": {
+        "forenames": "string",
+        "surname": "string"
+      },
+      "softDeleted": false,
+      "staff": {
+        "forenames": "string",
+        "surname": "string"
+      },
+      "team": {
+        "borough": {
+          "code": "string",
+          "description": "string"
+        },
+        "description": "string",
+        "district": {
+          "code": "string",
+          "description": "string"
+        },
+        "telephone": "string"
+      },
+      "toDate": "2018-06-22",
+      "trustOfficer": {
+        "forenames": "string",
+        "surname": "string"
+      }
+    }
+  ],
+  "offenderProfile": {
+    "ethnicity": "string",
+    "immigrationStatus": "string",
+    "nationality": "string",
+    "notes": "string",
+    "offenderDetails": {},
+    "offenderLanguages": {
+      "languageConcerns": "string",
+      "otherLanguages": [
+        "string"
+      ],
+      "primaryLanguage": "string",
+      "requiresInterpreter": true
+    },
+    "previousConviction": {
+      "detail": {}
+    },
+    "religion": "string",
+    "remandStatus": "string",
+    "riskColour": "string",
+    "secondaryNationality": "string",
+    "sexualOrientation": "string"
+  },
+  "otherIds": {
+    "crn": "X12345",
+    "croNumber": "string",
+    "immigrationNumber": "string",
+    "mostRecentPrisonerNumber": "string",
+    "niNumber": "string",
+    "nomsNumber": "string",
+    "pncNumber": "2018/123456P"
+  },
+  "partitionArea": "string",
+  "previousSurname": "string",
+  "softDeleted": false,
+  "surname": "Smith",
+  "title": "string"
+}

@@ -68,6 +68,12 @@ public class GlobalSteps {
         return cal.getTime();
     }
 
+    @Then("^the page should display the following by class name")
+    public void pageShouldDisplay(DataTable sectionText) {
+        val labelTextMap = sectionText.asMap(String.class, String.class);
+        labelTextMap.forEach((className, text) -> assertThat(page.getPageTextByClassName(className)).isEqualTo(text));
+    }
+
     @When("^they select the \"([^\"]*)\" button$")
     public void theySelectTheButton(String button) {
         page.clickButton(button);
@@ -258,5 +264,15 @@ public class GlobalSteps {
     public void thatTheOffenderHasTheFollowingOffenderDetailsInDelius(DataTable data) {
         val offenderDetailsMap = data.asMap(String.class, String.class);
         offenderApiMock.stubOffenderWithDetails(offenderDetailsMap);
+    }
+
+    @Given("^that the offender has the following data from json file \"([^\"]*)\" in Delius$")
+    public void thatTheOffenderHasTheFollowingDataInDelius(String fileName) {
+        offenderApiMock.stubOffenderWithResource(fileName + ".json");
+    }
+
+    @When("^they expand the \"([^\"]*)\" content section$")
+    public void theySelectLinkToExpandSection(String detailsText) {
+        page.clickSpanWithClass(detailsText, "govuk-details__summary");
     }
 }
