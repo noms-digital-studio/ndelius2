@@ -161,6 +161,16 @@ public class OffenderApiMock {
         return this;
     }
 
+    public OffenderApiMock stubOffenderWithResource(String resource) {
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/all"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource(resource))));
+
+
+        return this;
+    }
+
     private static String loadResource(String resource) {
         return fromInputStream(new Environment(Mode.TEST).resourceAsStream(resource), "UTF-8").mkString();
     }
