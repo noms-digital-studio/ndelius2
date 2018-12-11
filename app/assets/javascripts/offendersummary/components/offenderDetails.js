@@ -3,17 +3,24 @@ import * as PropTypes from 'prop-types';
 
 const OffenderDetails = ({ contactDetails }) => {
 
-    const mainAddress = contactDetails.addresses.find((address) => {
-        return address.status && address.status.code === 'M';
-    });
+    let mainAddress;
+    let telephoneNumber;
+    let mobileNumber;
 
-    const telephoneNumber = contactDetails.phoneNumbers.find((number) => {
-        return number.type && number.type === 'TELEPHONE';
-    });
+    if (contactDetails.hasOwnProperty('addresses')) {
+        mainAddress = contactDetails.addresses.find((address) => {
+            return address.status && address.status.code === 'M';
+        });
+    }
 
-    const mobileNumber = contactDetails.phoneNumbers.find((number) => {
-        return number.type && number.type === 'MOBILE';
-    });
+    if (contactDetails.hasOwnProperty('phoneNumbers')) {
+        telephoneNumber = contactDetails.phoneNumbers.find((number) => {
+            return number.type && number.type === 'TELEPHONE';
+        });
+        mobileNumber = contactDetails.phoneNumbers.find((number) => {
+            return number.type && number.type === 'MOBILE';
+        });
+    }
 
     return (
         <div>
@@ -90,7 +97,7 @@ OffenderDetails.propTypes = {
             buildingName: PropTypes.string,
             county: PropTypes.string,
             from: PropTypes.string,
-            noFixedAbode: PropTypes.bool.isRequired,
+            noFixedAbode: PropTypes.bool,
             postcode: PropTypes.string,
             status: PropTypes.shape({
                 code: PropTypes.string,
@@ -99,13 +106,13 @@ OffenderDetails.propTypes = {
             streetName: PropTypes.string,
             telephoneNumber: PropTypes.string,
             town: PropTypes.string
-        })).isRequired,
-        emailAddresses: PropTypes.arrayOf(PropTypes.string).isRequired,
+        })),
+        emailAddresses: PropTypes.arrayOf(PropTypes.string),
         phoneNumbers: PropTypes.arrayOf(PropTypes.shape({
             number: PropTypes.string,
             type: PropTypes.string
-        })).isRequired
-    }).isRequired
+        }))
+    })
 };
 
 export default OffenderDetails;
