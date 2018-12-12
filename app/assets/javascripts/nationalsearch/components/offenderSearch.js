@@ -5,7 +5,7 @@ const OffenderSearch = ({ searchTerm, probationAreasFilter, search, searchType }
 
     const onSubmit = (event) => {
         event.preventDefault();
-        let inputValue = document.getElementById('searchTerms').value;
+        let inputValue = document && document.getElementById ? document.getElementById('searchTerms').value : void 0;
         search(searchTerm || inputValue, searchType, probationAreasFilter);
     };
 
