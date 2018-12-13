@@ -15,6 +15,10 @@ class OffenderSummaryPage extends Component {
         getOffenderDetails();
     }
 
+    componentDidUpdate() {
+        window.GOVUKFrontend.initAll();
+    }
+
     render() {
         const { fetching, error } = this.props;
         return (

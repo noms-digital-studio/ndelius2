@@ -275,4 +275,9 @@ public class GlobalSteps {
     public void theySelectLinkToExpandSection(String detailsText) {
         page.clickSpanWithClass(detailsText, "govuk-details__summary");
     }
+
+    @When("^they expand the \"([^\"]*)\" accordion$")
+    public void theyExpandAccordion(String detailsText) {
+        page.clickAccordionWithLabel(detailsText);
+    }
 }

@@ -41,20 +41,11 @@
   "currentRestriction": false,
   "dateOfBirth": "1998-06-22",
   "firstName": "John",
-  "gender": "string",
+  "gender": "",
   "middleNames": [
     "string"
   ],
-  "offenderAliases": [
-    {
-      "firstName": "string",
-      "gender": "string",
-      "middleNames": [
-        "string"
-      ],
-      "surname": "string"
-    }
-  ],
+  "offenderAliases": [],
   "offenderId": 0,
   "offenderManagers": [
     {
@@ -94,9 +85,9 @@
     }
   ],
   "offenderProfile": {
-    "ethnicity": "string",
-    "immigrationStatus": "string",
-    "nationality": "string",
+    "ethnicity": "",
+    "immigrationStatus": "",
+    "nationality": "",
     "notes": "string",
     "offenderDetails": {},
     "offenderLanguages": {
@@ -105,7 +96,7 @@
         "string"
       ],
       "primaryLanguage": "string",
-      "requiresInterpreter": true
+      "requiresInterpreter": null
     },
     "previousConviction": {
       "detail": {}
@@ -121,7 +112,7 @@
     "croNumber": "string",
     "immigrationNumber": "string",
     "mostRecentPrisonerNumber": "string",
-    "niNumber": "string",
+    "niNumber": "",
     "nomsNumber": "string",
     "pncNumber": "2018/123456P"
   },

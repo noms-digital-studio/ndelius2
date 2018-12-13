@@ -56,7 +56,7 @@
   "currentRestriction": false,
   "dateOfBirth": "1998-06-22",
   "firstName": "John",
-  "gender": "string",
+  "gender": "Male",
   "middleNames": [
     "string"
   ],
@@ -109,9 +109,9 @@
     }
   ],
   "offenderProfile": {
-    "ethnicity": "string",
+    "ethnicity": "White British",
     "immigrationStatus": "string",
-    "nationality": "string",
+    "nationality": "British",
     "notes": "string",
     "offenderDetails": {},
     "offenderLanguages": {
@@ -136,7 +136,7 @@
     "croNumber": "string",
     "immigrationNumber": "string",
     "mostRecentPrisonerNumber": "string",
-    "niNumber": "string",
+    "niNumber": "AB123456C",
     "nomsNumber": "string",
     "pncNumber": "2018/123456P"
   },

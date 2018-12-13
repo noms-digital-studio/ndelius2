@@ -5,34 +5,39 @@
 @import helpers.JsonHelper.stringify
 @this(webJarsUtil: WebJarsUtil)(implicit configuration: Config)
 
-@feedbackLink = @{configuration.getString("feedback.offender.summary.form.url")}
+@feedbackLink = @{
+    configuration.getString("feedback.offender.summary.form.url")
+}
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+    <head>
 
-    <title>HMPPS - Offender summary</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>HMPPS - Offender summary</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/main.css"))' />
-    <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
+        <link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/main.css"))' />
+        <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
 
-    @googleAnalyticsHead()
+        @googleAnalyticsHead()
 
-  </head>
-  <body class="govuk-template__body">
-    <div class="govuk-width-container">
-      <main class="govuk-main-wrapper" id="content" role="main" />
-    </div>
+    </head>
+    <body class="govuk-template__body">
 
-    <script type="text/javascript">
-      window.feedbackLink = @Html(stringify(feedbackLink));
-    </script>
+        <div class="govuk-width-container">
+            <main class="govuk-main-wrapper" id="content" role="main" />
+        </div>
 
-    <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
-    <script type='text/javascript' src='@relative(routes.Assets.versioned("bundle.js"))'></script>
+        <script src='@relative(routes.Assets.versioned("javascripts/vendor/govuk/govuk-frontend-2.4.1.min.js"))' type="text/javascript"></script>
+        <script type="text/javascript">
+            window.feedbackLink = @Html(stringify(feedbackLink));
+            window.GOVUKFrontend.initAll();
+        </script>
 
-  </body>
+        <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
+        <script type='text/javascript' src='@relative(routes.Assets.versioned("bundle.js"))'></script>
+
+    </body>
 </html>
