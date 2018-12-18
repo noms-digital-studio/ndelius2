@@ -40,9 +40,9 @@ const OffenderDetails = ({ offenderDetails }) => {
                     <tbody>
                     <tr>
                         <th width="50%">Aliases</th>
-                        <td className="qa-aliases">{ offenderDetails.offenderAliases.length > 0 && 'Yes (' + offenderDetails.offenderAliases.length + ')' || 'No' }</td>
+                        <td className="qa-aliases">{ offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && 'Yes (' + offenderDetails.offenderAliases.length + ')' || 'No' }</td>
                         <td className="qa-aliases-link" style={ { textAlign: 'right' } }
-                            width="100">{ offenderDetails.offenderAliases.length > 0 && (
+                            width="100">{ offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && (
                             <a href="javascript:void(0);">View all</a>) }</td>
                     </tr>
                     <tr>
