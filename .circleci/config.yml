@@ -56,7 +56,7 @@ jobs:
             name: Deploy to Elastic Beanstalk Smoke Test environment
             command: |
                 export PATH=$PATH:~/.local/bin/
-                eb deploy delius-new-tech-smoke-test --label $(cat /workspace/version.txt)
+                eb deploy delius-new-tech-2-secure --label $(cat /workspace/version.txt)
     smoketest:
         docker:
             - image: circleci/openjdk:8-node-browsers
