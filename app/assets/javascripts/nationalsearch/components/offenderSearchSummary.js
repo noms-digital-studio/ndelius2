@@ -10,8 +10,8 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
     <li id={`offenderSummary${offenderSummary.offenderId}`}>
         <div className="offenderDetailsRow clearfix">
             <div className='offenderImageContainer'>
-                {offenderSummary.oneTimeNomisRef && <img className="offenderImage" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`}/>}
-                {!offenderSummary.oneTimeNomisRef && <img className="offenderImage" src='assets/images/NoPhoto@2x.png'/>}
+                {offenderSummary.oneTimeNomisRef && <img alt={`Image of ${offenderSummary.firstName} ${offenderSummary.surname}`} className="offenderImage" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`}/>}
+                {!offenderSummary.oneTimeNomisRef && <img alt="No offender image available" className="offenderImage" src='assets/images/NoPhoto@2x.png'/>}
             </div>
 
             <div role='group' className='panel panel-border-narrow offender-summary'>
@@ -21,8 +21,8 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                     </p>
                     <p>
                         <span>
-                            <span id='crn-label'className='bold'>CRN:&nbsp;</span>
-                            <span className='bold margin-right' aria-labelledby="crn-label"><MT text={offenderSummary.otherIds.crn} highlight={offenderSummary.highlight} highlightFieldName='otherIds.crn'/></span>
+                            <span id={`crn-label-${offenderSummary.offenderId}`} className='bold'>CRN:&nbsp;</span>
+                            <span className='bold margin-right' aria-labelledby={`crn-label-${offenderSummary.offenderId}`}><MT text={offenderSummary.otherIds.crn} highlight={offenderSummary.highlight} highlightFieldName='otherIds.crn'/></span>
                         </span>
                         <Risk risk={offenderSummary.offenderProfile.riskColour}/>
                         <CurrentOffender current={offenderSummary.currentDisposal}/>
@@ -31,40 +31,40 @@ const OffenderSearchSummary = ({offenderSummary, searchTerm}) => (
                             <span aria-label="Age">{offenderSummary.age}</span>
                         </span>
                         <br/>
-                        <span id='provider'>
-                            <span id='provider-label'>Provider:&nbsp;</span>
-                            <span className='margin-right' aria-labelledby="provider-label">{provider(offenderSummary)}</span>
+                        <span id={`provider-${offenderSummary.offenderId}`}>
+                            <span id={`provider-label-${offenderSummary.offenderId}`}>Provider:&nbsp;</span>
+                            <span className='margin-right' aria-labelledby={`provider-label-${offenderSummary.offenderId}`}>{provider(offenderSummary)}</span>
                         </span>
                         <br/>
-                        <span id='officer'>
-                            <span id='officer-label'>Officer name:&nbsp;</span>
-                            <span className='margin-right' aria-labelledby="officer-label">{officer(offenderSummary)}</span>
+                        <span id={`officer-${offenderSummary.offenderId}`}>
+                            <span id={`officer-label-${offenderSummary.offenderId}`}>Officer name:&nbsp;</span>
+                            <span className='margin-right' aria-labelledby={`officer-label-${offenderSummary.offenderId}`}>{officer(offenderSummary)}</span>
                         </span>
                     </p>
                     {matchesAnyHighlightedField(offenderSummary.highlight, ['otherIds.pncNumberLongYear', 'otherIds.pncNumberShortYear']) &&
                     <p>
-                        <span id='pncNumber-label'>PNC:&nbsp;</span>
-                        <span id='pncNumber' aria-labelledby="pncNumber-label" className='margin-right' className="mark">
+                        <span id={`pncNumber-label-${offenderSummary.offenderId}`}>PNC:&nbsp;</span>
+                        <span id={`pncNumber-${offenderSummary.offenderId}`} aria-labelledby={`pncNumber-label-${offenderSummary.offenderId}`} className='margin-right mark'>
                             {offenderSummary.otherIds.pncNumber}
                         </span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'otherIds.nomsNumber') &&
                     <p>
-                        <span id='nomsNumber-label'>NOMS:&nbsp;</span>
-                        <span id='nomsNumber' aria-labelledby='nomsNumber-label' className='margin-right'><MT text={offenderSummary.otherIds.nomsNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.nomsNumber'/></span>
+                        <span id={`nomsNumber-label-${offenderSummary.offenderId}`}>NOMS:&nbsp;</span>
+                        <span id={`nomsNumber-${offenderSummary.offenderId}`} aria-labelledby={`nomsNumber-label-${offenderSummary.offenderId}`} className='margin-right'><MT text={offenderSummary.otherIds.nomsNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.nomsNumber'/></span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'otherIds.niNumber') &&
                     <p>
-                        <span id='niNumber-label'>National Insurance Number:&nbsp;</span>
-                        <span id='niNumber' aria-labelledby="niNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.niNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.niNumber'/></span>
+                        <span id={`niNumber-label-${offenderSummary.offenderId}`}>National Insurance Number:&nbsp;</span>
+                        <span id={`niNumber-${offenderSummary.offenderId}`} aria-labelledby={`niNumber-label-${offenderSummary.offenderId}`} className='margin-right'><MT text={offenderSummary.otherIds.niNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.niNumber'/></span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'otherIds.croNumberLowercase') &&
                     <p>
-                        <span id='croNumber-label'>CRO:&nbsp;</span>
-                        <span id='croNumber' aria-labelledby="croNumber-label" className='margin-right'><MT text={offenderSummary.otherIds.croNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.croNumberLowercase'/></span>
+                        <span id={`croNumber-label-${offenderSummary.offenderId}`}>CRO:&nbsp;</span>
+                        <span id={`croNumber-${offenderSummary.offenderId}`} aria-labelledby={`croNumber-label-${offenderSummary.offenderId}`} className='margin-right'><MT text={offenderSummary.otherIds.croNumber} highlight={offenderSummary.highlight} highlightFieldName='otherIds.croNumberLowercase'/></span>
                     </p>
                     }
                     {matchesHighlightedField(offenderSummary.highlight, 'middleNames') &&

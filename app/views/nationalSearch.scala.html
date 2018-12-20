@@ -31,7 +31,7 @@
   <body>
     <div id="content"></div>
 
-    <script type="text/javascript">
+    <script>
       window.recentSearchMinutes = @recentSearchMinutes;
       window.probationAreas = @Html(stringify(probationAreas));
       window.feedbackLink = @Html(stringify(feedbackLink));
@@ -39,9 +39,9 @@
       window.featureOffenderSummary = '@{configuration.getString("feature.offender.summary")}'
     </script>
 
-    <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
-    <script type='text/javascript' src='@relative(webJarsUtil.url("jquery", "jquery.js").get)'></script>
-    <script type='text/javascript' src='@relative(routes.Assets.versioned("bundle.js"))'></script>
+    <script src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
+    <script src='@relative(webJarsUtil.url("jquery", "jquery.js").get)'></script>
+    <script src='@relative(routes.Assets.versioned("bundle.js"))'></script>
 
   </body>
   </html>

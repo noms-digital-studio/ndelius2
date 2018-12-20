@@ -39,11 +39,12 @@ const OffenderDetails = ({ offenderDetails }) => {
                 <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
                     <tbody>
                     <tr>
-                        <th width="50%">Aliases</th>
+                        <th style={ { width: '50%' } }>Aliases</th>
                         <td className="qa-aliases">{ offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && 'Yes (' + offenderDetails.offenderAliases.length + ')' || 'No' }</td>
-                        <td className="qa-aliases-link" style={ { textAlign: 'right' } }
-                            width="100">{ offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && (
-                            <a href="javascript:void(0);">View all</a>) }</td>
+                        <td className="qa-aliases-link" style={ { textAlign: 'right', width: '100px' } }>
+                            { offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && (
+                                <a href="javascript:void(0);">View all</a>) }
+                        </td>
                     </tr>
                     <tr>
                         <th>Gender</th>
@@ -75,17 +76,18 @@ const OffenderDetails = ({ offenderDetails }) => {
                     </tbody>
                 </table>
 
-                <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" role="group">
-                    <summary className="govuk-details__summary" role="button"
+                <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                    <summary className="govuk-details__summary"
                              aria-controls="offender-details-contact-details"
                              aria-expanded="true"><span className="govuk-details__summary-text">Contact details</span>
                     </summary>
-                    <div className="govuk-details__text moj-details__text--no-border" id="offender-details-contact-details"
+                    <div className="govuk-details__text moj-details__text--no-border"
+                         id="offender-details-contact-details"
                          aria-hidden="false">
                         <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
                             <tbody>
                             <tr>
-                                <th width="50%">Telephone</th>
+                                <th style={ { width: '50%' } }>Telephone</th>
                                 <td className="qa-telephone">{ telephoneNumber && telephoneNumber.number || 'Unknown' }</td>
                             </tr>
                             <tr>
@@ -101,8 +103,8 @@ const OffenderDetails = ({ offenderDetails }) => {
                     </div>
                 </details>
 
-                <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" role="group">
-                    <summary className="govuk-details__summary" role="button"
+                <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                    <summary className="govuk-details__summary"
                              aria-controls="offender-details-main-address"
                              aria-expanded="true"><span className="govuk-details__summary-text">Main address</span>
                     </summary>

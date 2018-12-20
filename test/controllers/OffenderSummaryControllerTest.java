@@ -76,7 +76,7 @@ public class OffenderSummaryControllerTest extends WithApplication {
         assertThat(result.status()).isEqualTo(OK);
         val content = Helpers.contentAsString(result);
 
-        val offenderSummaryPageContent = "<main class=\"govuk-main-wrapper\" id=\"content\" role=\"main\" />";
+        val offenderSummaryPageContent = "<main class=\"govuk-main-wrapper\" id=\"content\" />";
         assertThat(content).contains(offenderSummaryPageContent);
     }
 

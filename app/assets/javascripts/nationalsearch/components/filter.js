@@ -38,10 +38,10 @@ class Filter extends Component {
                 {shouldDisplayFilter(filterValues) &&
                 <div  className='filter'>
                     <button tabIndex="3" onClick={() => this.toggleExpanded()} type="button" aria-expanded={expanded} aria-controls={`filters-${name}`} className={expanded ? 'open' : 'closed'}>
-                        <div id='provider-select-label' className='bold-small'>
+                        <span id='provider-select-label' className='bold-small'>
                             {title}
-                        </div>
-                        <div id='selected' className='font-xsmall'>{countSelected()} selected</div>
+                        </span>
+                        <span id='selected' className='font-xsmall'>{countSelected()} selected</span>
                     </button>
                     <div role='group'aria-labelledby='provider-select-label' id={`filters-${name}`} className={expanded ? 'open filter-container' : 'closed filter-container'}>
                         <div>

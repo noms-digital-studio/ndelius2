@@ -82,8 +82,8 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 1965/1234567X'}/>)
 
-                expect(summary.find('#pncNumber')).to.have.length(1)
-                expect(summary.find('#pncNumber').text()).to.equal('1965/1234567X')
+                expect(summary.find('#pncNumber-123')).to.have.length(1)
+                expect(summary.find('#pncNumber-123').text()).to.equal('1965/1234567X')
             })
         })
         context('pnc present and does not match a search term', () => {
@@ -98,7 +98,7 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
 
-                expect(summary.find('#pncNumber')).to.have.length(0)
+                expect(summary.find('#pncNumber-123')).to.have.length(0)
             })
         })
         context('pnc not present', () => {
@@ -112,7 +112,7 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 1965/1234567X'}/>)
 
-                expect(summary.find('#pncNumber')).to.have.length(0)
+                expect(summary.find('#pncNumber-123')).to.have.length(0)
             })
         })
     })
@@ -130,8 +130,8 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith A1234AA'}/>)
 
-                expect(summary.find('#nomsNumber')).to.have.length(1)
-                expect(summary.find('#nomsNumber Connect(MarkableText)').prop('text')).to.equal('A1234AA')
+                expect(summary.find('#nomsNumber-123')).to.have.length(1)
+                expect(summary.find('#nomsNumber-123 Connect(MarkableText)').prop('text')).to.equal('A1234AA')
             })
         })
         context('noms present and does not match a search term', () => {
@@ -146,7 +146,7 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
 
-                expect(summary.find('#nomsNumber')).to.have.length(0)
+                expect(summary.find('#nomsNumber-123')).to.have.length(0)
             })
         })
         context('noms not present', () => {
@@ -160,7 +160,7 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith A1234AA'}/>)
 
-                expect(summary.find('#nomsNumber')).to.have.length(0)
+                expect(summary.find('#nomsNumber-123')).to.have.length(0)
             })
         })
     })
@@ -178,8 +178,8 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith NE998877A'}/>)
 
-                expect(summary.find('#niNumber')).to.have.length(1)
-                expect(summary.find('#niNumber Connect(MarkableText)').prop('text')).to.equal('NE998877A')
+                expect(summary.find('#niNumber-123')).to.have.length(1)
+                expect(summary.find('#niNumber-123 Connect(MarkableText)').prop('text')).to.equal('NE998877A')
             })
         })
         context('ni present and does not match a search term', () => {
@@ -194,7 +194,7 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
 
-                expect(summary.find('#niNumber')).to.have.length(0)
+                expect(summary.find('#niNumber-123')).to.have.length(0)
             })
         })
         context('ni not present', () => {
@@ -208,7 +208,7 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith NE998877A'}/>)
 
-                expect(summary.find('#niNumber')).to.have.length(0)
+                expect(summary.find('#niNumber-123')).to.have.length(0)
             })
         })
     })
@@ -226,8 +226,8 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 123456/12A'}/>)
 
-                expect(summary.find('#croNumber')).to.have.length(1)
-                expect(summary.find('#croNumber Connect(MarkableText)').prop('text')).to.equal('123456/12A')
+                expect(summary.find('#croNumber-123')).to.have.length(1)
+                expect(summary.find('#croNumber-123 Connect(MarkableText)').prop('text')).to.equal('123456/12A')
             })
         })
         context('cro present and does not match a search term', () => {
@@ -242,7 +242,7 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith'}/>)
 
-                expect(summary.find('#croNumber')).to.have.length(0)
+                expect(summary.find('#croNumber-123')).to.have.length(0)
             })
         })
         context('cro not present', () => {
@@ -256,7 +256,7 @@ describe('OffenderSearchSummary component', () => {
                 })
                 const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Smith 123456/12A'}/>)
 
-                expect(summary.find('#croNumber')).to.have.length(0)
+                expect(summary.find('#croNumber-123')).to.have.length(0)
             })
         })
     })
@@ -340,10 +340,10 @@ describe('OffenderSearchSummary component', () => {
             })
 
             it('renders provider label with no text', () => {
-                expect(summary.find('#provider').text().trim()).to.equal('Provider:')
+                expect(summary.find('#provider-123').text().trim()).to.equal('Provider:')
             })
             it('renders officer label with no text', () => {
-                expect(summary.find('#officer').text().trim()).to.equal('Officer name:')
+                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name:')
             })
         })
         context('no offender managers', () => {
@@ -353,10 +353,10 @@ describe('OffenderSearchSummary component', () => {
             })
 
             it('renders provider label with no text', () => {
-                expect(summary.find('#provider').text().trim()).to.equal('Provider:')
+                expect(summary.find('#provider-123').text().trim()).to.equal('Provider:')
             })
             it('renders officer label with no text', () => {
-                expect(summary.find('#officer').text().trim()).to.equal('Officer name:')
+                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name:')
             })
         })
         context('no active offender managers', () => {
@@ -378,10 +378,10 @@ describe('OffenderSearchSummary component', () => {
             })
 
             it('renders provider label with no text', () => {
-                expect(summary.find('#provider').text().trim()).to.equal('Provider:')
+                expect(summary.find('#provider-123').text().trim()).to.equal('Provider:')
             })
             it('renders officer label with no text', () => {
-                expect(summary.find('#officer').text().trim()).to.equal('Officer name:')
+                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name:')
             })
         })
         context('with active offender managers', () => {
@@ -403,10 +403,10 @@ describe('OffenderSearchSummary component', () => {
             })
 
             it('renders active provider', () => {
-                expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
+                expect(summary.find('#provider-123').text().trim()).to.equal('Provider: CPA Thames Valley')
             })
             it('renders active officer', () => {
-                expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
+                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name: Annette Anld')
             })
         })
         context('with active and inactive offender managers', () => {
@@ -453,10 +453,10 @@ describe('OffenderSearchSummary component', () => {
             })
 
             it('renders active provider', () => {
-                expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
+                expect(summary.find('#provider-123').text().trim()).to.equal('Provider: CPA Thames Valley')
             })
             it('renders active officer', () => {
-                expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
+                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name: Annette Anld')
             })
         })
         context('with many active offender managers', () => {
@@ -503,10 +503,10 @@ describe('OffenderSearchSummary component', () => {
             })
 
             it('renders first active provider', () => {
-                expect(summary.find('#provider').text().trim()).to.equal('Provider: CPA Thames Valley')
+                expect(summary.find('#provider-123').text().trim()).to.equal('Provider: CPA Thames Valley')
             })
             it('renders first active officer', () => {
-                expect(summary.find('#officer').text().trim()).to.equal('Officer name: Annette Anld')
+                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name: Annette Anld')
             })
         })
     })

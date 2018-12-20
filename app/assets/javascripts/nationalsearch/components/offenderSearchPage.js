@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react';
 import {Link} from 'react-router-dom'
 
 import OffenderSearchResults from '../containers/offenderSearchResultsContainer';
@@ -22,45 +22,43 @@ const OffenderSearchPage = ({firstTimeIn, showWelcomeBanner, reloadRecentSearch}
     }
 
     return (
-        <div>
-            <div id="root">
-                <main id="content">
-                    <GovUkPhaseBanner/>
-                    <div className="govuk-box-highlight blue">
-                        <div className="key-content search relative">
+        <Fragment>
+            <main id="root">
+                <GovUkPhaseBanner/>
+                <div className="govuk-box-highlight blue">
+                    <div className="key-content search relative">
 
-                            <div className="search">
+                        <div className="search">
 
-                                <h1 className="heading-large margin-bottom medium no-margin-top">Search for an offender</h1>
+                            <h1 className="heading-large margin-bottom medium no-margin-top">Search for an offender</h1>
 
-                                <div className="national-search-add">
-                                    <AddNewOffenderLink tabIndex="3"/>
-                                </div>
-
-                                <OffenderSearch/>
-
-                                <div className="grid-row">
-                                    <div className="column-two-thirds">
-                                        <Suggestions/>
-                                    </div>
-                                </div>
-
+                            <div className="national-search-add">
+                                <AddNewOffenderLink tabIndex="3"/>
                             </div>
 
-                            <div className="national-search-help">
-                                <Link tabIndex="2" to="help" className="bold clickable white">Tips for getting better results</Link>
+                            <OffenderSearch/>
+
+                            <div className="grid-row">
+                                <div className="column-two-thirds">
+                                    <Suggestions/>
+                                </div>
                             </div>
 
                         </div>
+
+                        <div className="national-search-help">
+                            <Link tabIndex="2" to="help" className="bold clickable white">Tips for getting better results</Link>
+                        </div>
+
                     </div>
-                    <div>
-                        {showWelcomeBanner && <SearchFooter/>}
-                        {!showWelcomeBanner && <OffenderSearchResults/>}
-                    </div>
-                </main>
-            </div>
+                </div>
+                <div>
+                    {showWelcomeBanner && <SearchFooter/>}
+                    {!showWelcomeBanner && <OffenderSearchResults/>}
+                </div>
+            </main>
             <FrameNavigation/>
-        </div>
+        </Fragment>
     );
 };
 

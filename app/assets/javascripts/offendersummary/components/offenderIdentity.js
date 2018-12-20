@@ -8,8 +8,8 @@ const OffenderIdentity = ({ offenderDetails }) => {
             <tbody>
             <tr>
                 <td>
-                    {offenderDetails.oneTimeNomisRef && <img className="offender-image" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderDetails.oneTimeNomisRef)}/image`}/>}
-                    {!offenderDetails.oneTimeNomisRef && <img className="offender-image" src='assets/images/NoPhoto@2x.png'/>}
+                    {offenderDetails.oneTimeNomisRef && <img alt={`Image of ${offenderDetails.firstName} ${offenderDetails.surname}`} className="offender-image" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderDetails.oneTimeNomisRef)}/image`}/>}
+                    {!offenderDetails.oneTimeNomisRef && <img alt="No offender image available" className="offender-image" src='assets/images/NoPhoto@2x.png'/>}
                 </td>
                 <td>
                     <h1 className="govuk-heading-l govuk-!-margin-0 govuk-!-padding-0 qa-offender-name">{offenderDetails.surname}, {offenderDetails.firstName}</h1>

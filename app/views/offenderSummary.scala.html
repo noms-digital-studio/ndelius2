@@ -27,17 +27,17 @@
     <body class="govuk-template__body">
 
         <div class="govuk-width-container">
-            <main class="govuk-main-wrapper" id="content" role="main" />
+            <main class="govuk-main-wrapper" id="content" />
         </div>
 
-        <script src='@relative(routes.Assets.versioned("javascripts/vendor/govuk/govuk-frontend-2.4.1.min.js"))' type="text/javascript"></script>
-        <script type="text/javascript">
+        <script src='@relative(routes.Assets.versioned("javascripts/vendor/govuk/govuk-frontend-2.4.1.min.js"))'></script>
+        <script>
             window.feedbackLink = @Html(stringify(feedbackLink));
             window.GOVUKFrontend.initAll();
         </script>
 
-        <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
-        <script type='text/javascript' src='@relative(routes.Assets.versioned("bundle.js"))'></script>
+        <script src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
+        <script src='@relative(routes.Assets.versioned("bundle.js"))'></script>
 
     </body>
 </html>
