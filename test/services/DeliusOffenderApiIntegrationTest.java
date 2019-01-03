@@ -1,5 +1,6 @@
 package services;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
@@ -13,17 +14,12 @@ import play.Application;
 import play.Environment;
 import play.Mode;
 import play.inject.guice.GuiceApplicationBuilder;
-import play.libs.Json;
 import play.test.WithApplication;
 
 import java.util.AbstractMap;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.anyUrl;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.okForContentType;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static scala.io.Source.fromInputStream;
@@ -78,6 +74,13 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
             get(urlEqualTo("/offenders/crn/X12345/institutionalReports/999"))
                 .willReturn(
                     okForContentType("application/json",  loadResource("/deliusoffender/institutionalReports.json"))));
+
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/offenderId/12345/registrations"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderRegistrations.json"))));
+
+
 
         offenderApi = instanceOf(OffenderApi.class);
     }
@@ -209,6 +212,21 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
 
         assertThat(institutionalReport.getConviction().mainOffenceDescription()).isEqualTo("Fraud subcategory description - 02/11/2018");
     }
+
+    @Test
+    public void getsOffenderRegistrationsByOffenderId() {
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/offenderId/12345/registrations"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderRegistrations.json"))));
+
+
+        val registrations = ArrayNode.class.cast(offenderApi.getOffenderRegistrationsByOffenderId("ABC", "12345").toCompletableFuture().join());
+
+        assertThat(registrations.size()).isEqualTo(13);
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/offenderId/12345/registrations")));
+    }
+
 
     private static Map.Entry<String, String> entry(String code, String description) {
         return new AbstractMap.SimpleEntry<>(code, description);

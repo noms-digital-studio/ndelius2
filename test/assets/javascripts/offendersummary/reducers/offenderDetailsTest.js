@@ -51,9 +51,5 @@ describe("offenderDetailsReducer", () => {
         it('fetching toggled off', () => {
             expect(state.fetching).to.equal(false)
         });
-        it('fetching toggled off', () => {
-            expect(state.fetching).to.equal(false)
-        });
-
     })
 })

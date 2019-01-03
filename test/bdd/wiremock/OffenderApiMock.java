@@ -1,11 +1,12 @@
 package bdd.wiremock;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
+import lombok.Builder;
+import lombok.Data;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import play.Environment;
@@ -14,18 +15,18 @@ import play.libs.Json;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-import static scala.io.Source.fromInputStream;
-import static utils.InstitutionalReportHelpers.anInstitutionalReport;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static scala.io.Source.fromInputStream;
 import static utils.CourtAppearanceHelpers.aCourtReport;
 import static utils.CourtAppearanceHelpers.someCourtAppearances;
+import static utils.InstitutionalReportHelpers.anInstitutionalReport;
 import static utils.OffenceHelpers.someOffences;
 import static utils.OffenderHelper.aFemaleOffenderWithNoContactDetails;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
@@ -35,6 +36,15 @@ public class OffenderApiMock {
     @Named("offenderApiWireMock")
     private WireMockServer offenderApiWireMock;
 
+    @Data
+    @Builder
+    public static class Registration {
+        private String register;
+        private String type;
+        private String riskColour;
+        private LocalDate startDate;
+
+    }
     public OffenderApiMock start() {
             offenderApiWireMock.start();
         return this;
@@ -95,6 +105,10 @@ public class OffenderApiMock {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/deliusoffender/userAccess.json"))));
 
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/registrations"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderRegistrations.json"))));
 
         return this;
     }
@@ -170,6 +184,29 @@ public class OffenderApiMock {
 
         return this;
     }
+
+    public OffenderApiMock stubOffenderWithRegistrations(List<Registration> registrations) {
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/registrations"))
+                        .willReturn(
+                                okForContentType("application/json", JsonHelper.stringify(
+                                        registrations
+                                        .stream()
+                                        .map(registration -> {
+                                            val template = JsonHelper.jsonToObjectMap(loadResource("/deliusoffender/offenderRegistration.json"));
+                                            template.replace("register", ImmutableMap.of("code", registration.getRegister().toUpperCase(), "description", registration.getRegister()));
+                                            template.replace("type", ImmutableMap.of("code", registration.getType().toUpperCase(), "description", registration.getType()));
+                                            template.replace("startDate", registration.getStartDate().format(DateTimeFormatter.ISO_DATE));
+                                            template.replace("riskColour", registration.getRiskColour());
+
+                                            return template;
+                                        })
+                                        .collect(Collectors.toList()))
+                                )));
+
+        return this;
+    }
+
 
     private static String loadResource(String resource) {
         return fromInputStream(new Environment(Mode.TEST).resourceAsStream(resource), "UTF-8").mkString();

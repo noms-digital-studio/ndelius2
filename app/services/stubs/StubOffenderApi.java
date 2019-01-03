@@ -7,6 +7,8 @@ import com.google.common.collect.ImmutableMap;
 import interfaces.HealthCheckResult;
 import interfaces.OffenderApi;
 import lombok.val;
+import play.Environment;
+import play.Mode;
 import play.libs.Json;
 
 import java.time.LocalDate;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 import static interfaces.HealthCheckResult.healthy;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static play.libs.Json.toJson;
+import static scala.io.Source.fromInputStream;
 import static services.stubs.StubPrisonerApi.NOMS_NUMBER_OF_FEMALE;
 
 public class StubOffenderApi implements OffenderApi {
@@ -221,6 +224,11 @@ public class StubOffenderApi implements OffenderApi {
                 "  \"currentRestriction\": false,\n" +
                 "  \"currentExclusion\": false\n" +
                 "}"));
+    }
+
+    @Override
+    public CompletionStage<JsonNode> getOffenderRegistrationsByOffenderId(String bearerToken, String offenderId) {
+        return CompletableFuture.completedFuture(loadJsonResource("/stubdata/offender-registrations.json"));
     }
 
     @Override
@@ -909,5 +917,10 @@ public class StubOffenderApi implements OffenderApi {
 
         return probationAreas.get(code);
     }
+
+    private static JsonNode loadJsonResource(String resource) {
+        return Json.parse(new Environment(Mode.DEV).resourceAsStream(resource));
+    }
+
 
 }

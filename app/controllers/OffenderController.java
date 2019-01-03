@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -23,12 +24,12 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static helpers.JwtHelper.principal;
 import static helpers.StaticImage.noPhotoImage;
-import static play.mvc.Results.badRequest;
 
 public class OffenderController extends Controller {
 
@@ -92,11 +93,35 @@ public class OffenderController extends Controller {
     }
 
     public CompletionStage<Result> detail() {
+        return jsonResultOf((bearerToken, offenderId) ->
+                offenderApi.getOffenderDetailByOffenderId(bearerToken, offenderId)
+                        .thenApply(jsonNode -> addImageRef(jsonNode, bearerToken)));
+    }
+
+    public CompletionStage<Result> registrations() {
+        return jsonResultOf((bearerToken, offenderId) ->
+                offenderApi.getOffenderRegistrationsByOffenderId(bearerToken, offenderId)
+                        .thenApply(this::filterInactiveRegistrations));
+    }
+
+    private JsonNode filterInactiveRegistrations(JsonNode jsonNode) {
+        val registrations = ArrayNode.class.cast(jsonNode);
+        val elements = registrations.elements();
+
+        while (elements.hasNext()) {
+            val registration = elements.next();
+            if (!registration.get("active").asBoolean()) {
+                elements.remove();
+            }
+        }
+        return registrations;
+    }
+
+    private CompletionStage<Result> jsonResultOf(BiFunction<String, String, CompletionStage<JsonNode>> jsonSupplier) {
         val bearerToken = session(SessionKeys.OFFENDER_API_BEARER_TOKEN);
         return Optional.ofNullable(session(SessionKeys.OFFENDER_ID)).
                 map(offenderId ->
-                        offenderApi.getOffenderDetailByOffenderId(bearerToken, offenderId).
-                                thenApply(jsonNode -> addImageRef(jsonNode, bearerToken)).
+                        jsonSupplier.apply(bearerToken, offenderId).
                                 thenApply(JsonHelper::okJson)).
                 orElse(CompletableFuture.completedFuture(badRequest("no offender found in session"))).
                 thenApply(result -> result.withHeader(CACHE_CONTROL, "no-cache, no-store, must-revalidate")).

@@ -22,7 +22,7 @@ public class StubPrisonerApi implements PrisonerApi, PrisonerCategoryApi {
     }
     @Override
     public CompletionStage<byte[]> getImage(String nomsNumber) {
-        return CompletableFuture.completedFuture(loadResourceBytes("/stub-offender-image.jpeg"));
+        return CompletableFuture.completedFuture(loadJsonResourceBytes("/stubdata/stub-offender-image.jpeg"));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class StubPrisonerApi implements PrisonerApi, PrisonerCategoryApi {
         return CompletableFuture.completedFuture(Optional.of(Category.builder().code("A").description("Cat A").build()));
     }
 
-    private static byte[] loadResourceBytes(String resource) {
+    private static byte[] loadJsonResourceBytes(String resource) {
         try {
             return ByteStreams.toByteArray(new Environment(Mode.DEV).resourceAsStream(resource));
         } catch (IOException e) {

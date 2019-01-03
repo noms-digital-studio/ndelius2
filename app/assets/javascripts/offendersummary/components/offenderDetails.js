@@ -34,7 +34,7 @@ const OffenderDetails = ({ offenderDetails }) => {
     };
 
     return (
-        <Accordion label="Offender details" content={
+        <Accordion label="Offender details">
             <Fragment>
                 <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
                     <tbody>
@@ -92,7 +92,7 @@ const OffenderDetails = ({ offenderDetails }) => {
                             </tr>
                             <tr>
                                 <th>Email</th>
-                                <td className="qa-email">{ offenderDetails.contactDetails && offenderDetails.contactDetails.emailAddresses[0] || 'Unknown' }</td>
+                                <td className="qa-email">{ offenderDetails.contactDetails && offenderDetails.contactDetails.emailAddresses && offenderDetails.contactDetails.emailAddresses[0] || 'Unknown' }</td>
                             </tr>
                             <tr>
                                 <th>Mobile</th>
@@ -142,7 +142,7 @@ const OffenderDetails = ({ offenderDetails }) => {
                     </div>
                 </details>
             </Fragment>
-        }/>
+        </Accordion>
     );
 };
 

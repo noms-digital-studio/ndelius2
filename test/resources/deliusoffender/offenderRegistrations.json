@@ -1,0 +1,449 @@
+[
+  {
+    "registrationId": 2500077587,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "5",
+      "description": "Public Protection"
+    },
+    "type": {
+      "code": "REG15",
+      "description": "Risk to Known Adult"
+    },
+    "riskColour": "Amber",
+    "startDate": "2018-12-11",
+    "nextReviewDate": "2019-06-11",
+    "reviewPeriodMonths": 6,
+    "notes": "some notes",
+    "registeringTeam": {
+      "code": "N07N07",
+      "description": "CHT"
+    },
+    "registeringOfficer": {
+      "forenames": "Unallocated",
+      "surname": "Staff"
+    },
+    "registeringProbationArea": {
+      "code": "N07",
+      "description": "NPS London"
+    },
+    "warnUser": false,
+    "active": true
+  },
+  {
+    "registrationId": 2500077459,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "2",
+      "description": "Alerts"
+    },
+    "type": {
+      "code": "INVI",
+      "description": "Victim Contact"
+    },
+    "riskColour": "Amber",
+    "startDate": "2018-12-07",
+    "nextReviewDate": "2019-03-07",
+    "reviewPeriodMonths": 3,
+    "registeringTeam": {
+      "code": "N01C01",
+      "description": "Barrow Court"
+    },
+    "registeringOfficer": {
+      "forenames": "Unallocated",
+      "surname": "Unallocated"
+    },
+    "registeringProbationArea": {
+      "code": "N01",
+      "description": "NPS North West"
+    },
+    "warnUser": false,
+    "active": true
+  },
+  {
+    "registrationId": 2500077458,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "5",
+      "description": "Public Protection"
+    },
+    "type": {
+      "code": "MAPP",
+      "description": "MAPPA"
+    },
+    "riskColour": "Red",
+    "startDate": "2018-12-07",
+    "nextReviewDate": "2019-03-07",
+    "reviewPeriodMonths": 3,
+    "registeringTeam": {
+      "code": "N07PRC",
+      "description": "CRC Created"
+    },
+    "registeringOfficer": {
+      "forenames": "CRC",
+      "surname": "Created"
+    },
+    "registeringProbationArea": {
+      "code": "N07",
+      "description": "NPS London"
+    },
+    "registerLevel": {
+      "code": "M2",
+      "description": "MAPPA Level 2"
+    },
+    "registerCategory": {
+      "code": "M1",
+      "description": "MAPPA Cat 1"
+    },
+    "warnUser": false,
+    "active": true
+  },
+  {
+    "registrationId": 2500077453,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "1",
+      "description": "RoSH"
+    },
+    "type": {
+      "code": "RVHR",
+      "description": "Very High RoSH"
+    },
+    "riskColour": "Red",
+    "startDate": "2018-12-07",
+    "nextReviewDate": "2019-06-07",
+    "reviewPeriodMonths": 6,
+    "registeringTeam": {
+      "code": "N07SP1",
+      "description": "Bexley\\Bromley SP TEST1"
+    },
+    "registeringOfficer": {
+      "forenames": "Test",
+      "surname": "Tester"
+    },
+    "registeringProbationArea": {
+      "code": "N07",
+      "description": "NPS London"
+    },
+    "warnUser": false,
+    "active": true
+  },
+  {
+    "registrationId": 2500077413,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "3",
+      "description": "Safeguarding"
+    },
+    "type": {
+      "code": "RCHD",
+      "description": "Risk to Children"
+    },
+    "riskColour": "Red",
+    "startDate": "2018-12-06",
+    "nextReviewDate": "2019-03-06",
+    "reviewPeriodMonths": 3,
+    "notes": "Stuff",
+    "registeringTeam": {
+      "code": "N07N07",
+      "description": "CHT"
+    },
+    "registeringOfficer": {
+      "forenames": "Unallocated",
+      "surname": "Staff"
+    },
+    "registeringProbationArea": {
+      "code": "N07",
+      "description": "NPS London"
+    },
+    "warnUser": false,
+    "active": true
+  },
+  {
+    "registrationId": 2500077414,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "5",
+      "description": "Public Protection"
+    },
+    "type": {
+      "code": "AV2S",
+      "description": "Risk to Staff"
+    },
+    "riskColour": "Red",
+    "startDate": "2018-12-06",
+    "nextReviewDate": "2019-06-06",
+    "reviewPeriodMonths": 6,
+    "registeringTeam": {
+      "code": "C03C17",
+      "description": "CRC - UPW Claypath"
+    },
+    "registeringOfficer": {
+      "forenames": "Staff",
+      "surname": "Unallocated"
+    },
+    "registeringProbationArea": {
+      "code": "C03",
+      "description": "CPA Durham Tees Valley"
+    },
+    "warnUser": true,
+    "active": true
+  },
+  {
+    "registrationId": 2500077415,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "3",
+      "description": "Safeguarding"
+    },
+    "type": {
+      "code": "RCPR",
+      "description": "Child Protection"
+    },
+    "riskColour": "Red",
+    "startDate": "2018-12-06",
+    "reviewPeriodMonths": 3,
+    "registeringTeam": {
+      "code": "N02DTX",
+      "description": "Default Designated Transfer Team"
+    },
+    "registeringOfficer": {
+      "forenames": "Unallocated",
+      "surname": "Unallocated"
+    },
+    "registeringProbationArea": {
+      "code": "N02",
+      "description": "NPS North East"
+    },
+    "warnUser": false,
+    "active": false,
+    "endDate": "2018-12-07",
+    "deregisteringTeam": {
+      "code": "N05EBR",
+      "description": "NPS team N05EBR"
+    },
+    "deregisteringOfficer": {
+      "forenames": "Andy Neil",
+      "surname": "Doctor"
+    },
+    "deregisteringProbationArea": {
+      "code": "N05",
+      "description": "NPS South West and South Central"
+    },
+    "deregisteringNotes": "no risk"
+  },
+  {
+    "registrationId": 2500077416,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "2",
+      "description": "Alerts"
+    },
+    "type": {
+      "code": "REG26",
+      "description": "Organised Crime"
+    },
+    "riskColour": "Amber",
+    "startDate": "2018-12-06",
+    "nextReviewDate": "2019-06-06",
+    "reviewPeriodMonths": 6,
+    "registeringTeam": {
+      "code": "C03C17",
+      "description": "CRC - UPW Claypath"
+    },
+    "registeringOfficer": {
+      "forenames": "Staff",
+      "surname": "Unallocated"
+    },
+    "registeringProbationArea": {
+      "code": "C03",
+      "description": "CPA Durham Tees Valley"
+    },
+    "warnUser": false,
+    "active": true
+  },
+  {
+    "registrationId": 2500077419,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "4",
+      "description": "Information"
+    },
+    "type": {
+      "code": "DOFF",
+      "description": "Duplicate Offender Records Exist"
+    },
+    "riskColour": "White",
+    "startDate": "2018-12-06",
+    "nextReviewDate": "2019-06-06",
+    "reviewPeriodMonths": 6,
+    "registeringTeam": {
+      "code": "N07N07",
+      "description": "CHT"
+    },
+    "registeringOfficer": {
+      "forenames": "Unallocated",
+      "surname": "Staff"
+    },
+    "registeringProbationArea": {
+      "code": "N07",
+      "description": "NPS London"
+    },
+    "warnUser": false,
+    "active": true
+  },
+  {
+    "registrationId": 2500077409,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "1",
+      "description": "RoSH"
+    },
+    "type": {
+      "code": "RHRH",
+      "description": "High RoSH"
+    },
+    "riskColour": "Red",
+    "startDate": "2018-12-06",
+    "reviewPeriodMonths": 6,
+    "registeringTeam": {
+      "code": "N07SP1",
+      "description": "Bexley\\Bromley SP TEST1"
+    },
+    "registeringOfficer": {
+      "forenames": "AZEROONE",
+      "surname": "AZEROONE"
+    },
+    "registeringProbationArea": {
+      "code": "N07",
+      "description": "NPS London"
+    },
+    "warnUser": false,
+    "active": false,
+    "endDate": "2018-12-07",
+    "deregisteringTeam": {
+      "code": "N07N07",
+      "description": "CHT"
+    },
+    "deregisteringOfficer": {
+      "forenames": "Unallocated",
+      "surname": "Staff"
+    },
+    "deregisteringProbationArea": {
+      "code": "N07",
+      "description": "NPS London"
+    }
+  },
+  {
+    "registrationId": 2500077410,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "5",
+      "description": "Public Protection"
+    },
+    "type": {
+      "code": "REG17",
+      "description": "Risk to Public"
+    },
+    "riskColour": "Amber",
+    "startDate": "2018-12-06",
+    "nextReviewDate": "2019-06-06",
+    "reviewPeriodMonths": 6,
+    "registeringTeam": {
+      "code": "N05N06",
+      "description": "NPS GCS Ryecroft AP"
+    },
+    "registeringOfficer": {
+      "forenames": "Staff",
+      "surname": "Unallocated"
+    },
+    "registeringProbationArea": {
+      "code": "N05",
+      "description": "NPS South West and South Central"
+    },
+    "warnUser": false,
+    "active": true
+  },
+  {
+    "registrationId": 2500077411,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "2",
+      "description": "Alerts"
+    },
+    "type": {
+      "code": "INLL",
+      "description": "Lifer"
+    },
+    "riskColour": "Red",
+    "startDate": "2018-12-06",
+    "nextReviewDate": "2019-12-06",
+    "reviewPeriodMonths": 12,
+    "registeringTeam": {
+      "code": "C03C17",
+      "description": "CRC - UPW Claypath"
+    },
+    "registeringOfficer": {
+      "forenames": "Staff",
+      "surname": "Unallocated"
+    },
+    "registeringProbationArea": {
+      "code": "C03",
+      "description": "CPA Durham Tees Valley"
+    },
+    "registerLevel": {
+      "code": "L1",
+      "description": "Lifer - Supervised"
+    },
+    "registerCategory": {
+      "code": "LF03",
+      "description": "Lifer - Life Imprisonment"
+    },
+    "warnUser": false,
+    "active": true
+  },
+  {
+    "registrationId": 2500077449,
+    "offenderId": 2500095973,
+    "register": {
+      "code": "4",
+      "description": "Information"
+    },
+    "type": {
+      "code": "RTAO",
+      "description": "Terrorism Act Offender"
+    },
+    "riskColour": "Red",
+    "startDate": "2017-12-03",
+    "reviewPeriodMonths": 6,
+    "notes": "more notes",
+    "registeringTeam": {
+      "code": "C03C17",
+      "description": "CRC - UPW Claypath"
+    },
+    "registeringOfficer": {
+      "forenames": "Staff",
+      "surname": "Unallocated"
+    },
+    "registeringProbationArea": {
+      "code": "C03",
+      "description": "CPA Durham Tees Valley"
+    },
+    "warnUser": false,
+    "active": false,
+    "endDate": "2018-12-07",
+    "deregisteringTeam": {
+      "code": "C03C17",
+      "description": "CRC - UPW Claypath"
+    },
+    "deregisteringOfficer": {
+      "forenames": "Staff",
+      "surname": "Unallocated"
+    },
+    "deregisteringProbationArea": {
+      "code": "C03",
+      "description": "CPA Durham Tees Valley"
+    },
+    "deregisteringNotes": "no longer a terrorist"
+  }
+]

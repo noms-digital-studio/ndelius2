@@ -10,7 +10,7 @@ describe('Accordion component (shared)', () => {
     describe('Accordion', () => {
 
         beforeEach(() => {
-            wrapper = shallow(<Accordion label="Offender details" content={ <Fragment>Content goes here</Fragment> }/>);
+            wrapper = shallow(<Accordion label="Offender details"> <Fragment>Content goes here</Fragment> </Accordion>);
         });
 
         it('contains label', () => {

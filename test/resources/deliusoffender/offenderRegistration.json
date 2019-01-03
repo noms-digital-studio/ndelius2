@@ -1,0 +1,31 @@
+{
+  "registrationId": 1,
+  "offenderId": 1,
+  "register": {
+    "code": "1",
+    "description": "Public Protection"
+  },
+  "type": {
+    "code": "REG1",
+    "description": "Risk to Known Adult"
+  },
+  "riskColour": "Amber",
+  "startDate": "2018-12-11",
+  "nextReviewDate": "2019-06-11",
+  "reviewPeriodMonths": 6,
+  "notes": "some notes",
+  "registeringTeam": {
+    "code": "N07N07",
+    "description": "CHT"
+  },
+  "registeringOfficer": {
+    "forenames": "Unallocated",
+    "surname": "Staff"
+  },
+  "registeringProbationArea": {
+    "code": "N07",
+    "description": "NPS London"
+  },
+  "warnUser": false,
+  "active": true
+}

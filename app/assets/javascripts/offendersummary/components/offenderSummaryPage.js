@@ -4,6 +4,7 @@ import GovUkPhaseBanner from './govukPhaseBanner';
 import ErrorMessage from './errorMessage';
 import OffenderIdentity from '../containers/offenderIdentityContainer';
 import OffenderDetails from '../containers/offenderDetailsContainer';
+import Registrations from '../containers/registrationsContainer';
 
 class OffenderSummaryPage extends Component {
     constructor(props) {
@@ -34,6 +35,7 @@ class OffenderSummaryPage extends Component {
                         <div className="govuk-grid-column-one-half">&nbsp;</div>
                     </div>
 
+                    <Registrations/>
                     <OffenderDetails/>
 
                 </div>

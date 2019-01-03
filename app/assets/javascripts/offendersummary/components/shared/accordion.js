@@ -25,7 +25,7 @@ class Accordion extends Component {
                     </a>
                     <div className={ 'qa-accordion-content govuk-!-margin-top-4' + (this.state.isOpen ? '' : ' govuk-visually-hidden') } aria-hidden={!this.state.isOpen}>
                         <div className="moj-inside-panel">
-                            { this.props.content }
+                            { this.props.children }
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@ class Accordion extends Component {
 
 Accordion.propTypes = {
     label: PropTypes.string,
-    content: PropTypes.node
+    children: PropTypes.node
 };
 
 export default Accordion;
