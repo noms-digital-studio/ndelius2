@@ -497,39 +497,39 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String riskManagementPlanRequired;
 
     @RequiredOnPage(value = 16, message = "Enter the current situation", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("CURRENT_SITUATION")
+    @JsonProperty("RMP_CURRENT_SITUATION")
     private String currentSituation;
 
     @RequiredOnPage(value = 16, message = "Enter the supporting agencies", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("SUPPORTING_AGENCIES")
+    @JsonProperty("RMP_SUPPORTING_AGENCIES")
     private String supportingAgencies;
 
     @RequiredOnPage(value = 16, message = "Enter the support", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("SUPPORT")
+    @JsonProperty("RMP_SUPPORT")
     private String support;
 
     @RequiredOnPage(value = 16, message = "Enter the control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("CONTROL")
+    @JsonProperty("RMP_CONTROL")
     private String control;
 
     @RequiredOnPage(value = 16, message = "Enter the added measures for specific risks", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RISK_MEASURES")
+    @JsonProperty("RMP_RISK_MEASURES")
     private String riskMeasures;
 
     @RequiredOnPage(value = 16, message = "Enter the agency actions", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("AGENCY_ACTIONS")
+    @JsonProperty("RMP_AGENCY_ACTIONS")
     private String agencyActions;
 
     @RequiredOnPage(value = 16, message = "Enter the additional conditions or requirements", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("ADDITIONAL_CONDITIONS")
+    @JsonProperty("RMP_ADDITIONAL_CONDITIONS")
     private String additionalConditions;
 
     @RequiredOnPage(value = 16, message = "Enter the level of contact", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("LEVEL_OF_CONTACT")
+    @JsonProperty("RMP_LEVEL_OF_CONTACT")
     private String levelOfContact;
 
     @RequiredOnPage(value = 16, message = "Enter the contingency plan", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("CONTINGENCY_PLAN")
+    @JsonProperty("RMP_CONTINGENCY_PLAN")
     private String contingencyPlan;
 
     // Page 17 - Resettlement plan for release
@@ -552,7 +552,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
 
     // Page 19 - Recommendation
     @RequiredOnPage(value = 19, message = "Enter your recommendation")
-    @JsonProperty("RECOMMENDATION")
+    @JsonProperty("_RECOMMENDATION_")
     private String recommendation;
 
     // Page 20 - Oral hearing

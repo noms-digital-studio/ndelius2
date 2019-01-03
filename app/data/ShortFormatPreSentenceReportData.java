@@ -206,7 +206,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     // Page 8
 
     @RequiredOnPage(value = 8, message = "Enter your proposed sentence")
-    @JsonProperty("PROPOSAL")
+    @JsonProperty("_PROPOSAL_")
     private String proposal;
 
     // Page 9
@@ -271,7 +271,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     private String reportAuthor;
 
     @RequiredOnPage(value = 11, message = "Enter the office")
-    @JsonProperty("OFFICE")
+    @JsonProperty("_OFFICE_")
     private String office;
 
     @OnPage(11)
