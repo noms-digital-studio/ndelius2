@@ -31,11 +31,20 @@ function openPopup(url, name, top, left) {
         if (window.hasOwnProperty('GOVUKFrontend')) {
             window.GOVUKFrontend.initAll();
 
+            var nodeListForEach = function(nodes, callback) {
+                if (window.NodeList.prototype.forEach) {
+                    return nodes.forEach(callback)
+                }
+                for (var i = 0; i < nodes.length; i++) {
+                    callback.call(window, nodes[i], i, nodes)
+                }
+            };
+
             // @TODO: If this is to be a pattern, refine and include in the MOJ Pattern Library
-            document.querySelectorAll('[data-module="progressive-radios"]').forEach(function ($module) {
+            nodeListForEach(document.querySelectorAll('[data-module="progressive-radios"]'), function ($module) {
 
                 var $inputs = $module.querySelectorAll('input[type="radio"]');
-                $inputs.forEach(function ($input) {
+                nodeListForEach($inputs, function ($input) {
                     var controls = $input.getAttribute('data-aria-controls');
                     controls = controls ? controls.substr(0, controls.lastIndexOf('-')) + '-progressive' : '';
 
@@ -58,7 +67,7 @@ function openPopup(url, name, top, left) {
                 function activate($id) {
                     $module.querySelector('#' + $id).classList.toggle('govuk-radios__conditional--hidden', false);
 
-                    $inputs.forEach(function ($input) {
+                    nodeListForEach($inputs, function ($input) {
                         $input.setAttribute('aria-expanded', $input.checked);
                     });
                 }
@@ -207,6 +216,7 @@ function openPopup(url, name, top, left) {
         $('.nav-item, .moj-subnav__link').click(function (e) {
 
             e.preventDefault();
+            console.info('NAV CLICK');
 
             var target = $(this).data('target');
             if (target && !$(this).hasClass('active')) {
