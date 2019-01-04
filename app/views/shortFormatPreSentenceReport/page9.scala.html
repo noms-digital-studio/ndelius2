@@ -15,7 +15,7 @@
 
     <div class="govuk-form-group @if(!reportForm.errors("sourcesPreviousConvictions").isEmpty) { govuk-form-group--error}">
         <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-label">Select all case documents you have used for this PAROM 1</legend>
+            <legend class="govuk-fieldset__legend govuk-label">Select the relevant options</legend>
             <div class="govuk-checkboxes" data-module="checkboxes">
                 @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
                 @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service records")
