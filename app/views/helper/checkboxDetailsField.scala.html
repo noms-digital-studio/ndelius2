@@ -4,13 +4,13 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @sectionId = @{name + "-details"}
-@arguments = @{ scala.Predef.Map('_label -> label, Symbol("data-target") -> sectionId) }
+@arguments = @{ scala.Predef.Map('_label -> label, Symbol("data-aria-controls") -> sectionId) }
 @allArguments = @{ error match {
     case Some(text) => arguments + ('_error -> text)
     case _ => arguments
 } }
 
 @checkbox(reportForm(name), allArguments.toSeq: _*)
-<div class="panel panel-border-narrow moj-reveal moj-reveal-reduce js-hidden" id="@sectionId">
+<div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="@sectionId">
 @textarea(reportForm(name + "Details"), '_label -> detailsLabel, 'class -> "wide")
 </div>

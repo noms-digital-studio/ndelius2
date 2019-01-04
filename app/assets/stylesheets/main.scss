@@ -4,6 +4,7 @@
 @import "quill";
 
 .new-window {
+  @include govuk-font(16);
   span {
     background-image: url("../images/new-window.png");
     background-position: 100% 50%;
@@ -42,4 +43,17 @@
 .offender-image {
   width: 165px;
   border: white 10px solid;
+}
+
+.app-float-left {
+  float: left;
+  @include govuk-clearfix();
+}
+
+.moj-textarea {
+  margin-bottom: 0 !important;
+}
+
+.ql-toolbar.ql-snow {
+  margin-bottom: 0;
 }

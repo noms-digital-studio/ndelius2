@@ -1,9 +1,6 @@
 // Quill specific styling that is compatible with both major versions of govuk stylesheets
 
-.form-group {
-  .ql-container.ql-snow {
-    border: none;
-  }
+.govuk-form-group {
 
   .ql-editor:focus {
 
@@ -20,7 +17,7 @@
   }
 
   .ql-toolbar {
-    visibility: hidden;
+
     @if global-variable-exists(gutter-one-third) {
       margin-bottom: $gutter-one-third;
     }
@@ -82,7 +79,7 @@
 }
 
 @-moz-document url-prefix() {
-  .form-group {
+  .govuk-form-group {
     .ql-editor:focus {
       .ql-align-justify {
         white-space: inherit

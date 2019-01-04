@@ -1,21 +1,21 @@
 @(elements: helper.FieldElements)
 
 @for(info <- elements.infos) {
-    <span class="form-hint govuk-hint govuk-!-margin-bottom-0">@info</span>
+    <span class="govuk-hint govuk-!-margin-bottom-0">@info</span>
 }
 
 @elements.args.get('_hint).map { hint =>
-    <details class="govuk-details govuk-!-margin-bottom-0 @if(elements.input.body.contains("type=\"radio\"")) { govuk-!-margin-bottom-2 margin-bottom }">
+    <details class="govuk-details govuk-!-margin-bottom-0 @if(elements.input.body.contains("type=\"radio\"")) { govuk-!-margin-bottom-2 }">
         <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">@elements.args.getOrElse('_hintLabel, "What to include")</span>
         </summary>
-        <div id="hint_@elements.id" class="panel panel-border-narrow govuk-details__text @if(elements.input.body.contains("type=\"radio\"")) { govuk-!-margin-bottom-4 margin-bottom medium-important }">
+        <div id="hint_@elements.id" class="govuk-details__text @if(elements.input.body.contains("type=\"radio\"")) { govuk-!-margin-bottom-4 }">
             @hint
         </div>
     </details>
 }
 
 @for(error <- elements.errors) {
-    <span class="error-message govuk-error-message" aria-hidden="true">@elements.args.getOrElse('_error, error)</span>
-    <span id="@elements.id-error" role="alert" class="visually-hidden govuk-visually-hidden">Please enter @elements.label</span>
+    <span class="govuk-error-message" aria-hidden="true">@elements.args.getOrElse('_error, error)</span>
+    <span id="@elements.id-error" role="alert" class="govuk-visually-hidden">Please enter @elements.label</span>
 }

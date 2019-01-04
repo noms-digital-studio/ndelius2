@@ -2,22 +2,16 @@
 
 @(entry: Int, title: String, pageStatus: PageStatus)
 
-<table role="presentation">
-    <tbody>
-        <tr>
-            <td class="font-medium" width="30">@{entry - 1}.</td>
-            <td><a href="javascript:void(0);" class="nav-item font-medium" data-target="@entry">@title</a></td>
-            <td width="135" class="align-right">
-                @if(pageStatus.isVisited && pageStatus.isValid) {
-                    <strong class="page-status-tag saved fixed-width">SAVED</strong>
-                } else if(pageStatus.isVisited) {
-                    <strong class="page-status-tag incomplete fixed-width">INCOMPLETE</strong>
-                } else {
-                    <span class="font-xsmall margin-right">Not started</span>
-                }
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<hr class="margin-top margin-bottom"/>
+<tr>
+    <td class="govuk-body-l" width="30">.</td>
+    <td><a href="javascript:void(0);" class="nav-item govuk-body-l" data-target="@entry">@title</a></td>
+    <td align="right" class="govuk-!-padding-right-0" width="80">
+        @if(pageStatus.isVisited && pageStatus.isValid) {
+            <strong class="moj-page-status-tag moj-page-status-tag--saved">SAVED</strong>
+        } else if(pageStatus.isVisited) {
+        <strong class="moj-page-status-tag moj-page-status-tag--incomplete">INCOMPLETE</strong>
+        } else {
+        <strong class="moj-page-status-tag moj-page-status-tag--empty">Not started</strong>
+        }
+    </td>
+</tr>

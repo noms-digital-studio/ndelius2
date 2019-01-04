@@ -1,6 +1,5 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
 @import com.typesafe.config.Config
 @import data.viewModel.PageStatus
@@ -13,51 +12,20 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Sign your report - Short Format Pre Sentence Report", true, Some(11)) {
+@popup(reportForm, encrypter, "Sign your report", 11, Some(("Submit", Some("Submit and view your report"))), false) {
+    @inputText(reportForm("reportAuthor"), '_label -> "Report author")
+    @inputText(reportForm("office"), '_label -> "Office")
+    @inputText(reportForm("courtOfficePhoneNumber"), '_label -> "Court office phone number")
+    @inputText(reportForm("counterSignature"), '_label -> "Counter signature (if applicable)")
+    @readOnlyField(reportForm("startDate"), "Start date", encrypter)
 
-    <h1 class="heading-xlarge">Sign your report</h1>
-
-    <div class="grid-row">
-        <div class="column-one-third">
-
-        @navigation(11)
-
-        </div>
-        <div class="column-two-thirds">
-
-            @if(!reportForm.allErrors().isEmpty) {
-                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
-
-                    <ul class="govuk-list govuk-error-summary__list">
-                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
-                    </ul>
-                </div>
-            }
-
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-                @CSRF.formField
-
-                @commonFields(reportForm, encrypter)
-                @page2Fields(reportForm, encrypter)
-                @page3Fields(reportForm, encrypter)
-                @page4Fields(reportForm)
-                @page5Fields(reportForm)
-                @page6Fields(reportForm)
-                @page7Fields(reportForm)
-                @page8Fields(reportForm)
-                @page9Fields(reportForm)
-
-                @inputText(reportForm("reportAuthor"), '_label -> "Report author", 'required -> "true")
-                @inputText(reportForm("office"), '_label -> "Office", 'required -> "true")
-                @inputText(reportForm("courtOfficePhoneNumber"), '_label -> "Court office phone number")
-                @inputText(reportForm("counterSignature"), '_label -> "Counter signature (if applicable)")
-                @readOnlyField(reportForm("startDate"), "Start date", encrypter)
-                @inputText(reportForm("reportDate"), '_label -> "Completion date", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
-
-                @footer(11, reportForm, encrypter, Some(("Submit", Some("Submit and upload your report"))), false)
-            }
-
-        </div>
-    </div>
+    @inputText(
+        reportForm("reportDate"),
+        '_label -> "Completion date",
+        'required -> "true",
+        '_date -> "true",
+        '_form_hint -> "For example, 31 3 1980",
+        '_day -> reportForm("reportDate_day").getValue.orElse(""),
+        '_month -> reportForm("reportDate_month").getValue.orElse(""),
+        '_year -> reportForm("reportDate_year").getValue.orElse(""))
 }

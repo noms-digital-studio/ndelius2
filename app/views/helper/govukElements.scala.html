@@ -6,19 +6,17 @@
 
 @if(elements.input.body.contains("type=\"checkbox\"")) {
   @govukInfoErrors(elements)
-  <div class="govuk-checkboxes__item multiple-choice" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>
+  <div class="govuk-checkboxes__item" @for((key, value) <- elements.args if !key.name.startsWith("_") && key.name != "data-aria-controls") { @{key.name}=@{value} }>
     <input class="govuk-checkboxes__input @elements.args.get('class)" type="checkbox" role="checkbox" id="@elements.id" name="@elements.field.name" value="true" @if(Boolean.parseBoolean(elements.field.value.getOrElse("false"))) { checked="checked" } aria-checked="@Boolean.parseBoolean(elements.field.value.getOrElse("false"))" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} @if(elements.args.get(Symbol("data-aria-controls"))) {data-aria-controls="@elements.args.get(Symbol("data-aria-controls"))"} />
     <label class="govuk-label govuk-checkboxes__label" for="@elements.id">
-        <span class="form-label-bold">@elements.label</span>
+        <span>@elements.label</span>
     </label>
   </div>
-  <div class="clearfix"></div>
-  <div class="margin-top"></div>
 } else if(elements.input.body.contains("type=\"radio\"")) {
-    <div class="govuk-radios form-group@if(elements.hasErrors) { form-group-error govuk-form-group--error} @if(elements.args.get(Symbol("_inline"))) {govuk-radios--inline}">
+    <div class="govuk-radios@if(elements.hasErrors) { govuk-form-group--error} @if(elements.args.get(Symbol("_inline"))) {govuk-radios--inline}">
         @govukInfoErrors(elements)
         @htmlLines.init.tail.grouped(2).map(_.mkString).map { radioAndLabel =>
-            <div class="govuk-radios__item multiple-choice" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} }>
+            <div class="govuk-radios__item" @for((key, value) <- elements.args if !key.name.startsWith("_") && key.name != "data-aria-controls") { @{key.name}=@{value} }>
             @{
                 val matcher = Pattern.compile("value=\"(.*)\" ").matcher(radioAndLabel)
                 matcher.find()
@@ -32,15 +30,14 @@
                         .replaceAll("((?:id|for)=\".*?)\\/(.*?\")", "$1_$2")
                 )
             }
-
             </div>
         }
     </div>
 } else if(elements.args.get(Symbol("_date"))) {
-    <div class="govuk-form-group form-group@if(elements.hasErrors) { form-group-error govuk-form-group--error}">
+    <div class="govuk-form-group@if(elements.hasErrors) { govuk-form-group--error}">
         <fieldset class="govuk-fieldset" aria-describedby="dob-hint" role="group">
             <legend class="govuk-fieldset__legend govuk-fieldset__legend">
-                @elements.label
+                <span>@elements.label</span>
             </legend>
 
             @if(elements.args.get(Symbol("_form_hint"))) {
@@ -84,23 +81,19 @@
     </div>
 
 } else {
-  <div class="govuk-form-group form-group@if(elements.hasErrors) { form-group-error govuk-form-group--error}">
+  <div class="govuk-form-group@if(elements.hasErrors) { govuk-form-group--error}">
     @govukLabel(elements)
     @if(elements.input.body.contains("textarea id=")) {
-      <span id="@elements.id-autosave_error" class="autosave-error-message error-message govuk-error-message js-hidden" aria-hidden="true">We can't currently save your report as the service is unavailable</span>
-      <span>
-        <textarea class="form-control govuk-textarea @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" aria-label="@elements.label" role="textbox" placeholder="@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}" id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} } aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"}>@elements.field.value</textarea>
+      <span id="@elements.id-autosave_error" class="govuk-error-message js-hidden" aria-hidden="true">We can't currently save your report as the service is unavailable</span>
+        <textarea class="govuk-textarea moj-textarea @elements.args.get('class)@if(elements.hasErrors) { govuk-textarea--error}" aria-label="@elements.label" role="textbox" placeholder="@if(elements.args.get('placeholder)) {@elements.args.get('placeholder)} else {Start typing here...}" id="@elements.id" name="@elements.field.name" @for((key, value) <- elements.args if !key.name.startsWith("_")) { @{key.name}=@{value} } aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"}>@elements.field.value</textarea>
 
         @if(elements.args.get(Symbol("data-limit"))) {
-            <div class="pull-left js-hidden" id="@elements.id-countHolder">
-                <p class="form-hint" id="@elements.id-count"></p>
+            <div class="govuk-visually-hidden" id="@elements.id-countHolder">
+                <p class="govuk-hint" id="@elements.id-count" />
             </div>
-            <div class="clearfix"></div>
         }
-
-      </span>
     } else if(elements.input.body.contains("select id=")) {
-      <select class="form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error}" id="@elements.id" name="@elements.field.name">
+      <select class="@elements.args.get('class)@if(elements.hasErrors) { govuk-select--error}" id="@elements.id" name="@elements.field.name">
           @htmlLines.filter(_.startsWith("<option ")).map(Html(_))
       </select>
     } else {
@@ -109,9 +102,7 @@
           @elements.args.get(Symbol("_form_hint"))
           </span>
       }
-      <span>
-        <input class="govuk-input @if(elements.args.get(Symbol("_number"))) {govuk-!-width-one-half} form-control @elements.args.get('class)@if(elements.hasErrors) { form-control-error govuk-input--error}" @if(elements.args.get(Symbol("_number"))) {type="number"} else {type="text"} role="textbox" placeholder="@elements.args.get('placeholder)" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} />
-      </span>
+      <input class="govuk-input @if(elements.args.get(Symbol("_number"))) {govuk-!-width-one-half} @elements.args.get('class)@if(elements.hasErrors) { govuk-input--error}" @if(elements.args.get(Symbol("_number"))) {type="number"} else {type="text"} role="textbox" placeholder="@elements.args.get('placeholder)" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} />
     }
   </div>
 }

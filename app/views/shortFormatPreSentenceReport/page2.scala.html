@@ -1,66 +1,33 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
 @import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
-@import menu._
 @import fragment._
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Offender details - Short Format Pre Sentence Report", true, Some(2)) {
+@popup(reportForm, encrypter, "Offender details", 2) {
 
-    <h1 class="heading-xlarge">Offender details</h1>
+    @readOnlyField(reportForm("name"), "Full name", encrypter)
+    @readOnlyField(reportForm("dateOfBirth"), "Date of birth", encrypter)
+    @readOnlyField(reportForm("age"), "Age", encrypter)
+    @readOnlyField(reportForm("crn"), "Delius CRN", encrypter)
+    @if(Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
+        @readOnlyField(reportForm("address"), "Address", encrypter)
+    }
+    @if(Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
+        @readOnlyField(reportForm("pnc"), "PNC ID", encrypter)
+    }
 
-    <div class="grid-row">
-        <div class="column-one-third">
-
-        @navigation(2)
-
-        </div>
-        <div class="column-two-thirds">
-
-        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-            @CSRF.formField
-
-            @commonFields(reportForm, encrypter)
-
-            @readOnlyField(reportForm("name"), "Full name", encrypter)
-            @readOnlyField(reportForm("dateOfBirth"), "Date of birth", encrypter)
-            @readOnlyField(reportForm("age"), "Age", encrypter)
-            @readOnlyField(reportForm("crn"), "Delius CRN", encrypter)
-            @if(Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
-                @readOnlyField(reportForm("address"), "Address", encrypter)
-            }
-            @if(Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
-                @readOnlyField(reportForm("pnc"), "PNC ID", encrypter)
-            }
-
-            @if(!Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
-              @inputText(reportForm("address"), '_label -> "Address")
-            }
-            @if(!Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
-                @inputText(reportForm("pnc"), '_label -> "PNC ID (if available)", 'class -> "half-width")
-            }
-
-            @page3Fields(reportForm, encrypter)
-            @page4Fields(reportForm)
-            @page5Fields(reportForm)
-            @page6Fields(reportForm)
-            @page7Fields(reportForm)
-            @page8Fields(reportForm)
-            @page9Fields(reportForm)
-            @page11Fields(reportForm, encrypter)
-
-            @footer(2, reportForm, encrypter)
-        }
-
-        </div>
-    </div>
-
+    @if(!Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
+        @inputText(reportForm("address"), '_label -> "Address")
+    }
+    @if(!Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
+        @inputText(reportForm("pnc"), '_label -> "PNC ID (if available)", 'class -> "half-width")
+    }
 }

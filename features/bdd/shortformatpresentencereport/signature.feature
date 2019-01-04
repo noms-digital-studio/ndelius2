@@ -32,29 +32,24 @@ Feature: Short Format Pre-sentence Report - Sign your report
 
   Scenario: Delius user does not complete the relevant questions on the "Sign your report" UI
 
-    When they select the "Submit" button
+    When they remove the stored date for "Completion date"
+    And they select the "Submit" button
     Then the following error messages are displayed
-      | Report author | Enter the report author |
-      | Office        | Enter the office        |
+      | Report author   | Enter the report author          |
+      | Office          | Enter the office                 |
+      | Completion date | Enter the report completion date |
 
-  Scenario: Delius user wants to sign and date their Short Format Pre-sentence Report
+  Scenario: Delius user wants to submit their Short Format Pre-sentence Report
 
     When they input the following information
-      | Report author   | Jane Doe           |
-      | Office          | Stafford, Midlands |
-      | Completion date | 07/08/2018         |
+      | Report author | Jane Doe           |
+      | Office        | Stafford, Midlands |
+    And they enter the date "07/08/2018" for "Completion date"
 
     Then the following information should be saved in the report
       | reportAuthor | Jane Doe           |
       | office       | Stafford, Midlands |
       | reportDate   | 07/08/2018         |
-
-  Scenario: Delius user wants to submit their Short Format Pre-sentence Report
-
-    When they input the following information
-      | Report author   | Jane Doe           |
-      | Office          | Stafford, Midlands |
-      | Completion date | 07/08/2018         |
 
     And they select the "Submit" button
     Then the user should be directed to the "Report saved" UI

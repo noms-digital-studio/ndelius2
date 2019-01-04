@@ -65,8 +65,14 @@ public class OffenderSummaryPage extends FluentPage {
         await().until($(".qa-offender-registrations")).size(1);
 
         val row = $(".qa-offender-registrations tbody tr").index(registrationTableRow.getRowNumber());
+        val riskTag = row.find(".moj-risk-tag").first().getElement();
+        val statusColor = colourToRGB(registrationTableRow.getStatusColour());
 
-        return row.find(".moj-risk-tag").first().getElement().getCssValue("background-color").equals(colourToRGB(registrationTableRow.getStatusColour())) &&
+        return riskTag.getCssValue("color").equals(statusColor) &&
+                riskTag.getCssValue("border-left-color").equals(statusColor) &&
+                riskTag.getCssValue("border-top-color").equals(statusColor) &&
+                riskTag.getCssValue("border-right-color").equals(statusColor) &&
+                riskTag.getCssValue("border-bottom-color").equals(statusColor) &&
                 row.text().contains(String.format("%s %s %s %s", registrationTableRow.getType(), registrationTableRow.getStatusWord().toLowerCase(), registrationTableRow.getDescription(), registrationTableRow.getDate()));
     }
 
@@ -83,7 +89,7 @@ public class OffenderSummaryPage extends FluentPage {
             case "Green":
                 return "rgba(0, 100, 53, 1)";
             case "White":
-                return "rgba(0, 0, 0, 0)";
+                return "rgba(111, 119, 123, 1)";
         }
 
         return "";

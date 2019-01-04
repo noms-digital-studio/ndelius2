@@ -4,16 +4,12 @@
 
 @renderNavigation(entries: Seq[String]) = {
 
-    <nav class="js-stick-at-top-when-scrolling">
-
-        <h3 class="font-xsmall bold">Report sections:</h3>
-
-        <span class="display-block margin-top"></span>
-
-        <ul>
-        @for((entry, index) <- entries.zipWithIndex) {
-            @navigationEntry(index + 2, entry, current)
-        }
+    <nav class="moj-subnav">
+        <p class="govuk-heading-s moj-subnav__title">Report sections</p>
+        <ul class="moj-subnav__section">
+            @for((entry, index) <- entries.zipWithIndex) {
+                @navigationEntry(index + 2, entry, current)
+            }
         </ul>
     </nav>
 }

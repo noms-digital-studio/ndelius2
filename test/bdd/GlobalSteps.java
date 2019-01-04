@@ -137,6 +137,13 @@ public class GlobalSteps {
         page.fillInputInSectionWithLegend(legend, "Year", new SimpleDateFormat("yyyy").format(date));
     }
 
+    @When("^they remove the stored date for \"([^\"]*)\"$")
+    public void theyEnterTheDateFor(String legend) throws ParseException {
+        page.fillInputInSectionWithLegend(legend, "Day", "");
+        page.fillInputInSectionWithLegend(legend, "Month", "");
+        page.fillInputInSectionWithLegend(legend, "Year", "");
+    }
+
     private Map<String, String> toNameValues(Map<String, String> labelTextMap) {
         return labelTextMap.keySet().stream().map(label -> new SimpleEntry<>(nameFromLabel(label), labelTextMap.get(label))).collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
     }

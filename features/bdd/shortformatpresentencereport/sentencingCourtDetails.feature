@@ -8,7 +8,7 @@ Feature: Short Format Pre-sentence Report - Sentencing court details
     Given they input the following information
       | Court              |  |
       | Local justice area |  |
-      | Date of hearing    |  |
+    And they remove the stored date for "Date of hearing"
     When they select the "Continue" button
     Then  the following error messages are displayed
       | Court              | Enter the court              |
@@ -20,7 +20,7 @@ Feature: Short Format Pre-sentence Report - Sentencing court details
     When they input the following information
       | Court              | Some court text              |
       | Local justice area | Some local justice area text |
-      | Date of hearing    | 09/08/2018                   |
+    And they enter the date "09/08/2018" for "Date of hearing"
 
     Then the following information should be saved in the report
       | court            | Some court text              |

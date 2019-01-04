@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -361,6 +362,11 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
         }
 
         return LocalDate.now();
+    }
+
+    protected String formattedDateFromDatePartsDefaultToday(String fieldName) {
+        String storedDate = formattedDateFromDateParts(fieldForName(fieldName));
+        return Strings.isNullOrEmpty(storedDate) ? new SimpleDateFormat("dd/MM/yyyy").format(new Date()) : storedDate;
     }
 
     protected String formattedDateFromDateParts(String fieldName) {

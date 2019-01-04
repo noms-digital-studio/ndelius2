@@ -1,12 +1,10 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
 @import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
-@import menu._
 @import fragment._
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
@@ -30,48 +28,6 @@
     <p>Remember that your proposal should be commensurate with risk and need. Proposals should not be made for suspended sentence orders.</p>
 }
 
-@main("Conclusion - Short Format Pre Sentence Report", true, Some(8)) {
-
-    <h1 class="heading-xlarge">Proposal</h1>
-
-    <div class="grid-row">
-        <div class="column-one-third">
-
-        @navigation(8)
-
-        </div>
-        <div class="column-two-thirds">
-
-            @if(!reportForm.allErrors().isEmpty) {
-                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
-
-                    <ul class="govuk-list govuk-error-summary__list">
-                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
-                    </ul>
-                </div>
-            }
-
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-                @CSRF.formField
-
-                @commonFields(reportForm, encrypter)
-                @page2Fields(reportForm, encrypter)
-                @page3Fields(reportForm, encrypter)
-                @page4Fields(reportForm)
-                @page5Fields(reportForm)
-                @page6Fields(reportForm)
-                @page7Fields(reportForm)
-
-                @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_hint -> proposalHint, 'class -> "wide", Symbol("data-limit") -> "3000", 'required -> "true")
-
-                @page9Fields(reportForm)
-                @page11Fields(reportForm, encrypter)
-
-                @footer(8, reportForm, encrypter)
-            }
-
-        </div>
-    </div>
-
+@popup(reportForm, encrypter, "Proposal", 8) {
+    @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_hint -> proposalHint, Symbol("data-limit") -> "3000")
 }

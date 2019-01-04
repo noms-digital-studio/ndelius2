@@ -1,65 +1,30 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
 @import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
 @import scala.io.Source
-@import menu._
 @import fragment._
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Sentencing court details - Short Format Pre Sentence Report", true, Some(3)) {
+@popup(reportForm, encrypter, "Sentencing court details", 3) {
 
-    <h1 class="heading-xlarge">Sentencing court details</h1>
+    @inputText(reportForm("court"), '_label -> "Court")
+    @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area")
 
-    <div class="grid-row">
-        <div class="column-one-third">
-
-        @navigation(3)
-
-        </div>
-        <div class="column-two-thirds">
-
-            @if(!reportForm.allErrors().isEmpty) {
-                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
-
-                    <ul class="govuk-list govuk-error-summary__list">
-                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
-                    </ul>
-                </div>
-            }
-
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-                @CSRF.formField
-
-                @commonFields(reportForm, encrypter)
-                @page2Fields(reportForm, encrypter)
-
-                @inputText(reportForm("court"), '_label -> "Court", 'required -> "true", 'class -> "wide")
-
-                @inputText(reportForm("localJusticeArea"), '_label -> "Local justice area", 'required -> "true", 'class -> "wide")
-
-                @inputText(reportForm("dateOfHearing"), '_label -> "Date of hearing", '_help -> "For example: 28/06/2017", 'class -> "date-picker", 'required -> "true")
-
-                @page4Fields(reportForm)
-                @page5Fields(reportForm)
-                @page6Fields(reportForm)
-                @page7Fields(reportForm)
-                @page8Fields(reportForm)
-                @page9Fields(reportForm)
-                @page11Fields(reportForm, encrypter)
-
-                @footer(3, reportForm, encrypter)
-            }
-
-        </div>
-    </div>
+    @inputText(
+        reportForm("dateOfHearing"),
+        '_label -> "Date of hearing",
+        'required -> "true",
+        '_date -> "true",
+        '_form_hint -> "For example, 31 3 1980",
+        '_day -> reportForm("dateOfHearing_day").getValue.orElse(""),
+        '_month -> reportForm("dateOfHearing_month").getValue.orElse(""),
+        '_year -> reportForm("dateOfHearing_year").getValue.orElse(""))
 
 }

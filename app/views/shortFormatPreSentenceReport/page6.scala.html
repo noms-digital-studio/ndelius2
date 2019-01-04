@@ -1,14 +1,11 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
 @import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
-@import menu._
 @import fragment._
-
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
@@ -20,61 +17,35 @@
 
 @caringResponsibilitiesGuidance = {
     <p>Detail the offender’s current and past caring responsibilities.</p>
-    <p class="margin-top">Take account of caring for both children and adults.</p>
-    <p class="margin-top">How have those responsibilities affected their offending?</p>
-    <p class="margin-top">Have they affected their engagement with rehabilitative interventions?</p>
-    <p class="margin-top">Remember that evidence shows that imprisonment of mothers has significant impacts on those that they care for.</p>
+    <p>Take account of caring for both children and adults.</p>
+    <p>How have those responsibilities affected their offending?</p>
+    <p>Have they affected their engagement with rehabilitative interventions?</p>
+    <p>Remember that evidence shows that imprisonment of mothers has significant impacts on those that they care for.</p>
 }
-@main("Offender assessment - Short Format Pre Sentence Report", true, Some(6)) {
+@popup(reportForm, encrypter, "Offender assessment", 6) {
 
-    <h1 class="heading-xlarge">Offender assessment</h1>
+    <h2 class="govuk-fieldset__heading"><span class="govuk-caption-xl">Select the factors relating to offending behaviour and offender need. Include protective factors.</span></h2>
 
-    <div class="grid-row">
-        <div class="column-one-third">
+    <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">Offender assessment guidance</span>
+        </summary>
+        <div class="govuk-details__text panel panel-border-narrow">
 
-        @navigation(6)
+            <p>You should consider diversity issues for each factor in terms of the offender’s own experiences or protected characteristics.</p>
+            <p>Key aspects of the person’s circumstances should be detailed. Those which are linked to their offending behaviour should be highlighted.</p>
+            <p>Make sure that you select all of the factors that have impacted on offending, and that may impact on future risk of re offending.</p>
+            <p>Also, consider if there are factors that are not directly linked. These may cause difficulties for the offender and impact on their desistance from crime.</p>
+            <p>Include information on protective factors that may support desistance.</p>
+            <p>Provide an explanation of the offender's motivation and readiness to change.</p>
 
         </div>
-        <div class="column-two-thirds">
+    </details>
 
-            @if(!reportForm.allErrors().isEmpty) {
-                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
-
-                    <ul class="govuk-list govuk-error-summary__list">
-                        @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
-                    </ul>
-                </div>
-            }
-
-            <h2 class="lede no-margin-top no-margin-bottom">Select the factors relating to offending behaviour and offender need. Include protective factors.</h2>
-
-            <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">Offender assessment guidance</span>
-                </summary>
-                <div class="govuk-details__text panel panel-border-narrow">
-
-                    <p>You should consider diversity issues for each factor in terms of the offender’s own experiences or protected characteristics.</p>
-                    <p>Key aspects of the person’s circumstances should be detailed. Those which are linked to their offending behaviour should be highlighted.</p>
-                    <p>Make sure that you select all of the factors that have impacted on offending, and that may impact on future risk of re offending.</p>
-                    <p>Also, consider if there are factors that are not directly linked. These may cause difficulties for the offender and impact on their desistance from crime.</p>
-                    <p>Include information on protective factors that may support desistance.</p>
-                    <p>Provide an explanation of the offender's motivation and readiness to change.</p>
-
-                </div>
-            </details>
-
-            @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
-                @CSRF.formField
-
-                @commonFields(reportForm, encrypter)
-                @page2Fields(reportForm, encrypter)
-                @page3Fields(reportForm, encrypter)
-                @page4Fields(reportForm)
-                @page5Fields(reportForm)
-
-                <div class="form-group@if(reportForm.allErrors.stream.anyMatch(_.key.contains("issue"))) { form-group-error}">
+    <div class="govuk-form-group@if(reportForm.allErrors.stream.anyMatch(_.key.contains("issue"))) { govuk-form-group--error}">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">Select the relevant options</legend>
+            <div class="govuk-checkboxes" data-module="checkboxes">
                 @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment for accommodation", Some("Select underlying issues from the options below"))
                 @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment for employment")
                 @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment for finance")
@@ -83,67 +54,55 @@
                 @checkboxDetailsField(reportForm, "issueHealth", "Physical & mental health", "Provide a brief assessment for physical & mental health")
                 @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment for behaviour")
                 @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues")
-                </div>
-
-                <hr />
-
-                <div class="form-group">
-                    <fieldset>
-                        <legend class="margin-bottom medium">
-                            <span class="form-label-bold">Is there evidence of the offender experiencing trauma?</span>
-                        </legend>
-
-                        @inputRadioGroup(
-                            reportForm("experienceTrauma"),
-                            options(
-                                "yes" -> "Yes",
-                                "no" -> "No"
-                            ),
-                            Symbol("_inline") -> "true",
-                            Symbol("data-target") -> "experienceTrauma-details",
-                            Symbol("data-ignore") -> "no"
-                        )
-                    </fieldset>
-
-                    <div class="panel panel-border-narrow js-hidden moj-reveal margin-top" id="experienceTrauma-details">
-                    @textarea(reportForm("experienceTraumaDetails"), '_label -> "Experience of trauma", '_hint -> traumaGuidance, 'class -> "wide")
-                    </div>
-                </div>
-
-
-                <hr />
-
-                <div class="form-group">
-                    <fieldset>
-                        <legend class="margin-bottom medium">
-                            <span class="form-label-bold">Does the offender have caring responsibilities for children or adults, or have they ever had caring responsibilities for children or adults?</span>
-                        </legend>
-
-                        @inputRadioGroup(
-                            reportForm("caringResponsibilities"),
-                            options(
-                                "yes" -> "Yes",
-                                "no" -> "No"
-                            ),
-                            Symbol("_inline") -> "true",
-                            Symbol("data-target") -> "caringResponsibilities-details",
-                            Symbol("data-ignore") -> "no"
-                        )
-                    </fieldset>
-
-                    <div class="panel panel-border-narrow moj-reveal js-hidden" id="caringResponsibilities-details">
-                    @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance, 'class -> "wide")
-                    </div>
-                </div>
-
-                @page7Fields(reportForm)
-                @page8Fields(reportForm)
-                @page9Fields(reportForm)
-                @page11Fields(reportForm, encrypter)
-
-                @footer(6, reportForm, encrypter)
-            }
-
-        </div>
+            </div>
+        </fieldset>
     </div>
+
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+        <div class="govuk-form-group" data-module="radios">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-label">
+                    Is there evidence of the offender experiencing trauma?
+                </legend>
+
+                @inputRadioGroup(
+                    reportForm("experienceTrauma"),
+                    options(
+                        "yes" -> "Yes",
+                        "no" -> "No"
+                    ),
+                    Symbol("_inline") -> "true",
+                    Symbol("data-aria-controls") -> "experience-trauma"
+                )
+            </fieldset>
+
+            <div class="govuk-radios__conditional govuk-radios__conditional--hidden govuk-!-margin-top-2" id="experience-trauma-yes">
+            @textarea(reportForm("experienceTraumaDetails"), '_label -> "Experience of trauma", '_hint -> traumaGuidance)
+            </div>
+        </div>
+
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+        <div class="govuk-form-group" data-module="radios">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-label">
+                    Does the offender have caring responsibilities for children or adults, or have they ever had caring responsibilities for children or adults?
+                </legend>
+
+                @inputRadioGroup(
+                    reportForm("caringResponsibilities"),
+                    options(
+                        "yes" -> "Yes",
+                        "no" -> "No"
+                    ),
+                    Symbol("_inline") -> "true",
+                    Symbol("data-aria-controls") -> "caring-responsibilities"
+                )
+            </fieldset>
+
+            <div class="govuk-radios__conditional govuk-radios__conditional--hidden govuk-!-margin-top-2" id="caring-responsibilities-yes">
+            @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance)
+            </div>
+        </div>
 }

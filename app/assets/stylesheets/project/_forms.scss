@@ -1,39 +1,3 @@
-textarea.form-control {
-  max-width: 100%;
-
-  margin: 10px 0 0 0;
-  resize: none;
-  border: 0;
-  padding-left: 0;
-  overflow: auto;
-
-  @include ie(8) {
-    height: 8em;
-    border: 2px solid !important;
-  }
-
-  &::placeholder {
-    font-size: 25px;
-  }
-
-  &.wide {
-    width: 100%;
-  }
-
-  &.classic {
-    border: 2px solid $text-colour;
-    min-height: 150px;
-  }
-
-  &.form-control-error {
-    // border: 4px solid $error-colour;
-  }
-}
-
-.form-control.force-border {
-  border: 2px solid $text-colour !important;
-}
-
 input[type="text"], input[type="number"] {
 
   &.wide {

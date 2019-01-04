@@ -16,47 +16,49 @@
 
 @main("Start your report - Short Format Pre Sentence Report", true, Some(1)) {
 
-    <div class="panel interrupt-panel">
-    <h1 class="heading-xlarge">Short Format Pre-sentence Report</h1>
+    <div class="moj-interrupt">
+        <h1 class="govuk-heading-xl govuk-!-margin-top-6 moj-!-color-white">Short Format Pre-sentence Report</h1>
+        <ul>
+            <li>
+                <p class="govuk-body govuk-!-margin-top-0 moj-!-color-white"><span class="govuk-heading-m moj-!-color-white govuk-!-margin-bottom-1">Save and close your report at any point</span> You can save and close your report so you don't have to complete the whole thing at once.</p>
+            </li>
+            <li>
+                <p class="govuk-body govuk-!-margin-top-0 moj-!-color-white"><span class="govuk-heading-m moj-!-color-white govuk-!-margin-bottom-1">Save as you write</span> Your report will be saved as you write so you'll never lose your work.</p>
+            </li>
+            <li>
+                <p class="govuk-body govuk-!-margin-top-0 moj-!-color-white"><span class="govuk-heading-m moj-!-color-white govuk-!-margin-bottom-1">Return to complete your report later</span> You can finish your report when it suits you.</p>
+            </li>
+            <li>
+                <p class="govuk-body govuk-!-margin-top-0 moj-!-color-white"><span class="govuk-heading-m moj-!-color-white govuk-!-margin-bottom-1">Edit your completed report</span> You can edit your report whenever you want, even after you've finished.</p>
+            </li>
+        </ul>
 
-        <span class="bold-medium">@reportForm("lastUpdated").getValue.map( _ => "This draft report was last saved:").orElse("")</span>
-        <span class="font-medium" id="lastUpdated">@reportForm("lastUpdated").getValue.map( dateTime => asDuration(dateTime)).orElse("")</span>
+        @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+            @CSRF.formField
 
-        <ul class="list-bullet margin-top medium">
-        <li><div class="bold-medium">Save and close your report at any point</div><div class="font-small">You can save and close your report so you don't have to complete the whole thing at once.</div></li>
-        <li><div class="bold-medium">Save as you write</div><div class="normal">Your report will be saved as you write so you'll never lose your work.</div></li>
-        <li><div class="bold-medium">Return to complete your report later</div><div class="font-small">You can finish your report when it suits you.</div></li>
-        <li><div class="bold-medium">Edit your completed report</div><div class="font-small">You can edit your report whenever you want, even after you've finished.</div></li>
-    </ul>
+            @commonFields(reportForm, encrypter)
+            @page2Fields(reportForm, encrypter)
+            @page3Fields(reportForm, encrypter)
+            @page4Fields(reportForm)
+            @page5Fields(reportForm)
+            @page6Fields(reportForm)
+            @page7Fields(reportForm)
+            @page8Fields(reportForm)
+            @page9Fields(reportForm)
+            @page11Fields(reportForm, encrypter)
 
-    <div class="margin-top large">
-    @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-        @CSRF.formField
+            @pageNumber(
+                reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
+                Some(reportForm("originalPageNumber").getValue.fold(("Start now", None))(_ => ("Continue now", None))),
+                Some("popup-launcher"),
+                reportForm("originalPageNumber").getValue)
+            <div class="new-window"><span class="govuk-body-s moj-!-color-white">Launches in a separate window</span></div>
+        }
 
-        @commonFields(reportForm, encrypter)
-        @page2Fields(reportForm, encrypter)
-        @page3Fields(reportForm, encrypter)
-        @page4Fields(reportForm)
-        @page5Fields(reportForm)
-        @page6Fields(reportForm)
-        @page7Fields(reportForm)
-        @page8Fields(reportForm)
-        @page9Fields(reportForm)
-        @page11Fields(reportForm, encrypter)
-
-        @pageNumber(
-            reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
-            Some(reportForm("originalPageNumber").getValue.fold(("Start now", None))(_ => ("Continue now", None))),
-            Some("popup-launcher"),
-            reportForm("originalPageNumber").getValue)
-        <div class="new-window"><span class="font-xsmall">Launches in a separate window</span></div>
-    }
     </div>
-    </div>
-    <a class="bold-xsmall clickable back-link" tabindex="1" href="javascript:documentList()">Back to document list</a>
+    <a class="govuk-back-link" tabindex="1" href="javascript:documentList()">Back to document list</a>
 
 }
-
 
 <script type="text/javascript">
     var isExistingReport = @reportForm("lastUpdated").getValue.map( _ => "true").orElse("false");

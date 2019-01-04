@@ -565,6 +565,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
 
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("pageNumber", "3");
@@ -593,6 +596,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -624,6 +630,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -656,6 +665,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence","Some offence");
@@ -690,6 +702,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -725,6 +740,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -768,6 +786,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -823,6 +844,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -881,6 +905,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -940,6 +967,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -999,6 +1029,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -1060,6 +1093,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -1123,6 +1159,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -1199,6 +1238,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -1276,6 +1318,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("pnc", encryptor.apply("98793030"));
                 put("court", encryptor.apply("Manchester and Salford Magistrates Court"));
                 put("dateOfHearing", encryptor.apply("01/02/2017"));
+                put("dateOfHearing_day", "01");
+                put("dateOfHearing_month", "02");
+                put("dateOfHearing_year", "2017");
                 put("localJusticeArea", encryptor.apply("Greater Manchester"));
 
                 put("mainOffence", "Some offence");
@@ -1326,6 +1371,9 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("reportAuthor", "Arthur Author");
                 put("office", "Sheffield probation office");
                 put("reportDate", "21/06/2017");
+                put("reportDate_day", "21");
+                put("reportDate_month", "06");
+                put("reportDate_year", "2017");
 
                 put("pageNumber", "11");
             }

@@ -1,83 +1,38 @@
 @import data._
 @import helper._
-@import shortFormatPreSentenceReport.hiddenInputs._
 @import play.Environment
 @import com.typesafe.config.Config
 @import data.viewModel.PageStatus
 @import helpers.CallHelper.relative
 @import org.webjars.play.WebJarsUtil
-@import menu._
 @import fragment._
-
 
 @(reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main("Sources of information - Short Format Pre Sentence Report", true, Some(9)) {
+@popup(reportForm, encrypter, "Sources of information", 9) {
 
-    <h1 class="heading-xlarge">Sources of information</h1>
+    <div class="govuk-form-group @if(!reportForm.errors("sourcesPreviousConvictions").isEmpty) { govuk-form-group--error}">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">Select all case documents you have used for this PAROM 1</legend>
+            <div class="govuk-checkboxes" data-module="checkboxes">
+                @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
+                @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service records")
+                @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS summary")
+                @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys assessments")
+                @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous convictions")
+                @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim statement")
+                @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Safeguarding checks")
+                @checkbox(reportForm("policeInformationSource"), '_label -> "Police information")
+                @checkbox(reportForm("sentencingGuidelinesInformationSource"), '_label -> "Sentencing guidelines")
+                @checkbox(reportForm("domesticAbuseInformationSource"), '_label -> "Domestic abuse call out information")
+                @checkbox(reportForm("otherInformationSource"), '_label -> "Other (please specify below)", Symbol("data-aria-controls") -> "other-sources")
 
-    <div class="grid-row">
-        <div class="column-one-third">
-
-        @navigation(9)
-
-        </div>
-        <div class="column-two-thirds">
-
-            @if(!reportForm.allErrors().isEmpty) {
-                <div class="error-summary no-margin-top" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                    <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem</h2>
-
-                    <ul class="govuk-list govuk-error-summary__list">
-                    @reportForm.allErrors.map(error => <li><a href={s"#${error.key}-error"} class="error-message">{error.format(messages())}</a></li>)
-                    </ul>
+                <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden govuk-!-margin-top-2" id="other-sources">
+                @textarea(reportForm("otherInformationDetails"), '_label -> "Other source(s) of information")
                 </div>
-            }
-
-            <fieldset>
-
-                <legend class="lede margin-bottom medium">Select the relevant options</legend>
-
-                @helper.form(action = relative(routes.ShortFormatPreSentenceReportController.wizardPost()), 'novalidate -> "") {
-                    @CSRF.formField
-
-                    @commonFields(reportForm, encrypter)
-                    @page2Fields(reportForm, encrypter)
-                    @page3Fields(reportForm, encrypter)
-
-                    @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
-                    @checkbox(reportForm("serviceRecordsInformationSource"), '_label -> "Service records")
-                    @checkbox(reportForm("cpsSummaryInformationSource"), '_label -> "CPS summary")
-                    @checkbox(reportForm("oasysAssessmentsInformationSource"), '_label -> "Previous OASys assessments")
-                    @checkbox(reportForm("previousConvictionsInformationSource"), '_label -> "Previous convictions")
-                    @checkbox(reportForm("victimStatementInformationSource"), '_label -> "Victim statement")
-                    @checkbox(reportForm("childrenServicesInformationSource"), '_label -> "Safeguarding checks")
-                    @checkbox(reportForm("policeInformationSource"), '_label -> "Police information")
-                    @checkbox(reportForm("sentencingGuidelinesInformationSource"), '_label -> "Sentencing guidelines")
-                    @checkbox(reportForm("domesticAbuseInformationSource"), '_label -> "Domestic abuse call out information")
-                    @checkbox(reportForm("otherInformationSource"), '_label -> "Other (please specify below)", Symbol("data-target") -> "other-information")
-
-                    <div class="panel panel-border-narrow moj-reveal moj-reveal-reduce js-hidden" id="other-information">
-                    @textarea(reportForm("otherInformationDetails"), '_label -> "Other source(s) of information", 'class -> "wide")
-                    </div>
-
-                    <div class="margin-top large"></div>
-
-                    @page4Fields(reportForm)
-                    @page5Fields(reportForm)
-                    @page6Fields(reportForm)
-                    @page7Fields(reportForm)
-                    @page8Fields(reportForm)
-                    @page11Fields(reportForm, encrypter)
-
-                    @footer(9, reportForm, encrypter)
-                }
-
-            </fieldset>
-
-        </div>
+            </div>
+        </fieldset>
     </div>
-
 }

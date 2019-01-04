@@ -4,18 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import data.annotations.Encrypted;
-import data.annotations.OnPage;
-import data.annotations.RequiredGroupOnPage;
-import data.annotations.RequiredOnPage;
+import data.annotations.*;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import play.data.validation.ValidationError;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,11 +65,20 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("_LOCAL_JUSTICE_AREA_")
     private String localJusticeArea;
 
-    @Encrypted
-    @RequiredOnPage(value = 3, message = "Enter the date of hearing")
     @JsonProperty("_DATE_OF_HEARING_")
-    private String dateOfHearing;
+    public String getDateOfHearing() {
+        return formattedDateFromDatePartsDefaultToday("dateOfHearing");
+    }
 
+    @Encrypted
+    @RequiredDateOnPage(value = 3,
+            message = "Enter the date of hearing",
+            incompleteMessage = "Enter the date of hearing and include a day, month and year",
+            invalidMessage = "Enter a real date of hearing")
+    private String dateOfHearing;
+    private String dateOfHearing_day;
+    private String dateOfHearing_month;
+    private String dateOfHearing_year;
 
     // Page 4
 
@@ -282,9 +286,19 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("COUNTER_SIGNATURE")
     private String counterSignature;
 
-    @RequiredOnPage(value = 11, message = "Enter the report completion date")
     @JsonProperty("REPORT_DATE")
+    public String getReportDate() {
+        return formattedDateFromDatePartsDefaultToday("reportDate");
+    }
+
+    @RequiredDateOnPage(value = 11,
+            message = "Enter the report completion date",
+            incompleteMessage = "Enter the report completion date and include a day, month and year",
+            invalidMessage = "Enter a real report completion date")
     private String reportDate;
+    private String reportDate_day;
+    private String reportDate_month;
+    private String reportDate_year;
 
     @JsonProperty("ADDRESS_LINES")
     public List<String> addressLines() {
@@ -296,11 +310,22 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
                                 .collect(Collectors.toList()))
                 .orElse(ImmutableList.of());
     }
+
     @Override
     public List<ValidationError> validate() {
 
-        if (Strings.isNullOrEmpty(reportDate)) { // Fill in for the first read only page, then keep any user changes
-            reportDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+        if (!Strings.isNullOrEmpty(dateOfHearing) && Strings.isNullOrEmpty(dateOfHearing_day) && Strings.isNullOrEmpty(dateOfHearing_month) && Strings.isNullOrEmpty(dateOfHearing_year)) {
+            String[] dateOfHeartingSplit = dateOfHearing.split("/");
+            dateOfHearing_day = dateOfHeartingSplit[0];
+            dateOfHearing_month = dateOfHeartingSplit[1];
+            dateOfHearing_year = dateOfHeartingSplit[2];
+        }
+
+        if (!Strings.isNullOrEmpty(reportDate) && Strings.isNullOrEmpty(reportDate_day) && Strings.isNullOrEmpty(reportDate_month) && Strings.isNullOrEmpty(reportDate_year)) {
+            String[] reportDateSplit = reportDate.split("/");
+            reportDate_day = reportDateSplit[0];
+            reportDate_month = reportDateSplit[1];
+            reportDate_year = reportDateSplit[2];
         }
 
         return super.validate();

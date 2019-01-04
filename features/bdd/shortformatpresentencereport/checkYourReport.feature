@@ -17,4 +17,4 @@ Feature: Parole Report
 
     Given that the Delius user is on the "Offence details" page within the Short Format Pre-sentence Report
     When they are select "Check your report" link on the navigation menu
-    Then the button for "Offence analysis" must display "Not started"
+    Then the button for "Offence analysis" must display "NOT STARTED"

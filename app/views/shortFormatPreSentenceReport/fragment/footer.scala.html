@@ -2,32 +2,37 @@
 @import helpers.CallHelper.relative
 @import data._
 
-@(page: Int, reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true)
+@(page: Int, reportForm: Form[ShortFormatPreSentenceReportData], encrypter: String => String, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true, showNextButton: Boolean = true)
 
-<footer class="report-footer">
-    <div class="preview-container">
-        <button class="button secondary" id="draftReport" type="button" data-target="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))">
+<div class="moj-footer-compensate"></div>
+<footer class="moj-report-footer">
+    <div class="moj-report-footer__container-left">
+
+        <button class="govuk-button moj-button--secondary moj-tooltip govuk-!-margin-bottom-1" id="draftReport" type="button" data-target="@relative(routes.ShortFormatPreSentenceReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))">
             View draft report
         </button>
 
     </div>
-    <div class="container">
-        <div id="save_indicator" class="inline margin-top margin-right js-hidden">
-            <div class="font-xxsmall inline">
-                <div class="spinner inline active">
-                    <div class="double-bounce1"></div>
-                    <div class="double-bounce2"></div>
-                </div>
-                <span>Changes saved</span>
+    <div class="moj-report-footer__container-right">
+        <div id="save_indicator" class="moj-auto-save js-hidden">
+            <div class="moj-auto-save__spinner">
+                <div class="moj-auto-save__spinner__double-bounce1"></div>
+                <div class="moj-auto-save__spinner__double-bounce2"></div>
             </div>
+            <span class="govuk-body-xs">Changes saved</span>
         </div>
 
+        @if(showNextButton) {
+            @pageNumber(page, nextText)
+        } else {
+            <input type="hidden" id="jumpNumber" name="jumpNumber" value="" />
+            <input type="hidden" id="pageNumber" name="pageNumber" value="@page"/>
+        }
 
-        @pageNumber(page, nextText)
         @if(showCloseButton) {
-        <button class="button secondary tooltip" id="exitLink" type="button" aria-label="Close" >
-            Close<span>Save and close your report</span>
-        </button>
+            <button class="govuk-button moj-button--secondary moj-tooltip govuk-!-margin-bottom-1" id="exitLink" type="button" aria-label="Close" >
+                Close<span>Save and close your report</span>
+            </button>
         }
     </div>
 </footer>

@@ -27,6 +27,44 @@ function openPopup(url, name, top, left) {
             GOVUK.stickAtTopWhenScrolling.init();
         }
 
+        // Init GOVUKFrontend
+        if (window.hasOwnProperty('GOVUKFrontend')) {
+            window.GOVUKFrontend.initAll();
+
+            // @TODO: If this is to be a pattern, refine and include in the MOJ Pattern Library
+            document.querySelectorAll('[data-module="progressive-radios"]').forEach(function ($module) {
+
+                var $inputs = $module.querySelectorAll('input[type="radio"]');
+                $inputs.forEach(function ($input) {
+                    var controls = $input.getAttribute('data-aria-controls');
+                    controls = controls ? controls.substr(0, controls.lastIndexOf('-')) + '-progressive' : '';
+
+                    // Check if input controls anything and content exists.
+                    if (!controls || !$module.querySelector('#' + controls)) {
+                        return;
+                    }
+
+                    $input.setAttribute('data-aria-controls', controls);
+                    $input.removeAttribute('_');
+                    $input.addEventListener('click', function() {
+                        activate(controls);
+                    });
+
+                    if ($input.checked) {
+                        activate(controls);
+                    }
+                });
+
+                function activate($id) {
+                    $module.querySelector('#' + $id).classList.toggle('govuk-radios__conditional--hidden', false);
+
+                    $inputs.forEach(function ($input) {
+                        $input.setAttribute('aria-expanded', $input.checked);
+                    });
+                }
+            });
+        }
+
         // Feedback links
         $('#feedbackForm,#footerFeedbackForm').click(function (e) {
             e.preventDefault();
@@ -123,10 +161,10 @@ function openPopup(url, name, top, left) {
                 messageTarget = $('#' + editor.attr('id') + '-count');
 
             if (limit && current > 0) {
-                messageHolder.removeClass('js-hidden');
+                messageHolder.removeClass('govuk-visually-hidden');
                 messageTarget.text(limit + ' recommended characters, you have used ' + current);
             } else {
-                messageHolder.addClass('js-hidden');
+                messageHolder.addClass('govuk-visually-hidden');
             }
 
         }
@@ -166,7 +204,7 @@ function openPopup(url, name, top, left) {
         /**
          * Navigation items
          */
-        $('.nav-item').click(function (e) {
+        $('.nav-item, .moj-subnav__link').click(function (e) {
 
             e.preventDefault();
 
@@ -351,6 +389,9 @@ function openPopup(url, name, top, left) {
             var toolbar = $(id).prev();
             toolbar.before($(id));
 
+            // Include class to hide toolbar by default
+            $(id).next().addClass('govuk-visually-hidden');
+
             function addTooltipsToToolbar() {
                 toolbar.find('button').addClass('tooltip').addClass('moj-tooltip');
                 var tips = [
@@ -373,10 +414,10 @@ function openPopup(url, name, top, left) {
             // show/hide toolbar with focus change
             editor.on('selection-change', function (range) {
                 if (range) {
-                    $(id).next().css('visibility', 'visible');
+                    $(id).next().removeClass('govuk-visually-hidden');
                     ensureCaretInView();
                 } else {
-                    $(id).next().css('visibility', 'hidden');
+                    $(id).next().addClass('govuk-visually-hidden');
                 }
             });
 
@@ -413,7 +454,6 @@ function openPopup(url, name, top, left) {
             toolbar.find('svg').attr('focusable', 'false');
 
             addTooltipsToToolbar();
-
         }
 
 
