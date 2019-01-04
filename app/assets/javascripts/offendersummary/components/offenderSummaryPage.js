@@ -5,6 +5,7 @@ import ErrorMessage from './errorMessage';
 import OffenderIdentity from '../containers/offenderIdentityContainer';
 import OffenderDetails from '../containers/offenderDetailsContainer';
 import Registrations from '../containers/registrationsContainer';
+import Convictions from '../containers/convictionsContainer';
 
 class OffenderSummaryPage extends Component {
     constructor(props) {
@@ -36,6 +37,7 @@ class OffenderSummaryPage extends Component {
                     </div>
 
                     <Registrations/>
+                    <Convictions/>
                     <OffenderDetails/>
 
                 </div>

@@ -104,6 +104,10 @@ public class OffenderController extends Controller {
                         .thenApply(this::filterInactiveRegistrations));
     }
 
+    public CompletionStage<Result> convictions() {
+        return jsonResultOf(offenderApi::getOffenderConvictionsByOffenderId);
+    }
+
     private JsonNode filterInactiveRegistrations(JsonNode jsonNode) {
         val registrations = ArrayNode.class.cast(jsonNode);
         val elements = registrations.elements();

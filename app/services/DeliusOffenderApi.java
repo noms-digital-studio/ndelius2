@@ -176,6 +176,17 @@ public class DeliusOffenderApi implements OffenderApi {
     }
 
     @Override
+    public CompletionStage<JsonNode> getOffenderConvictionsByOffenderId(String bearerToken, String offenderId) {
+        val url = String.format(offenderApiBaseUrl + "offenders/offenderId/%s/convictions", offenderId);
+        return wsClient.url(url)
+                .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+                .get()
+                .thenApply(response -> assertOkResponse(response, "getOffenderConvictionsByOffenderId"))
+                .thenApply(WSResponse::getBody)
+                .thenApply(Json::parse);
+    }
+
+    @Override
     public CompletionStage<CourtAppearances> getCourtAppearancesByCrn(String bearerToken, String crn) {
         val url = String.format(offenderApiBaseUrl + "offenders/crn/%s/courtAppearances", crn);
         return wsClient.url(url)

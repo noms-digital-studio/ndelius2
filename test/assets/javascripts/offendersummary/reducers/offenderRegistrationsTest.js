@@ -2,7 +2,7 @@ import {RECEIVE_OFFENDER_REGISTRATIONS, OFFENDER_REGISTRATIONS_LOAD_ERROR} from 
 import offenderRegistrations  from './offenderRegistrations'
 import {expect} from 'chai';
 
-describe("offenderDetailsReducer", () => {
+describe("offenderRegistrationsReducer", () => {
     let state;
     describe("when in default state", () => {
         beforeEach(() => {

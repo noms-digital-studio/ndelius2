@@ -21,6 +21,21 @@ const offenderRegistrationsLoadFailure = error => ({
     error
 })
 
+const receiveOffenderConvictions = convictions => ({
+    type: types.RECEIVE_OFFENDER_CONVICTIONS,
+    convictions
+})
+
+const offenderConvictionsLoadFailure = error => ({
+    type: types.OFFENDER_CONVICTIONS_LOAD_ERROR,
+    error
+})
+
+const incrementMaxConvictionsVisibleCount = incrementBy => ({
+    type: types.INCREMENT_MAX_CONVICTIONS_VISIBLE,
+    incrementBy
+})
+
 export const getOffenderDetails = () => dispatch => {
     offender.getDetails(
         details => dispatch(receiveOffenderDetails(details)),
@@ -30,4 +45,14 @@ export const getOffenderRegistrations = () => dispatch => {
     offender.getRegistrations(
         details => dispatch(receiveOffenderRegistrations(details)),
      error => dispatch(offenderRegistrationsLoadFailure(error)))
+}
+
+export const getOffenderConvictions = () => dispatch => {
+    offender.getConvictions(
+        details => dispatch(receiveOffenderConvictions(details)),
+        error => dispatch(offenderConvictionsLoadFailure(error)))
+}
+
+export const showMoreConvictions = () => dispatch => {
+    dispatch(incrementMaxConvictionsVisibleCount(10))
 }

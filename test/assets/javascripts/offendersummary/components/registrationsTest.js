@@ -41,6 +41,16 @@ describe('Registrations component', () => {
         }, registration)
 
 
+    context('on mount', () => {
+        it('offender registrations are requested', () => {
+            const getOffenderRegistrations = stub()
+            shallow(<Registrations registrations={[]} error={false} fetching={true} getOffenderRegistrations={getOffenderRegistrations}/>)
+
+            expect(getOffenderRegistrations).to.be.calledOnce
+        })
+    })
+
+
     describe('registration rendering', () => {
         context('no registrations', () => {
             beforeEach(() => {

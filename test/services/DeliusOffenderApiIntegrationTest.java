@@ -80,6 +80,11 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/deliusoffender/offenderRegistrations.json"))));
 
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/offenderId/12345/convictions"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderConvictions.json"))));
+
 
 
         offenderApi = instanceOf(OffenderApi.class);
@@ -157,7 +162,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(offender.getSurname()).isEqualTo("Smith");
         assertThat(offender.getOtherIds()).extracting("pncNumber").contains("2018/123456P");
         assertThat(offender.getContactDetails().mainAddress().get().getStatus().getCode()).isEqualTo("M");
-        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/all")));
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/all")).withHeader("Authorization", new EqualToPattern("Bearer ABC")));
     }
 
     @Test
@@ -167,7 +172,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(offender.get("firstName").asText()).isEqualTo("John");
         assertThat(offender.get("surname").asText()).isEqualTo("Smith");
         assertThat(offender.get("otherIds").get("pncNumber").asText()).isEqualTo("2018/123456P");
-        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/offenderId/12345/all")));
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/offenderId/12345/all")).withHeader("Authorization", new EqualToPattern("Bearer ABC")));
     }
 
     @Test
@@ -181,7 +186,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(courtAppearances.getItems().get(0).getCourtReports().get(0).getCourtReportId()).isEqualTo(1);
         assertThat(courtAppearances.getItems().get(0).getOffenceIds().size()).isEqualTo(3);
 
-        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/courtAppearances")));
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/courtAppearances")).withHeader("Authorization", new EqualToPattern("Bearer ABC")));
     }
 
     @Test
@@ -192,7 +197,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(courtReport.getDateRequired()).isEqualTo("2018-07-17T00:00:00");
         assertThat(courtReport.getRequiredByCourt().getCourtName()).isEqualTo("Mansfield  Magistrates Court");
 
-        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/courtReports/41")));
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/courtReports/41")).withHeader("Authorization", new EqualToPattern("Bearer ABC")));
     }
 
     @Test
@@ -203,7 +208,7 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         assertThat(offences.getItems().get(0).getOffenceId()).isEqualTo("M1");
         assertThat(offences.getItems().get(0).getDetail().getCode()).isEqualTo("00101");
 
-        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/offences")));
+        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/crn/X12345/offences")).withHeader("Authorization", new EqualToPattern("Bearer ABC")));
     }
 
     @Test
@@ -224,7 +229,29 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
         val registrations = ArrayNode.class.cast(offenderApi.getOffenderRegistrationsByOffenderId("ABC", "12345").toCompletableFuture().join());
 
         assertThat(registrations.size()).isEqualTo(13);
-        wireMock.verify(getRequestedFor(urlEqualTo("/offenders/offenderId/12345/registrations")));
+        wireMock.verify(
+                getRequestedFor(
+                        urlEqualTo("/offenders/offenderId/12345/registrations"))
+                        .withHeader("Authorization", new EqualToPattern("Bearer ABC")));
+    }
+
+
+    @Test
+    public void getsOffenderConvictionsByOffenderId() {
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/offenderId/12345/convictions"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderConvictions.json"))));
+
+
+        val convictions = ArrayNode.class.cast(offenderApi.getOffenderConvictionsByOffenderId("ABC", "12345").toCompletableFuture().join());
+
+        assertThat(convictions.size()).isEqualTo(20);
+        wireMock.verify(
+                getRequestedFor(
+                        urlEqualTo("/offenders/offenderId/12345/convictions"))
+                        .withHeader("Authorization", new EqualToPattern("Bearer ABC")));
+
     }
 
 
