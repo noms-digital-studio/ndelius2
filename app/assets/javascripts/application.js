@@ -179,14 +179,22 @@ function openPopup(url, name, top, left) {
         }
 
 
-        // Analytics for 'What to include' links on PAROM1
+        // Analytics for 'What to include' links on SFR and PAROM1
         $('summary').click(function () {
-            if (window.location.pathname.indexOf('paroleParom1Report') !== -1) {
+
+            var isSfr = window.location.pathname.indexOf('shortFormatPreSentenceReport') !== -1;
+            var isParom = window.location.pathname.indexOf('paroleParom1Report') !== -1;
+
+            if (isSfr || isParom) {
                 var details = $(this).parent(),
-                    label = details.prev('.govuk-caption-xl').text() || details.prev('span').prev('.form-label-bold').text() || details.prev('.form-label-bold').text() || details.parent().parent().find('legend').text();
+                    label = details.parent().find('.govuk-caption-xl').text() ||
+                        details.parent().parent().find('legend').find('span').text() ||
+                        details.parent().parent().find('legend').text() ||
+                        details.prev('span:not(.govuk-hint)').text() ||
+                        details.prev('span').prev('span').text()|| 'Unknown field';
 
                 gtag('event', details.attr('open') ? 'close' : 'open', {
-                    'event_category': 'PAROM1 - What to include',
+                    'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - What to include',
                     'event_label': $('h1').text() + ' > ' + label.trim()
                 });
             }
