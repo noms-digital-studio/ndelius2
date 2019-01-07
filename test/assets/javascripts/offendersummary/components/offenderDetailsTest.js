@@ -320,10 +320,13 @@ describe('Offender Details component', () => {
             });
 
             it('contains address number and building name', () => {
-                expect(wrapper.text()).to.contain('5 Sea View');
+                expect(wrapper.text()).to.contain('Sea View');
             });
-            it('contains street name', () => {
-                expect(wrapper.text()).to.contain('High Street, Nether Edge');
+            it('contains street name and number', () => {
+                expect(wrapper.text()).to.contain('5 High Street');
+            });
+            it('contains district name', () => {
+                expect(wrapper.text()).to.contain('Nether Edge');
             });
             it('contains district and town', () => {
                 expect(wrapper.text()).to.contain('Sheffield');
