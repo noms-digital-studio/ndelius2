@@ -6,6 +6,7 @@ import OffenderIdentity from '../containers/offenderIdentityContainer';
 import OffenderDetails from '../containers/offenderDetailsContainer';
 import Registrations from '../containers/registrationsContainer';
 import Convictions from '../containers/convictionsContainer';
+import Notes from '../containers/notesContainer';
 
 class OffenderSummaryPage extends Component {
     constructor(props) {
@@ -39,6 +40,7 @@ class OffenderSummaryPage extends Component {
                     <Registrations/>
                     <Convictions/>
                     <OffenderDetails/>
+                    <Notes/>
 
                 </div>
                 }

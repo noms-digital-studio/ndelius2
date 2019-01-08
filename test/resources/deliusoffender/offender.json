@@ -113,7 +113,6 @@
     "immigrationStatus": "string",
     "nationality": "British",
     "notes": "string",
-    "offenderDetails": {},
     "offenderLanguages": {
       "languageConcerns": "string",
       "otherLanguages": [
