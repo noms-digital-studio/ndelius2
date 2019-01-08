@@ -9,6 +9,11 @@ export default {
     getRegistrations: (cb, rejected) => fetch('offender/registrations', {cache: "no-store"})
         .then(response => response.json())
         .then(data => cb(data))
+        .catch(error => rejected(error)),
+
+    getConvictions: (cb, rejected) => fetch('offender/convictions', {cache: "no-store"})
+        .then(response => response.json())
+        .then(data => cb(data))
         .catch(error => rejected(error))
 }
 

@@ -43,6 +43,9 @@ describe('OffenderSummaryPage component', () => {
             it('offender registrations container is displayed', () => {
                 expect(page.find('Connect(Registrations)').exists()).to.be.true
             })
+            it('offender convictions container is displayed', () => {
+                expect(page.find('Connect(Convictions)').exists()).to.be.true
+            })
             it('banner is displayed', () => {
                 expect(page.find('GovUkPhaseBanner').exists()).to.be.true
             })

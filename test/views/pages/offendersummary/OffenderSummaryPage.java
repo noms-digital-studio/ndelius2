@@ -4,8 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import lombok.val;
+import org.assertj.core.api.AbstractBigDecimalAssert;
 import org.fluentlenium.core.FluentPage;
-import org.fluentlenium.core.domain.FluentWebElement;
 import org.openqa.selenium.By;
 import play.test.TestBrowser;
 
@@ -15,6 +15,7 @@ import java.time.Instant;
 import static views.pages.ParameterEncrypt.encrypt;
 
 public class OffenderSummaryPage extends FluentPage {
+
     @Data
     @ToString
     @Builder(toBuilder = true)
@@ -25,6 +26,17 @@ public class OffenderSummaryPage extends FluentPage {
         private String statusColour;
         private String description;
         private String date;
+    }
+
+    @Data
+    @ToString
+    @Builder(toBuilder = true)
+    public static class EventTableRow {
+        private int rowNumber;
+        private String outcome;
+        private String mainOffence;
+        private String appDate;
+        private String status;
     }
 
 
@@ -76,6 +88,21 @@ public class OffenderSummaryPage extends FluentPage {
                 row.text().contains(String.format("%s %s %s %s", registrationTableRow.getType(), registrationTableRow.getStatusWord().toLowerCase(), registrationTableRow.getDescription(), registrationTableRow.getDate()));
     }
 
+    public boolean hasEventTableWithRow(EventTableRow eventTableRow) {
+        await().until($(".qa-offender-convictions")).size(1);
+
+        val headerRow = $(".qa-offender-convictions tbody tr").index(eventTableRow.getRowNumber() * 2);
+        val bodyRow = $(".qa-offender-convictions tbody tr").index((eventTableRow.getRowNumber() * 2) + 1);
+
+        return eventTableRow.getOutcome().equals(headerRow.text())
+                && bodyRow.text().contains(String.format("%s\n%s\n%s", eventTableRow.getMainOffence(), eventTableRow.getAppDate(), eventTableRow.getStatus()));
+    }
+
+    public int countEventTableWithRows() {
+        return $(".qa-offender-convictions tbody tr").count() / 2;
+    }
+
+
     private String colourToRGB(String statusColour) {
         // map the BDD colours to actual CSS colours presented on screen
         // this is preferable to mapping to css class names that are identified by 'low', 'medium' etc
@@ -99,6 +126,12 @@ public class OffenderSummaryPage extends FluentPage {
         await().until($(".qa-offender-registrations")).size(1);
         return $(By.className("qa-offender-registrations")).text();
     }
+
+    public String getEventTableText() {
+        await().until($(".qa-offender-convictions")).size(1);
+        return $(By.className("qa-offender-convictions")).text();
+    }
+
 
     public void clickAccordion(String partialText) {
         await().until($(By.partialLinkText(partialText))).size(1);

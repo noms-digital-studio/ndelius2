@@ -45,6 +45,24 @@ public class OffenderApiMock {
         private LocalDate startDate;
 
     }
+    @Data
+    @Builder
+    public static class Conviction {
+        private LocalDate referralDate;
+        private String mainOffenceDescription;
+        private String latestCourtAppearanceDescription;
+        private boolean active;
+        private Sentence sentence;
+    }
+
+    @Data
+    @Builder
+    public static class Sentence {
+        private String description;
+        private int length;
+        private String lengthUnit;
+
+    }
     public OffenderApiMock start() {
             offenderApiWireMock.start();
         return this;
@@ -198,6 +216,41 @@ public class OffenderApiMock {
                                             template.replace("type", ImmutableMap.of("code", registration.getType().toUpperCase(), "description", registration.getType()));
                                             template.replace("startDate", registration.getStartDate().format(DateTimeFormatter.ISO_DATE));
                                             template.replace("riskColour", registration.getRiskColour());
+
+                                            return template;
+                                        })
+                                        .collect(Collectors.toList()))
+                                )));
+
+        return this;
+    }
+    public OffenderApiMock stubOffenderWithConvictions(List<Conviction> convictions) {
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/convictions"))
+                        .willReturn(
+                                okForContentType("application/json", JsonHelper.stringify(
+                                        convictions
+                                        .stream()
+                                        .map(conviction -> {
+                                            val template = JsonHelper.jsonToObjectMap(loadResource("/deliusoffender/offenderConviction.json"));
+                                            template.replace("referralDate", conviction.getReferralDate().format(DateTimeFormatter.ISO_DATE));
+                                            val latestCourtAppearanceOutcome = (Map<String, Object>)template.get("latestCourtAppearanceOutcome");
+                                            latestCourtAppearanceOutcome.replace("description", conviction.getLatestCourtAppearanceDescription());
+                                            val offences = (List<Map<String, Object>>) template.get("offences");
+                                            val offenceDetail = (Map<String, Object>)offences.get(0).get("detail");
+                                            offenceDetail.replace("description", conviction.getMainOffenceDescription());
+
+                                            if (conviction.getSentence() == null) {
+                                                template.remove("sentence");
+                                            } else {
+                                                val sentence = (Map<String, Object>)template.get("sentence");
+                                                sentence.replace("description", conviction.getSentence().getDescription());
+                                                sentence.replace("originalLength", conviction.getSentence().getLength());
+                                                sentence.replace("originalLengthUnits", conviction.getSentence().getLengthUnit());
+                                            }
+
+                                            template.replace("active", conviction.isActive());
+
 
                                             return template;
                                         })

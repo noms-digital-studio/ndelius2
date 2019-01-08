@@ -304,6 +304,8 @@ public interface OffenderApi {
 
     CompletionStage<JsonNode> getOffenderRegistrationsByOffenderId(String bearerToken, String offenderId);
 
+    CompletionStage<JsonNode> getOffenderConvictionsByOffenderId(String bearerToken, String offenderId);
+
     CompletionStage<CourtAppearances> getCourtAppearancesByCrn(String bearerToken, String crn);
 
     CompletionStage<CourtReport> getCourtReportByCrnAndCourtReportId(String bearerToken, String crn, String courtReportId);

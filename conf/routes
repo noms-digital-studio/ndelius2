@@ -31,6 +31,7 @@ GET     /feedback/sfpsr                             controllers.FeedbackControll
 GET     /offender/oneTimeNomisRef/:reference/image  controllers.OffenderController.image(reference: String)
 GET     /offender/detail                            controllers.OffenderController.detail
 GET     /offender/registrations                     controllers.OffenderController.registrations
+GET     /offender/convictions                       controllers.OffenderController.convictions
 
 GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
 POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost
