@@ -109,7 +109,6 @@
     "immigrationStatus": "string",
     "nationality": "string",
     "notes": "string",
-    "offenderDetails": {},
     "offenderLanguages": {
       "languageConcerns": "string",
       "otherLanguages": [

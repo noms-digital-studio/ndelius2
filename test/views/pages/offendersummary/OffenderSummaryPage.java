@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import lombok.val;
-import org.assertj.core.api.AbstractBigDecimalAssert;
 import org.fluentlenium.core.FluentPage;
 import org.openqa.selenium.By;
 import play.test.TestBrowser;
@@ -136,6 +135,12 @@ public class OffenderSummaryPage extends FluentPage {
     public void clickAccordion(String partialText) {
         await().until($(By.partialLinkText(partialText))).size(1);
         $(By.partialLinkText(partialText)).click();
+    }
+
+    public String getNotes() {
+        await().until($(".qa-offender-notes")).size(1);
+
+        return $(".qa-offender-notes .moj-card__body").text();
     }
 
 }

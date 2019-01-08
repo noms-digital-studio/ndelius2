@@ -128,6 +128,11 @@ public class OffenderApiMock {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/deliusoffender/offenderRegistrations.json"))));
 
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/convictions"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderConvictions.json"))));
+
         return this;
     }
 
@@ -192,6 +197,25 @@ public class OffenderApiMock {
 
         return this;
     }
+
+    public OffenderApiMock stubOffenderWithNotes(List<String> notes) {
+        val offender = ObjectNode.class.cast(Json.parse(loadResource("/deliusoffender/offender.json")));
+        val offenderProfile = ObjectNode.class.cast(offender.get("offenderProfile"));
+
+        if (notes.isEmpty()) {
+            offenderProfile.remove("offenderDetails");
+        } else {
+            offenderProfile.put("offenderDetails", String.join("\n", notes));
+        }
+
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/all"))
+                        .willReturn(
+                                okForContentType("application/json", Json.stringify(offender))));
+
+        return this;
+    }
+
 
     public OffenderApiMock stubOffenderWithResource(String resource) {
         offenderApiWireMock.stubFor(
