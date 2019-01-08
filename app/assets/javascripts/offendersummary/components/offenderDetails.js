@@ -104,7 +104,7 @@ const OffenderDetails = ({ offenderDetails }) => {
                                     { mainAddress && !mainAddress.noFixedAbode && (
                                         <Fragment>
                                             { mainAddress.buildingName && (<span className="qa-main-address-1">{ mainAddress.buildingName }<br/></span>) }
-                                            <span className="qa-main-address-2">{ mainAddress.addressNumber } { mainAddress.streetName }</span><br/>
+                                            <span className="qa-main-address-2">{ mainAddress.addressNumber && (mainAddress.addressNumber + ' ') }{ mainAddress.streetName }</span><br/>
                                             { mainAddress.district && (<span className="qa-main-address-3">{ mainAddress.district }<br/></span>) }
                                             <span className="qa-main-address-4">{ mainAddress.town }</span><br/>
                                             <span className="qa-main-address-5">{ mainAddress.county }</span><br/>
