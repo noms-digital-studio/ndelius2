@@ -17,6 +17,9 @@ function openPopup(url, name, top, left) {
 
     $(function () {
 
+        var isSfr = window.location.pathname.indexOf('shortFormatPreSentenceReport') !== -1;
+        var isParom = window.location.pathname.indexOf('paroleParom1Report') !== -1;
+
         if (window.hasOwnProperty('GOVUK')) {
             // Show/hide content
             var showHideContent = new GOVUK.ShowHideContent();
@@ -182,9 +185,6 @@ function openPopup(url, name, top, left) {
         // Analytics for 'What to include' links on SFR and PAROM1
         $('summary').click(function () {
 
-            var isSfr = window.location.pathname.indexOf('shortFormatPreSentenceReport') !== -1;
-            var isParom = window.location.pathname.indexOf('paroleParom1Report') !== -1;
-
             if (isSfr || isParom) {
                 var details = $(this).parent(),
                     label = details.parent().find('.govuk-caption-xl').text() ||
@@ -233,7 +233,17 @@ function openPopup(url, name, top, left) {
             }
         });
 
+        function trackViewDraft() {
+            gtag('event', 'click', {
+                'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - View draft',
+                'event_label': 'Page: ' + $('h1').text()
+            });
+        }
+
         $('#draftReport').click(function (e) {
+
+            trackViewDraft();
+
             var target = $(this).data('target');
             var form = $('form');
             $.ajax({
@@ -246,10 +256,22 @@ function openPopup(url, name, top, left) {
             });
         });
 
+        $('.js-view-draft').click(function(e) {
+            trackViewDraft();
+        });
+
         /**
          * Ensure jumpNumber is cleared if next after clicking browser back button
          */
         $('#nextButton:not(.popup-launcher)').click(function () {
+
+            if ($(this).text().indexOf('Submit') !== -1) {
+                gtag('event', 'submit', {
+                    'event_category': isSfr ? 'SFR' : 'PAROM1',
+                    'event_label': 'Report submitted'
+                });
+            }
+
             $('#jumpNumber').val('');
         });
 

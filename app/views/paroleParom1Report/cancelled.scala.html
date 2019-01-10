@@ -30,7 +30,7 @@
                     <td style="width: 36px; vertical-align: top;"><span class="moj-icon moj-icon--pdf" /></td>
                     <td>
                         <p class="govuk-body" id="view-pdf">Review and print your draft 'Parole Report - Parom 1'<br>
-                            <a href="@relative(routes.ParoleParom1ReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your draft PDF report</a>
+                            <a class="js-view-draft" href="@relative(routes.ParoleParom1ReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your draft PDF report</a>
                         </p>
                     </td>
                 </tr>
