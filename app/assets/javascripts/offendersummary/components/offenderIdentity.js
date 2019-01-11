@@ -19,10 +19,7 @@ const OffenderIdentity = ({ offenderDetails }) => {
                             <p className="govuk-body govuk-!-margin-0 govuk-!-margin-top-2">CRN</p>
                             <p className="qa-offender-crn govuk-heading-m govuk-!-margin-0 govuk-!-padding-0">{offenderDetails.otherIds.crn}</p>
                         </div>
-                        <div className="govuk-grid-column-two-thirds govuk-!-margin-top-2">
-                            <div className="moj-risk-alert moj-risk-alert--medium govuk-!-margin-bottom-2" role="alert">medium risk of serious harm</div>
-                            <div className="moj-risk-alert moj-risk-alert--high moj-risk-alert--small govuk-!-margin-bottom-2" role="alert">breached conditions</div>
-                        </div>
+                        <div className="govuk-grid-column-two-thirds govuk-!-margin-top-2" />
                     </div>
                 </div>
             </div>
