@@ -1,0 +1,7 @@
+.app-offender-header {
+  width: calc(100% - 205px);
+
+  @include govuk-media-query(mobile, tablet) {
+    width: 100%;
+  }
+}

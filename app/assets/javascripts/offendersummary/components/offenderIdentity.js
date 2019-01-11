@@ -4,24 +4,31 @@ import {dateFromISO} from '../../helpers/formatters'
 
 const OffenderIdentity = ({ offenderDetails }) => {
     return(
-        <table className="qa-offender-identity" role="presentation">
-            <tbody>
-            <tr>
-                <td>
+        <div className="govuk-grid-row govuk-!-margin-top-3">
+            <div className="govuk-grid-column-full">
+                <div className="app-float-left app-float-left__not-narrow">
                     {offenderDetails.oneTimeNomisRef && <img alt={`Image of ${offenderDetails.firstName} ${offenderDetails.surname}`} className="offender-image" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderDetails.oneTimeNomisRef)}/image`}/>}
                     {!offenderDetails.oneTimeNomisRef && <img alt="No offender image available" className="offender-image" src='assets/images/NoPhoto@2x.png'/>}
-                </td>
-                <td>
-                    <h1 className="govuk-heading-l govuk-!-margin-0 govuk-!-padding-0 qa-offender-name">{offenderDetails.surname}, {offenderDetails.firstName}</h1>
-                    <p className="govuk-body govuk-!-margin-0 govuk-!-margin-top-2">Date of birth</p>
-                    <p className="govuk-heading-m govuk-!-margin-0 govuk-!-padding-0 qa-offender-date-of-birth">{dateFromISO(offenderDetails.dateOfBirth)}</p>
-                    <p className="govuk-body govuk-!-margin-0 govuk-!-margin-top-2">CRN</p>
-                    <p className="govuk-heading-m govuk-!-margin-0 govuk-!-padding-0 qa-offender-crn">{offenderDetails.otherIds.crn}</p>
-                </td>
-            </tr>
-            </tbody>
-        </table>)
-}
+                </div>
+                <div className="app-float-left app-float-left__not-narrow app-offender-header">
+                    <h1 className="qa-offender-name govuk-heading-l govuk-!-margin-0 govuk-!-margin-top-1 govuk-!-padding-0">{offenderDetails.surname}, {offenderDetails.firstName}</h1>
+                    <div className="govuk-grid-row">
+                        <div className="govuk-grid-column-one-third">
+                            <p className="govuk-body govuk-!-margin-0 govuk-!-margin-top-2">Date of birth</p>
+                            <p className="qa-offender-date-of-birth govuk-heading-m govuk-!-margin-0 govuk-!-padding-0">{dateFromISO(offenderDetails.dateOfBirth)}</p>
+                            <p className="govuk-body govuk-!-margin-0 govuk-!-margin-top-2">CRN</p>
+                            <p className="qa-offender-crn govuk-heading-m govuk-!-margin-0 govuk-!-padding-0">{offenderDetails.otherIds.crn}</p>
+                        </div>
+                        <div className="govuk-grid-column-two-thirds govuk-!-margin-top-2">
+                            <div className="moj-risk-alert moj-risk-alert--medium govuk-!-margin-bottom-2" role="alert">medium risk of serious harm</div>
+                            <div className="moj-risk-alert moj-risk-alert--high moj-risk-alert--small govuk-!-margin-bottom-2" role="alert">breached conditions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 OffenderIdentity.propTypes = {
     offenderDetails: PropTypes.shape({
@@ -33,6 +40,6 @@ OffenderIdentity.propTypes = {
         }),
         oneTimeNomisRef: PropTypes.string
     }).isRequired
-}
+};
 
-export default OffenderIdentity
+export default OffenderIdentity;

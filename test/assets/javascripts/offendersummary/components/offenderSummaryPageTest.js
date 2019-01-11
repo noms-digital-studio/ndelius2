@@ -23,7 +23,7 @@ describe('OffenderSummaryPage component', () => {
             })
 
             it('no main content is displayed', () => {
-                expect(page.find('.govuk-grid-row').exists()).to.be.false
+                expect(page.find('.qa-main-content').exists()).to.be.false
             })
             it('banner is displayed', () => {
                 expect(page.find('GovUkPhaseBanner').exists()).to.be.true
@@ -35,7 +35,7 @@ describe('OffenderSummaryPage component', () => {
             })
 
             it('main content is displayed', () => {
-                expect(page.find('.govuk-grid-row').exists()).to.be.true
+                expect(page.find('.qa-main-content').exists()).to.be.true
             })
             it('offender identity container is displayed', () => {
                 expect(page.find('Connect(OffenderIdentity)').exists()).to.be.true
@@ -59,7 +59,7 @@ describe('OffenderSummaryPage component', () => {
             })
 
             it('no main content is displayed', () => {
-                expect(page.find('.govuk-grid-row').exists()).to.be.false
+                expect(page.find('.qa-main-content').exists()).to.be.false
             })
             it('error is displayed', () => {
                 expect(page.find('ErrorMessage').exists()).to.be.true

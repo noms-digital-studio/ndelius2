@@ -3,6 +3,8 @@
 @import "calendar";
 @import "quill";
 
+@import 'app/offender-header';
+
 .new-window {
   @include govuk-font(16);
   span {
@@ -48,6 +50,13 @@
 .app-float-left {
   float: left;
   @include govuk-clearfix();
+
+  &.app-float-left__not-narrow {
+    @include govuk-media-query(mobile, tablet) {
+      display: block;
+      float: none;
+    }
+  }
 }
 
 .moj-textarea {
