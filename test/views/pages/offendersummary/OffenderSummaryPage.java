@@ -143,4 +143,12 @@ public class OffenderSummaryPage extends FluentPage {
         return $(".qa-offender-notes .moj-card__body").text();
     }
 
+    public String getFieldValueInSection(String selector, String fieldLabel) {
+        await().until($(selector)).size(1);
+
+        val row = $(selector).find(By.xpath(String.format(".//tr[th[text()='%s']]", fieldLabel)));
+        return row.find("td").text();
+    }
+
+
 }

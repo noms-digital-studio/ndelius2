@@ -12,7 +12,7 @@ describe("offenderRegistrationsReducer", () => {
         it('fetching is true', () => {
             expect(state.fetching).to.equal(true)
         });
-        it('offender error not set', () => {
+        it('load error not set', () => {
             expect(state.loadError).to.equal(false)
         });
     })
@@ -29,7 +29,7 @@ describe("offenderRegistrationsReducer", () => {
         it('fetching toggled off', () => {
             expect(state.fetching).to.equal(false)
         });
-        it('offender error is cleared', () => {
+        it('load error is cleared', () => {
             expect(state.loadError).to.equal(false)
         });
 
@@ -41,7 +41,7 @@ describe("offenderRegistrationsReducer", () => {
                 error: new Error('Boom!')
             })
         })
-        it('offender error set', () => {
+        it('load error set', () => {
             expect(state.loadError).to.equal(true)
         });
         it('fetching toggled off', () => {

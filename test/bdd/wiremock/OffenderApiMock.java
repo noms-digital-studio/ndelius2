@@ -1,5 +1,6 @@
 package bdd.wiremock;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
@@ -16,6 +17,7 @@ import play.libs.Json;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +64,19 @@ public class OffenderApiMock {
         private int length;
         private String lengthUnit;
 
+    }
+
+    @Data
+    @Builder
+    public static class Appointment {
+        private LocalDate appointmentDate;
+        private LocalTime appointmentStartTime;
+        private String officeLocationDescription;
+        private String probationAreaDescription;
+        private String teamDescription;
+        private String appointmentTypeDescription;
+        private String staffForenames;
+        private String staffSurname;
     }
     public OffenderApiMock start() {
             offenderApiWireMock.start();
@@ -132,6 +147,11 @@ public class OffenderApiMock {
                 get(urlMatching("/offenders/offenderId/.*/convictions"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/deliusoffender/offenderConvictions.json"))));
+
+        offenderApiWireMock.stubFor(
+                get(urlPathMatching("/offenders/offenderId/.*/appointments"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderAppointments.json"))));
 
         return this;
     }
@@ -280,6 +300,36 @@ public class OffenderApiMock {
                                         })
                                         .collect(Collectors.toList()))
                                 )));
+
+        return this;
+    }
+
+    public OffenderApiMock stubOffenderWithNextAppointment(Appointment appointment) {
+        val appointments = ArrayNode.class.cast(Json.parse(loadResource("/deliusoffender/offenderAppointments.json")));
+
+        if (appointment == null) {
+            appointments.remove(0);
+        } else {
+            val appointmentNode = ObjectNode.class.cast(appointments.get(0));
+            appointmentNode.put("appointmentDate", appointment.getAppointmentDate().format(DateTimeFormatter.ISO_DATE));
+            appointmentNode.put("appointmentStartTime", appointment.getAppointmentStartTime().format(DateTimeFormatter.ISO_TIME));
+            val officeLocation = ObjectNode.class.cast(appointmentNode.get("officeLocation"));
+            officeLocation.put("description", appointment.getOfficeLocationDescription());
+            val probationArea = ObjectNode.class.cast(appointmentNode.get("probationArea"));
+            probationArea.put("description", appointment.getProbationAreaDescription());
+            val team = ObjectNode.class.cast(appointmentNode.get("team"));
+            team.put("description", appointment.getTeamDescription());
+            val appointmentType = ObjectNode.class.cast(appointmentNode.get("appointmentType"));
+            appointmentType.put("description", appointment.getAppointmentTypeDescription());
+            val staff = ObjectNode.class.cast(appointmentNode.get("staff"));
+            staff.put("forenames", appointment.getStaffForenames());
+            staff.put("surname", appointment.getStaffSurname());
+        }
+
+        offenderApiWireMock.stubFor(
+                get(urlPathMatching("/offenders/offenderId/.*/appointments"))
+                        .willReturn(
+                                okForContentType("application/json", Json.stringify(appointments))));
 
         return this;
     }

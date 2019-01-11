@@ -32,6 +32,7 @@ GET     /offender/oneTimeNomisRef/:reference/image  controllers.OffenderControll
 GET     /offender/detail                            controllers.OffenderController.detail
 GET     /offender/registrations                     controllers.OffenderController.registrations
 GET     /offender/convictions                       controllers.OffenderController.convictions
+GET     /offender/nextAppointment                   controllers.OffenderController.nextAppointment
 
 GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
 POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost

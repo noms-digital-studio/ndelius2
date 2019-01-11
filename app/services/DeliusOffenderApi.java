@@ -16,6 +16,8 @@ import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.Base64;
@@ -182,6 +184,19 @@ public class DeliusOffenderApi implements OffenderApi {
                 .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
                 .get()
                 .thenApply(response -> assertOkResponse(response, "getOffenderConvictionsByOffenderId"))
+                .thenApply(WSResponse::getBody)
+                .thenApply(Json::parse);
+    }
+
+    @Override
+    public CompletionStage<JsonNode> getOffenderFutureAppointmentsByOffenderId(String bearerToken, String offenderId) {
+        val url = String.format(offenderApiBaseUrl + "offenders/offenderId/%s/appointments", offenderId);
+        return wsClient.url(url)
+                .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+                .addQueryParameter("from", LocalDate.now().format(DateTimeFormatter.ISO_DATE))
+                .addQueryParameter("attended", "NOT_RECORDED")
+                .get()
+                .thenApply(response -> assertOkResponse(response, "getOffenderFutureAppointmentsByOffenderId"))
                 .thenApply(WSResponse::getBody)
                 .thenApply(Json::parse);
     }

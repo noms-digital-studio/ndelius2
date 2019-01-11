@@ -1,0 +1,62 @@
+[
+  {
+    "appointmentId": 2502592268,
+    "appointmentType": {
+      "code": "APPA03",
+      "description": "AP PA - Accommodation"
+    },
+    "appointmentDate": "2019-09-17",
+    "appointmentStartTime": "09:35:00",
+    "appointmentEndTime": "09:55:00",
+    "createdDateTime": "2019-01-09T09:36:12",
+    "lastUpdatedDateTime": "2019-01-09T09:36:12",
+    "staff": {
+      "forenames": "Oliver ZZ",
+      "surname": "Polus"
+    },
+    "team": {
+      "code": "N02T01",
+      "description": "OMU A "
+    },
+    "officeLocation": {
+      "code": "DTVBIS1",
+      "description": "Bishop Auckland"
+    },
+    "probationArea": {
+      "code": "N02",
+      "description": "NPS North East"
+    },
+    "visorContact": false,
+    "attended": "NOT_RECORDED"
+  },
+  {
+    "appointmentId": 2502592267,
+    "appointmentType": {
+      "code": "APPA03",
+      "description": "AP PA - Accommodation"
+    },
+    "appointmentDate": "2019-03-28",
+    "appointmentStartTime": "09:28:00",
+    "appointmentEndTime": "10:28:00",
+    "createdDateTime": "2019-01-09T09:29:50",
+    "lastUpdatedDateTime": "2019-01-09T09:29:50",
+    "staff": {
+      "forenames": "Chloe ZZ",
+      "surname": "Ransom"
+    },
+    "team": {
+      "code": "N07T01",
+      "description": "OMU A"
+    },
+    "officeLocation": {
+      "code": "LDN_BCS",
+      "description": "1 REGARTH AVENUE"
+    },
+    "probationArea": {
+      "code": "N07",
+      "description": "NPS London"
+    },
+    "visorContact": false,
+    "attended": "NOT_RECORDED"
+  }
+]

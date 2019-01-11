@@ -1,6 +1,6 @@
 import React from 'react'
 import * as PropTypes from 'prop-types'
-import moment from 'moment'
+import {dateFromISO} from '../../helpers/formatters'
 
 const OffenderIdentity = ({ offenderDetails }) => {
     return(
@@ -14,7 +14,7 @@ const OffenderIdentity = ({ offenderDetails }) => {
                 <td>
                     <h1 className="govuk-heading-l govuk-!-margin-0 govuk-!-padding-0 qa-offender-name">{offenderDetails.surname}, {offenderDetails.firstName}</h1>
                     <p className="govuk-body govuk-!-margin-0 govuk-!-margin-top-2">Date of birth</p>
-                    <p className="govuk-heading-m govuk-!-margin-0 govuk-!-padding-0 qa-offender-date-of-birth">{moment(offenderDetails.dateOfBirth, 'YYYY-MM-DD').format('DD/MM/YYYY')}</p>
+                    <p className="govuk-heading-m govuk-!-margin-0 govuk-!-padding-0 qa-offender-date-of-birth">{dateFromISO(offenderDetails.dateOfBirth)}</p>
                     <p className="govuk-body govuk-!-margin-0 govuk-!-margin-top-2">CRN</p>
                     <p className="govuk-heading-m govuk-!-margin-0 govuk-!-padding-0 qa-offender-crn">{offenderDetails.otherIds.crn}</p>
                 </td>

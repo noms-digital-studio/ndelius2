@@ -21,12 +21,19 @@ import play.mvc.Results;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static helpers.JwtHelper.principal;
 import static helpers.StaticImage.noPhotoImage;
@@ -106,6 +113,34 @@ public class OffenderController extends Controller {
 
     public CompletionStage<Result> convictions() {
         return jsonResultOf(offenderApi::getOffenderConvictionsByOffenderId);
+    }
+
+    public CompletionStage<Result> nextAppointment() {
+        val bearerToken = session(SessionKeys.OFFENDER_API_BEARER_TOKEN);
+        return Optional.ofNullable(session(SessionKeys.OFFENDER_ID)).
+                map(offenderId ->
+                        offenderApi.getOffenderFutureAppointmentsByOffenderId(bearerToken, offenderId)
+                                .thenApply(this::findNextAppointment)
+                                .thenApply(possibleAppointment -> possibleAppointment.map(JsonHelper::okJson).orElse(notFound()))).
+                orElse(CompletableFuture.completedFuture(badRequest("no offender found in session"))).
+                thenApply(result -> result.withHeader(CACHE_CONTROL, "no-cache, no-store, must-revalidate")).
+                thenApply(result -> result.withHeader(PRAGMA, "no-cache")).
+                thenApply(result -> result.withHeader(EXPIRES, "0"));
+    }
+
+    private Optional<JsonNode> findNextAppointment(JsonNode jsonNode) {
+
+        Stream<JsonNode> appointments = StreamSupport.stream(Spliterators.spliteratorUnknownSize(ArrayNode.class.cast(jsonNode).elements(), Spliterator.ORDERED), false);
+
+        return appointments.min(Comparator.comparing(this::appointmentDateTime));
+
+    }
+
+    private LocalDateTime appointmentDateTime(JsonNode appointment) {
+        val date = appointment.get("appointmentDate").asText();
+        // there really should be a time set but if not assume end of day for comparison
+        val time = Optional.ofNullable(appointment.get("appointmentStartTime")).map(JsonNode::asText).orElse("23:59:59");
+        return LocalDateTime.parse(String.format("%sT%s", date, time), DateTimeFormatter.ISO_DATE_TIME);
     }
 
     private JsonNode filterInactiveRegistrations(JsonNode jsonNode) {

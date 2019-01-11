@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import * as PropTypes from 'prop-types';
 import Accordion from './shared/accordion';
 import ErrorMessage from './errorMessage'
-import moment from 'moment'
+import {dateFromISO} from '../../helpers/formatters'
 
 class Registrations extends Component {
     constructor(props) {
@@ -75,7 +75,7 @@ const renderRegistration = registration => {
             <td><span className="govuk-body">{registration.register.description}</span></td>
             <td><span className={`moj-risk-tag ${alertLevelClass(registration)}`}>{alertLevelText(registration)}</span></td>
             <td>{registration.type.description}</td>
-            <td>{moment(registration.startDate, 'YYYY-MM-DD').format('DD/MM/YYYY')}</td>
+            <td>{dateFromISO(registration.startDate)}</td>
         </tr>
 
     );

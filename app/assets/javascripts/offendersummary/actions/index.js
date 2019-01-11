@@ -36,6 +36,20 @@ const incrementMaxConvictionsVisibleCount = incrementBy => ({
     incrementBy
 })
 
+const receiveNextAppointment = appointment => ({
+    type: types.RECEIVE_NEXT_APPOINTMENT,
+    appointment
+})
+
+const nextAppointmentLoadFailure = error => ({
+    type: types.NEXT_APPOINTMENT_LOAD_ERROR,
+    error
+})
+
+const receiveNoNextAppointment = () => ({
+    type: types.RECEIVE_NO_NEXT_APPOINTMENT
+})
+
 export const getOffenderDetails = () => dispatch => {
     offender.getDetails(
         details => dispatch(receiveOffenderDetails(details)),
@@ -55,4 +69,11 @@ export const getOffenderConvictions = () => dispatch => {
 
 export const showMoreConvictions = () => dispatch => {
     dispatch(incrementMaxConvictionsVisibleCount(10))
+}
+
+export const getNextAppointment = () => dispatch => {
+    offender.getNextAppointment(
+        details => dispatch(receiveNextAppointment(details)),
+        () => dispatch(receiveNoNextAppointment()),
+        error => dispatch(nextAppointmentLoadFailure(error)))
 }

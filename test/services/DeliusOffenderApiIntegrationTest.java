@@ -16,7 +16,9 @@ import play.Mode;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithApplication;
 
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
+import java.util.Date;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -84,6 +86,12 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                 get(urlEqualTo("/offenders/offenderId/12345/convictions"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/deliusoffender/offenderConvictions.json"))));
+
+
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/offenderId/12345/appointments"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderAppointments.json"))));
 
 
 
@@ -252,6 +260,31 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                         urlEqualTo("/offenders/offenderId/12345/convictions"))
                         .withHeader("Authorization", new EqualToPattern("Bearer ABC")));
 
+    }
+
+    @Test
+    public void getsOffenderFutureAppointmentsByOffenderId() {
+        wireMock.stubFor(
+                get(urlPathEqualTo("/offenders/offenderId/12345/appointments"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderAppointments.json"))));
+
+
+
+        val appointments = ArrayNode.class.cast(offenderApi.getOffenderFutureAppointmentsByOffenderId("ABC", "12345").toCompletableFuture().join());
+
+        assertThat(appointments.size()).isEqualTo(1);
+        wireMock.verify(
+                getRequestedFor(
+                        urlPathEqualTo("/offenders/offenderId/12345/appointments"))
+                        .withQueryParam("from", new EqualToPattern(today()))
+                        .withQueryParam("attended", new EqualToPattern("NOT_RECORDED"))
+                        .withHeader("Authorization", new EqualToPattern("Bearer ABC")));
+
+    }
+
+    private String today() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     }
 
 

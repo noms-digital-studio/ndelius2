@@ -1,0 +1,32 @@
+[
+  {
+    "appointmentId": 2502592267,
+    "appointmentType": {
+      "code": "APPA03",
+      "description": "AP PA - Accommodation"
+    },
+    "appointmentDate": "2019-03-28",
+    "appointmentStartTime": "09:28:00",
+    "appointmentEndTime": "10:28:00",
+    "createdDateTime": "2019-01-09T09:29:50",
+    "lastUpdatedDateTime": "2019-01-09T09:29:50",
+    "staff": {
+      "forenames": "Chloe ZZ",
+      "surname": "Ransom"
+    },
+    "team": {
+      "code": "N07T01",
+      "description": "OMU A"
+    },
+    "officeLocation": {
+      "code": "LDN_BCS",
+      "description": "1 REGARTH AVENUE"
+    },
+    "probationArea": {
+      "code": "N07",
+      "description": "NPS London"
+    },
+    "visorContact": false,
+    "attended": "NOT_RECORDED"
+  }
+]

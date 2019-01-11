@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 import Accordion from './shared/accordion';
 import ErrorMessage from './errorMessage'
 import moment from 'moment'
+import {dateFromISO} from '../../helpers/formatters'
 
 class Convictions extends Component {
     constructor(props) {
@@ -69,7 +70,7 @@ const renderConviction = conviction => {
             <td className="govuk-!-padding-top-0"><p
                 className="govuk-body moj-!-color-grey govuk-!-margin-bottom-0">{mainOffenceDescription(conviction)}</p></td>
             <td className="govuk-!-padding-top-0" width="110"><p
-                className="govuk-body moj-!-color-grey govuk-!-margin-bottom-0">{moment(conviction.referralDate, 'YYYY-MM-DD').format('DD/MM/YYYY')}</p></td>
+                className="govuk-body moj-!-color-grey govuk-!-margin-bottom-0">{dateFromISO(conviction.referralDate)}</p></td>
             <td className="govuk-!-padding-top-0" width="100"><p
                 className={`govuk-body govuk-!-font-size-19 moj-!-text-align-right govuk-!-margin-bottom-0 moj-!-color-${conviction.active? 'green' : 'red'}`}>{conviction.active? 'Active' : 'Terminated'}</p>
             </td>

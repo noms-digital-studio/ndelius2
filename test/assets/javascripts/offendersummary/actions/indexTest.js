@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {stub} from 'sinon';
 import offender from '../api/offender'
-import {getOffenderDetails, getOffenderRegistrations, getOffenderConvictions, showMoreConvictions} from './index'
+import {getOffenderDetails, getOffenderRegistrations, getOffenderConvictions, showMoreConvictions, getNextAppointment} from './index'
 
 
 describe('offender summary action', () => {
@@ -12,6 +12,7 @@ describe('offender summary action', () => {
         offender.getDetails = stub()
         offender.getRegistrations = stub()
         offender.getConvictions = stub()
+        offender.getNextAppointment = stub()
     })
 
     describe('on getOffenderDetails', () => {
@@ -80,6 +81,35 @@ describe('offender summary action', () => {
         })
         it ('dispatches INCREMENT_MAX_CONVICTIONS_VISIBLE with incrementBy of 10', () => {
             expect(dispatch).to.be.calledWith({type: 'INCREMENT_MAX_CONVICTIONS_VISIBLE', incrementBy: 10})
+        })
+    })
+    describe('on getNextAppointment', () => {
+        context('successful response', () => {
+            beforeEach(() => {
+                offender.getNextAppointment.yields({appointmentId: 1}, null)
+                getNextAppointment()(dispatch)
+            })
+            it ('dispatches RECEIVE_NEXT_APPOINTMENT with details', () => {
+                expect(dispatch).to.be.calledWith({type: 'RECEIVE_NEXT_APPOINTMENT', appointment: {appointmentId: 1}})
+            })
+        })
+        context('no data response', () => {
+            beforeEach(() => {
+                getNextAppointment()(dispatch)
+                offender.getNextAppointment.callArg(1)
+            })
+            it ('dispatches RECEIVE_NO_NEXT_APPOINTMENT', () => {
+                expect(dispatch).to.be.calledWith({type: 'RECEIVE_NO_NEXT_APPOINTMENT'})
+            })
+        })
+        context('unsuccessful response', () => {
+            beforeEach(() => {
+                getNextAppointment()(dispatch)
+                offender.getNextAppointment.callArgWith(2, 'Boom!')
+            })
+            it ('dispatches NEXT_APPOINTMENT_LOAD_ERROR with error', () => {
+                expect(dispatch).to.be.calledWith({type: 'NEXT_APPOINTMENT_LOAD_ERROR', error: 'Boom!'})
+            })
         })
     })
 })
