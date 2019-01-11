@@ -190,6 +190,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     @Override
     protected final CompletionStage<Result> completedWizard(T data) {
+        Logger.info("AUDIT:{}: Completed report {} crn={}", data.getOnBehalfOfUser(), templateName(), data.getCrn());
 
         final Function<Byte[], CompletionStage<Optional<Byte[]>>> resultIfStored = result ->
                 storeReport(data, result).thenApply(stored ->
