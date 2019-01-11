@@ -183,6 +183,10 @@ public class StubOffenderApi implements OffenderApi {
                 "        \"code\": \"C16\",\n" +
                 "        \"description\": \"CPA Thames Valley\"\n" +
                 "      },\n" +
+                "      \"allocationReason\": {\n" +
+                "        \"code\": \"OM\",\n" +
+                "        \"description\": \"Offender Moved\"\n" +
+                "      },\n" +
                 "      \"fromDate\": \"2018-02-16\",\n" +
                 "      \"active\": true\n" +
                 "    },\n" +
