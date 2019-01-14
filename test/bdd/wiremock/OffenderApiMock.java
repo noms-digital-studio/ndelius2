@@ -78,6 +78,20 @@ public class OffenderApiMock {
         private String staffForenames;
         private String staffSurname;
     }
+
+    @Data
+    @Builder
+    public static class OffenderManager {
+        private String staffForenames;
+        private String staffSurname;
+        private String probationAreaDescription;
+        private String teamDescription;
+        private String teamTelephone;
+        private String boroughDescription;
+        private String districtDescription;
+        private String allocationReasonDescription;
+        private LocalDate fromDate;
+    }
     public OffenderApiMock start() {
             offenderApiWireMock.start();
         return this;
@@ -227,6 +241,41 @@ public class OffenderApiMock {
         } else {
             offenderProfile.put("offenderDetails", String.join("\n", notes));
         }
+
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/all"))
+                        .willReturn(
+                                okForContentType("application/json", Json.stringify(offender))));
+
+        return this;
+    }
+
+
+    public OffenderApiMock stubOffenderWithOffenderManager(OffenderManager offenderManager) {
+        val offender = ObjectNode.class.cast(Json.parse(loadResource("/deliusoffender/offender.json")));
+        // get first (and only) manager node
+        val offenderManagerNode = ObjectNode.class.cast(offender.get("offenderManagers").get(0));
+
+
+        offenderManagerNode.put("fromDate", offenderManager.getFromDate().format(DateTimeFormatter.ISO_DATE));
+        val probationArea = ObjectNode.class.cast(offenderManagerNode.get("probationArea"));
+        probationArea.put("description", offenderManager.getProbationAreaDescription());
+        val team = ObjectNode.class.cast(offenderManagerNode.get("team"));
+        team.put("description", offenderManager.getTeamDescription());
+        if (StringUtils.isBlank(offenderManager.getTeamTelephone())) {
+            team.remove("telephone");
+        } else {
+            team.put("telephone", offenderManager.getTeamTelephone());
+        }
+        val district = ObjectNode.class.cast(team.get("district"));
+        district.put("description", offenderManager.getDistrictDescription());
+        val borough = ObjectNode.class.cast(team.get("borough"));
+        borough.put("description", offenderManager.getBoroughDescription());
+        val staff = ObjectNode.class.cast(offenderManagerNode.get("staff"));
+        staff.put("forenames", offenderManager.getStaffForenames());
+        staff.put("surname", offenderManager.getStaffSurname());
+        val allocationReason = ObjectNode.class.cast(offenderManagerNode.get("allocationReason"));
+        allocationReason.put("description", offenderManager.getAllocationReasonDescription());
 
         offenderApiWireMock.stubFor(
                 get(urlMatching("/offenders/offenderId/.*/all"))

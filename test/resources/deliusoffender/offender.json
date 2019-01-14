@@ -73,38 +73,37 @@
   "offenderId": 0,
   "offenderManagers": [
     {
-      "active": true,
-      "fromDate": "2018-06-22",
-      "partitionArea": "string",
-      "probationArea": {
-        "code": "string",
-        "description": "string"
-      },
-      "providerEmployee": {
-        "forenames": "string",
-        "surname": "string"
-      },
-      "softDeleted": false,
-      "staff": {
-        "forenames": "string",
-        "surname": "string"
-      },
-      "team": {
-        "borough": {
-          "code": "string",
-          "description": "string"
-        },
-        "description": "string",
-        "district": {
-          "code": "string",
-          "description": "string"
-        },
-        "telephone": "string"
-      },
-      "toDate": "2018-06-22",
       "trustOfficer": {
-        "forenames": "string",
-        "surname": "string"
+        "forenames": "Sophie Zz",
+        "surname": "Pheim"
+      },
+      "staff": {
+        "forenames": "Sophie Zz",
+        "surname": "Pheim"
+      },
+      "partitionArea": "National Data",
+      "softDeleted": false,
+      "team": {
+        "description": "OMU A",
+        "telephone": "0114 555 1236",
+        "district": {
+          "code": "N04NPSA",
+          "description": "N04 Division"
+        },
+        "borough": {
+          "code": "N04100",
+          "description": "N04 Cluster 1"
+        }
+      },
+      "probationArea": {
+        "code": "N04",
+        "description": "NPS Midlands"
+      },
+      "fromDate": "2017-09-18",
+      "active": true,
+      "allocationReason": {
+        "code": "OM",
+        "description": "Offender Moved"
       }
     }
   ],
