@@ -38,6 +38,16 @@ public class OffenderSummaryPage extends FluentPage {
         private String status;
     }
 
+    @Data
+    @ToString
+    @Builder(toBuilder = true)
+    public static class PersonalCircumstanceTableRow {
+        private int rowNumber;
+        private String type;
+        private String subtype;
+        private String date;
+    }
+
 
     @Inject
     public OffenderSummaryPage(TestBrowser control) {
@@ -149,6 +159,24 @@ public class OffenderSummaryPage extends FluentPage {
         val row = $(selector).find(By.xpath(String.format(".//tr[th[text()='%s']]", fieldLabel)));
         return row.find("td").text();
     }
+
+    public String getPersonalCircumstancesTableText() {
+        await().until($(".qa-offender-personal-circumstances")).size(1);
+        return $(By.className("qa-offender-personal-circumstances")).text();
+    }
+
+    public boolean hasPersonalCircumstanceTableWithRow(PersonalCircumstanceTableRow personalCircumstanceTableRow) {
+        await().until($(".qa-offender-personal-circumstances")).size(1);
+
+        val row = $(".qa-offender-personal-circumstances tbody tr").index((personalCircumstanceTableRow.getRowNumber()));
+
+        return row.text().contains(String.format("%s %s %s", personalCircumstanceTableRow.getType(), personalCircumstanceTableRow.getSubtype(), personalCircumstanceTableRow.getDate()));
+    }
+
+    public int countPersonalCircumstancesTableWithRows() {
+        return $(".qa-offender-personal-circumstances tbody tr").count();
+    }
+
 
 
 }

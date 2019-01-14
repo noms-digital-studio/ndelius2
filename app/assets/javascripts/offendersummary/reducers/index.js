@@ -3,10 +3,12 @@ import offenderDetails from './offenderDetails'
 import offenderRegistrations from './offenderRegistrations'
 import offenderConvictions from './offenderConvictions'
 import nextAppointment from './nextAppointment'
+import offenderPersonalCircumstances from './offenderPersonalCircumstances'
 
 export default combineReducers({
     offenderDetails,
     offenderRegistrations,
     offenderConvictions,
-    nextAppointment
+    nextAppointment,
+    offenderPersonalCircumstances
 })

@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {stub} from 'sinon';
 import offender from '../api/offender'
-import {getOffenderDetails, getOffenderRegistrations, getOffenderConvictions, showMoreConvictions, getNextAppointment} from './index'
+import {getOffenderDetails, getOffenderRegistrations, getOffenderConvictions, showMoreConvictions, getNextAppointment, getOffenderPersonalCircumstances} from './index'
 
 
 describe('offender summary action', () => {
@@ -13,6 +13,7 @@ describe('offender summary action', () => {
         offender.getRegistrations = stub()
         offender.getConvictions = stub()
         offender.getNextAppointment = stub()
+        offender.getPersonalCircumstances = stub()
     })
 
     describe('on getOffenderDetails', () => {
@@ -112,6 +113,27 @@ describe('offender summary action', () => {
             })
         })
     })
+    describe('on getOffenderPersonalCircumstances', () => {
+        context('successful response', () => {
+            beforeEach(() => {
+                offender.getPersonalCircumstances.yields([{type: 'Bad'}], null)
+                getOffenderPersonalCircumstances()(dispatch)
+            })
+            it ('dispatches RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES with details', () => {
+                expect(dispatch).to.be.calledWith({type: 'RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES', circumstances: [{type: 'Bad'}]})
+            })
+        })
+        context('unsuccessful response', () => {
+            beforeEach(() => {
+                getOffenderPersonalCircumstances()(dispatch)
+                offender.getPersonalCircumstances.callArgWith(1, 'Boom!')
+            })
+            it ('dispatches OFFENDER_PERSONAL_CIRCUMSTANCES_LOAD_ERROR with error', () => {
+                expect(dispatch).to.be.calledWith({type: 'OFFENDER_PERSONAL_CIRCUMSTANCES_LOAD_ERROR', error: 'Boom!'})
+            })
+        })
+    })
+
 })
 
 

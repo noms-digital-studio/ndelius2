@@ -94,6 +94,12 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                                 okForContentType("application/json", loadResource("/deliusoffender/offenderAppointments.json"))));
 
 
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/offenderId/12345/personalCircumstances"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderPersonalCircumstances.json"))));
+
+
 
         offenderApi = instanceOf(OffenderApi.class);
     }
@@ -282,6 +288,26 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                         .withHeader("Authorization", new EqualToPattern("Bearer ABC")));
 
     }
+
+    @Test
+    public void getsOffenderPersonalCircumstancesByOffenderId() {
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/offenderId/12345/personalCircumstances"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderPersonalCircumstances.json"))));
+
+
+        val personalCircumstances = ArrayNode.class.cast(offenderApi.getOffenderPersonalCircumstancesByOffenderId("ABC", "12345").toCompletableFuture().join());
+
+        assertThat(personalCircumstances.size()).isEqualTo(9);
+        wireMock.verify(
+                getRequestedFor(
+                        urlEqualTo("/offenders/offenderId/12345/personalCircumstances"))
+                        .withHeader("Authorization", new EqualToPattern("Bearer ABC")));
+
+    }
+
+
 
     private String today() {
         return new SimpleDateFormat("yyyy-MM-dd").format(new Date());

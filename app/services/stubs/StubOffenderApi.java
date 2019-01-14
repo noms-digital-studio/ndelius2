@@ -246,6 +246,11 @@ public class StubOffenderApi implements OffenderApi {
     }
 
     @Override
+    public CompletionStage<JsonNode> getOffenderPersonalCircumstancesByOffenderId(String bearerToken, String offenderId) {
+        return CompletableFuture.completedFuture(loadJsonResource("/stubdata/offender-personal-circumstances.json"));
+    }
+
+    @Override
     public CompletionStage<CourtAppearances> getCourtAppearancesByCrn(String bearerToken, String crn) {
         if (isBlank(bearerToken)) {
             throw new RuntimeException("getOffenderByCrn called with blank bearerToken");

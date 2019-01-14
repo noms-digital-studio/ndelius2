@@ -19,7 +19,12 @@ export default {
     getNextAppointment: (cb, noDataCb, rejected) => fetch('offender/nextAppointment', {cache: "no-store"})
         .then(jsonOrError)
         .then(data => cb(data))
-        .catch(error => error.message === '404' ? noDataCb() : rejected(error))
+        .catch(error => error.message === '404' ? noDataCb() : rejected(error)),
+
+    getPersonalCircumstances: (cb, rejected) => fetch('offender/personalCircumstances', {cache: "no-store"})
+        .then(jsonOrError)
+        .then(data => cb(data))
+        .catch(error => rejected(error)),
 }
 
 

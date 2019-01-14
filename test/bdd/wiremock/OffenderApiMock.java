@@ -92,6 +92,16 @@ public class OffenderApiMock {
         private String allocationReasonDescription;
         private LocalDate fromDate;
     }
+
+    @Data
+    @Builder
+    public static class PersonalCircumstance {
+        private String personalCircumstanceTypeDescription;
+        private String personalCircumstanceSubTypeDescription;
+        private LocalDate startDate;
+        private LocalDate endDate;
+    }
+
     public OffenderApiMock start() {
             offenderApiWireMock.start();
         return this;
@@ -166,6 +176,11 @@ public class OffenderApiMock {
                 get(urlPathMatching("/offenders/offenderId/.*/appointments"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/deliusoffender/offenderAppointments.json"))));
+
+        offenderApiWireMock.stubFor(
+                get(urlPathMatching("/offenders/offenderId/.*/personalCircumstances"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/offenderPersonalCircumstances.json"))));
 
         return this;
     }
@@ -382,6 +397,39 @@ public class OffenderApiMock {
 
         return this;
     }
+
+    public OffenderApiMock stubOffenderWithPersonalCircumstances(List<PersonalCircumstance> personalCircumstances) {
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/personalCircumstances"))
+                        .willReturn(
+                                okForContentType("application/json", JsonHelper.stringify(
+                                        personalCircumstances
+                                                .stream()
+                                                .map(personalCircumstance -> {
+                                                    val template = JsonHelper.jsonToObjectMap(loadResource("/deliusoffender/offenderPersonalCircumstance.json"));
+                                                    template.replace("startDate", personalCircumstance.getStartDate().format(DateTimeFormatter.ISO_DATE));
+                                                    if (personalCircumstance.getEndDate() == null) {
+                                                        template.remove("endDate");
+                                                    } else {
+                                                        template.replace("endDate", personalCircumstance.getEndDate().format(DateTimeFormatter.ISO_DATE));
+                                                    }
+
+                                                    val personalCircumstanceType = (Map<String, Object>)template.get("personalCircumstanceType");
+                                                    personalCircumstanceType.replace("description", personalCircumstance.getPersonalCircumstanceTypeDescription());
+                                                    personalCircumstanceType.replace("code", personalCircumstance.getPersonalCircumstanceTypeDescription().toUpperCase());
+                                                    val personalCircumstanceSubType = (Map<String, Object>)template.get("personalCircumstanceSubType");
+                                                    personalCircumstanceSubType.replace("description", personalCircumstance.getPersonalCircumstanceSubTypeDescription());
+                                                    personalCircumstanceSubType.replace("code", personalCircumstance.getPersonalCircumstanceSubTypeDescription().toUpperCase());
+
+
+                                                    return template;
+                                                })
+                                                .collect(Collectors.toList()))
+                                )));
+
+        return this;
+    }
+
 
 
     private static String loadResource(String resource) {
