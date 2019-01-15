@@ -137,6 +137,10 @@ public class OffenderSummaryPage extends FluentPage {
         $(By.partialLinkText(partialText)).click();
     }
 
+    public Boolean isElementRendered(String id) {
+        return $(id).size() > 0;
+    }
+
     public String getNotes() {
         await().until($(".qa-offender-notes")).size(1);
 
