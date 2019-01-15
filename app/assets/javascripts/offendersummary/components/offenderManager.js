@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types'
 import ErrorMessage from './errorMessage'
 import Accordion from './shared/accordion'
 import NextAppointment from '../containers/nextAppointmentContainer'
+import PersonalCircumstances from '../containers/personalCircumstancesContainer'
 import {staff} from '../../helpers/offenderManagerHelper'
 import {dateFromISO} from '../../helpers/formatters'
 
@@ -44,6 +45,7 @@ const OffenderManager = ({ fetching, error, offenderManager }) => {
                         </tr>
                         </tbody>
                     </table>
+                    <PersonalCircumstances/>
                     <NextAppointment/>
                 </div>
                 }

@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -21,17 +22,16 @@ import play.mvc.Results;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -128,9 +128,17 @@ public class OffenderController extends Controller {
                 thenApply(result -> result.withHeader(EXPIRES, "0"));
     }
 
+    public CompletionStage<Result> personalCircumstances() {
+        return jsonResultOf((bearerToken, offenderId) ->
+                offenderApi.getOffenderPersonalCircumstancesByOffenderId(bearerToken, offenderId)
+                        .thenApply(this::filterForCircumstancesThatHaveNotEnded)
+                        .thenApply(this::filterForLatestCircumstanceForType));
+    }
+
+
     private Optional<JsonNode> findNextAppointment(JsonNode jsonNode) {
 
-        Stream<JsonNode> appointments = StreamSupport.stream(Spliterators.spliteratorUnknownSize(ArrayNode.class.cast(jsonNode).elements(), Spliterator.ORDERED), false);
+        Stream<JsonNode> appointments = asStream(jsonNode);
 
         return appointments.min(Comparator.comparing(this::appointmentDateTime));
 
@@ -155,6 +163,36 @@ public class OffenderController extends Controller {
         }
         return registrations;
     }
+
+    private JsonNode filterForLatestCircumstanceForType(JsonNode jsonNode) {
+        val personalCircumstancesGroupedByType = asStream(jsonNode).collect(Collectors.groupingBy(node -> node.get("personalCircumstanceType").get("code").asText()));
+
+        return personalCircumstancesGroupedByType.entrySet().stream()
+                .map(this::latestCircumstance)
+                .collect(JsonNodeFactory.instance::arrayNode, ArrayNode::add, ArrayNode::addAll);
+    }
+
+    private JsonNode latestCircumstance(Map.Entry<String, List<JsonNode>> personalCircumstances) {
+        return personalCircumstances.getValue().stream()
+                .max(Comparator.comparing(this::startDate)).orElseThrow(() -> new RuntimeException("No start date on personal circumstance"));
+    }
+
+    private LocalDate startDate(JsonNode personalCircumstance) {
+        val date = personalCircumstance.get("startDate").asText();
+        return LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+    }
+
+
+    private JsonNode filterForCircumstancesThatHaveNotEnded(JsonNode jsonNode) {
+        return asStream(jsonNode)
+                .filter(node -> node.get("endDate") == null)
+                .collect(JsonNodeFactory.instance::arrayNode, ArrayNode::add, ArrayNode::addAll);
+    }
+
+    private Stream<JsonNode> asStream(JsonNode jsonNode) {
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(ArrayNode.class.cast(jsonNode).elements(), Spliterator.ORDERED), false);
+    }
+
 
     private CompletionStage<Result> jsonResultOf(BiFunction<String, String, CompletionStage<JsonNode>> jsonSupplier) {
         val bearerToken = session(SessionKeys.OFFENDER_API_BEARER_TOKEN);

@@ -33,6 +33,7 @@ GET     /offender/detail                            controllers.OffenderControll
 GET     /offender/registrations                     controllers.OffenderController.registrations
 GET     /offender/convictions                       controllers.OffenderController.convictions
 GET     /offender/nextAppointment                   controllers.OffenderController.nextAppointment
+GET     /offender/personalCircumstances                   controllers.OffenderController.personalCircumstances
 
 GET     /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardGet
 POST    /report/shortFormatPreSentenceReport        controllers.ShortFormatPreSentenceReportController.wizardPost

@@ -67,6 +67,14 @@ describe('OffenderManager component', () => {
                 expect(wrapper.find('.qa-offender-manager').exists()).to.be.true
             })
 
+            it('personal circumstances is displayed', () => {
+                expect(wrapper.find('Connect(PersonalCircumstances)').exists()).to.be.true
+            })
+
+            it('next appointment is displayed', () => {
+                expect(wrapper.find('Connect(NextAppointment)').exists()).to.be.true
+            })
+
             it('probation area is rendered', () => {
                 expect(wrapper.find('tbody tr').at(0).find('td').text()).to.equal('NPS North West')
             })

@@ -1,0 +1,19 @@
+{
+  "personalCircumstanceId": 1,
+  "offenderId": 1,
+  "personalCircumstanceType": {
+    "code": "D",
+    "description": "General Health"
+  },
+  "personalCircumstanceSubType": {
+    "code": "D01",
+    "description": "Mental Health Concerns"
+  },
+  "startDate": "2019-01-01",
+  "endDate": "2019-03-06",
+  "probationArea": {
+    "code": "N07",
+    "description": "NPS London"
+  },
+  "evidenced": false
+}

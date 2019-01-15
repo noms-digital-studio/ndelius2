@@ -50,6 +50,17 @@ const receiveNoNextAppointment = () => ({
     type: types.RECEIVE_NO_NEXT_APPOINTMENT
 })
 
+const receiveOffenderPersonalCircumstances = circumstances => ({
+    type: types.RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES,
+    circumstances
+})
+
+const offenderPersonalCircumstancesLoadFailure = error => ({
+    type: types.OFFENDER_PERSONAL_CIRCUMSTANCES_LOAD_ERROR,
+    error
+})
+
+
 export const getOffenderDetails = () => dispatch => {
     offender.getDetails(
         details => dispatch(receiveOffenderDetails(details)),
@@ -76,4 +87,10 @@ export const getNextAppointment = () => dispatch => {
         details => dispatch(receiveNextAppointment(details)),
         () => dispatch(receiveNoNextAppointment()),
         error => dispatch(nextAppointmentLoadFailure(error)))
+}
+
+export const getOffenderPersonalCircumstances = () => dispatch => {
+    offender.getPersonalCircumstances(
+        details => dispatch(receiveOffenderPersonalCircumstances(details)),
+        error => dispatch(offenderPersonalCircumstancesLoadFailure(error)))
 }
