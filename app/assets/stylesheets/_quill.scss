@@ -59,6 +59,14 @@
   }
 
   .ql-editor {
+
+    &.ql-blank::before {
+      @if mixin_exists(govuk-font) {
+        @include govuk-font($size: 24);
+      }
+      font-style: normal;
+    }
+
     .ql-align-justify {
       white-space: normal;
     }
@@ -87,4 +95,3 @@
     }
   }
 }
-
