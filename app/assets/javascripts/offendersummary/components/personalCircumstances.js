@@ -25,7 +25,7 @@ class PersonalCircumstances extends Component {
         const {fetching, error, circumstances} = this.props;
 
         return (
-            <details className="govuk-details govuk-!-margin-top-0" role="group" ref={this.setDetailsRef}>
+            <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" role="group" ref={this.setDetailsRef}>
                 <summary className="govuk-details__summary" role=" button" aria-controls="details-content-circumstances" aria-expanded="false">
                     <span className="govuk-details__summary-text">Personal circumstances</span>
                 </summary>

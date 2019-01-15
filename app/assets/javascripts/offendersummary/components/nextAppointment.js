@@ -49,7 +49,7 @@ export class AppointmentDetail extends Component {
         const {appointment, noNextAppointment} = this.props;
 
         return (
-            <details className="govuk-details govuk-!-margin-top-0 qa-next-appointment" role="group" ref={this.setDetailsRef}>
+            <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0 qa-next-appointment" role="group" ref={this.setDetailsRef}>
                 <summary className="govuk-details__summary" role="button"
                          aria-controls="details-content-appointment" aria-expanded="false">
                     <span className="govuk-details__summary-text"> Next appointment details </span>
