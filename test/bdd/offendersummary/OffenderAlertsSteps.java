@@ -35,4 +35,35 @@ public class OffenderAlertsSteps {
     public void theyShouldSeeBreachedConditionsAlert() {
         assertThat(page.isElementRendered(".qa-alert-breach")).isTrue();
     }
+
+    @Then("^they should not see a RoSH registration alert$")
+    public void theyShouldNotSeeRoshAlert() {
+        assertThat(page.isElementRendered(".qa-alert-rosh")).isFalse();
+    }
+
+    @Then("^they should see a \"([^\"]*)\" RoSH registration alert$")
+    public void theyShouldSeeVeryHighRoshRegistrationAlert(String type) {
+
+        String elementText = page.getElementText(".qa-alert-rosh");
+
+        switch(type) {
+            case "very high":
+                assertThat(elementText).isEqualTo("very high risk of serious harm");
+                break;
+            case "high":
+                assertThat(elementText).isEqualTo("high risk of serious harm");
+                break;
+            case "medium":
+                assertThat(elementText).isEqualTo("medium risk of serious harm");
+                break;
+            case "low":
+                assertThat(elementText).isEqualTo("low risk of serious harm");
+                break;
+        }
+    }
+
+    @Then("^the RoSH registration alert should be \"([^\"]*)\"$")
+    public void theRoshAlertShouldBeTheCorrectColor(String color) {
+        assertThat(page.hasRegistrationAlertColor(color)).isTrue();
+    }
 }

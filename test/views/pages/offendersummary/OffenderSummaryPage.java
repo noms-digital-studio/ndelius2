@@ -97,6 +97,12 @@ public class OffenderSummaryPage extends FluentPage {
                 row.text().contains(String.format("%s %s %s %s", registrationTableRow.getType(), registrationTableRow.getStatusWord().toLowerCase(), registrationTableRow.getDescription(), registrationTableRow.getDate()));
     }
 
+    public boolean hasRegistrationAlertColor(String color) {
+        await().until($(".moj-risk-alert")).size(1);
+        val statusColor = alertColourToRGB(color);
+        return find(".moj-risk-alert").first().getElement().getCssValue("color").equals(statusColor);
+    }
+
     public boolean hasEventTableWithRow(EventTableRow eventTableRow) {
         await().until($(".qa-offender-convictions")).size(1);
 
@@ -111,6 +117,22 @@ public class OffenderSummaryPage extends FluentPage {
         return $(".qa-offender-convictions tbody tr").count() / 2;
     }
 
+    private String alertColourToRGB(String statusColour) {
+        // map the BDD colours to actual CSS colours presented on screen
+        // this is preferable to mapping to css class names that are identified by 'low', 'medium' etc
+        // a nicer way would be doing a complex difference calculation between these values and the formal
+        // definition of white, amber etc - all a bit OTT for now allow css changes to break BDD
+        switch (statusColour) {
+            case "Red":
+                return "rgba(223, 48, 52, 1)";
+            case "Amber":
+                return colourToRGB("Amber");
+            case "Green":
+                return "rgba(133, 153, 75, 1)";
+        }
+
+        return "";
+    }
 
     private String colourToRGB(String statusColour) {
         // map the BDD colours to actual CSS colours presented on screen
@@ -147,8 +169,13 @@ public class OffenderSummaryPage extends FluentPage {
         $(By.partialLinkText(partialText)).click();
     }
 
-    public Boolean isElementRendered(String id) {
-        return $(id).size() > 0;
+    public Boolean isElementRendered(String className) {
+        return $(className).size() > 0;
+    }
+
+    public String getElementText(String className) {
+        await().until($(className)).size(1);
+        return $(className).text();
     }
 
     public String getNotes() {
