@@ -2,6 +2,7 @@ package services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import interfaces.HealthCheckResult;
@@ -95,6 +96,18 @@ public class DeliusOffenderApi implements OffenderApi {
                 });
 
     }
+
+    @Override
+    public CompletionStage<AccessLimitation> checkAccessLimitation(String bearerToken, long offenderId) {
+        val url = String.format(offenderApiBaseUrl + "offenders/offenderId/%d/userAccess", offenderId);
+        return wsClient.url(url)
+                .addHeader(AUTHORIZATION, String.format("Bearer %s", bearerToken))
+                .get()
+                .thenApply(response -> assertResponseIn(response, "checkAccessLimitation", ImmutableList.of(OK, FORBIDDEN)))
+                .thenApply(WSResponse::getBody)
+                .thenApply(body -> readValue(body, AccessLimitation.class));
+    }
+
 
     @Override
     public CompletionStage<HealthCheckResult> isHealthy() {
@@ -324,7 +337,10 @@ public class DeliusOffenderApi implements OffenderApi {
     }
 
     private WSResponse assertOkResponse(WSResponse response, String description) {
-        if (response.getStatus() != OK) {
+        return assertResponseIn(response, description, ImmutableList.of(OK));
+    }
+    private WSResponse assertResponseIn(WSResponse response, String description, List<Integer> statuses) {
+        if(!statuses.contains(response.getStatus())) {
             Logger.error("{} API bad response {}", description, response.getStatus());
             throw new RuntimeException(String.format("Unable to call %s. Status = %d", description, response.getStatus()));
         }

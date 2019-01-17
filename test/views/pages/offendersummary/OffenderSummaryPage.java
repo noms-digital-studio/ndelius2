@@ -66,6 +66,16 @@ public class OffenderSummaryPage extends FluentPage {
         return this;
     }
 
+    public OffenderSummaryPage navigateHereExpectLimitedAccess() {
+        goTo(String.format("/offenderSummary?offenderId=%s&user=%s&t=%s",
+                "12345",
+                encrypt("john.smith"),
+                encrypt(String.format("%d", Instant.now().toEpochMilli()))
+        ));
+
+        return this;
+    }
+
     public String getOffenderName() {
         return $(By.className("qa-offender-name")).text();
     }
@@ -179,6 +189,10 @@ public class OffenderSummaryPage extends FluentPage {
 
     public int countPersonalCircumstancesTableWithRows() {
         return $(".qa-offender-personal-circumstances tbody tr").count();
+    }
+
+    public String getErrorListText() {
+        return $(".govuk-error-summary__list").text();
     }
 
 

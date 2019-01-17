@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static scala.io.Source.fromInputStream;
 
@@ -305,6 +306,32 @@ public class DeliusOffenderApiIntegrationTest extends WithApplication {
                         urlEqualTo("/offenders/offenderId/12345/personalCircumstances"))
                         .withHeader("Authorization", new EqualToPattern("Bearer ABC")));
 
+    }
+
+    @Test
+    public void getsOffenderAccessLimitationsByOffenderId() {
+        /*
+        {
+          "userRestricted": true,
+          "restrictionMessage": "This is a restricted offender record",
+          "userExcluded": true,
+          "exclusionMessage": "This is an excluded offender record"
+        }
+         */
+        wireMock.stubFor(
+                get(urlEqualTo("/offenders/offenderId/12345/userAccess"))
+                        .willReturn(
+                                forbidden()
+                                        .withHeader(CONTENT_TYPE, "application/json")
+                                        .withBody(loadResource("/deliusoffender/offenderCanAccess.json"))));
+
+
+        val accessLimitation = offenderApi.checkAccessLimitation("ABC", 12345L).toCompletableFuture().join();
+
+        assertThat(accessLimitation.isUserRestricted()).isTrue();
+        assertThat(accessLimitation.getRestrictionMessage()).isEqualTo("This is a restricted offender record");
+        assertThat(accessLimitation.isUserExcluded()).isTrue();
+        assertThat(accessLimitation.getExclusionMessage()).isEqualTo("This is an excluded offender record");
     }
 
 
