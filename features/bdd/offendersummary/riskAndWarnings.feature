@@ -73,3 +73,19 @@ Scenario: Offender is on multiple categories within Registers and warnings Lists
   | RoSH               | Very High            | Red               |Very High RoSH                   | 07/12/2018  |
   | Safeguarding       | High                 | Red               |Risk to Children                 | 10/01/2015  |
   | Safeguarding       | Medium               | Amber             |Child Concerns                   | 06/12/2018  |
+
+  Scenario: Offender has a serious registration
+
+    Given that the a registration which is serious is saved for an offender in Delius
+    And they navigate to the offender summary page
+    And the Delius user selects the "Registers and warnings" link on the "Offender Summary" UI
+    When offender registrations are displayed
+    Then the serious registration message "This offender has serious registrations" is displayed
+
+  Scenario: Offender has no serious registration
+
+    Given that the a registration which is not serious is saved for an offender in Delius
+    And they navigate to the offender summary page
+    And the Delius user selects the "Registers and warnings" link on the "Offender Summary" UI
+    When offender registrations are displayed
+    Then the serious registration message is not displayed

@@ -61,7 +61,7 @@ public class OffenderSummaryPage extends FluentPage {
                 encrypt(String.format("%d", Instant.now().toEpochMilli()))
         ));
 
-        control.await().until($(By.className("qa-offender-identity")));
+        control.await().until($(By.className("qa-main-content"))).size(1);
 
         return this;
     }
@@ -221,6 +221,16 @@ public class OffenderSummaryPage extends FluentPage {
     public String getErrorListText() {
         return $(".govuk-error-summary__list").text();
     }
+
+    public String getSeriousRegistrationsText() {
+        return $(".qa-offender-serious-registrations").text();
+    }
+
+    public boolean hasSeriousRegistrationMessage() {
+        return $(".qa-offender-serious-registrations").size() == 1;
+    }
+
+
 
 
 

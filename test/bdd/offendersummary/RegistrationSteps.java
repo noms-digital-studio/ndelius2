@@ -3,6 +3,7 @@ package bdd.offendersummary;
 import bdd.wiremock.OffenderApiMock;
 import com.google.common.collect.ImmutableList;
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -66,6 +67,47 @@ public class RegistrationSteps {
     public void theyShouldSeeTheFollowingAlertAndRegistrationText(String text) {
         assertThat(page.getRegistrationTableText()).isEqualToIgnoringCase(text);
     }
+
+    @Given("^that the a registration which is serious is saved for an offender in Delius$")
+    public void thatTheARegistrationWhichIsSeriousIsSavedForAnOffenderInDelius() {
+        offenderApiMock.stubOffenderWithRegistrations(ImmutableList.of(OffenderApiMock.Registration
+                .builder()
+                .register("Public Protection")
+                .type("Danger to staff")
+                .riskColour("Red")
+                .startDate(LocalDate.now())
+                .warnUser(true)
+                .build()));
+    }
+
+    @When("^offender registrations are displayed$")
+    public void offenderRegistrationsAreDisplayed() {
+        // this waits until registration sections is available, hence registrations have been retrieved
+        page.getRegistrationTableText();
+    }
+
+    @Given("^that the a registration which is not serious is saved for an offender in Delius$")
+    public void thatTheARegistrationWhichIsNotSeriousIsSavedForAnOffenderInDelius() {
+        offenderApiMock.stubOffenderWithRegistrations(ImmutableList.of(OffenderApiMock.Registration
+                .builder()
+                .register("Public Protection")
+                .type("Danger to children")
+                .riskColour("Red")
+                .startDate(LocalDate.now())
+                .warnUser(false)
+                .build()));
+    }
+
+    @Then("^the serious registration message \"([^\"]*)\" is displayed$")
+    public void theSeriousRegistrationMessageIsDisplayed(String message) {
+        assertThat(page.getSeriousRegistrationsText()).contains(message);
+    }
+
+    @Then("^the serious registration message is not displayed$")
+    public void theSeriousRegistrationMessageIsNotDisplayed() {
+        assertThat(page.hasSeriousRegistrationMessage()).isFalse();
+    }
+
 
 
     private List<OffenderApiMock.Registration> toRegistrations(DataTable data) {

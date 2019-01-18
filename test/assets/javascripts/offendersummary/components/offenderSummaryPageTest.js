@@ -40,6 +40,9 @@ describe('OffenderSummaryPage component', () => {
             it('offender identity container is displayed', () => {
                 expect(page.find('Connect(OffenderIdentity)').exists()).to.be.true
             })
+            it('offender serious registrations container is displayed', () => {
+                expect(page.find('Connect(SeriousRegistrations)').exists()).to.be.true
+            })
             it('offender registrations container is displayed', () => {
                 expect(page.find('Connect(Registrations)').exists()).to.be.true
             })
