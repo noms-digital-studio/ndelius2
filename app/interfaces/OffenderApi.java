@@ -276,6 +276,55 @@ public interface OffenderApi {
         }
     }
 
+    /**
+     * No lombok - Scala doesn't play well with inner, inner classes
+     */
+    class  AccessLimitation {
+        private boolean userRestricted;
+        private String restrictionMessage;
+        private boolean userExcluded;
+        private String exclusionMessage;
+
+        @java.beans.ConstructorProperties({"userRestricted", "restrictionMessage", "userExcluded", "exclusionMessage"})
+        public AccessLimitation(boolean userRestricted, String restrictionMessage, boolean userExcluded, String exclusionMessage) {
+            this.userRestricted = userRestricted;
+            this.restrictionMessage = restrictionMessage;
+            this.userExcluded = userExcluded;
+            this.exclusionMessage = exclusionMessage;
+        }
+
+        public boolean canAccess() {
+            return !userExcluded && !userRestricted;
+        }
+        public static AccessLimitation userExcluded(String message){
+            return new AccessLimitation(false, null, true, message);
+        }
+        public static AccessLimitation userRestricted(String message){
+            return new AccessLimitation(true, message, false, null);
+        }
+        public static AccessLimitation userAllowed() {
+            return new AccessLimitation(false, null, false, null);
+        }
+
+
+        public boolean isUserRestricted() {
+            return this.userRestricted;
+        }
+
+        public String getRestrictionMessage() {
+            return this.restrictionMessage;
+        }
+
+        public boolean isUserExcluded() {
+            return this.userExcluded;
+        }
+
+        public String getExclusionMessage() {
+            return this.exclusionMessage;
+        }
+    }
+
+
 
     static String joinList(String delimiter, List<String> list) {
         return String.join(delimiter,
@@ -289,6 +338,14 @@ public interface OffenderApi {
     CompletionStage<String> logon(String username);
 
     CompletionStage<Boolean> canAccess(String bearerToken, long offenderId);
+
+    /**
+     * A version of `canAccess` that gives more information about why an offender record can not be accessed
+     * @param bearerToken
+     * @param offenderId
+     * @return AccessLimitation even if an offender record can be accessed
+     */
+    CompletionStage<AccessLimitation> checkAccessLimitation(String bearerToken, long offenderId);
 
     CompletionStage<HealthCheckResult> isHealthy();
 

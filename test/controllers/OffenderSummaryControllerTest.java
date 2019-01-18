@@ -42,7 +42,7 @@ public class OffenderSummaryControllerTest extends WithApplication {
     @Before
     public void before()  {
         when(offenderApi.logon(any())).thenReturn(CompletableFuture.completedFuture(JwtHelperTest.generateToken()));
-        when(offenderApi.canAccess(any(), anyLong())).thenReturn(CompletableFuture.completedFuture(true));
+        when(offenderApi.checkAccessLimitation(any(), anyLong())).thenReturn(CompletableFuture.completedFuture(OffenderApi.AccessLimitation.userAllowed()));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class OffenderSummaryControllerTest extends WithApplication {
 
     @Test
     public void indexPageSessionDoesNotContainsOffenderIdWhenOffenderIsNotAccessibleToUser() throws UnsupportedEncodingException {
-        when(offenderApi.canAccess(any(), anyLong())).thenReturn(CompletableFuture.completedFuture(false));
+        when(offenderApi.checkAccessLimitation(any(), anyLong())).thenReturn(CompletableFuture.completedFuture(OffenderApi.AccessLimitation.userExcluded("This offender is not allowed to be viewed")));
 
         val result = route(app, buildIndexPageRequest("bobby.beats", "321"));
 
@@ -92,7 +92,7 @@ public class OffenderSummaryControllerTest extends WithApplication {
 
     @Test
     public void notAccessibleIndexPageRenderedWhenOffenderIsNotAccessibleToUser() throws UnsupportedEncodingException {
-        when(offenderApi.canAccess(any(), anyLong())).thenReturn(CompletableFuture.completedFuture(false));
+        when(offenderApi.checkAccessLimitation(any(), anyLong())).thenReturn(CompletableFuture.completedFuture(OffenderApi.AccessLimitation.userExcluded("This offender is not allowed to be viewed")));
         val result = route(app, buildIndexPageRequest());
 
         assertThat(result.status()).isEqualTo(OK);

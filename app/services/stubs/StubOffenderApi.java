@@ -41,6 +41,11 @@ public class StubOffenderApi implements OffenderApi {
     }
 
     @Override
+    public CompletionStage<AccessLimitation> checkAccessLimitation(String bearerToken, long offenderId) {
+        return CompletableFuture.completedFuture(AccessLimitation.userAllowed());
+    }
+
+    @Override
     public CompletionStage<HealthCheckResult> isHealthy() {
         return CompletableFuture.completedFuture(healthy());
     }

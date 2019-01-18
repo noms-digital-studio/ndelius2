@@ -1,0 +1,6 @@
+{
+  "userRestricted": true,
+  "restrictionMessage": "This is a restricted offender record",
+  "userExcluded": true,
+  "exclusionMessage": "This is an excluded offender record"
+}

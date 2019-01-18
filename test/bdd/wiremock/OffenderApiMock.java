@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
+import interfaces.OffenderApi;
 import lombok.Builder;
 import lombok.Data;
 import lombok.val;
@@ -446,6 +447,19 @@ public class OffenderApiMock {
 
         return this;
     }
+
+    public void stubOffenderWithLimitedAccessExclusion(String exclusionMessage) {
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/userAccess"))
+                        .willReturn(forbidden().withBody(JsonHelper.stringify(OffenderApi.AccessLimitation.userExcluded(exclusionMessage)))));
+    }
+
+    public void stubOffenderWithLimitedAccessRestricted(String restrictedMessage) {
+        offenderApiWireMock.stubFor(
+                get(urlMatching("/offenders/offenderId/.*/userAccess"))
+                        .willReturn(forbidden().withBody(JsonHelper.stringify(OffenderApi.AccessLimitation.userRestricted(restrictedMessage)))));
+    }
+
 
 
 
