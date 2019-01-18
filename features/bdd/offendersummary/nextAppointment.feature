@@ -31,11 +31,4 @@ Feature: Offender Summary
     And they navigate to the offender summary page
     When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
     And they expand the "Next appointment details" content section
-    Then the screen should expand to show the following next appointment
-      | Contact type | Unknown |
-      | Date         | Unknown |
-      | Start time   | Unknown |
-      | Location     | Unknown |
-      | Provider     | Unknown |
-      | Team         | Unknown |
-      | Officer      | Unknown |
+    Then the screen should expand to show the following next appointment message "No next appointment recorded"

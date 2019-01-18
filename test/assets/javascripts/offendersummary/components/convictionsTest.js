@@ -71,7 +71,7 @@ describe('Convictions component', () => {
             })
 
             it('contains no data text', () => {
-                expect(wrapper.find('.qa-offender-convictions').text()).to.equal('No data')
+                expect(wrapper.find('.qa-offender-convictions').text()).to.equal('No events recorded')
             })
 
         })

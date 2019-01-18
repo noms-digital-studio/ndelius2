@@ -5,15 +5,15 @@ Scenario: Kieron Robinson is not on any registers and warnings list within Deliu
 
   Given that the Kieron Robinson is not on any registers and warning lists within Delius
   And they navigate to the offender summary page
-  When  the Delius user selects the "Registers and warnings" link on the "Offender Summary" UI
-  Then  they should see the following alert and registration text "no data"
+  When  the Delius user selects the "Active registers and warnings" link on the "Offender Summary" UI
+  Then  they should see the following alert and registration text "No active registers and warnings recorded"
 
 Scenario: Offender is on the "Low" RoSH Register in Delius
   Given that the following alert and registration information is saved for an offender in Delius
   | Flag   | Type      |  Date       | Colour |
   | RoSH   | Low RoSH  | 07/12/2018  | Green  |
   And they navigate to the offender summary page
-  When  the Delius user selects the "Registers and warnings" link on the "Offender Summary" UI
+  When  the Delius user selects the "Active registers and warnings" link on the "Offender Summary" UI
   Then  then they should see the following alert and registrations information
   | Type           | Status word  | Status Colour     |Description        | Date        |
   | RoSH           | Low          | Green             |Low RoSH           | 07/12/2018  |
@@ -27,7 +27,7 @@ Scenario: Offender is on multiple registers and warnings lists within Delius
   | Alerts              | Lifer                            | 06/12/2018  | Red    |
   | Information         | Duplicate Offender Records Exist | 06/12/2018  | White  |
   And they navigate to the offender summary page
-  When  the Delius user selects the "Registers and warnings" link on the "Offender Summary" UI
+  When  the Delius user selects the "Active registers and warnings" link on the "Offender Summary" UI
   Then  then they should see the following alert and registrations information
   | Type               | Status word  | Status Colour     |Description                      | Date        |
   | Alerts             | High         | Red               |Lifer                            | 06/12/2018  |
@@ -55,7 +55,7 @@ Scenario: Offender is on multiple categories within Registers and warnings Lists
   | Public Protection   | Risk to Staff                    | 06/12/2018  | Red    |
   | Information         | Record to be retained            | 06/12/2018  | Green  |
   And they navigate to the offender summary page
-  When  the Delius user selects the "Registers and warnings" link on the "Offender Summary" UI
+  When  the Delius user selects the "Active registers and warnings" link on the "Offender Summary" UI
   Then  then they should see the following alert and registrations information
   | Type               | Status word          | Status Colour     |Description                      | Date        |
   | Alerts             | High                 | Red               |Lifer                            | 06/12/2018  |
@@ -78,7 +78,7 @@ Scenario: Offender is on multiple categories within Registers and warnings Lists
 
     Given that the a registration which is serious is saved for an offender in Delius
     And they navigate to the offender summary page
-    And the Delius user selects the "Registers and warnings" link on the "Offender Summary" UI
+    And the Delius user selects the "Active registers and warnings" link on the "Offender Summary" UI
     When offender registrations are displayed
     Then the serious registration message "This offender has serious registrations" is displayed
 
@@ -86,6 +86,6 @@ Scenario: Offender is on multiple categories within Registers and warnings Lists
 
     Given that the a registration which is not serious is saved for an offender in Delius
     And they navigate to the offender summary page
-    And the Delius user selects the "Registers and warnings" link on the "Offender Summary" UI
+    And the Delius user selects the "Active registers and warnings" link on the "Offender Summary" UI
     When offender registrations are displayed
     Then the serious registration message is not displayed

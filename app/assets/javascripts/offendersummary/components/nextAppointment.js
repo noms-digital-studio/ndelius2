@@ -56,38 +56,42 @@ export class AppointmentDetail extends Component {
                 </summary>
                 <div className="govuk-details__text moj-details__text--no-border" id="details-content-appointment"
                      aria-hidden="true">
-                    <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
-                        <tbody>
-                        <tr>
-                            <th>Contact type</th>
-                            <td>{!noNextAppointment && appointment.appointmentType.description || 'Unknown'}</td>
-                        </tr>
-                        <tr>
-                            <th>Date</th>
-                            <td>{!noNextAppointment && dateFromISO(appointment.appointmentDate) || 'Unknown'}</td>
-                        </tr>
-                        <tr>
-                            <th>Start time</th>
-                            <td>{!noNextAppointment && appointment.appointmentStartTime && moment(appointment.appointmentStartTime, 'H:mm:ss').format('H:mm') || 'Unknown'}</td>
-                        </tr>
-                        <tr>
-                            <th>Location</th>
-                            <td>{!noNextAppointment && appointment.officeLocation && appointment.officeLocation.description || 'Unknown'}</td>
-                        </tr>
-                        <tr>
-                            <th>Provider</th>
-                            <td>{!noNextAppointment && appointment.probationArea && appointment.probationArea.description || 'Unknown'}</td>
-                        </tr>
-                        <tr>
-                            <th>Team</th>
-                            <td>{!noNextAppointment && appointment.team && appointment.team.description || 'Unknown'}</td>
-                        </tr>
-                        <tr>
-                            <th>Officer</th>
-                            <td>{!noNextAppointment && appointment.staff && staff(appointment.staff) || 'Unknown'}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                  {noNextAppointment &&
+                  <div><p className="govuk-body moj-!-text-align-center">No next appointment recorded</p></div>                  }
+                  {!noNextAppointment &&
+                  <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
+                    <tbody>
+                    <tr>
+                      <th>Contact type</th>
+                      <td>{appointment.appointmentType.description || 'Unknown'}</td>
+                    </tr>
+                    <tr>
+                      <th>Date</th>
+                      <td>{dateFromISO(appointment.appointmentDate) || 'Unknown'}</td>
+                    </tr>
+                    <tr>
+                      <th>Start time</th>
+                      <td>{appointment.appointmentStartTime && moment(appointment.appointmentStartTime, 'H:mm:ss').format('H:mm') || 'Unknown'}</td>
+                    </tr>
+                    <tr>
+                      <th>Location</th>
+                      <td>{appointment.officeLocation && appointment.officeLocation.description || 'Unknown'}</td>
+                    </tr>
+                    <tr>
+                      <th>Provider</th>
+                      <td>{appointment.probationArea && appointment.probationArea.description || 'Unknown'}</td>
+                    </tr>
+                    <tr>
+                      <th>Team</th>
+                      <td>{appointment.team && appointment.team.description || 'Unknown'}</td>
+                    </tr>
+                    <tr>
+                      <th>Officer</th>
+                      <td>{appointment.staff && staff(appointment.staff) || 'Unknown'}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                  }
                 </div>
             </details>
         )

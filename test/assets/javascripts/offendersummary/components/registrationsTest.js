@@ -58,11 +58,11 @@ describe('Registrations component', () => {
             })
 
             it('contains registration count of zero', () => {
-                expect(wrapper.find({label: "Registers and warnings (0)"}).exists()).to.be.true
+                expect(wrapper.find({label: "Active registers and warnings (0)"}).exists()).to.be.true
             })
 
             it('contains no data text', () => {
-                expect(wrapper.find('.qa-offender-registrations').text()).to.equal('No data')
+                expect(wrapper.find('.qa-offender-registrations').text()).to.equal('No active registers and warnings recorded')
             })
 
         })
@@ -73,7 +73,7 @@ describe('Registrations component', () => {
             })
 
             it('contains registration count', () => {
-                expect(wrapper.find({label: "Registers and warnings (2)"}).exists()).to.be.true
+                expect(wrapper.find({label: "Active registers and warnings (2)"}).exists()).to.be.true
             })
             it('contains row for each registration', () => {
                 expect(wrapper.find('tbody tr')).to.have.length(2)
