@@ -46,6 +46,7 @@ public class OffenderApiMock {
         private String type;
         private String riskColour;
         private LocalDate startDate;
+        private boolean warnUser;
 
     }
     @Data
@@ -325,6 +326,7 @@ public class OffenderApiMock {
                                             template.replace("type", ImmutableMap.of("code", registration.getType().toUpperCase(), "description", registration.getType()));
                                             template.replace("startDate", registration.getStartDate().format(DateTimeFormatter.ISO_DATE));
                                             template.replace("riskColour", registration.getRiskColour());
+                                            template.replace("warnUser", registration.isWarnUser());
 
                                             return template;
                                         })

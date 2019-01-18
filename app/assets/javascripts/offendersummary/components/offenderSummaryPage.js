@@ -5,6 +5,7 @@ import ErrorMessage from './errorMessage';
 import OffenderIdentity from '../containers/offenderIdentityContainer';
 import OffenderDetails from '../containers/offenderDetailsContainer';
 import Registrations from '../containers/registrationsContainer';
+import SeriousRegistrations from '../containers/seriousRegistrationsContainer';
 import Convictions from '../containers/convictionsContainer';
 import Notes from '../containers/notesContainer';
 import OffenderManager from '../containers/offenderManagerContainer';
@@ -28,6 +29,7 @@ class OffenderSummaryPage extends Component {
                 <div className="qa-main-content">
 
                     <OffenderIdentity/>
+                    <SeriousRegistrations/>
                     <Registrations/>
                     <Convictions/>
                     <OffenderManager/>
