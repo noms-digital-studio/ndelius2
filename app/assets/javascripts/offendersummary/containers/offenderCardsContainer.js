@@ -1,15 +1,13 @@
 import { connect } from 'react-redux'
+import offenderCards from '../components/offenderCards'
 import { findActiveOffenderManager } from '../../helpers/offenderManagerHelper'
-import offenderManager from '../components/offenderManager'
 
 const mapStateToProps = state => ({
-  fetching: state.offenderSummary.offenderDetails.fetching,
-  error: state.offenderSummary.offenderDetails.offenderDetailsLoadError,
+  offenderConvictions: state.offenderSummary.offenderConvictions,
   offenderManager: state.offenderSummary.offenderDetails.offenderManagers
     && findActiveOffenderManager(state.offenderSummary.offenderDetails.offenderManagers)
 })
-
 export default connect(
   mapStateToProps,
   null
-)(offenderManager)
+)(offenderCards)

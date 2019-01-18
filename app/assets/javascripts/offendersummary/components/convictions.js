@@ -1,9 +1,9 @@
-import React, {Component, Fragment} from 'react';
-import * as PropTypes from 'prop-types';
-import Accordion from './shared/accordion';
+import React, { Component, Fragment } from 'react'
+import * as PropTypes from 'prop-types'
+import Accordion from './shared/accordion'
 import ErrorMessage from './errorMessage'
-import moment from 'moment'
-import {dateFromISO} from '../../helpers/formatters'
+import { dateFromISO } from '../../helpers/formatters'
+import { convictionDescription, convictionSorter, mainOffenceDescription } from '../../helpers/convictionsHelper'
 
 class Convictions extends Component {
     constructor(props) {
@@ -54,10 +54,6 @@ class Convictions extends Component {
     }
 }
 
-const convictionSorter = (first, second) => {
-    return moment(second.referralDate, 'YYYY-MM-DD').diff(moment(first.referralDate, 'YYYY-MM-DD'))
-}
-
 const renderConviction = conviction => {
     return (
         <Fragment key={conviction.convictionId}>
@@ -78,16 +74,6 @@ const renderConviction = conviction => {
         </Fragment>
     );
 }
-
-const mainOffenceDescription = conviction => {
-    return conviction.offences.filter(offence => offence.mainOffence).map(offence => `${offence.detail.description}`)
-}
-
-const convictionDescription = conviction => {
-    return conviction.sentence && `${conviction.sentence.description} (${conviction.sentence.originalLength} ${conviction.sentence.originalLengthUnits})`
-        || conviction.latestCourtAppearanceOutcome.description
-}
-
 
 Convictions.propTypes = {
     getOffenderConvictions: PropTypes.func,
