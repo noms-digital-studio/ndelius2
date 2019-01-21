@@ -50,7 +50,7 @@ const OffenderCards = ({offenderConvictions, offenderManager}) => {
               <span className="govuk-body govuk-!-margin-0 moj-!-color-white">&nbsp;({ activeCount || 0 } active)</span>
             ) }
           </p>
-          { activeEvents && activeEvents.length && (
+          { !!activeEvents && !!activeEvents.length && (
             <p className="qa-card-active-event govuk-body govuk-!-margin-0 moj-!-color-white">
               Last active event: { convictionDescription(activeEvents[0]) }
             </p>
