@@ -75,7 +75,7 @@ describe('PersonalCircumstances component', () => {
                     wrapper = shallow(<PersonalCircumstances  fetching={false} error={false} circumstances={[]} getOffenderPersonalCircumstances={stub()}/>)
                 })
                 it('renders a no data message', () => {
-                    expect(wrapper.find('.qa-offender-personal-circumstances').text()).to.equal('No Personal Circumstance recorded')
+                    expect(wrapper.find('.qa-offender-personal-circumstances').text()).to.equal('No personal circumstance recorded')
                 })
             })
             context('with data', () => {

@@ -5,7 +5,7 @@ Feature: Offender Summary - personal circumstances
     And they navigate to the offender summary page
     When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
     And they expand the "Personal circumstances" content section
-    Then the screen should expand to show the following text "No Personal Circumstance recorded"
+    Then the screen should expand to show the following text "No personal circumstance recorded"
 
   Scenario: Offender is pregnant
     Given that the following personal circumstance information is saved for an offender within Delius
