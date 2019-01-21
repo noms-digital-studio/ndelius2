@@ -18,12 +18,12 @@ class Registrations extends Component {
         const {fetching, error, registrations} = this.props;
 
         return (
-            <Accordion label={`Registers and warnings (${registrations.length})`}>
+            <Accordion label={`Active registers and warnings (${registrations.length})`}>
                 <Fragment>
                     {!fetching && !error &&
                     <div className="moj-inside-panel qa-offender-registrations">
                         {registrations.length === 0 &&
-                        <div><p className="govuk-body moj-!-text-align-center">No data</p></div>
+                        <div><p className="govuk-body moj-!-text-align-center">No active registers and warnings recorded</p></div>
                         }
                         {registrations.length > 0 &&
                         <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
@@ -32,7 +32,7 @@ class Registrations extends Component {
                                     <th width="220">Type</th>
                                     <th width="130">Status</th>
                                     <th>Description</th>
-                                    <th width="130">Date</th>
+                                    <th width="130">Registration date</th>
                                 </tr>
                             </thead>
                             <tbody>

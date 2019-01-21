@@ -260,5 +260,14 @@ describe('NextAppointment component', () => {
 
             })
         })
+      context('no next appointment', () => {
+        beforeEach(() => {
+          wrapper = shallow(<AppointmentDetail noNextAppointment={true}/>)
+        })
+        it('no appointment message is rendered', () => {
+          expect(wrapper.find('#details-content-appointment').text()).to.equal('No next appointment recorded')
+        })
+
+      })
     })
 })

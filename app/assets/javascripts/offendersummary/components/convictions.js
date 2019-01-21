@@ -24,7 +24,7 @@ class Convictions extends Component {
                     {!fetching && !error &&
                     <div className="moj-inside-panel qa-offender-convictions">
                         {convictions.length === 0 &&
-                        <div><p className="govuk-body moj-!-text-align-center">No data</p></div>
+                        <div><p className="govuk-body moj-!-text-align-center">No events recorded</p></div>
                         }
                         {convictions.length > 0 &&
                         <table className="govuk-table moj-table moj-table--split-rows govuk-!-margin-0" role="presentation">

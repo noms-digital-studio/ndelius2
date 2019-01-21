@@ -230,6 +230,9 @@ public class OffenderSummaryPage extends FluentPage {
         return $(".qa-offender-serious-registrations").size() == 1;
     }
 
+    public String getNextAppointmentMessage() {
+        return $("#details-content-appointment").text();
+    }
     public String getPageTextByClassName(String className) {
         return $(By.className(className)).text();
     }

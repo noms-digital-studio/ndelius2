@@ -47,4 +47,9 @@ public class NextAppointmentSteps {
         val appointment = data.asMap(String.class, String.class);
         appointment.forEach((field, value) -> assertThat( page.getFieldValueInSection(".qa-next-appointment", field)).describedAs(field).isEqualTo(value));
     }
+
+    @Then("^the screen should expand to show the following next appointment message \"([^\"]*)\"$")
+    public void theScreenShouldExpandToShowTheFollowingNextAppointmentMessaage(String message)  {
+        assertThat(page.getNextAppointmentMessage()).isEqualTo(message);
+    }
 }
