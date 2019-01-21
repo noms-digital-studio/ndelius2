@@ -33,7 +33,7 @@ class PersonalCircumstances extends Component {
                     {!fetching && !error &&
                     <div className="moj-inside-panel qa-offender-personal-circumstances">
                         {circumstances.length === 0 &&
-                        <div><p className="govuk-body moj-!-text-align-center">No Personal Circumstance recorded</p></div>
+                        <div><p className="govuk-body moj-!-text-align-center">No personal circumstance recorded</p></div>
                         }
                         {circumstances.length > 0 &&
                         <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
