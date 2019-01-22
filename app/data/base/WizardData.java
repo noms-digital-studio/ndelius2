@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -311,13 +312,30 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
         return dateFieldValues(field).collect(Collectors.joining("/"));
     }
 
+    /**
+     * Assumes field must contain a parsable date
+     * @param field
+     * @return LocalDate
+     */
+    private LocalDate dateFromFieldValuesOf(Field field) {
+        try {
+            return getValidatorDateFormat()
+                    .parse(dateFieldValues(field).collect(Collectors.joining("/")))
+                    .toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        } catch (ParseException e) {
+            throw new RuntimeException("Should be a valid date", e);
+        }
+    }
+
     private boolean suppliedDateNotWithinRange(Field field, String minDate, String maxDate) {
 
         if (minDate.isEmpty() && maxDate.isEmpty()) {
             return false;
         }
 
-        LocalDate parsedDate = LocalDate.parse(dateStringFromFieldValuesOf(field), DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
+        LocalDate parsedDate = dateFromFieldValuesOf(field);
 
         if (!minDate.isEmpty() && parsedDate.isBefore(getRequiredDate(minDate))) {
             return true;
@@ -340,7 +358,7 @@ public abstract class WizardData implements Validatable<List<ValidationError>> {
             return false;
         }
 
-        LocalDate fieldDate =  LocalDate.parse(dateStringFromFieldValuesOf(field), DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
+        LocalDate fieldDate = dateFromFieldValuesOf(field);
         LocalDate earliestDate = LocalDate.parse(earliestDateValue, DateTimeFormatter.ofPattern(VALID_DATE_FORMAT));
 
         return fieldDate.isBefore(earliestDate);

@@ -746,6 +746,19 @@ public class WizardDataValidationTest {
     }
 
     @Test
+    public void outOfRangeValidationWorksWithSpaceAtEndOfDates() {
+        LocalDate now = LocalDate.now();
+        LocalDate tomorrow = now.plusDays(1);
+
+        data.setPageNumber(24);
+        data.setPage24_day(String.valueOf(tomorrow.getDayOfMonth()));
+        data.setPage24_month(String.valueOf(tomorrow.getMonthValue()));
+        data.setPage24_year(tomorrow.getYear() + " ");
+        assertThat(data.validate()).hasSize(1);
+        assertThat(data.validate()).usingFieldByFieldElementComparator().contains(new ValidationError("page24", "Out of range message. Max limit Today"));
+    }
+
+    @Test
     public void requiredDateFieldNoErrorsWhenDateIsOnUpperBoundAndOnlyMaxLimitSet() {
         LocalDate now = LocalDate.now();
         LocalDate oneYearInFuture = now.plusYears(1);
