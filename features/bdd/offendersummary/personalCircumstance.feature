@@ -3,7 +3,7 @@ Feature: Offender Summary - personal circumstances
   Scenario: Offender has no personal circumstance saved in Delius
     Given that the offender has no personal circumstance saved in Delius
     And they navigate to the offender summary page
-    When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
+    And they expand the "Offender manager" accordion
     And they expand the "Personal circumstances" content section
     Then the screen should expand to show the following text "No personal circumstance recorded"
 
@@ -12,7 +12,7 @@ Feature: Offender Summary - personal circumstances
       | Circumstance type   | Circumstance subtype | Start Date | End date |
       | Pregnancy/Maternity | Pregnancy            | 17/10/2018 |          |
     And they navigate to the offender summary page
-    When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
+    And they expand the "Offender manager" accordion
     And they expand the "Personal circumstances" content section
     Then the following personal circumstance information must be displayed
       | Type                | Subtype   | Date       |
@@ -27,7 +27,7 @@ Feature: Offender Summary - personal circumstances
       | Accommodation     | Homeless - Rough Sleeping | 03/01/2018 |          |
 
     And they navigate to the offender summary page
-    When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
+    And they expand the "Offender manager" accordion
     And they expand the "Personal circumstances" content section
     Then the following personal circumstance information must be displayed
       | Type          | Subtype           | Date       |
@@ -48,7 +48,7 @@ Feature: Offender Summary - personal circumstances
       | Benefit                      | Universal Credit                         | 20/02/2018 |            |
 
     And they navigate to the offender summary page
-    When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
+    And they expand the "Offender manager" accordion
     And they expand the "Personal circumstances" content section
     Then the following personal circumstance information must be displayed
       | Type                         | Subtype                                  | Date       |

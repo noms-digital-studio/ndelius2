@@ -19,7 +19,7 @@ class Convictions extends Component {
         const {fetching, error, convictions, maxConvictionsVisible, showMoreConvictions} = this.props;
 
         return (
-            <Accordion label={`Events (${convictions.length})`}>
+            <Accordion label={`Events (${convictions.length})`} id="2">
                 <Fragment>
                     {!fetching && !error &&
                     <div className="moj-inside-panel qa-offender-convictions">

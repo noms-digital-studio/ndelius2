@@ -8,7 +8,7 @@ Feature: Offender Summary - offender manager
       | NPS London       | Unallocated Team (No7) | Staff, Unallocated Staff(N07) | N07 Cluster 1 | N07 Division |                       | Reallocation -Inactive offender | 05/11/2018     |
 
     And they navigate to the offender summary page
-    When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
+    And they expand the "Offender manager" accordion
     Then they should see the following offender manager details
 
       | Provider   | Cluster       | LDU and team                          | Officer     | Team telephone | Date allocated | Reason for allocation           |
@@ -23,7 +23,7 @@ Feature: Offender Summary - offender manager
       | CPA Northumbria  | OMU A        | Anyld, Annette ZZ        | C01 Cluster 1 | C01 County | 029876 1234           | Offender Moved        | 12/10/2016     |
 
     And they navigate to the offender summary page
-    When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
+    And they expand the "Offender manager" accordion
     Then they should see the following offender manager details
 
       | Provider        | Cluster       | LDU and team       | Officer           | Team telephone | Date allocated | Reason for allocation |

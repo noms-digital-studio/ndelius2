@@ -13,7 +13,7 @@ Feature: Offender Summary
       | Team         | OMU A              |
       | Officer      | Pheim, Sophie Zz   |
     And they navigate to the offender summary page
-    When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
+    And they expand the "Offender manager" accordion
     And they expand the "Next appointment details" content section
     Then the screen should expand to show the following next appointment
       | Contact type | 3 Way Meeting (NS) |
@@ -29,6 +29,6 @@ Feature: Offender Summary
 
     Given that the offender does not have a next appointment within Delius
     And they navigate to the offender summary page
-    When the Delius user selects the "Offender manager" link on the "Offender Summary" UI
+    And they expand the "Offender manager" accordion
     And they expand the "Next appointment details" content section
     Then the screen should expand to show the following next appointment message "No next appointment recorded"

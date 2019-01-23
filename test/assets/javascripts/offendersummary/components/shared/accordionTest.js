@@ -1,28 +1,30 @@
-import { Fragment } from 'react';
-import { expect } from 'chai';
-import { shallow } from 'enzyme';
-import Accordion from './accordion';
+import React, { Fragment } from 'react'
+import { expect } from 'chai'
+import { shallow } from 'enzyme'
+import Accordion from './accordion'
 
 describe('Accordion component (shared)', () => {
 
-    let wrapper;
+  let wrapper
 
-    describe('Accordion', () => {
+  describe('Accordion', () => {
 
-        beforeEach(() => {
-            wrapper = shallow(<Accordion label="Offender details"> <Fragment>Content goes here</Fragment> </Accordion>);
-        });
+    beforeEach(() => {
+      wrapper = shallow(<Accordion label="Offender details" id="1">
+        <Fragment>Content goes here</Fragment>
+      </Accordion>)
+    })
 
-        it('contains label', () => {
-            expect(wrapper.text()).to.contain('Offender details');
-        });
-        it('has enclosed hidden content by default', () => {
-            expect(wrapper.find('.qa-accordion-content').hasClass('govuk-visually-hidden')).to.equal(true);
-            expect(wrapper.text()).to.contain('Content goes here');
-        });
-        it('displays the enclosed content when state is changed', () => {
-            wrapper.setState({ isOpen: 'true' });
-            expect(wrapper.find('.qa-accordion-content').hasClass('govuk-visually-hidden')).to.equal(false);
-        });
-    });
-});
+    it('contains label', () => {
+      expect(wrapper.find('.govuk-accordion__section-button').text()).to.contain('Offender details')
+    })
+
+    it('has heading ID set correctly', () => {
+      expect(wrapper.find('#accordion-default-heading-1')).to.have.lengthOf(1)
+    })
+
+    it('has content ID set correctly', () => {
+      expect(wrapper.find('#accordion-default-content-1')).to.have.lengthOf(1)
+    })
+  })
+})

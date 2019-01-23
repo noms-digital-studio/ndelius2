@@ -9,7 +9,7 @@ import {dateFromISO} from '../../helpers/formatters'
 
 const OffenderManager = ({ fetching, error, offenderManager }) => {
     return(
-        <Accordion label='Offender manager'>
+        <Accordion label='Offender manager' id="3">
             <Fragment>
                 {!fetching && !error &&
                 <div className="moj-inside-panel qa-offender-manager">

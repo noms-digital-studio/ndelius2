@@ -5,7 +5,7 @@ Feature: Offender Summary: Events
 
     Given that the offender has no events saved within Delius
     And they navigate to the offender summary page
-    When  the Delius user selects the "Events" link on the "Offender Summary" UI
+    And they expand the "Events" accordion
     Then  they should see the following event text "No events recorded"
 
   Scenario: Offender has three events saved within Delius
@@ -15,7 +15,7 @@ Feature: Offender Summary: Events
       | Detaining and threatening to kill or injure a hostage (Taking of Hostages Act 1982) - 03604 | Deferred Sentence               |          | 26/11/2018 | Active     |
       | Acknowledging bail in false name - 08303                                                    | Hearing date changed            |          | 29/11/2018 | Terminated |
     And they navigate to the offender summary page
-    When the Delius user selects the "Events" link on the "Offender Summary" UI
+    And they expand the "Events" accordion
     Then they should see the following event information
       | Outcome                         | Main Offence                                                                                | App Date   | Status     |
       | Hearing date changed            | Acknowledging bail in false name - 08303                                                    | 29/11/2018 | Terminated |
@@ -32,7 +32,7 @@ Feature: Offender Summary: Events
       | Stealing mail bags or postal packets or unlawfully taking away or opening mail bag - 04200                                                 | ORA Suspended Sentence Order (12 Months) | ORA Suspended Sentence Order (12 Months) | 10/05/2016 | Terminated |
       | Town and Country Planning Act 1990/Planning (Listed Buildings and Conservation Areas) Act 1990/Planning (Hazardous Substances Act) - 09400 | ORA Suspended Sentence Order (24 Months) | ORA Suspended Sentence Order (24 Months) | 10/06/2017 | Active     |
     And they navigate to the offender summary page
-    When the Delius user selects the "Events" link on the "Offender Summary" UI
+    And they expand the "Events" accordion
     And they select "Show more events" hyperlink from the UI
     Then they should see the following event information
       | Outcome                                  | Main Offence                                                                                                                               | App Date   | Status     |
@@ -67,7 +67,7 @@ Feature: Offender Summary: Events
       | Abstracting electricity - 04300                                                                                                            | ORA Suspended Sentence Order (36 Months) | ORA Suspended Sentence Order (36 Months) | 01/03/2014 | Terminated |
       | Abstracting electricity - 04300                                                                                                            | ORA Suspended Sentence Order (36 Months) | ORA Suspended Sentence Order (36 Months) | 01/03/2015 | Terminated |
     And they navigate to the offender summary page
-    When the Delius user selects the "Events" link on the "Offender Summary" UI
+    And they expand the "Events" accordion
     Then they should see the following event information
       | Outcome                         | Main Offence                                                                                | App Date   | Status     |
       | Hearing date changed            | Acknowledging bail in false name - 08303                                                    | 29/11/2018 | Terminated |

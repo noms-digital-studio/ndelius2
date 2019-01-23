@@ -22,7 +22,7 @@ const OffenderIdentity = ({ offenderDetails }) => {
                             <p className="govuk-body govuk-!-margin-0 govuk-!-margin-top-2">CRN</p>
                             <p className="qa-offender-crn govuk-heading-m govuk-!-margin-0 govuk-!-padding-0">{offenderDetails.otherIds.crn}</p>
                         </div>
-                        <div className="govuk-grid-column-two-thirds govuk-!-margin-top-2">
+                        <div className="govuk-grid-column-two-thirds govuk-!-margin-top-2 govuk-!-padding-right-0">
 
                             <OffenderAlerts/>
 

@@ -44,12 +44,6 @@ public class RegistrationSteps {
         offenderApiMock.stubOffenderWithRegistrations(toRegistrations(data));
     }
 
-    @When("^the Delius user selects the \"([^\"]*)\" link on the \"Offender Summary\" UI$")
-    public void theDeliusUserSelectsTheLinkOnTheUI(String accordionLink) {
-        page.clickAccordion(accordionLink);
-    }
-
-
     @Then("^then they should see the following alert and registrations information$")
     public void thenTheyShouldSeeTheFollowingAlertAndRegistrationsInformation(DataTable data) {
         toRegistrationRowEntry(data).forEach(row -> assertThat(page.hasRegistrationTableWithRow(row)).describedAs(row.toString()).isTrue());

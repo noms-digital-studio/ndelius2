@@ -173,12 +173,6 @@ public class OffenderSummaryPage extends FluentPage {
         return $(By.className("qa-offender-convictions")).text();
     }
 
-
-    public void clickAccordion(String partialText) {
-        await().until($(By.partialLinkText(partialText))).size(1);
-        $(By.partialLinkText(partialText)).click();
-    }
-
     public Boolean isElementRendered(String className) {
         return $(className).size() > 0;
     }

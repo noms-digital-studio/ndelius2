@@ -4,6 +4,13 @@ import {shallow} from 'enzyme';
 import {stub} from 'sinon';
 
 describe('OffenderSummaryPage component', () => {
+
+    beforeEach(() => {
+        global.document = {
+            querySelectorAll: stub()
+        }
+    })
+
     context('on mount', () => {
         it('offender details are requested', () => {
             const getOffenderDetails = stub()

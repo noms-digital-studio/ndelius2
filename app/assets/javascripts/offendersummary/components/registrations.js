@@ -18,7 +18,7 @@ class Registrations extends Component {
         const {fetching, error, registrations} = this.props;
 
         return (
-            <Accordion label={`Active registers and warnings (${registrations.length})`}>
+            <Accordion label={`Active registers and warnings (${registrations.length})`} id="1">
                 <Fragment>
                     {!fetching && !error &&
                     <div className="moj-inside-panel qa-offender-registrations">

@@ -15,8 +15,6 @@ class OffenderDetails extends Component {
         new window.GOVUKFrontend.Details(this.details).init();
     }
 
-
-
     render() {
         const {offenderDetails} = this.props;
         let mainAddress;
@@ -50,7 +48,7 @@ class OffenderDetails extends Component {
 
 
         return (
-            <Accordion label="Offender details">
+            <Accordion label="Offender details" id="4">
                 <Fragment>
                     <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
                         <tbody>
