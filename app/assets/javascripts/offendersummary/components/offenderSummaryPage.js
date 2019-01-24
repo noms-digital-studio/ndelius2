@@ -23,10 +23,10 @@ class OffenderSummaryPage extends Component {
   }
 
   componentDidUpdate () {
-    const {fetching, error} = this.props
+    const {fetching, error, childrenFetching} = this.props
     const $accordion = document.querySelector('[data-module="accordion"]')
 
-    if ($accordion && !fetching && !error && !this.hasRendered) {
+    if ($accordion && !fetching && !error && !this.hasRendered && !childrenFetching) {
       this.hasRendered = true
       new window.GOVUKFrontend.Accordion($accordion).init()
     }
@@ -66,7 +66,8 @@ class OffenderSummaryPage extends Component {
 OffenderSummaryPage.propTypes = {
   getOffenderDetails: PropTypes.func,
   fetching: PropTypes.bool,
-  error: PropTypes.bool
+  error: PropTypes.bool,
+  childrenFetching: PropTypes.bool
 }
 
 export default OffenderSummaryPage

@@ -4,7 +4,8 @@ import { getOffenderDetails } from '../actions'
 
 const mapStateToProps = state => ({
   fetching: state.offenderSummary.offenderDetails.fetching,
-  error: state.offenderSummary.offenderDetails.offenderDetailsLoadError
+  error: state.offenderSummary.offenderDetails.offenderDetailsLoadError,
+  childrenFetching: state.offenderSummary.offenderConvictions.fetching || state.offenderSummary.offenderRegistrations.fetching
 })
 
 export default connect(
