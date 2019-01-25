@@ -158,6 +158,34 @@ public class StubOffenderApi implements OffenderApi {
                 "  },\n" +
                 "  \"offenderProfile\": {\n" +
                 "    \"offenderLanguages\": {},\n" +
+                "    \"disabilities\": [\n" +
+                "        {\n" +
+                "            \"disabilityId\": 2500072586,\n" +
+                "            \"disabilityType\": {\n" +
+                "                \"code\": \"LD\",\n" +
+                "                \"description\": \"Learning Difficulties\"\n" +
+                "            },\n" +
+                "            \"startDate\": \"2019-01-13\",\n" +
+                "            \"endDate\": \"2019-01-23\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"disabilityId\": 2500073086,\n" +
+                "            \"disabilityType\": {\n" +
+                "                \"code\": \"SI\",\n" +
+                "                \"description\": \"Speech Impairment\"\n" +
+                "            },\n" +
+                "            \"startDate\": \"2019-01-13\",\n" +
+                "            \"endDate\": \"2019-01-23\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"disabilityId\": 2500073087,\n" +
+                "            \"disabilityType\": {\n" +
+                "                \"code\": \"ND\",\n" +
+                "                \"description\": \"No Disability\"\n" +
+                "            },\n" +
+                "            \"startDate\": \"2019-01-13\"\n" +
+                "        }\n" +
+                "    ]," +
                 "    \"previousConviction\": {},\n" +
                 "    \"riskColour\": \"Amber\"\n" +
                 "  },\n" +

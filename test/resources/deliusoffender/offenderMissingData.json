@@ -104,7 +104,8 @@
     "remandStatus": "string",
     "riskColour": "string",
     "secondaryNationality": "string",
-    "sexualOrientation": "string"
+    "sexualOrientation": "string",
+    "disabilities": []
   },
   "otherIds": {
     "crn": "X12345",

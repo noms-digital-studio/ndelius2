@@ -12,7 +12,7 @@ Feature: Offender summary - offender details
       | qa-nationality | British       |
       | qa-ethnicity   | White British |
       | qa-interpreter | Yes           |
-      | qa-disability  | --            |
+      | qa-disability  | No Disability |
 
   Scenario: Delius user views offender details with no data
 
@@ -26,6 +26,7 @@ Feature: Offender summary - offender details
       | qa-nationality | Unknown |
       | qa-ethnicity   | Unknown |
       | qa-interpreter | Unknown |
+      | qa-disability  | Unknown |
 
   Scenario: Delius user views offender who has a main address and contact details registered
 

@@ -47,6 +47,16 @@ class OffenderDetails extends Component {
         };
 
 
+        const activeDisabilities = disability => !disability.endDate
+        const disabilities = () => {
+          if (offenderDetails.hasOwnProperty('offenderProfile') &&
+            offenderDetails.offenderProfile.hasOwnProperty('disabilities') &&
+            offenderDetails.offenderProfile.disabilities.filter(activeDisabilities ).length > 0) {
+              return offenderDetails.offenderProfile.disabilities.filter(activeDisabilities).map(disability => disability.disabilityType.description).join(', ');
+          }
+          return 'Unknown';
+        };
+
         return (
             <Accordion label="Offender details" id="4">
                 <Fragment>
@@ -85,7 +95,7 @@ class OffenderDetails extends Component {
                         </tr>
                         <tr>
                             <th>Disability status</th>
-                            <td className="qa-disability" colSpan="2"> --</td>
+                            <td className="qa-disability" colSpan="2">{ disabilities() }</td>
                         </tr>
                         </tbody>
                     </table>
@@ -159,7 +169,15 @@ OffenderDetails.propTypes = {
                 offenderLanguages: PropTypes.shape({
                         requiresInterpreter: PropTypes.bool
                     }
-                )
+                ),
+                disabilities: PropTypes.arrayOf(PropTypes.shape({
+                  disabilityId: PropTypes.number,
+                  disabilityType: PropTypes.shape({
+                    description: PropTypes.string
+                  }),
+                  startDate: PropTypes.string,
+                  endDate: PropTypes.string
+                }))
             }
         ),
         gender: PropTypes.string,
