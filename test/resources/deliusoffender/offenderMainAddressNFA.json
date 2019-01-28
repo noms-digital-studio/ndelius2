@@ -124,7 +124,35 @@
     "remandStatus": "string",
     "riskColour": "string",
     "secondaryNationality": "string",
-    "sexualOrientation": "string"
+    "sexualOrientation": "string",
+    "disabilities": [
+      {
+        "disabilityId": 2500072586,
+        "disabilityType": {
+          "code": "LD",
+          "description": "Learning Difficulties"
+        },
+        "startDate": "2019-01-13",
+        "endDate": "2019-01-23"
+      },
+      {
+        "disabilityId": 2500073086,
+        "disabilityType": {
+          "code": "SI",
+          "description": "Speech Impairment"
+        },
+        "startDate": "2019-01-13",
+        "endDate": "2019-01-23"
+      },
+      {
+        "disabilityId": 2500073087,
+        "disabilityType": {
+          "code": "ND",
+          "description": "No Disability"
+        },
+        "startDate": "2019-01-13"
+      }
+    ]
   },
   "otherIds": {
     "crn": "X12345",
