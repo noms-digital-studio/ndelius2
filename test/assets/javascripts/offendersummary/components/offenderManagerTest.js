@@ -80,7 +80,7 @@ describe('OffenderManager component', () => {
             })
 
             it('from date is rendered formatted', () => {
-                expect(wrapper.find('tbody tr').at(5).find('td').text()).to.equal('01/03/2019')
+                expect(wrapper.find('tbody tr').at(6).find('td').text()).to.equal('01/03/2019')
             })
 
             context('with a team', () => {
@@ -103,11 +103,14 @@ describe('OffenderManager component', () => {
                 it('cluster is rendered using borough', () => {
                     expect(wrapper.find('tbody tr').at(1).find('td').text()).to.equal('Battersea')
                 })
-                it('LDU and team is rendered', () => {
-                    expect(wrapper.find('tbody tr').at(2).find('td').text()).to.equal('Inner London & OMU B')
+                it('LDU is rendered', () => {
+                    expect(wrapper.find('tbody tr').at(2).find('td').text()).to.equal('Inner London')
+                })
+                it('Team is rendered', () => {
+                    expect(wrapper.find('tbody tr').at(3).find('td').text()).to.equal('OMU B')
                 })
                 it('telephone is rendered', () => {
-                    expect(wrapper.find('tbody tr').at(4).find('td').text()).to.equal('020 555 1234')
+                    expect(wrapper.find('tbody tr').at(5).find('td').text()).to.equal('020 555 1234')
                 })
             })
             context('without a team', () => {
@@ -119,11 +122,14 @@ describe('OffenderManager component', () => {
                 it('cluster is rendered as Unknown', () => {
                     expect(wrapper.find('tbody tr').at(1).find('td').text()).to.equal('Unknown')
                 })
-                it('LDU and team is rendered as Unknown', () => {
-                    expect(wrapper.find('tbody tr').at(2).find('td').text()).to.equal('Unknown & Unknown')
+                it('LDU is rendered as Unknown', () => {
+                    expect(wrapper.find('tbody tr').at(2).find('td').text()).to.equal('Unknown')
+                })
+                it('Team is rendered as Unknown', () => {
+                    expect(wrapper.find('tbody tr').at(3).find('td').text()).to.equal('Unknown')
                 })
                 it('telephone is rendered as Unknown', () => {
-                    expect(wrapper.find('tbody tr').at(4).find('td').text()).to.equal('Unknown')
+                    expect(wrapper.find('tbody tr').at(5).find('td').text()).to.equal('Unknown')
                 })
             })
 
@@ -138,7 +144,7 @@ describe('OffenderManager component', () => {
                     )}/>)
                 })
                 it('allocation is rendered', () => {
-                    expect(wrapper.find('tbody tr').at(6).find('td').text()).to.equal('Offender moved')
+                    expect(wrapper.find('tbody tr').at(7).find('td').text()).to.equal('Offender moved')
                 })
             })
             context('without allocation reason', () => {
@@ -149,7 +155,7 @@ describe('OffenderManager component', () => {
                                                        offenderManager={offenderManager}/>)
                 })
                 it('allocation is rendered as Unknown', () => {
-                    expect(wrapper.find('tbody tr').at(6).find('td').text()).to.equal('Unknown')
+                    expect(wrapper.find('tbody tr').at(7).find('td').text()).to.equal('Unknown')
                 })
             })
 
@@ -171,4 +177,3 @@ describe('OffenderManager component', () => {
         })
     })
 })
-

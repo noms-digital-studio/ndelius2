@@ -11,8 +11,8 @@ Feature: Offender Summary - offender manager
     And they expand the "Offender manager" accordion
     Then they should see the following offender manager details
 
-      | Provider   | Cluster       | LDU and team                          | Officer     | Team telephone | Date allocated | Reason for allocation           |
-      | NPS London | N07 Cluster 1 | N07 Division & Unallocated Team (No7) | Unallocated | Unknown        | 05/11/2018     | Reallocation -Inactive offender |
+      | Provider   | Cluster       | LDU          | Team                   | Officer     | Team telephone | Date allocated | Reason for allocation           |
+      | NPS London | N07 Cluster 1 | N07 Division | Unallocated Team (No7) | Unallocated | Unknown        | 05/11/2018     | Reallocation -Inactive offender |
 
 
   Scenario: Offender has an offender manager
@@ -26,5 +26,5 @@ Feature: Offender Summary - offender manager
     And they expand the "Offender manager" accordion
     Then they should see the following offender manager details
 
-      | Provider        | Cluster       | LDU and team       | Officer           | Team telephone | Date allocated | Reason for allocation |
-      | CPA Northumbria | C01 Cluster 1 | C01 County & OMU A | Anyld, Annette ZZ | 029876 1234    | 12/10/2016     | Offender Moved        |
+      | Provider        | Cluster       | LDU        | Team  | Officer           | Team telephone | Date allocated | Reason for allocation |
+      | CPA Northumbria | C01 Cluster 1 | C01 County | OMU A | Anyld, Annette ZZ | 029876 1234    | 12/10/2016     | Offender Moved        |

@@ -24,8 +24,12 @@ const OffenderManager = ({ fetching, error, offenderManager }) => {
                             <td>{offenderManager.team && offenderManager.team.borough && offenderManager.team.borough.description || 'Unknown'}</td>
                         </tr>
                         <tr>
-                            <th>LDU and team</th>
-                            <td>{offenderManager.team && offenderManager.team.district && offenderManager.team.district.description || 'Unknown'} &amp; {offenderManager.team &&  offenderManager.team.description || 'Unknown'}</td>
+                            <th>LDU</th>
+                            <td>{offenderManager.team && offenderManager.team.district && offenderManager.team.district.description || 'Unknown'}</td>
+                        </tr>
+                        <tr>
+                            <th>Team</th>
+                            <td>{offenderManager.team &&  offenderManager.team.description || 'Unknown'}</td>
                         </tr>
                         <tr>
                             <th>Officer</th>
