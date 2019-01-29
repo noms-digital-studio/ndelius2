@@ -66,62 +66,6 @@ public class OffenderController_personalCircumstances_Test extends WithApplicati
     }
 
 
-    @Test
-    public void personalCircumstancesReturnedAreFilteredLeavingOnlyOnePerType() {
-        val originalJson = asArrayNode(
-                aPersonalCircumstance(PersonalCircumstance
-                        .builder()
-                        .id(1L)
-                        .personalCircumstanceTypeCode("A")
-                        .personalCircumstanceTypeDescription("Accommodation")
-                        .personalCircumstanceSubTypeCode("A")
-                        .personalCircumstanceSubTypeDescription("Moved to private house")
-                        .startDate("2019-01-01")
-                        .build()),
-                aPersonalCircumstance(PersonalCircumstance
-                        .builder()
-                        .id(2L)
-                        .personalCircumstanceTypeCode("A")
-                        .personalCircumstanceTypeDescription("Accommodation")
-                        .personalCircumstanceSubTypeCode("B")
-                        .personalCircumstanceSubTypeDescription("No fixed abode")
-                        .startDate("2019-02-01")
-                        .build()),
-                aPersonalCircumstance(PersonalCircumstance
-                        .builder()
-                        .id(3L)
-                        .personalCircumstanceTypeCode("A")
-                        .personalCircumstanceTypeDescription("Accommodation")
-                        .personalCircumstanceSubTypeCode("C")
-                        .personalCircumstanceSubTypeDescription("No fixed abode")
-                        .startDate("2019-03-01")
-                        .endDate("2019-04-01")
-                        .build()),
-                aPersonalCircumstance(PersonalCircumstance
-                        .builder()
-                        .id(4L)
-                        .personalCircumstanceTypeCode("B")
-                        .personalCircumstanceTypeDescription("Health")
-                        .personalCircumstanceSubTypeCode("D")
-                        .personalCircumstanceSubTypeDescription("AIDS")
-                        .startDate("2019-05-01")
-                        .build())
-        );
-        assertThat(originalJson.size()).isEqualTo(4);
-
-        when(offenderApi.getOffenderPersonalCircumstancesByOffenderId(any(), any())).thenReturn(CompletableFuture.completedFuture(originalJson));
-
-        val request = new Http.RequestBuilder()
-                .session("offenderApiBearerToken", JwtHelperTest.generateToken())
-                .session("offenderId", "123")
-                .method(GET)
-                .uri("/offender/personalCircumstances");
-
-        val result = route(app, request);
-        val content = Json.parse(Helpers.contentAsString(result));
-
-        assertThat(idsOf(content)).containsExactly(2L, 4L);
-    }
 
     private Long[] idsOf(JsonNode content) {
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(ArrayNode.class.cast(content).elements(), Spliterator.ORDERED), false)
@@ -146,10 +90,10 @@ public class OffenderController_personalCircumstances_Test extends WithApplicati
                 aPersonalCircumstance(PersonalCircumstance
                         .builder()
                         .id(2L)
-                        .personalCircumstanceTypeCode("B")
-                        .personalCircumstanceTypeDescription("Health")
+                        .personalCircumstanceTypeCode("A")
+                        .personalCircumstanceTypeDescription("Accommodation")
                         .personalCircumstanceSubTypeCode("B")
-                        .personalCircumstanceSubTypeDescription("AIDS")
+                        .personalCircumstanceSubTypeDescription("No fixed abode")
                         .startDate("2019-02-01")
                         .build()),
                 aPersonalCircumstance(PersonalCircumstance

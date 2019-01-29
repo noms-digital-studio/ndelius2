@@ -22,16 +22,17 @@ import play.mvc.Results;
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Comparator;
+import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -131,8 +132,7 @@ public class OffenderController extends Controller {
     public CompletionStage<Result> personalCircumstances() {
         return jsonResultOf((bearerToken, offenderId) ->
                 offenderApi.getOffenderPersonalCircumstancesByOffenderId(bearerToken, offenderId)
-                        .thenApply(this::filterForCircumstancesThatHaveNotEnded)
-                        .thenApply(this::filterForLatestCircumstanceForType));
+                        .thenApply(this::filterForCircumstancesThatHaveNotEnded));
     }
 
 
@@ -163,25 +163,6 @@ public class OffenderController extends Controller {
         }
         return registrations;
     }
-
-    private JsonNode filterForLatestCircumstanceForType(JsonNode jsonNode) {
-        val personalCircumstancesGroupedByType = asStream(jsonNode).collect(Collectors.groupingBy(node -> node.get("personalCircumstanceType").get("code").asText()));
-
-        return personalCircumstancesGroupedByType.entrySet().stream()
-                .map(this::latestCircumstance)
-                .collect(JsonNodeFactory.instance::arrayNode, ArrayNode::add, ArrayNode::addAll);
-    }
-
-    private JsonNode latestCircumstance(Map.Entry<String, List<JsonNode>> personalCircumstances) {
-        return personalCircumstances.getValue().stream()
-                .max(Comparator.comparing(this::startDate)).orElseThrow(() -> new RuntimeException("No start date on personal circumstance"));
-    }
-
-    private LocalDate startDate(JsonNode personalCircumstance) {
-        val date = personalCircumstance.get("startDate").asText();
-        return LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-    }
-
 
     private JsonNode filterForCircumstancesThatHaveNotEnded(JsonNode jsonNode) {
         return asStream(jsonNode)

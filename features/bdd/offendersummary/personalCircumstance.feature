@@ -30,8 +30,10 @@ Feature: Offender Summary - personal circumstances
     And they expand the "Offender manager" accordion
     And they expand the "Personal circumstances" content section
     Then the following personal circumstance information must be displayed
-      | Type          | Subtype           | Date       |
-      | Accommodation | Approved Premises | 10/07/2018 |
+      | Type          | Subtype                   | Date       |
+      | Accommodation | Approved Premises         | 10/07/2018 |
+      | Accommodation | Friends/Family (settled)  | 24/04/2018 |
+      | Accommodation | Homeless - Rough Sleeping | 03/01/2018 |
 
 
   Scenario: Offender has multiple personal circumstance saved in Delius
@@ -57,5 +59,6 @@ Feature: Offender Summary - personal circumstances
       | General Health               | Maternity                                | 17/10/2018 |
       | Accommodation                | Approved Premises                        | 10/07/2018 |
       | Care leaver                  | Care Experienced                         | 05/05/2018 |
+      | General Health               | Mental health concerns                   | 21/04/2018 |
       | Offender Level Recording (L) | Offender File Checked Out                | 18/04/2018 |
       | Benefit                      | Universal Credit                         | 20/02/2018 |
