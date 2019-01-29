@@ -5,7 +5,9 @@ $govuk-fonts-path: '../fonts/';
 @import "calendar";
 @import "quill";
 
+@import 'app/layout';
 @import 'app/offender-header';
+@import 'app/typography';
 
 .new-window {
   @include govuk-font(16);

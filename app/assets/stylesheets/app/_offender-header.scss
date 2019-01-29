@@ -5,3 +5,12 @@
     width: 100%;
   }
 }
+
+.app-risk-alert {
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  @include govuk-media-query(desktop) {
+    max-width: 460px;
+  }
+}

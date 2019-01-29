@@ -40,10 +40,10 @@ const OffenderAlerts = ({ offenderConvictions, registrations }) => {
     return (
         <Fragment>
             { roshAlertLevelClass && (
-                <div className={ `qa-alert-rosh moj-risk-alert govuk-!-margin-bottom-2 ${roshAlertLevelClass}` } role="alert">{ roshAlertLevelText } risk of serious harm</div>
+                <div className={ `qa-alert-rosh moj-risk-alert app-risk-alert app-float-right govuk-!-margin-bottom-2 ${roshAlertLevelClass}` } role="alert">{ roshAlertLevelText } risk of serious harm</div>
             ) }
             { inBreach && (
-                <div className="qa-alert-breach moj-risk-alert moj-risk-alert--high moj-risk-alert--small govuk-!-margin-bottom-2" role="alert">breached conditions</div>
+                <div className="qa-alert-breach moj-risk-alert app-risk-alert app-float-right moj-risk-alert--high moj-risk-alert--small govuk-!-margin-bottom-2" role="alert">breached conditions</div>
             ) }
         </Fragment>
     );

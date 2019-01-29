@@ -1,0 +1,4 @@
+.app-float-right {
+  float: right;
+  @include govuk-clearfix();
+}
