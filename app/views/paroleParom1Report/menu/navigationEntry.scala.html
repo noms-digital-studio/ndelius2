@@ -1,5 +1,5 @@
 @(entry: Int, title: String, current: Int)
 
-<li class="moj-navigation-list__item @if(current == entry) {moj-navigation-list__item--active} ">
-    - <a href="javascript:void(0);" class="nav-item" data-target="@entry" @if(current == entry) { aria-disabled="true"} title="@title">@title</a>
+<li class="moj-subnav__section-item@if(current == entry) { moj-subnav__section-item--current}">
+    <a href="javascript:void(0);" class="moj-subnav__link govuk-link" data-target="@entry" @if(current == entry) { aria-disabled="true"} title="@title">@title</a>
 </li>

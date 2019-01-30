@@ -221,11 +221,8 @@ function openPopup(url, name, top, left) {
         /**
          * Navigation items
          */
-        $('.nav-item, .moj-subnav__link').click(function (e) {
-
+        $('.moj-subnav__link').click(function (e) {
             e.preventDefault();
-            console.info('NAV CLICK');
-
             var target = $(this).data('target');
             if (target && !$(this).hasClass('active')) {
                 $('#jumpNumber').val(target);
