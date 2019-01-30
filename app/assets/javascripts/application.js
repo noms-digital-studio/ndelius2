@@ -221,7 +221,7 @@ function openPopup(url, name, top, left) {
         /**
          * Navigation items
          */
-        $('.moj-subnav__link').click(function (e) {
+        $('.nav-item, .moj-subnav__link').click(function (e) {
             e.preventDefault();
             var target = $(this).data('target');
             if (target && !$(this).hasClass('active')) {
