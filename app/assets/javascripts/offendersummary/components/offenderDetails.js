@@ -56,6 +56,10 @@ class OffenderDetails extends Component {
           }
           return 'Unknown';
         };
+        const middleNames = () => {
+            return offenderDetails.middleNames && offenderDetails.middleNames.join(', ')
+
+        }
 
         return (
             <Accordion label="Offender details" id="4">
@@ -70,6 +74,13 @@ class OffenderDetails extends Component {
                                     <a href="javascript:void(0);">View all</a>) }
                             </td>
                         </tr>
+                        {middleNames() && (
+                          <tr>
+                            <th>Middle names</th>
+                            <td className="qa-middle-names" colSpan="2">{ middleNames() }</td>
+                          </tr>
+                        )
+                        }
                         <tr>
                             <th>Gender</th>
                             <td className="qa-gender" colSpan="2">{ offenderDetails.gender || 'Unknown' }</td>
@@ -205,7 +216,8 @@ OffenderDetails.propTypes = {
                 number: PropTypes.string,
                 type: PropTypes.string
             }))
-        })
+        }),
+        middleNames: PropTypes.arrayOf(PropTypes.string)
     })
 };
 

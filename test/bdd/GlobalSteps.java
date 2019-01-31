@@ -74,6 +74,14 @@ public class GlobalSteps {
         labelTextMap.forEach((className, text) -> assertThat(page.getPageTextByClassName(className)).isEqualTo(text));
     }
 
+
+    @And("^the page should not display the following by class name$")
+    public void thePageShouldNotDisplayTheFollowingByClassName(DataTable sectionText) {
+        sectionText.asList(String.class).forEach(className -> assertThat(page.hasSectionWithClassName(className)).isFalse());
+
+    }
+
+
     @When("^they select the \"([^\"]*)\" button$")
     public void theySelectTheButton(String button) {
         page.clickButton(button);
