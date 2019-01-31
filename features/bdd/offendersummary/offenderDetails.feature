@@ -6,13 +6,14 @@ Feature: Offender summary - offender details
     When they navigate to the offender summary page
     And they expand the "Offender details" accordion
     Then the page should display the following by class name
-      | qa-aliases     | Yes (1)       |
-      | qa-gender      | Male          |
-      | qa-ni-number   | AB123456C     |
-      | qa-nationality | British       |
-      | qa-ethnicity   | White British |
-      | qa-interpreter | Yes           |
-      | qa-disability  | No Disability |
+      | qa-aliases      | Yes (1)       |
+      | qa-middle-names | Isaac, Kweku  |
+      | qa-gender       | Male          |
+      | qa-ni-number    | AB123456C     |
+      | qa-nationality  | British       |
+      | qa-ethnicity    | White British |
+      | qa-interpreter  | Yes           |
+      | qa-disability   | No Disability |
 
   Scenario: Delius user views offender details with no data
 
@@ -27,6 +28,8 @@ Feature: Offender summary - offender details
       | qa-ethnicity   | Unknown |
       | qa-interpreter | Unknown |
       | qa-disability  | Unknown |
+    And the page should not display the following by class name
+      | qa-middle-names |
 
   Scenario: Delius user views offender who has a main address and contact details registered
 

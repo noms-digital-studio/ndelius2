@@ -47,6 +47,10 @@ describe('Offender Details component', () => {
       otherIds: {
         niNumber: 'AB123456C'
       },
+      middleNames: [
+        'Andy',
+        'Stephen'
+      ],
       offenderProfile: {
         ethnicity: 'White British',
         nationality: 'British',
@@ -98,6 +102,9 @@ describe('Offender Details component', () => {
       it('contains gender', () => {
         expect(wrapper.text()).to.contain('GenderMale')
       })
+      it('contains middle namea', () => {
+        expect(wrapper.text()).to.contain('Middle namesAndy, Stephen')
+      })
       it('contains NI number', () => {
         expect(wrapper.text()).to.contain('NI NumberAB123456C')
       })
@@ -123,6 +130,17 @@ describe('Offender Details component', () => {
 
       it('contains no alias flag', () => {
         expect(wrapper.text()).to.contain('AliasesNo')
+      })
+    })
+
+    context('when offender has no middle names', () => {
+      beforeEach(() => {
+        offenderDetails.middleNames = []
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+      })
+
+      it('contains no middle name row', () => {
+        expect(wrapper.text()).to.not.contain('Middle names')
       })
     })
 

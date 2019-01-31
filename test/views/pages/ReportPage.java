@@ -133,6 +133,10 @@ public class ReportPage extends FluentPage {
         return $(By.className(className)).text();
     }
 
+    public boolean hasSectionWithClassName(String className) {
+        return $(By.className(className)).size() > 0;
+    }
+
     public void clickLink(String linkText) {
         $(By.linkText(linkText)).click();
     }
