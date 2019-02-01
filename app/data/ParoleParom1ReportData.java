@@ -218,7 +218,8 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
 
 
     // Page 6 - OPD pathway
-    @RequiredOnPage(value = 6, message = "Specify if the prisoner has met OPD screening criteria and been considered for OPD pathway services")
+
+    @RequiredOnPage(value = 6, message = "Specify if the prisoner has been screened into the OPD pathway (OPD criteria met)")
     @JsonProperty("CONSIDERED_FOR_OPD_PATHWAY_SERVICES")
     private String consideredForOPDPathwayServices;
 
@@ -231,8 +232,6 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             message = "Enter the OPD screening date",
             incompleteMessage = "Enter the OPD screening date and include a day, month and year",
             invalidMessage = "Enter a real date for the OPD screening",
-            onlyIfField = "consideredForOPDPathwayServices",
-            onlyIfFieldMatchValue = "yes",
             maxDate = "Today",
             outOfRangeMessage = "The OPD screening date must be in the past",
             earliestDateField = "convictionDate",
@@ -242,11 +241,11 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String opdScreenedDate_month;
     private String opdScreenedDate_year;
 
-    @RequiredOnPage(value = 6, message = "Enter the reasons why the prisoner has not been screened",
+    @RequiredOnPage(value = 6, message = "Specify whether you have you received consultation or a formulation",
             onlyIfField = "consideredForOPDPathwayServices",
-            onlyIfFieldMatchValue = "no")
-    @JsonProperty("NOT_SCREENED_FOR_OPD_REASON")
-    private String notScreenedForOpdReason;
+            onlyIfFieldMatchValue = "yes")
+    @JsonProperty("OPD_CONSULTATION_OR_FORMULATION")
+    private String consultationOrFormulation;
 
     // Page 7 - Behaviour in prison
     @RequiredOnPage(value = 7, message = "Enter details of the prisoner's behaviour in prison")
