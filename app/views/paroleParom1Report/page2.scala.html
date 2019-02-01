@@ -21,6 +21,8 @@
 
     @readOnlyField(reportForm("prisonerDetailsNomisNumber"), "NOMS number")
 
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
     <div class="govuk-form-group" data-module="radios" >
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
@@ -56,23 +58,19 @@
 
     @textarea(reportForm("prisonerDetailsOffence"), '_label -> "Offence", 'class -> "moj-textarea--prefilled", 'required -> "true")
 
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
-
     @textarea(reportForm("prisonerDetailsSentence"), '_label -> "Sentence", 'class -> "moj-textarea--prefilled", 'required -> "true")
-
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
 
     <div class="govuk-form-group" data-module="radios">
         <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
             <legend class="govuk-fieldset__legend govuk-label">
-                Sentence type
+                Does the prisoner have an indeterminate sentence?
             </legend>
 
             @inputRadioGroup(
                 reportForm("prisonerDetailsSentenceType"),
                 options(
-                    "indeterminate" -> "Indeterminate",
-                    "determinate" -> "Determinate"
+                    "indeterminate" -> "Yes",
+                    "determinate" -> "No"
                 ),
                 Symbol("_inline") -> "true",
                 Symbol("data-aria-controls") -> "sentence-type"
@@ -97,6 +95,25 @@
 
         <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="sentence-type-determinate">
 
+            <fieldset class="govuk-fieldset govuk-!-margin-bottom-1">
+                <legend class="govuk-fieldset__legend govuk-label">
+                    Sentence type
+                </legend>
+
+                @inputRadioGroup(
+                    reportForm("prisonerDetailsDeterminateSentenceType"),
+                    options(
+                        "extendedDeterminate" -> "Extended Determinate (EDS)",
+                        "discretionaryConditionalRelease" -> "Discretionary Conditional Release (DCR)",
+                        "sentenceOffendersParticularConcern" -> "Sentence for Offenders of Particular Concern (SOPC)",
+                        "extendedPublicProtection" -> "Extended Public Protection (EPP)",
+                        "extended" -> "Extended"
+                    )
+                )
+            </fieldset>
+
+            <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible"/>
+
             @inputText(
                 reportForm("prisonerDetailsParoleEligibilityDate"),
                 '_label -> "Parole eligibility date",
@@ -106,16 +123,6 @@
                 '_day -> reportForm("prisonerDetailsParoleEligibilityDate_day").getValue.orElse(""),
                 '_month -> reportForm("prisonerDetailsParoleEligibilityDate_month").getValue.orElse(""),
                 '_year -> reportForm("prisonerDetailsParoleEligibilityDate_year").getValue.orElse(""))
-
-            @inputText(
-                reportForm("prisonerDetailsAutoReleaseDate"),
-                '_label -> "Automatic release date/non parole eligibility date",
-                'required -> "true",
-                '_date -> "true",
-                '_form_hint -> "For example, 31 3 2018",
-                '_day -> reportForm("prisonerDetailsAutoReleaseDate_day").getValue.orElse(""),
-                '_month -> reportForm("prisonerDetailsAutoReleaseDate_month").getValue.orElse(""),
-                '_year -> reportForm("prisonerDetailsAutoReleaseDate_year").getValue.orElse(""))
 
         </div>
 

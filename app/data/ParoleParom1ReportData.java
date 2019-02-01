@@ -62,7 +62,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("PRISONER_DETAILS_SENTENCE")
     private String prisonerDetailsSentence;
 
-    @RequiredOnPage(value = 2, message = "Select the sentence type")
+    @RequiredOnPage(value = 2, message = "Specify if the prisoner has an indeterminate sentence")
     @JsonProperty("PRISONER_DETAILS_SENTENCE_TYPE")
     private String prisonerDetailsSentenceType;
 
@@ -89,12 +89,19 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String prisonerDetailsTariffExpiryDate_month;
     private String prisonerDetailsTariffExpiryDate_year;
 
+    @RequiredOnPage(value = 2, message = "Select the sentence type",
+            onlyIfField = "prisonerDetailsSentenceType",
+            onlyIfFieldMatchValue = "determinate")
+    @JsonProperty("PRISONER_DETAILS_DETERMINATE_SENTENCE_TYPE")
+    private String prisonerDetailsDeterminateSentenceType;
+
     @JsonProperty("PRISONER_DETAILS_PAROLE_ELIGIBILITY_DATE")
     public String getPrisonerDetailsParoleEligibilityDate() {
         return formattedDateFromDateParts("prisonerDetailsParoleEligibilityDate");
     }
 
-    @DateOnPage(value = 2, incompleteMessage = "Enter the parole eligibility date and include a day, month and year",
+    @RequiredDateOnPage(value = 2,  message = "Enter the parole eligibility date",
+            incompleteMessage = "Enter the parole eligibility date and include a day, month and year",
             invalidMessage = "Enter a real parole eligibility date",
             onlyIfField = "prisonerDetailsSentenceType",
             onlyIfFieldMatchValue = "determinate",
@@ -104,22 +111,6 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     private String prisonerDetailsParoleEligibilityDate_day;
     private String prisonerDetailsParoleEligibilityDate_month;
     private String prisonerDetailsParoleEligibilityDate_year;
-
-    @JsonProperty("PRISONER_DETAILS_AUTO_RELEASE_DATE")
-    public String getPrisonerDetailsAutoReleaseDate() {
-        return formattedDateFromDateParts("prisonerDetailsAutoReleaseDate");
-    }
-
-    @DateOnPage(value = 2, incompleteMessage = "Enter the automatic release date and include a day, month and year",
-            invalidMessage = "Enter a real automatic release date",
-            onlyIfField = "prisonerDetailsSentenceType",
-            onlyIfFieldMatchValue = "determinate",
-            minDate = "Today",
-            outOfRangeMessage = "The automatic release date/non parole eligibility date must be in the future")
-    private String prisonerDetailsAutoReleaseDate;
-    private String prisonerDetailsAutoReleaseDate_day;
-    private String prisonerDetailsAutoReleaseDate_month;
-    private String prisonerDetailsAutoReleaseDate_year;
 
     // Page 3
 

@@ -5,6 +5,10 @@ import views.pages.paroleparom1report.PrisonerDetailsPage;
 
 import javax.inject.Inject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import static views.pages.paroleparom1report.Page.PRISONER_DETAILS;
 
 public class PrisonerDetailsSteps {
@@ -51,10 +55,19 @@ public class PrisonerDetailsSteps {
 
     @Given("^that the Delius user has completed all the relevant fields within the \"Prisoner details\" UI$")
     public void thatTheDeliusUserHasCompletedAllTheRelevantFieldsWithinTheUI() throws Throwable {
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 1);
+        Date date = cal.getTime();
+
         page.clickRadioButtonWithLabelWithinLegend("A", "Current prison category");
         page.fillTextArea("Offence", "Aggravated assault");
         page.fillTextArea("Sentence", "20 years");
-        page.clickRadioButtonWithLabelWithinLegend("Determinate", "Sentence type");
+        page.clickRadioButtonWithLabelWithinLegend("No", "Does the prisoner have an indeterminate sentence?");
+        page.clickElementWithId("prisonerDetailsDeterminateSentenceType_extended");
+        page.fillInputInSectionWithLegend("Parole eligibility date", "Day", new SimpleDateFormat("dd").format(date));
+        page.fillInputInSectionWithLegend("Parole eligibility date", "Month", new SimpleDateFormat("MM").format(date));
+        page.fillInputInSectionWithLegend("Parole eligibility date", "Year", new SimpleDateFormat("yyyy").format(date));
         page.clickButton("Continue");
     }
 
