@@ -1,3 +1,4 @@
+@SFR
 Feature: Short Format Pre-Sentence Report - Landing Page
 
   Scenario: User wants to start writing the Short Format Pre-Sentence Report

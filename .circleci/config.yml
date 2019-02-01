@@ -13,11 +13,56 @@ jobs:
                   - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                   - v2-ndelius-new-tech-
             - run:
-                name: Run sbt build
+                name: npm install
+                command: |
+                  npm install < /dev/null
+            - run:
+                name: Compile
                 command: |
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sbt assembly < /dev/null
+                  sbt compile < /dev/null
+            - run:
+                name: Unit tests
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @None"
+                  sbt test < /dev/null
+            - run:
+                name: BDD - Offender Summary
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @OffenderSummary"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - run:
+                name: BDD - SFR
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @SFR"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - run:
+                name: BDD - Parom1
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @Parom1"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - run:
+                name: BDD - Others
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags ~@Parom1 --tags ~@OffenderSummary --tags ~@SFR"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - run:
+                name: Run sbt assembly
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  sbt 'set test in assembly := {}' assembly < /dev/null
             - save_cache:
                 key: v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:

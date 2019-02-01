@@ -1,3 +1,4 @@
+@SFR
 Feature: Short Format Pre-sentence Report - Sign your report
 
   Background:

@@ -1,3 +1,4 @@
+@OffenderSummary
 Feature: Offender Summary - restricted access
 
   Scenario: Offender is on the exclusion list

@@ -1,3 +1,4 @@
+@OffenderSummary
 Feature: Offender Summary - alerts
 
   Scenario: Offender has breached conviction conditions

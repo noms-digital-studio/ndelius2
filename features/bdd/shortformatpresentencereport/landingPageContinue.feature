@@ -1,3 +1,4 @@
+@SFR
 Feature: Short Format Pre-Sentence Report - Landing Page - Continue
 
   Scenario: Delius User wants to continue writing a Short Format Pre-Sentence Report

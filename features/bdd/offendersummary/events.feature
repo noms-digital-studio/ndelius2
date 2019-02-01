@@ -1,3 +1,4 @@
+@OffenderSummary
 Feature: Offender Summary: Events
 
 

@@ -1,3 +1,4 @@
+@OffenderSummary
 Feature: Offender summary - identity details
 
   Scenario: Delius user views offender who is in NOMIS

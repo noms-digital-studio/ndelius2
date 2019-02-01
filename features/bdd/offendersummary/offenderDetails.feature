@@ -1,3 +1,4 @@
+@OffenderSummary
 Feature: Offender summary - offender details
 
   Scenario: Delius user views complete offender details

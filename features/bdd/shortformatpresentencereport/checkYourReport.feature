@@ -1,3 +1,4 @@
+@SFR
 Feature: Parole Report
 
   Scenario: Delius user has completed all the relevant fields for "Offence details" UI

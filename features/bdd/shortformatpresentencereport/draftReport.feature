@@ -1,3 +1,4 @@
+@SFR
 Feature: Short Format Pre-sentence Report - Draft report saved
 
   Background: Delius user is on the "Offender details" UI within the Short Format Pre-sentence Report
