@@ -22,6 +22,11 @@ jobs:
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt compile < /dev/null
+    unitTests:
+        working_directory: ~/ndelius-new-tech
+        docker:
+            - image: circleci/openjdk:8-node-browsers
+        steps:
             - run:
                 name: Unit tests
                 command: |
@@ -29,6 +34,11 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @None"
                   sbt test < /dev/null
+    bddOfffenderSummary:
+        working_directory: ~/ndelius-new-tech
+        docker:
+            - image: circleci/openjdk:8-node-browsers
+        steps:
             - run:
                 name: BDD - Offender Summary
                 command: |
@@ -36,6 +46,11 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @OffenderSummary"
                   sbt "test-only bdd.RunCucumber" < /dev/null
+    bddSFR:
+        working_directory: ~/ndelius-new-tech
+        docker:
+            - image: circleci/openjdk:8-node-browsers
+        steps:
             - run:
                 name: BDD - SFR
                 command: |
@@ -43,6 +58,11 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @SFR"
                   sbt "test-only bdd.RunCucumber" < /dev/null
+    bddParom1:
+        working_directory: ~/ndelius-new-tech
+        docker:
+            - image: circleci/openjdk:8-node-browsers
+        steps:
             - run:
                 name: BDD - Parom1
                 command: |
@@ -50,6 +70,11 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @Parom1"
                   sbt "test-only bdd.RunCucumber" < /dev/null
+    bddOther:
+        working_directory: ~/ndelius-new-tech
+        docker:
+            - image: circleci/openjdk:8-node-browsers
+        steps:
             - run:
                 name: BDD - Others
                 command: |
@@ -57,6 +82,11 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags ~@Parom1 --tags ~@OffenderSummary --tags ~@SFR"
                   sbt "test-only bdd.RunCucumber" < /dev/null
+    artifacts:
+        working_directory: ~/ndelius-new-tech
+        docker:
+            - image: circleci/openjdk:8-node-browsers
+        steps:
             - run:
                 name: Run sbt assembly
                 command: |
@@ -148,16 +178,37 @@ workflows:
     version: 2
     build-deploy-test:
         jobs:
-            - build
+            - bddOther:
+              requires:
+                - build
+            - bddParom1:
+              requires:
+                - build
+            - bddSFR:
+              requires:
+                - build
+            - bddOfffenderSummary:
+              requires:
+                - build
+            - unitTests:
+              requires:
+                - build
+            - artifacts:
+              requires:
+                - bddOther
+                - bddParom1
+                - bddSFR
+                - bddOfffenderSummary
+                - unitTests
             - deploysmoketest:
                 requires:
-                    - build
+                    - artifacts
             - smoketest:
                 requires:
                     - deploysmoketest
             - deploy:
                 requires:
-                    - build
+                    - artifacts
                 filters:
                     branches:
                       only: master
