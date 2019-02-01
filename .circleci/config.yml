@@ -45,6 +45,8 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @None"
                   sbt test < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
     bddOfffenderSummary:
         working_directory: ~/ndelius-new-tech
         docker:
@@ -63,6 +65,8 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @OffenderSummary"
                   sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
     bddSFR:
         working_directory: ~/ndelius-new-tech
         docker:
@@ -81,7 +85,9 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @SFR"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-    bddParom1:
+            - store_test_results:
+                path: ./target/test-reports/
+    bddParom1Fast:
         working_directory: ~/ndelius-new-tech
         docker:
             - image: circleci/openjdk:8-node-browsers
@@ -97,8 +103,30 @@ jobs:
                 command: |
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  export CUCUMBER_OPTIONS="--tags @Parom1"
+                  export CUCUMBER_OPTIONS="--tags @Parom1  --tags ~@Slow"
                   sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
+    bddParom1Slow:
+        working_directory: ~/ndelius-new-tech
+        docker:
+            - image: circleci/openjdk:8-node-browsers
+        steps:
+            - attach_workspace:
+                  at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
+            - run:
+                name: BDD - Parom1
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @Parom1  --tags @Slow"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
     bddOther:
         working_directory: ~/ndelius-new-tech
         docker:
@@ -117,6 +145,8 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags ~@Parom1 --tags ~@OffenderSummary --tags ~@SFR"
                   sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
     artifacts:
         working_directory: ~/ndelius-new-tech
         docker:
@@ -223,7 +253,10 @@ workflows:
             - bddOther:
                 requires:
                     - build
-            - bddParom1:
+            - bddParom1Fast:
+                requires:
+                    - build
+            - bddParom1Slow:
                 requires:
                     - build
             - bddSFR:
@@ -238,7 +271,8 @@ workflows:
             - artifacts:
                 requires:
                     - bddOther
-                    - bddParom1
+                    - bddParom1Fast
+                    - bddParom1Slow
                     - bddSFR
                     - bddOfffenderSummary
                     - unitTests

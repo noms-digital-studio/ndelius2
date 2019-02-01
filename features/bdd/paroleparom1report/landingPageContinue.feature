@@ -1,4 +1,4 @@
-@Parom1
+@Parom1  @Slow
 Feature: Parole Report Landing Page - Continue
 
   Scenario: Delius User wants to continue writing a Parole Report for a Prisoner
