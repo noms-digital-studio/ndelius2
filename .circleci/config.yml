@@ -64,7 +64,6 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @None"
                   sbt test < /dev/null
-             <<: *testResults
     bddOfffenderSummary:
         <<: *defaults
         steps:
@@ -81,7 +80,6 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @OffenderSummary"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            <<: *testResults
     bddSFR:
         <<: *defaults
         steps:
@@ -98,7 +96,6 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @SFR"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            <<: *testResults
     bddParom1Fast:
         <<: *defaults
         steps:
@@ -115,7 +112,6 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @Parom1  --tags ~@Slow"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            <<: *testResults
     bddParom1Slow:
         <<: *defaults
         steps:
@@ -132,7 +128,6 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @Parom1  --tags @Slow"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            <<: *testResults
     bddOther:
         <<: *defaults
         steps:
@@ -149,7 +144,6 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags ~@Parom1 --tags ~@OffenderSummary --tags ~@SFR"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            <<: *testResults
     artifacts:
         <<: *defaults
         steps:
@@ -213,7 +207,6 @@ jobs:
             name: Build and run test
             command: |
                 gradle test
-        <<: *testResults
     deploy:
         docker:
           - image: paulodiovani/aws-eb-cli
