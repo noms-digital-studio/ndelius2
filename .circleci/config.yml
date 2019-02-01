@@ -24,6 +24,8 @@ jobs:
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt compile < /dev/null
+            - persist_to_workspace:
+                  root: .
     unitTests:
         working_directory: ~/ndelius-new-tech
         docker:
