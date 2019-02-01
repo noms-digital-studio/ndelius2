@@ -4,21 +4,22 @@ defaults: &defaults
     - image: circleci/openjdk:8-node-browsers
 
 testResults: &testResults
-  - store_test_results:
-      path: ./build/test-results/
-  - store_test_results:
-      path: ./build/geb-reports/
-  - store_test_results:
-      path: ./build/reports/
-  - store_artifacts:
-      path: ./build/test-results/
-      destination: reports
-  - store_artifacts:
-      path: ./build/geb-reports/
-      destination: reports
-  - store_artifacts:
-      path: ./build/reports/
-      destination: reports
+  - steps:
+    - store_test_results:
+        path: ./build/test-results/
+    - store_test_results:
+        path: ./build/geb-reports/
+    - store_test_results:
+        path: ./build/reports/
+    - store_artifacts:
+        path: ./build/test-results/
+        destination: reports
+    - store_artifacts:
+        path: ./build/geb-reports/
+        destination: reports
+    - store_artifacts:
+        path: ./build/reports/
+        destination: reports
 
 
 version: 2
