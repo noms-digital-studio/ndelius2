@@ -56,6 +56,7 @@ public class OffenderApiMock {
         private String mainOffenceDescription;
         private String latestCourtAppearanceDescription;
         private boolean active;
+        private boolean inBreach;
         private Sentence sentence;
     }
 
@@ -361,6 +362,7 @@ public class OffenderApiMock {
                                                     }
 
                                                     template.replace("active", conviction.isActive());
+                                                    template.replace("inBreach", conviction.isInBreach());
 
 
                                                     return template;

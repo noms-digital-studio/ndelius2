@@ -144,10 +144,10 @@ describe('Convictions component', () => {
                 })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}/>)
             })
 
-            it('contains conviction status in green', () => {
+            it('contains conviction status as active', () => {
                 expect(wrapper.find('tbody tr td').at(3).text()).to.equal('Active')
             })
-            it('displays conviction status in red', () => {
+            it('displays conviction status in green', () => {
                 expect(wrapper.find('tbody tr td').at(3).find('p').hasClass('moj-!-color-green')).to.equal(true)
             })
         })
@@ -164,6 +164,22 @@ describe('Convictions component', () => {
 
             it('contains conviction status of terminated', () => {
                 expect(wrapper.find('tbody tr td').at(3).text()).to.equal('Terminated')
+            })
+        })
+
+        context('single breached conviction', () => {
+            beforeEach(() => {
+                wrapper = shallow(<Convictions convictions={[
+                    aConviction({
+                        convictionId: 1,
+                        active: true,
+                        inBreach: true
+
+                })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}/>)
+            })
+
+            it('contains conviction status of breached', () => {
+                expect(wrapper.find('tbody tr td').at(3).text()).to.equal('Breached')
             })
             it('displays conviction status in red', () => {
                 expect(wrapper.find('tbody tr td').at(3).find('p').hasClass('moj-!-color-red')).to.equal(true)
