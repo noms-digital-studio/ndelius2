@@ -64,6 +64,7 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @None"
                   sbt test < /dev/null
+            *testResults
     bddOfffenderSummary:
         <<: *defaults
         steps:
