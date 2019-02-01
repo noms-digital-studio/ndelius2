@@ -1,11 +1,32 @@
+defaults: &defaults
+  working_directory: ~/ndelius-new-tech
+  docker:
+    - image: circleci/openjdk:8-node-browsers
+
+testResults: &testResults
+  - store_test_results:
+      path: ./build/test-results/
+  - store_test_results:
+      path: ./build/geb-reports/
+  - store_test_results:
+      path: ./build/reports/
+  - store_artifacts:
+      path: ./build/test-results/
+      destination: reports
+  - store_artifacts:
+      path: ./build/geb-reports/
+      destination: reports
+  - store_artifacts:
+      path: ./build/reports/
+      destination: reports
+
+
 version: 2
 general:
   branches:
 jobs:
     build:
-        working_directory: ~/ndelius-new-tech
-        docker:
-            - image: circleci/openjdk:8-node-browsers
+        <<: *defaults
         steps:
             - checkout
             - attach_workspace:
@@ -28,9 +49,7 @@ jobs:
                   root: .
                   paths: .
     unitTests:
-        working_directory: ~/ndelius-new-tech
-        docker:
-            - image: circleci/openjdk:8-node-browsers
+        <<: *defaults
         steps:
             - attach_workspace:
                 at: ~/ndelius-new-tech
@@ -45,12 +64,9 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @None"
                   sbt test < /dev/null
-            - store_test_results:
-                path: ./target/test-reports/
+             <<: *testResults
     bddOfffenderSummary:
-        working_directory: ~/ndelius-new-tech
-        docker:
-            - image: circleci/openjdk:8-node-browsers
+        <<: *defaults
         steps:
             - attach_workspace:
                   at: ~/ndelius-new-tech
@@ -65,12 +81,9 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @OffenderSummary"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            - store_test_results:
-                path: ./target/test-reports/
+            <<: *testResults
     bddSFR:
-        working_directory: ~/ndelius-new-tech
-        docker:
-            - image: circleci/openjdk:8-node-browsers
+        <<: *defaults
         steps:
             - attach_workspace:
                   at: ~/ndelius-new-tech
@@ -85,12 +98,9 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @SFR"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            - store_test_results:
-                path: ./target/test-reports/
+            <<: *testResults
     bddParom1Fast:
-        working_directory: ~/ndelius-new-tech
-        docker:
-            - image: circleci/openjdk:8-node-browsers
+        <<: *defaults
         steps:
             - attach_workspace:
                   at: ~/ndelius-new-tech
@@ -105,12 +115,9 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @Parom1  --tags ~@Slow"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            - store_test_results:
-                path: ./target/test-reports/
+            <<: *testResults
     bddParom1Slow:
-        working_directory: ~/ndelius-new-tech
-        docker:
-            - image: circleci/openjdk:8-node-browsers
+        <<: *defaults
         steps:
             - attach_workspace:
                   at: ~/ndelius-new-tech
@@ -125,12 +132,9 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @Parom1  --tags @Slow"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            - store_test_results:
-                path: ./target/test-reports/
+            <<: *testResults
     bddOther:
-        working_directory: ~/ndelius-new-tech
-        docker:
-            - image: circleci/openjdk:8-node-browsers
+        <<: *defaults
         steps:
             - attach_workspace:
                   at: ~/ndelius-new-tech
@@ -145,12 +149,9 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags ~@Parom1 --tags ~@OffenderSummary --tags ~@SFR"
                   sbt "test-only bdd.RunCucumber" < /dev/null
-            - store_test_results:
-                path: ./target/test-reports/
+            <<: *testResults
     artifacts:
-        working_directory: ~/ndelius-new-tech
-        docker:
-            - image: circleci/openjdk:8-node-browsers
+        <<: *defaults
         steps:
             - attach_workspace:
                   at: ~/ndelius-new-tech
@@ -169,8 +170,6 @@ jobs:
                 paths:
                   - ~/.ivy2/cache
                   - ~/.sbt
-            - store_test_results:
-                path: ./target/test-reports/
             - run:
                 name: Save Fat Jar
                 command: |
@@ -187,9 +186,6 @@ jobs:
             - store_artifacts:
                 path: target/artifacts
                 destination: jars
-            - store_artifacts:
-                path: ./target/test-reports/
-                destination: reports
     deploysmoketest:
         docker:
           - image: paulodiovani/aws-eb-cli
@@ -217,21 +213,7 @@ jobs:
             name: Build and run test
             command: |
                 gradle test
-        - store_test_results:
-            path: ./build/test-results/
-        - store_test_results:
-            path: ./build/geb-reports/
-        - store_test_results:
-            path: ./build/reports/
-        - store_artifacts:
-            path: ./build/test-results/
-            destination: reports
-        - store_artifacts:
-            path: ./build/geb-reports/
-            destination: reports
-        - store_artifacts:
-            path: ./build/reports/
-            destination: reports
+        <<: *testResults
     deploy:
         docker:
           - image: paulodiovani/aws-eb-cli
