@@ -8,6 +8,8 @@ jobs:
             - image: circleci/openjdk:8-node-browsers
         steps:
             - checkout
+            - attach_workspace:
+                at: ~/ndelius-new-tech
             - restore_cache:
                 keys:
                   - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
@@ -27,9 +29,9 @@ jobs:
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
-            - attach_workspace:
-                at: /workspace
             - checkout
+            - attach_workspace:
+                at: ~/ndelius-new-tech
             - run:
                 name: Unit tests
                 command: |
@@ -42,9 +44,9 @@ jobs:
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
-            - attach_workspace:
-                at: /workspace
-            - checkout
+          - checkout
+          - attach_workspace:
+              at: ~/ndelius-new-tech
             - run:
                 name: BDD - Offender Summary
                 command: |
@@ -57,9 +59,9 @@ jobs:
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
-            - attach_workspace:
-                at: /workspace
             - checkout
+            - attach_workspace:
+                at: ~/ndelius-new-tech
             - run:
                 name: BDD - SFR
                 command: |
@@ -72,9 +74,9 @@ jobs:
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
-            - attach_workspace:
-                at: /workspace
             - checkout
+            - attach_workspace:
+                at: ~/ndelius-new-tech
             - run:
                 name: BDD - Parom1
                 command: |
@@ -87,9 +89,9 @@ jobs:
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
-            - attach_workspace:
-                at: /workspace
             - checkout
+            - attach_workspace:
+                at: ~/ndelius-new-tech
             - run:
                 name: BDD - Others
                 command: |
@@ -102,9 +104,9 @@ jobs:
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
-            - attach_workspace:
-                at: /workspace
             - checkout
+            - attach_workspace:
+                at: ~/ndelius-new-tech
             - run:
                 name: Run sbt assembly
                 command: |
