@@ -44,9 +44,9 @@ jobs:
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
-          - checkout
-          - attach_workspace:
-                at: ~/ndelius-new-tech
+            - checkout
+            - attach_workspace:
+                  at: ~/ndelius-new-tech
             - run:
                 name: BDD - Offender Summary
                 command: |
