@@ -46,7 +46,7 @@ jobs:
         steps:
           - checkout
           - attach_workspace:
-              at: ~/ndelius-new-tech
+                at: ~/ndelius-new-tech
             - run:
                 name: BDD - Offender Summary
                 command: |
@@ -61,7 +61,7 @@ jobs:
         steps:
             - checkout
             - attach_workspace:
-                at: ~/ndelius-new-tech
+                  at: ~/ndelius-new-tech
             - run:
                 name: BDD - SFR
                 command: |
@@ -76,7 +76,7 @@ jobs:
         steps:
             - checkout
             - attach_workspace:
-                at: ~/ndelius-new-tech
+                  at: ~/ndelius-new-tech
             - run:
                 name: BDD - Parom1
                 command: |
@@ -91,7 +91,7 @@ jobs:
         steps:
             - checkout
             - attach_workspace:
-                at: ~/ndelius-new-tech
+                  at: ~/ndelius-new-tech
             - run:
                 name: BDD - Others
                 command: |
@@ -106,7 +106,7 @@ jobs:
         steps:
             - checkout
             - attach_workspace:
-                at: ~/ndelius-new-tech
+                  at: ~/ndelius-new-tech
             - run:
                 name: Run sbt assembly
                 command: |
