@@ -4,22 +4,21 @@ defaults: &defaults
     - image: circleci/openjdk:8-node-browsers
 
 testResults: &testResults
-  - steps:
-    - store_test_results:
-        path: ./build/test-results/
-    - store_test_results:
-        path: ./build/geb-reports/
-    - store_test_results:
-        path: ./build/reports/
-    - store_artifacts:
-        path: ./build/test-results/
-        destination: reports
-    - store_artifacts:
-        path: ./build/geb-reports/
-        destination: reports
-    - store_artifacts:
-        path: ./build/reports/
-        destination: reports
+  - store_test_results:
+      path: ./build/test-results/
+  - store_test_results:
+      path: ./build/geb-reports/
+  - store_test_results:
+      path: ./build/reports/
+  - store_artifacts:
+      path: ./build/test-results/
+      destination: reports
+  - store_artifacts:
+      path: ./build/geb-reports/
+      destination: reports
+  - store_artifacts:
+      path: ./build/reports/
+      destination: reports
 
 
 version: 2
@@ -65,7 +64,7 @@ jobs:
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @None"
                   sbt test < /dev/null
-            <<: *testResults
+            - *testResults
     bddOfffenderSummary:
         <<: *defaults
         steps:
