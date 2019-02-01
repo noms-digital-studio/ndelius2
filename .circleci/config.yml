@@ -26,6 +26,7 @@ jobs:
                   sbt compile < /dev/null
             - persist_to_workspace:
                   root: .
+                  paths: ~/ndelius-new-tech
     unitTests:
         working_directory: ~/ndelius-new-tech
         docker:
