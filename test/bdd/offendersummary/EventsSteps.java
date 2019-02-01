@@ -28,6 +28,7 @@ public class EventsSteps {
         private String sentence;
         private String appDate;
         private String status;
+        private boolean inBreach;
     }
     @Inject
     private OffenderSummaryPage page;
@@ -79,6 +80,7 @@ public class EventsSteps {
                         .referralDate(LocalDate.parse(entry.getAppDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy")))
                         .sentence(toSentence(entry.sentence))
                         .active(entry.getStatus().equalsIgnoreCase("Active"))
+                        .inBreach(entry.isInBreach())
                         .build())
                 .collect(Collectors.toList());
     }

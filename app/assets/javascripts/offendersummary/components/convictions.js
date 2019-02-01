@@ -55,6 +55,9 @@ class Convictions extends Component {
 }
 
 const renderConviction = conviction => {
+    const colorClass = () => conviction.active ? conviction.inBreach ? 'moj-!-color-red' : 'moj-!-color-green' : ''
+    const status = () => conviction.active ? conviction.inBreach ? 'Breached' : 'Active' : 'Terminated'
+
     return (
         <Fragment key={conviction.convictionId}>
         <tr>
@@ -68,7 +71,7 @@ const renderConviction = conviction => {
             <td className="govuk-!-padding-top-0" width="110"><p
                 className="govuk-body moj-!-color-grey govuk-!-margin-bottom-0">{dateFromISO(conviction.referralDate)}</p></td>
             <td className="govuk-!-padding-top-0" width="100"><p
-                className={`govuk-body govuk-!-font-size-19 moj-!-text-align-right govuk-!-margin-bottom-0 moj-!-color-${conviction.active? 'green' : 'red'}`}>{conviction.active? 'Active' : 'Terminated'}</p>
+                className={`govuk-body govuk-!-font-size-19 moj-!-text-align-right govuk-!-margin-bottom-0 ${colorClass()}`}>{status()}</p>
             </td>
         </tr>
         </Fragment>
@@ -95,6 +98,7 @@ Convictions.propTypes = {
             ).isRequired,
             referralDate: PropTypes.string.isRequired,
             active: PropTypes.bool.isRequired,
+            inBreach: PropTypes.bool.isRequired,
             convictionId: PropTypes.number.isRequired,
             sentence: PropTypes.shape(
                 {

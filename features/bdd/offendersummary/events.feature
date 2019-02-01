@@ -10,16 +10,16 @@ Feature: Offender Summary: Events
 
   Scenario: Offender has three events saved within Delius
     Given that the offender has the following event information saved in Delius
-      | Main Offence                                                                                | Outcome                         | Sentence | App Date   | Status     |
-      | Abstracting electricity - 04300                                                             | Adjourned - Pre-Sentence Report |          | 05/11/2018 | Active     |
-      | Detaining and threatening to kill or injure a hostage (Taking of Hostages Act 1982) - 03604 | Deferred Sentence               |          | 26/11/2018 | Active     |
-      | Acknowledging bail in false name - 08303                                                    | Hearing date changed            |          | 29/11/2018 | Terminated |
+      | Main Offence                                                                                | Outcome                         | Sentence | App Date   | Status     | InBreach |
+      | Abstracting electricity - 04300                                                             | Adjourned - Pre-Sentence Report |          | 05/11/2018 | Active     | false    |
+      | Detaining and threatening to kill or injure a hostage (Taking of Hostages Act 1982) - 03604 | Deferred Sentence               |          | 26/11/2018 | Active     | true     |
+      | Acknowledging bail in false name - 08303                                                    | Hearing date changed            |          | 29/11/2018 | Terminated | false    |
     And they navigate to the offender summary page
     And they expand the "Events" accordion
     Then they should see the following event information
       | Outcome                         | Main Offence                                                                                | App Date   | Status     |
       | Hearing date changed            | Acknowledging bail in false name - 08303                                                    | 29/11/2018 | Terminated |
-      | Deferred Sentence               | Detaining and threatening to kill or injure a hostage (Taking of Hostages Act 1982) - 03604 | 26/11/2018 | Active     |
+      | Deferred Sentence               | Detaining and threatening to kill or injure a hostage (Taking of Hostages Act 1982) - 03604 | 26/11/2018 | Breached   |
       | Adjourned - Pre-Sentence Report | Abstracting electricity - 04300                                                             | 05/11/2018 | Active     |
 
   Scenario: Offender has six events saved within Delius
