@@ -32,7 +32,6 @@ jobs:
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
-            - checkout
             - attach_workspace:
                 at: ~/ndelius-new-tech
             - run:
@@ -47,7 +46,6 @@ jobs:
         docker:
             - image: circleci/openjdk:8-node-browsers
         steps:
-            - checkout
             - attach_workspace:
                   at: ~/ndelius-new-tech
             - run:
