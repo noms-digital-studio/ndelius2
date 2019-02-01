@@ -179,27 +179,27 @@ workflows:
     build-deploy-test:
         jobs:
             - bddOther:
-              requires:
-                - build
+                requires:
+                    - build
             - bddParom1:
-              requires:
-                - build
+                requires:
+                    - build
             - bddSFR:
-              requires:
-                - build
+                requires:
+                    - build
             - bddOfffenderSummary:
-              requires:
-                - build
+                requires:
+                    - build
             - unitTests:
-              requires:
-                - build
+                requires:
+                    - build
             - artifacts:
-              requires:
-                - bddOther
-                - bddParom1
-                - bddSFR
-                - bddOfffenderSummary
-                - unitTests
+                requires:
+                    - bddOther
+                    - bddParom1
+                    - bddSFR
+                    - bddOfffenderSummary
+                    - unitTests
             - deploysmoketest:
                 requires:
                     - artifacts
