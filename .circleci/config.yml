@@ -30,6 +30,17 @@ jobs:
             - persist_to_workspace:
                   root: .
                   paths: .
+    parallel:
+      <<: *defaults
+      parallelism: 4
+      steps:
+        - attach_workspace:
+            at: ~/ndelius-new-tech
+        - run:
+            name: Parallel
+            command: |
+              TESTFILES=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
+              echo $TESTFILES
     unitTests:
         <<: *defaults
         steps:
@@ -237,6 +248,9 @@ workflows:
     build-deploy-test:
         jobs:
             - build
+            - parallel:
+                requires:
+                    - build
             - bddOther:
                 requires:
                     - build
@@ -257,6 +271,7 @@ workflows:
                     - build
             - artifacts:
                 requires:
+                    - parallel
                     - bddOther
                     - bddParom1Fast
                     - bddParom1Slow
