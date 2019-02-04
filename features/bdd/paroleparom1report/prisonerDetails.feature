@@ -1,3 +1,4 @@
+@Parom1
 Feature: Parole Report
 
   Background: Delius user is on the "Prisoner details" UI within the Parole Report

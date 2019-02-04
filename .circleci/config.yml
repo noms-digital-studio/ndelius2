@@ -1,30 +1,181 @@
+defaults: &defaults
+  working_directory: ~/ndelius-new-tech
+  docker:
+    - image: circleci/openjdk:8-node-browsers
+
 version: 2
 general:
   branches:
 jobs:
     build:
-        working_directory: ~/ndelius-new-tech
-        docker:
-            - image: circleci/openjdk:8-node-browsers
+        <<: *defaults
         steps:
             - checkout
+            - attach_workspace:
+                at: ~/ndelius-new-tech
             - restore_cache:
                 keys:
                   - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                   - v2-ndelius-new-tech-
             - run:
-                name: Run sbt build
+                name: npm install
+                command: |
+                  npm install < /dev/null
+            - run:
+                name: Compile
                 command: |
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  sbt assembly < /dev/null
+                  sbt compile < /dev/null
+            - persist_to_workspace:
+                  root: .
+                  paths: .
+    unitTests:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
+            - run:
+                name: Unit tests
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @None"
+                  sbt test < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
+            - store_artifacts:
+                path: ./target/test-reports/
+                destination: reports
+    bddOfffenderSummary:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                  at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
+            - run:
+                name: BDD - Offender Summary
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @OffenderSummary"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
+            - store_artifacts:
+                path: ./target/test-reports/
+                destination: reports
+    bddSFR:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                  at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
+            - run:
+                name: BDD - SFR
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @SFR"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
+            - store_artifacts:
+                path: ./target/test-reports/
+                destination: reports
+    bddParom1Fast:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                  at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
+            - run:
+                name: BDD - Parom1
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @Parom1  --tags ~@Slow"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
+            - store_artifacts:
+                path: ./target/test-reports/
+                destination: reports
+    bddParom1Slow:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                  at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
+            - run:
+                name: BDD - Parom1
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @Parom1  --tags @Slow"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
+            - store_artifacts:
+                path: ./target/test-reports/
+                destination: reports
+    bddOther:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                  at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
+            - run:
+                name: BDD - Others
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags ~@Parom1 --tags ~@OffenderSummary --tags ~@SFR"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
+            - store_artifacts:
+                path: ./target/test-reports/
+                destination: reports
+    artifacts:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                  at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
+            - run:
+                name: Run sbt assembly
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  sbt 'set test in assembly := {}' assembly < /dev/null
             - save_cache:
                 key: v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                 paths:
                   - ~/.ivy2/cache
                   - ~/.sbt
-            - store_test_results:
-                path: ./target/test-reports/
             - run:
                 name: Save Fat Jar
                 command: |
@@ -41,9 +192,6 @@ jobs:
             - store_artifacts:
                 path: target/artifacts
                 destination: jars
-            - store_artifacts:
-                path: ./target/test-reports/
-                destination: reports
     deploysmoketest:
         docker:
           - image: paulodiovani/aws-eb-cli
@@ -71,21 +219,6 @@ jobs:
             name: Build and run test
             command: |
                 gradle test
-        - store_test_results:
-            path: ./build/test-results/
-        - store_test_results:
-            path: ./build/geb-reports/
-        - store_test_results:
-            path: ./build/reports/
-        - store_artifacts:
-            path: ./build/test-results/
-            destination: reports
-        - store_artifacts:
-            path: ./build/geb-reports/
-            destination: reports
-        - store_artifacts:
-            path: ./build/reports/
-            destination: reports
     deploy:
         docker:
           - image: paulodiovani/aws-eb-cli
@@ -104,15 +237,41 @@ workflows:
     build-deploy-test:
         jobs:
             - build
-            - deploysmoketest:
+            - bddOther:
                 requires:
                     - build
+            - bddParom1Fast:
+                requires:
+                    - build
+            - bddParom1Slow:
+                requires:
+                    - build
+            - bddSFR:
+                requires:
+                    - build
+            - bddOfffenderSummary:
+                requires:
+                    - build
+            - unitTests:
+                requires:
+                    - build
+            - artifacts:
+                requires:
+                    - bddOther
+                    - bddParom1Fast
+                    - bddParom1Slow
+                    - bddSFR
+                    - bddOfffenderSummary
+                    - unitTests
+            - deploysmoketest:
+                requires:
+                    - artifacts
             - smoketest:
                 requires:
                     - deploysmoketest
             - deploy:
                 requires:
-                    - build
+                    - artifacts
                 filters:
                     branches:
                       only: master

@@ -1,3 +1,4 @@
+@OffenderSummary
 Feature: Offender Summary - personal circumstances
 
   Scenario: Offender has no personal circumstance saved in Delius

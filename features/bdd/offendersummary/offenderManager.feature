@@ -1,3 +1,4 @@
+@OffenderSummary
 Feature: Offender Summary - offender manager
 
   Scenario: Offender has not been allocated a Offender Manager

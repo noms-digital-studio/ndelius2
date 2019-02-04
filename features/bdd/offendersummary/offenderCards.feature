@@ -1,3 +1,4 @@
+@OffenderSummary
 Feature: Offender Summary - Offender manager and Events cards
 
   Scenario: Offender has no active events

@@ -1,3 +1,4 @@
+@OffenderSummary
 Feature: Offender Summary
 
   Background: Delius user is on the "Offender Summary" UI

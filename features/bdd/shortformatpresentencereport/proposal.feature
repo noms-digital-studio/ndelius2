@@ -1,3 +1,4 @@
+@SFR
 Feature: Short Format Pre-sentence Report - Proposal
 
   Background: Delius user is on the "Proposal" UI within the Short Format Pre-sentence Report
