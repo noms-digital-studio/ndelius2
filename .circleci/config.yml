@@ -93,9 +93,20 @@ jobs:
             - store_artifacts:
                 path: ./target/test-reports/
                 destination: reports
+    parallel:
+      <<: *defaults
+      parallelism: 2
+      steps:
+        - attach_workspace:
+            at: ~/ndelius-new-tech
+        - run:
+            name: Parallel
+            command: |
+              TESTFILES=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
+              echo $TESTFILES
     bddParom1:
         <<: *defaults
-        parallelism: 3
+        parallelism: 2
         steps:
             - attach_workspace:
                   at: ~/ndelius-new-tech
@@ -219,6 +230,9 @@ workflows:
     build-deploy-test:
         jobs:
             - build
+            - parallel:
+                requires:
+                    - build
             - bddOther:
                 requires:
                     - build
@@ -236,11 +250,8 @@ workflows:
                     - build
             - artifacts:
                 requires:
-                    - bddOther
+                    - parallel
                     - bddParom1
-                    - bddSFR
-                    - bddOfffenderSummary
-                    - unitTests
             - deploysmoketest:
                 requires:
                     - artifacts
