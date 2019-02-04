@@ -233,19 +233,7 @@ workflows:
             - parallel:
                 requires:
                     - build
-            - bddOther:
-                requires:
-                    - build
             - bddParom1:
-                requires:
-                    - build
-            - bddSFR:
-                requires:
-                    - build
-            - bddOfffenderSummary:
-                requires:
-                    - build
-            - unitTests:
                 requires:
                     - build
             - artifacts:
