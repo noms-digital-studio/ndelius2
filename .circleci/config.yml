@@ -93,8 +93,9 @@ jobs:
             - store_artifacts:
                 path: ./target/test-reports/
                 destination: reports
-    bddParom1Fast:
+    bddParom1:
         <<: *defaults
+        parallelism: 3
         steps:
             - attach_workspace:
                   at: ~/ndelius-new-tech
@@ -105,30 +106,11 @@ jobs:
             - run:
                 name: BDD - Parom1
                 command: |
+                  export TESTFILES=$(circleci tests glob "features/**/paroleparom1report/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  export CUCUMBER_OPTIONS="--tags @Parom1  --tags ~@Slow"
-                  sbt "test-only bdd.RunCucumber" < /dev/null
-            - store_test_results:
-                path: ./target/test-reports/
-            - store_artifacts:
-                path: ./target/test-reports/
-                destination: reports
-    bddParom1Slow:
-        <<: *defaults
-        steps:
-            - attach_workspace:
-                  at: ~/ndelius-new-tech
-            - restore_cache:
-                keys:
-                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
-                  - v2-ndelius-new-tech-
-            - run:
-                name: BDD - Parom1
-                command: |
-                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
-                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  export CUCUMBER_OPTIONS="--tags @Parom1  --tags @Slow"
+                  export CUCUMBER_OPTIONS="--tags @Parom1 $TESTFILES"
+                  echo $CUCUMBER_OPTIONS
                   sbt "test-only bdd.RunCucumber" < /dev/null
             - store_test_results:
                 path: ./target/test-reports/
@@ -240,10 +222,7 @@ workflows:
             - bddOther:
                 requires:
                     - build
-            - bddParom1Fast:
-                requires:
-                    - build
-            - bddParom1Slow:
+            - bddParom1:
                 requires:
                     - build
             - bddSFR:
@@ -258,8 +237,7 @@ workflows:
             - artifacts:
                 requires:
                     - bddOther
-                    - bddParom1Fast
-                    - bddParom1Slow
+                    - bddParom1
                     - bddSFR
                     - bddOfffenderSummary
                     - unitTests
