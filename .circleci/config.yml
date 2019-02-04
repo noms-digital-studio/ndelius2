@@ -99,6 +99,10 @@ jobs:
         steps:
             - attach_workspace:
                 at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
             - run:
                 name: BDD - Test
                 command: |
