@@ -94,16 +94,16 @@ jobs:
                 path: ./target/test-reports/
                 destination: reports
     parallel:
-      <<: *defaults
-      parallelism: 2
-      steps:
-        - attach_workspace:
-            at: ~/ndelius-new-tech
-        - run:
-            name: Parallel
-            command: |
-              TESTFILES=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
-              echo $TESTFILES
+        <<: *defaults
+        parallelism: 2
+        steps:
+            - attach_workspace:
+                at: ~/ndelius-new-tech
+            - run:
+                name: BDD - Test
+                command: |
+                  export TESTFILES=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
+                  echo $TESTFILES
     bddParom1:
         <<: *defaults
         parallelism: 2
