@@ -105,7 +105,7 @@ jobs:
                   export TESTFILES=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  export CUCUMBER_OPTIONS="--tags @Parom1 "  $TESTFILES
+                  export CUCUMBER_OPTIONS="--tags @Parom1 $TESTFILES"
                   echo $TESTFILES
                   echo $CUCUMBER_OPTIONS
     bddParom1:
@@ -124,7 +124,7 @@ jobs:
                   export TESTFILES=$(circleci tests glob "features/paroleparom1report/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  export CUCUMBER_OPTIONS="--tags @Parom1 "  $TESTFILES
+                  export CUCUMBER_OPTIONS="--tags @Parom1 $TESTFILES"
                   echo $TESTFILES
                   echo $CUCUMBER_OPTIONS
             - store_test_results:
