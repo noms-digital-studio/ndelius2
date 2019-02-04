@@ -93,32 +93,9 @@ jobs:
             - store_artifacts:
                 path: ./target/test-reports/
                 destination: reports
-    parallel:
-        <<: *defaults
-        parallelism: 2
-        steps:
-            - attach_workspace:
-                at: ~/ndelius-new-tech
-            - restore_cache:
-                keys:
-                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
-                  - v2-ndelius-new-tech-
-            - run:
-                name: BDD - Test
-                command: |
-                  export TESTFILES=$(circleci tests glob "features/**/paroleparom1report/**/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
-                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
-                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
-                  export CUCUMBER_OPTIONS="--tags @Parom1 $TESTFILES"
-                  echo $CUCUMBER_OPTIONS
-            - store_test_results:
-                path: ./target/test-reports/
-            - store_artifacts:
-                path: ./target/test-reports/
-                destination: reports
     bddParom1:
         <<: *defaults
-        parallelism: 3
+        parallelism: 4
         steps:
             - attach_workspace:
                   at: ~/ndelius-new-tech
@@ -129,7 +106,7 @@ jobs:
             - run:
                 name: BDD - Parom1
                 command: |
-                  export TESTFILES=$(circleci tests glob "features/bdd/paroleparom1report/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
+                  export TESTFILES=$(circleci tests glob "features/**/paroleparom1report/*.feature" | circleci tests split --split-by=timings --timings-type=filename)
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @Parom1 $TESTFILES"
@@ -242,16 +219,28 @@ workflows:
     build-deploy-test:
         jobs:
             - build
-            - parallel:
+            - bddOther:
                 requires:
                     - build
             - bddParom1:
                 requires:
                     - build
+            - bddSFR:
+                requires:
+                    - build
+            - bddOfffenderSummary:
+                requires:
+                    - build
+            - unitTests:
+                requires:
+                    - build
             - artifacts:
                 requires:
-                    - parallel
+                    - bddOther
                     - bddParom1
+                    - bddSFR
+                    - bddOfffenderSummary
+                    - unitTests
             - deploysmoketest:
                 requires:
                     - artifacts
