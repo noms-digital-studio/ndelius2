@@ -166,7 +166,7 @@ public class OffenderSummaryPage extends FluentPage {
 
     public String getRegistrationTableText() {
         await().until($(".qa-offender-registrations")).size(1);
-        return $(By.className("qa-offender-registrations")).text();
+        return $(By.className("qa-no-registrations-message")).text();
     }
 
     public String getEventTableText() {
@@ -198,7 +198,7 @@ public class OffenderSummaryPage extends FluentPage {
 
     public String getPersonalCircumstancesTableText() {
         await().until($(".qa-offender-personal-circumstances")).size(1);
-        return $(By.className("qa-offender-personal-circumstances")).text();
+        return $(By.className("qa-no-pc-recorded-message")).text();
     }
 
     public boolean hasPersonalCircumstanceTableWithRow(PersonalCircumstanceTableRow personalCircumstanceTableRow) {

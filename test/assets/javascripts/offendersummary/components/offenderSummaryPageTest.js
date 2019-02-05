@@ -35,6 +35,9 @@ describe('OffenderSummaryPage component', () => {
             it('banner is displayed', () => {
                 expect(page.find('GovUkPhaseBanner').exists()).to.be.true
             })
+            it('frame navigation is rendered', () => {
+                expect(page.find('Connect(FrameNavigation)').exists()).to.be.true
+            })
         })
         context('when finished fetching', () => {
             beforeEach(() => {
@@ -62,6 +65,9 @@ describe('OffenderSummaryPage component', () => {
             it('banner is displayed', () => {
                 expect(page.find('GovUkPhaseBanner').exists()).to.be.true
             })
+            it('frame navigation is rendered', () => {
+                expect(page.find('Connect(FrameNavigation)').exists()).to.be.true
+            })
         })
         context('when in error', () => {
             beforeEach(() => {
@@ -76,6 +82,9 @@ describe('OffenderSummaryPage component', () => {
             })
             it('banner is displayed', () => {
                 expect(page.find('GovUkPhaseBanner').exists()).to.be.true
+            })
+            it('frame navigation is rendered', () => {
+                expect(page.find('Connect(FrameNavigation)').exists()).to.be.true
             })
         })
     })

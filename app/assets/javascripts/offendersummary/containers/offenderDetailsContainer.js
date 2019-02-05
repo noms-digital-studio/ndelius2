@@ -1,10 +1,11 @@
-import { connect } from 'react-redux';
-import offenderDetails from '../components/offenderDetails';
+import { connect } from 'react-redux'
+import offenderDetails from '../components/offenderDetails'
+import { viewOffenderAliases, viewOffenderAddresses } from '../actions'
 
 const mapStateToProps = state => ({
-    offenderDetails: state.offenderSummary.offenderDetails
-});
+  offenderDetails: state.offenderSummary.offenderDetails
+})
 export default connect(
-    mapStateToProps,
-    null
-)(offenderDetails);
+  mapStateToProps,
+  { viewOffenderAliases, viewOffenderAddresses }
+)(offenderDetails)

@@ -2,95 +2,149 @@ import offender from '../api/offender'
 import * as types from '../constants/ActionTypes'
 
 const receiveOffenderDetails = details => ({
-    type: types.RECEIVE_OFFENDER_DETAILS,
-    details
+  type: types.RECEIVE_OFFENDER_DETAILS,
+  details
 })
 
 const offenderDetailsLoadFailure = error => ({
-    type: types.OFFENDER_DETAILS_LOAD_ERROR,
-    error
+  type: types.OFFENDER_DETAILS_LOAD_ERROR,
+  error
 })
 
 const receiveOffenderRegistrations = registrations => ({
-    type: types.RECEIVE_OFFENDER_REGISTRATIONS,
-    registrations
+  type: types.RECEIVE_OFFENDER_REGISTRATIONS,
+  registrations
 })
 
 const offenderRegistrationsLoadFailure = error => ({
-    type: types.OFFENDER_REGISTRATIONS_LOAD_ERROR,
-    error
+  type: types.OFFENDER_REGISTRATIONS_LOAD_ERROR,
+  error
 })
 
 const receiveOffenderConvictions = convictions => ({
-    type: types.RECEIVE_OFFENDER_CONVICTIONS,
-    convictions
+  type: types.RECEIVE_OFFENDER_CONVICTIONS,
+  convictions
 })
 
 const offenderConvictionsLoadFailure = error => ({
-    type: types.OFFENDER_CONVICTIONS_LOAD_ERROR,
-    error
+  type: types.OFFENDER_CONVICTIONS_LOAD_ERROR,
+  error
 })
 
 const incrementMaxConvictionsVisibleCount = incrementBy => ({
-    type: types.INCREMENT_MAX_CONVICTIONS_VISIBLE,
-    incrementBy
+  type: types.INCREMENT_MAX_CONVICTIONS_VISIBLE,
+  incrementBy
 })
 
 const receiveNextAppointment = appointment => ({
-    type: types.RECEIVE_NEXT_APPOINTMENT,
-    appointment
+  type: types.RECEIVE_NEXT_APPOINTMENT,
+  appointment
 })
 
 const nextAppointmentLoadFailure = error => ({
-    type: types.NEXT_APPOINTMENT_LOAD_ERROR,
-    error
+  type: types.NEXT_APPOINTMENT_LOAD_ERROR,
+  error
 })
 
 const receiveNoNextAppointment = () => ({
-    type: types.RECEIVE_NO_NEXT_APPOINTMENT
+  type: types.RECEIVE_NO_NEXT_APPOINTMENT
 })
 
 const receiveOffenderPersonalCircumstances = circumstances => ({
-    type: types.RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES,
-    circumstances
+  type: types.RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES,
+  circumstances
 })
 
 const offenderPersonalCircumstancesLoadFailure = error => ({
-    type: types.OFFENDER_PERSONAL_CIRCUMSTANCES_LOAD_ERROR,
-    error
+  type: types.OFFENDER_PERSONAL_CIRCUMSTANCES_LOAD_ERROR,
+  error
 })
 
+const navigateToViewOffenderAliases = offenderId => ({
+  type: types.NAVIGATE_TO_VIEW_OFFENDER_ALIASES,
+  offenderId
+})
+
+const navigateToViewOffenderAddresses = offenderId => ({
+  type: types.NAVIGATE_TO_VIEW_OFFENDER_ADDRESS_HISTORY,
+  offenderId
+})
+
+const navigateToViewOffenderPersonalCircumstances = offenderId => ({
+  type: types.NAVIGATE_TO_VIEW_OFFENDER_PERSONAL_CIRCUMSTANCES,
+  offenderId
+})
+
+const navigateToViewOffenderRegistrations = offenderId => ({
+  type: types.NAVIGATE_TO_VIEW_OFFENDER_REGISTRATIONS,
+  offenderId
+})
+
+const navigateToViewOffenderEvent = (offenderId, eventId) => ({
+  type: types.NAVIGATE_TO_VIEW_OFFENDER_EVENT,
+  offenderId,
+  eventId
+})
+
+const navigateToTransferInactiveOffender = offenderId => ({
+  type: types.NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER,
+  offenderId
+})
 
 export const getOffenderDetails = () => dispatch => {
-    offender.getDetails(
-        details => dispatch(receiveOffenderDetails(details)),
-     error => dispatch(offenderDetailsLoadFailure(error)))
+  offender.getDetails(
+    details => dispatch(receiveOffenderDetails(details)),
+    error => dispatch(offenderDetailsLoadFailure(error)))
 }
 export const getOffenderRegistrations = () => dispatch => {
-    offender.getRegistrations(
-        details => dispatch(receiveOffenderRegistrations(details)),
-     error => dispatch(offenderRegistrationsLoadFailure(error)))
+  offender.getRegistrations(
+    details => dispatch(receiveOffenderRegistrations(details)),
+    error => dispatch(offenderRegistrationsLoadFailure(error)))
 }
 
 export const getOffenderConvictions = () => dispatch => {
-    offender.getConvictions(
-        details => dispatch(receiveOffenderConvictions(details)),
-        error => dispatch(offenderConvictionsLoadFailure(error)))
+  offender.getConvictions(
+    details => dispatch(receiveOffenderConvictions(details)),
+    error => dispatch(offenderConvictionsLoadFailure(error)))
 }
 
 export const showMoreConvictions = () => dispatch => {
-    dispatch(incrementMaxConvictionsVisibleCount(10))
+  dispatch(incrementMaxConvictionsVisibleCount(10))
 }
 
 export const getNextAppointment = () => dispatch => {
-    offender.getNextAppointment(
-        details => dispatch(receiveNextAppointment(details)),
-        () => dispatch(receiveNoNextAppointment()),
-        error => dispatch(nextAppointmentLoadFailure(error)))
+  offender.getNextAppointment(
+    details => dispatch(receiveNextAppointment(details)),
+    () => dispatch(receiveNoNextAppointment()),
+    error => dispatch(nextAppointmentLoadFailure(error)))
 }
 
 export const getOffenderPersonalCircumstances = () => dispatch => {
-    offender.getPersonalCircumstances(
-        details => dispatch(receiveOffenderPersonalCircumstances(details)),
-        error => dispatch(offenderPersonalCircumstancesLoadFailure(error)))
+  offender.getPersonalCircumstances(
+    details => dispatch(receiveOffenderPersonalCircumstances(details)),
+    error => dispatch(offenderPersonalCircumstancesLoadFailure(error)))
+}
+
+export const viewOffenderAliases = offenderId => dispatch => {
+  dispatch(navigateToViewOffenderAliases(offenderId))
+}
+
+export const viewOffenderAddresses = offenderId => dispatch => {
+  dispatch(navigateToViewOffenderAddresses(offenderId))
+}
+
+export const viewOffenderPersonalCircumstances = offenderId => dispatch => {
+  dispatch(navigateToViewOffenderPersonalCircumstances(offenderId))
+}
+
+export const viewOffenderRegistrations = offenderId => dispatch => {
+  dispatch(navigateToViewOffenderRegistrations(offenderId))
+}
+
+export const viewOffenderEvent = (offenderId, eventId) => dispatch => {
+  dispatch(navigateToViewOffenderEvent(offenderId, eventId))
+}
+
+export const transferInactiveOffender = offenderId => dispatch => {
+  dispatch(navigateToTransferInactiveOffender(offenderId))
 }
