@@ -18,9 +18,9 @@ jobs:
                   - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                   - v2-ndelius-new-tech-
             - run:
-                name: npm install
+                name: yarn install
                 command: |
-                  npm install < /dev/null
+                  yarn install --silent
             - run:
                 name: Compile
                 command: |
