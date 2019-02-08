@@ -22,7 +22,7 @@ class PersonalCircumstances extends Component {
 
 
     render() {
-        const {fetching, error, circumstances} = this.props;
+        const {fetching, error, circumstances, viewOffenderPersonalCircumstances, offenderId} = this.props;
 
         return (
             <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" role="group" ref={this.setDetailsRef}>
@@ -33,7 +33,7 @@ class PersonalCircumstances extends Component {
                     {!fetching && !error &&
                     <div className="moj-inside-panel qa-offender-personal-circumstances">
                         {circumstances.length === 0 &&
-                        <div><p className="govuk-body moj-!-text-align-center">No personal circumstance recorded</p></div>
+                        <div><p className="govuk-body moj-!-text-align-center qa-no-pc-recorded-message">No personal circumstance recorded</p></div>
                         }
                         {circumstances.length > 0 &&
                         <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
@@ -49,6 +49,9 @@ class PersonalCircumstances extends Component {
                             </tbody>
                         </table>
                         }
+                      <p className="govuk-body app-align-right">
+                        <a className="govuk-link govuk-link--no-visited-state" href="javascript:void(0);" onClick={() => viewOffenderPersonalCircumstances(offenderId)}>View more personal circumstances</a>
+                      </p>
                     </div>
                     }
                     {!fetching && error &&
@@ -80,8 +83,10 @@ const circumstanceSorter = (first, second) => {
 
 PersonalCircumstances.propTypes = {
     getOffenderPersonalCircumstances: PropTypes.func,
+    viewOffenderPersonalCircumstances: PropTypes.func,
     fetching: PropTypes.bool,
     error: PropTypes.bool,
+    offenderId: PropTypes.number.isRequired,
     circumstances: PropTypes.arrayOf(
         PropTypes.shape({
             personalCircumstanceType: PropTypes.shape({

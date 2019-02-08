@@ -15,7 +15,7 @@ class Registrations extends Component {
     }
 
     render() {
-        const {fetching, error, registrations} = this.props;
+        const {fetching, error, registrations, offenderId, viewOffenderRegistrations} = this.props;
 
         return (
             <Accordion label={`Active registers and warnings (${registrations.length})`} id="1">
@@ -23,7 +23,7 @@ class Registrations extends Component {
                     {!fetching && !error &&
                     <div className="moj-inside-panel qa-offender-registrations">
                         {registrations.length === 0 &&
-                        <div><p className="govuk-body moj-!-text-align-center">No active registers and warnings recorded</p></div>
+                        <div><p className="govuk-body moj-!-text-align-center qa-no-registrations-message">No active registers and warnings recorded</p></div>
                         }
                         {registrations.length > 0 &&
                         <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
@@ -40,6 +40,9 @@ class Registrations extends Component {
                             </tbody>
                         </table>
                         }
+                        <p className="govuk-body app-align-right">
+                            <a className="govuk-link govuk-link--no-visited-state" href="javascript:void(0);" onClick={() => viewOffenderRegistrations(offenderId)}>View more registers and warnings</a>
+                        </p>
                     </div>
                     }
                     {!fetching && error &&
@@ -128,8 +131,10 @@ const alertLevelClass = registration => {
 
 Registrations.propTypes = {
     getOffenderRegistrations: PropTypes.func,
+    viewOffenderRegistrations: PropTypes.func,
     fetching: PropTypes.bool,
     error: PropTypes.bool,
+    offenderId: PropTypes.number.isRequired,
     registrations: PropTypes.arrayOf(
         PropTypes.shape({
             register: PropTypes.shape({

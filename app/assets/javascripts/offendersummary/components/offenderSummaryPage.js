@@ -10,6 +10,7 @@ import SeriousRegistrations from '../containers/seriousRegistrationsContainer'
 import Convictions from '../containers/convictionsContainer'
 import Notes from '../containers/notesContainer'
 import OffenderManager from '../containers/offenderManagerContainer'
+import FrameNavigation from '../containers/frameNavigationContainer'
 
 class OffenderSummaryPage extends Component {
 
@@ -38,6 +39,7 @@ class OffenderSummaryPage extends Component {
     return (
       <Fragment>
         <GovUkPhaseBanner/>
+        <FrameNavigation/>
         { !fetching && !error &&
         <div className="qa-main-content">
 

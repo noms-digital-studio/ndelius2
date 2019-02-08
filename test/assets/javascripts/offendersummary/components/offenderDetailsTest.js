@@ -1,6 +1,7 @@
 import { expect } from 'chai'
-import { render } from 'enzyme'
+import { render, shallow } from 'enzyme'
 import OffenderDetails from './offenderDetails'
+import {stub} from 'sinon';
 
 describe('Offender Details component', () => {
   let wrapper
@@ -9,6 +10,7 @@ describe('Offender Details component', () => {
   beforeEach(() => {
     offenderDetails = {
       gender: 'Male',
+      offenderId: 123,
       offenderAliases: [
         {
           dateOfBirth: '1976-05-12',
@@ -93,7 +95,7 @@ describe('Offender Details component', () => {
   describe('Offender details', () => {
     context('when all offender details are recorded', () => {
       beforeEach(() => {
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains alias flag and number', () => {
@@ -125,7 +127,7 @@ describe('Offender Details component', () => {
     context('when offender has no aliases recorded', () => {
       beforeEach(() => {
         offenderDetails.offenderAliases = []
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains no alias flag', () => {
@@ -136,7 +138,7 @@ describe('Offender Details component', () => {
     context('when offender has no middle names', () => {
       beforeEach(() => {
         offenderDetails.middleNames = []
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains no middle name row', () => {
@@ -147,7 +149,7 @@ describe('Offender Details component', () => {
     context('when offender has no gender recorded', () => {
       beforeEach(() => {
         offenderDetails.gender = ''
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains unknown gender', () => {
@@ -158,7 +160,7 @@ describe('Offender Details component', () => {
     context('when offender has no NI Number recorded', () => {
       beforeEach(() => {
         offenderDetails.otherIds.niNumber = ''
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains unknown NI Number', () => {
@@ -169,7 +171,7 @@ describe('Offender Details component', () => {
     context('when offender has no nationality recorded', () => {
       beforeEach(() => {
         offenderDetails.offenderProfile.nationality = ''
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains unknown Nationality', () => {
@@ -180,7 +182,7 @@ describe('Offender Details component', () => {
     context('when offender has no ethnicity recorded', () => {
       beforeEach(() => {
         offenderDetails.offenderProfile.ethnicity = ''
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains unknown Ethnicity', () => {
@@ -191,7 +193,7 @@ describe('Offender Details component', () => {
     context('when offender has no interpreter requirement recorded', () => {
       beforeEach(() => {
         offenderDetails.offenderProfile.offenderLanguages.requiresInterpreter = void 0
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains unknown interpreter requirement', () => {
@@ -202,7 +204,7 @@ describe('Offender Details component', () => {
     context('when offender has interpreter requirement recorded as false', () => {
       beforeEach(() => {
         offenderDetails.offenderProfile.offenderLanguages.requiresInterpreter = false
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains no interpreter requirement', () => {
@@ -220,7 +222,7 @@ describe('Offender Details component', () => {
           startDate: '2019-01-13',
           endDate: '2019-01-23'
         }]
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains no interpreter requirement', () => {
@@ -230,11 +232,38 @@ describe('Offender Details component', () => {
     context('when offender has no disabilities recorded', () => {
       beforeEach(() => {
         offenderDetails.offenderProfile.disabilities = []
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains no interpreter requirement', () => {
         expect(wrapper.text()).to.contain('Disability statusUnknown')
+      })
+    })
+    describe('external links', () => {
+      let viewOffenderAliases
+      let viewOffenderAddresses
+      beforeEach(() => {
+        global.window = {
+          GOVUKFrontend: {
+            Details: stub()
+          }
+        }
+        global.window.GOVUKFrontend.Details.prototype.init = stub()
+        viewOffenderAliases = stub()
+        viewOffenderAddresses = stub()
+        wrapper = shallow(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={viewOffenderAliases} viewOffenderAddresses={viewOffenderAddresses} />)
+      })
+      context('View All Aliases clicked', () => {
+        it('calls the viewOffenderAliases callback', () => {
+          wrapper.find('.qa-view-offender-aliases').simulate('click')
+          expect(viewOffenderAliases).to.be.calledWith(offenderDetails.offenderId)
+        })
+      })
+      context('View address history clicked', () => {
+        it('calls the viewOffenderAddresses callback', () => {
+          wrapper.find('.qa-view-offender-addresses').simulate('click')
+          expect(viewOffenderAddresses).to.be.calledWith(offenderDetails.offenderId)
+        })
       })
     })
   })
@@ -261,7 +290,7 @@ describe('Offender Details component', () => {
           ]
         }
 
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains telephone number', () => {
@@ -294,7 +323,7 @@ describe('Offender Details component', () => {
           ]
         }
 
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('does not contain email address', () => {
@@ -317,7 +346,7 @@ describe('Offender Details component', () => {
           ]
         }
 
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('does not contain telephone number', () => {
@@ -340,7 +369,7 @@ describe('Offender Details component', () => {
           ]
         }
 
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('does not contain mobile number', () => {
@@ -373,7 +402,7 @@ describe('Offender Details component', () => {
           phoneNumbers: []
         }
 
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains address number and building name', () => {
@@ -411,7 +440,7 @@ describe('Offender Details component', () => {
           phoneNumbers: []
         }
 
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains no fixed abode', () => {
@@ -429,7 +458,7 @@ describe('Offender Details component', () => {
           phoneNumbers: []
         }
 
-        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} />)
+        wrapper = render(<OffenderDetails offenderDetails={offenderDetails} viewOffenderAliases={stub()} viewOffenderAddresses={stub()} />)
       })
 
       it('contains no main address', () => {

@@ -254,7 +254,16 @@ public class StubOffenderApi implements OffenderApi {
                 "      \"active\": false\n" +
                 "    }\n" +
                 "  ],\n" +
-                "  \"offenderAliases\": [],\n" +
+                "  \"offenderAliases\": [" +
+                "    {\n" +
+                "      \"firstName\": \"Tom\",\n" +
+                "      \"gender\": \"Male\",\n" +
+                "      \"middleNames\": [\n" +
+                "        \"John\"\n" +
+                "      ],\n" +
+                "      \"surname\": \"Buddy\"\n" +
+                "    }\n" +
+                "  ],\n" +
                 "  \"softDeleted\": false,\n" +
                 "  \"currentDisposal\": \"1\",\n" +
                 "  \"partitionArea\": \"National Data\",\n" +
