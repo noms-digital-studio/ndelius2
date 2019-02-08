@@ -4,6 +4,7 @@ import ErrorMessage from './errorMessage'
 import moment from 'moment'
 import {staff} from '../../helpers/offenderManagerHelper'
 import {dateFromISO} from '../../helpers/formatters'
+import { standardOpenCloseElementTracking } from '../../helpers/analyticsHelper'
 
 class NextAppointment extends Component {
     constructor(props) {
@@ -43,6 +44,7 @@ export class AppointmentDetail extends Component {
 
     componentDidMount() {
         new window.GOVUKFrontend.Details(this.details).init();
+        standardOpenCloseElementTracking(document.querySelector('.js-analytics-next-appointment'), 'Offender summary > Offender manager', 'Next appointment details')
     }
 
     render() {
@@ -50,7 +52,7 @@ export class AppointmentDetail extends Component {
 
         return (
             <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0 qa-next-appointment" role="group" ref={this.setDetailsRef}>
-                <summary className="govuk-details__summary" role="button"
+                <summary className="govuk-details__summary js-analytics-next-appointment" role="button"
                          aria-controls="details-content-appointment" aria-expanded="false">
                     <span className="govuk-details__summary-text"> Next appointment details </span>
                 </summary>

@@ -3,6 +3,7 @@ import * as PropTypes from 'prop-types';
 import ErrorMessage from './errorMessage'
 import {dateFromISO} from '../../helpers/formatters'
 import moment from 'moment'
+import { standardOpenCloseElementTracking } from '../../helpers/analyticsHelper'
 
 class PersonalCircumstances extends Component {
     constructor(props) {
@@ -18,6 +19,7 @@ class PersonalCircumstances extends Component {
 
     componentDidMount() {
         new window.GOVUKFrontend.Details(this.details).init();
+        standardOpenCloseElementTracking(document.querySelector('.js-analytics-personal-circumstances'), 'Offender summary > Offender manager', 'Personal circumstances')
     }
 
 
@@ -26,7 +28,7 @@ class PersonalCircumstances extends Component {
 
         return (
             <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" role="group" ref={this.setDetailsRef}>
-                <summary className="govuk-details__summary" role=" button" aria-controls="details-content-circumstances" aria-expanded="false">
+                <summary className="govuk-details__summary js-analytics-personal-circumstances" role=" button" aria-controls="details-content-circumstances" aria-expanded="false">
                     <span className="govuk-details__summary-text">Personal circumstances</span>
                 </summary>
                 <div className="govuk-details__text moj-details__text--no-border" id="details-content-circumstances" aria-hidden="true">

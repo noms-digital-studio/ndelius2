@@ -187,19 +187,21 @@ function openPopup(url, name, top, left) {
 
             if (isSfr || isParom) {
                 var details = $(this).parent(),
+                    isOpen = details.attr('data-open') === 'true',
                     label = details.parent().find('.govuk-caption-xl').text() ||
                         details.parent().parent().find('legend').find('span').text() ||
                         details.parent().parent().find('legend').text() ||
                         details.prev('span:not(.govuk-hint)').text() ||
                         details.prev('span').prev('span').text()|| 'Unknown field';
 
-                gtag('event', details.attr('open') ? 'close' : 'open', {
-                    'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - What to include',
-                    'event_label': $('h1').text() + ' > ' + label.trim()
-                });
+              isOpen ? details.removeAttr('data-open') : details.attr('data-open', 'true')
+
+              gtag('event', isOpen ? 'close' : 'open', {
+                'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - What to include',
+                'event_label': $('h1').text() + ' > ' + label.trim()
+              })
             }
         });
-
 
         $('textarea').keyup(function () {
             var editor = $(this);

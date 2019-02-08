@@ -97,6 +97,9 @@ describe('NextAppointment component', () => {
                     Details: stub()
                 }
             }
+            global.document = {
+                querySelector: stub()
+            }
             global.window.GOVUKFrontend.Details.prototype.init = stub()
         })
 

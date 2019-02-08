@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import * as PropTypes from 'prop-types';
 import Accordion from './shared/accordion';
+import { standardOpenCloseElementTracking } from '../../helpers/analyticsHelper'
 
 class OffenderDetails extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ class OffenderDetails extends Component {
 
     componentDidMount() {
         new window.GOVUKFrontend.Details(this.details).init();
+        standardOpenCloseElementTracking(document.querySelector('.js-analytics-contact-details'), 'Offender summary > Offender details', 'Contact details')
     }
 
     render() {
@@ -112,7 +114,7 @@ class OffenderDetails extends Component {
                     </table>
 
                     <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" ref={this.setDetailsRef} >
-                        <summary className="govuk-details__summary"
+                        <summary className="govuk-details__summary js-analytics-contact-details"
                                  aria-controls="offender-details-contact-details"
                                  aria-expanded="true"><span className="govuk-details__summary-text">Contact details</span>
                         </summary>

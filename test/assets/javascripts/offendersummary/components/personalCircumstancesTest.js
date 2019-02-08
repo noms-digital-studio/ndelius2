@@ -10,6 +10,9 @@ describe('PersonalCircumstances component', () => {
         Details: stub()
       }
     }
+    global.document = {
+      querySelector: stub()
+    }
     global.window.GOVUKFrontend.Details.prototype.init = stub()
   })
 
@@ -38,7 +41,9 @@ describe('PersonalCircumstances component', () => {
     let getOffenderPersonalCircumstances
     beforeEach(() => {
       getOffenderPersonalCircumstances = stub()
-      shallow(<PersonalCircumstances error={false} fetching getOffenderPersonalCircumstances={getOffenderPersonalCircumstances} viewOffenderPersonalCircumstances={stub()} offenderId={123} />)
+      shallow(<PersonalCircumstances error={ false } fetching
+                                     getOffenderPersonalCircumstances={ getOffenderPersonalCircumstances }
+                                     viewOffenderPersonalCircumstances={ stub() } offenderId={ 123 }/>)
     })
 
     it('personal circumstances are requested', () => {
@@ -54,7 +59,8 @@ describe('PersonalCircumstances component', () => {
 
     context('when fetching', () => {
       beforeEach(() => {
-        wrapper = shallow(<PersonalCircumstances fetching error={false} getOffenderPersonalCircumstances={stub()} viewOffenderPersonalCircumstances={stub()} offenderId={123} />)
+        wrapper = shallow(<PersonalCircumstances fetching error={ false } getOffenderPersonalCircumstances={ stub() }
+                                                 viewOffenderPersonalCircumstances={ stub() } offenderId={ 123 }/>)
       })
 
       it('no main content is displayed', () => {
@@ -63,7 +69,10 @@ describe('PersonalCircumstances component', () => {
     })
     context('when finished fetching', () => {
       beforeEach(() => {
-        wrapper = shallow(<PersonalCircumstances fetching={false} error={false} circumstances={[aPersonalCircumstance()]} getOffenderPersonalCircumstances={stub()} viewOffenderPersonalCircumstances={stub()} offenderId={123} />)
+        wrapper = shallow(<PersonalCircumstances fetching={ false } error={ false }
+                                                 circumstances={ [aPersonalCircumstance()] }
+                                                 getOffenderPersonalCircumstances={ stub() }
+                                                 viewOffenderPersonalCircumstances={ stub() } offenderId={ 123 }/>)
       })
 
       it('main content is displayed', () => {
@@ -72,7 +81,9 @@ describe('PersonalCircumstances component', () => {
 
       context('with no data', () => {
         beforeEach(() => {
-          wrapper = shallow(<PersonalCircumstances fetching={false} error={false} circumstances={[]} getOffenderPersonalCircumstances={stub()} viewOffenderPersonalCircumstances={stub()} offenderId={123} />)
+          wrapper = shallow(<PersonalCircumstances fetching={ false } error={ false } circumstances={ [] }
+                                                   getOffenderPersonalCircumstances={ stub() }
+                                                   viewOffenderPersonalCircumstances={ stub() } offenderId={ 123 }/>)
         })
         it('renders a no data message', () => {
           expect(wrapper.find('.qa-no-pc-recorded-message').text()).to.equal('No personal circumstance recorded')
@@ -80,7 +91,7 @@ describe('PersonalCircumstances component', () => {
       })
       context('with data', () => {
         beforeEach(() => {
-          wrapper = shallow(<PersonalCircumstances fetching={false} error={false} circumstances={[
+          wrapper = shallow(<PersonalCircumstances fetching={ false } error={ false } circumstances={ [
             aPersonalCircumstance({
               startDate: '2018-01-19',
               personalCircumstanceType: {
@@ -90,7 +101,8 @@ describe('PersonalCircumstances component', () => {
                 description: 'No fixed abode'
               }
             })
-          ]} getOffenderPersonalCircumstances={stub()} viewOffenderPersonalCircumstances={stub()} offenderId={123} />)
+          ] } getOffenderPersonalCircumstances={ stub() } viewOffenderPersonalCircumstances={ stub() }
+                                                   offenderId={ 123 }/>)
         })
         it('renders type', () => {
           expect(wrapper.find('tbody tr td').at(0).text()).to.equal('Accommodation')
@@ -104,12 +116,13 @@ describe('PersonalCircumstances component', () => {
       })
       context('with lots of data', () => {
         beforeEach(() => {
-          wrapper = shallow(<PersonalCircumstances fetching={false} error={false} circumstances={[
-            aPersonalCircumstance({ personalCircumstanceId: 1, startDate: '2018-01-19' }),
-            aPersonalCircumstance({ personalCircumstanceId: 2, startDate: '2019-01-19' }),
-            aPersonalCircumstance({ personalCircumstanceId: 3, startDate: '2017-01-19' }),
-            aPersonalCircumstance({ personalCircumstanceId: 4, startDate: '2016-01-19' })
-          ]} getOffenderPersonalCircumstances={stub()} viewOffenderPersonalCircumstances={stub()} offenderId={123} />)
+          wrapper = shallow(<PersonalCircumstances fetching={ false } error={ false } circumstances={ [
+            aPersonalCircumstance({personalCircumstanceId: 1, startDate: '2018-01-19'}),
+            aPersonalCircumstance({personalCircumstanceId: 2, startDate: '2019-01-19'}),
+            aPersonalCircumstance({personalCircumstanceId: 3, startDate: '2017-01-19'}),
+            aPersonalCircumstance({personalCircumstanceId: 4, startDate: '2016-01-19'})
+          ] } getOffenderPersonalCircumstances={ stub() } viewOffenderPersonalCircumstances={ stub() }
+                                                   offenderId={ 123 }/>)
         })
         it('renders row for each circumstance', () => {
           expect(wrapper.find('tbody tr')).to.have.length(4)
@@ -125,7 +138,9 @@ describe('PersonalCircumstances component', () => {
     })
     context('when in error', () => {
       beforeEach(() => {
-        wrapper = shallow(<PersonalCircumstances fetching={false} error circumstances={[]} getOffenderPersonalCircumstances={stub()} viewOffenderPersonalCircumstances={stub()} offenderId={123} />)
+        wrapper = shallow(<PersonalCircumstances fetching={ false } error circumstances={ [] }
+                                                 getOffenderPersonalCircumstances={ stub() }
+                                                 viewOffenderPersonalCircumstances={ stub() } offenderId={ 123 }/>)
       })
 
       it('no main content is displayed', () => {
@@ -142,7 +157,11 @@ describe('PersonalCircumstances component', () => {
 
     beforeEach(() => {
       viewOffenderPersonalCircumstances = stub()
-      wrapper = shallow(<PersonalCircumstances fetching={false} error={false} circumstances={[aPersonalCircumstance()]} getOffenderPersonalCircumstances={stub()} viewOffenderPersonalCircumstances={viewOffenderPersonalCircumstances} offenderId={123} />)
+      wrapper = shallow(<PersonalCircumstances fetching={ false } error={ false }
+                                               circumstances={ [aPersonalCircumstance()] }
+                                               getOffenderPersonalCircumstances={ stub() }
+                                               viewOffenderPersonalCircumstances={ viewOffenderPersonalCircumstances }
+                                               offenderId={ 123 }/>)
     })
 
     it('callback called with offenderId', () => {

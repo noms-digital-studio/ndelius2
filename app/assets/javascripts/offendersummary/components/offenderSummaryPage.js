@@ -12,6 +12,8 @@ import Notes from '../containers/notesContainer'
 import OffenderManager from '../containers/offenderManagerContainer'
 import FrameNavigation from '../containers/frameNavigationContainer'
 
+import { configureOffenderSummaryAccordionTracking } from '../../helpers/offenderSummaryAccordionAnalyticsHelper'
+
 class OffenderSummaryPage extends Component {
 
   constructor (props) {
@@ -30,6 +32,7 @@ class OffenderSummaryPage extends Component {
     if ($accordion && !fetching && !error && !this.hasRendered && !childrenFetching) {
       this.hasRendered = true
       new window.GOVUKFrontend.Accordion($accordion).init()
+      configureOffenderSummaryAccordionTracking()
     }
   }
 
