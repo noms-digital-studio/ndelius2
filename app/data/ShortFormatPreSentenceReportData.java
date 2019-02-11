@@ -101,7 +101,7 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("OFFENCE_ANALYSIS")
     private String offenceAnalysis;
 
-    @OnPage(5)
+    @RequiredOnPage(value = 5, message = "Enter the patterns of offending behaviour")
     @JsonProperty("PATTERN_OF_OFFENDING")
     private String patternOfOffending;
 

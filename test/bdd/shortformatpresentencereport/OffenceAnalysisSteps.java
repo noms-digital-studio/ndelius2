@@ -19,6 +19,7 @@ public class OffenceAnalysisSteps {
     @Given("^Delius User completes the \"Offence analysis\" UI within the Short Format Pre-sentence Report")
     public void deliusUserCompletesThePageWithinTheReport() throws Throwable {
         page.fillTextArea("Offence analysis", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.fillTextArea("Patterns of offending behaviour", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.clickButton("Continue");
     }
 }
