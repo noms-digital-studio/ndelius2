@@ -24,7 +24,7 @@ describe('Accordion component (shared)', () => {
     })
 
     it('has content ID set correctly', () => {
-      expect(wrapper.find('#accordion-default-content-1')).to.have.lengthOf(1)
+      expect(wrapper.find('#accordion-offender-summary-content-1')).to.have.lengthOf(1)
     })
   })
 })

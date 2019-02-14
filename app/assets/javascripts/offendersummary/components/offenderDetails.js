@@ -66,7 +66,7 @@ class OffenderDetails extends Component {
         return (
             <Accordion label="Offender details" id="4">
                 <Fragment>
-                    <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
+                    <table className="govuk-table moj-table moj-table--split-rows">
                         <tbody>
                         <tr>
                             <th style={ { width: '50%' } }>Aliases</th>
@@ -113,15 +113,12 @@ class OffenderDetails extends Component {
                         </tbody>
                     </table>
 
-                    <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" ref={this.setDetailsRef} >
-                        <summary className="govuk-details__summary js-analytics-contact-details"
-                                 aria-controls="offender-details-contact-details"
-                                 aria-expanded="true"><span className="govuk-details__summary-text">Contact details</span>
+                    <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" ref={this.setDetailsRef}>
+                        <summary className="govuk-details__summary js-analytics-contact-details" aria-controls="offender-details-contact-details" aria-expanded="false">
+                          <span className="govuk-details__summary-text">Contact details</span>
                         </summary>
-                        <div className="govuk-details__text moj-details__text--no-border"
-                             id="offender-details-contact-details"
-                             aria-hidden="false">
-                            <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
+                        <div className="govuk-details__text moj-details__text--no-border" id="offender-details-contact-details" aria-hidden="true">
+                            <table className="govuk-table moj-table moj-table--split-rows">
                                 <tbody>
                                 <tr>
                                     <th style={ { width: '50%' } }>Telephone</th>

@@ -24,18 +24,16 @@ class Convictions extends Component {
       return (
         <Fragment key={conviction.convictionId}>
           <tr>
-            <td className='moj-!-border-0 govuk-!-padding-bottom-0' colSpan='3'>
-              <p className='govuk-!-margin-0 govuk-heading-s moj-!-color-blue moj-util-clickable'>
-                <a className='govuk-link govuk-link--no-visited-state' href='javascript:void(0);' onClick={() => viewOffenderEvent(offenderId, conviction.convictionId)}>{convictionDescription(conviction)}</a>
-              </p>
-            </td>
+            <th className='moj-!-border-0 govuk-!-padding-bottom-0' colSpan='3'>
+              <a className='govuk-!-margin-0 govuk-heading-s govuk-link govuk-link--no-visited-state' href='javascript:void(0);' onClick={() => viewOffenderEvent(offenderId, conviction.convictionId)}>{convictionDescription(conviction)}</a>
+            </th>
           </tr>
           <tr>
             <td className='govuk-!-padding-top-0'><p
               className='govuk-body moj-!-color-grey govuk-!-margin-bottom-0'>{mainOffenceDescription(conviction)}</p></td>
-            <td className='govuk-!-padding-top-0' width='110'><p
+            <td className='govuk-!-padding-top-0' style={ { width: "110px" } }><p
               className='govuk-body moj-!-color-grey govuk-!-margin-bottom-0'>{dateFromISO(conviction.referralDate)}</p></td>
-            <td className='govuk-!-padding-top-0' width='100'><p
+            <td className='govuk-!-padding-top-0' style={ { width: "100px" } }><p
               className={`govuk-body govuk-!-font-size-19 moj-!-text-align-right govuk-!-margin-bottom-0 ${colorClass()}`}>{status()}</p>
             </td>
           </tr>
@@ -52,7 +50,7 @@ class Convictions extends Component {
             <div><p className='govuk-body moj-!-text-align-center'>No events recorded</p></div>
             }
             {convictions.length > 0 &&
-            <table className='govuk-table moj-table moj-table--split-rows govuk-!-margin-0' role='presentation'>
+            <table className='govuk-table moj-table moj-table--split-rows govuk-!-margin-0'>
               <tbody>
                 {convictions.sort(convictionSorter).slice(0, maxConvictionsVisible).map(renderConviction)}
               </tbody>

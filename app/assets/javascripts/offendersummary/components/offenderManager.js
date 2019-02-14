@@ -13,7 +13,7 @@ const OffenderManager = ({ fetching, error, offenderManager }) => {
             <Fragment>
                 {!fetching && !error &&
                 <div className="moj-inside-panel qa-offender-manager">
-                    <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
+                    <table className="govuk-table moj-table moj-table--split-rows">
                         <tbody>
                         <tr>
                             <th>Provider</th>

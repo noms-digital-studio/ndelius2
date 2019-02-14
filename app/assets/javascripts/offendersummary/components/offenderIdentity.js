@@ -10,8 +10,8 @@ const OffenderIdentity = ({ offenderDetails }) => {
         <div className="govuk-grid-row govuk-!-margin-top-3">
             <div className="govuk-grid-column-full">
                 <div className="app-float-left app-float-left__not-narrow">
-                    {offenderDetails.oneTimeNomisRef && <img alt={`Image of ${offenderDetails.firstName} ${offenderDetails.surname}`} className="offender-image" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderDetails.oneTimeNomisRef)}/image`}/>}
-                    {!offenderDetails.oneTimeNomisRef && <img alt="No offender image available" className="offender-image" src='assets/images/NoPhoto@2x.png'/>}
+                    {offenderDetails.oneTimeNomisRef && <img width="165" height="205" alt={`Image of ${offenderDetails.firstName} ${offenderDetails.surname}`} className="offender-image" src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderDetails.oneTimeNomisRef)}/image`}/>}
+                    {!offenderDetails.oneTimeNomisRef && <img width="165" height="205" alt="No offender image available" className="offender-image" src='assets/images/NoPhoto@2x.png'/>}
                 </div>
                 <div className="app-float-left app-float-left__not-narrow app-offender-header">
                     <h1 className="qa-offender-name govuk-heading-l govuk-!-margin-0 govuk-!-margin-top-1 govuk-!-padding-0">{offenderDetails.surname}, {offenderDetails.firstName}</h1>

@@ -26,13 +26,13 @@ class Registrations extends Component {
                         <div><p className="govuk-body moj-!-text-align-center qa-no-registrations-message">No active registers and warnings recorded</p></div>
                         }
                         {registrations.length > 0 &&
-                        <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
+                        <table className="govuk-table moj-table moj-table--split-rows">
                             <thead>
                                 <tr>
-                                    <th width="220">Type</th>
-                                    <th width="130">Status</th>
+                                    <th style={ { width: "220px" } }>Type</th>
+                                    <th style={ { width: "130px" } }>Status</th>
                                     <th>Description</th>
-                                    <th width="130">Registration date</th>
+                                    <th style={ { width: "130px" } }>Registration date</th>
                                 </tr>
                             </thead>
                             <tbody>

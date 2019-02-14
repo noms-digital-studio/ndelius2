@@ -20,7 +20,7 @@ class Accordion extends Component {
             </span>
           </h2>
         </div>
-        <div id={ `accordion-default-content-${id}` } className="govuk-accordion__section-content"
+        <div id={ `accordion-offender-summary-content-${id}` } className="govuk-accordion__section-content"
              aria-labelledby={ `accordion-default-heading-${id}` }>
           { this.props.children }
         </div>

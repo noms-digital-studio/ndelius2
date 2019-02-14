@@ -127,10 +127,10 @@ describe('Convictions component', () => {
       })
 
       it('contains main offence', () => {
-        expect(wrapper.find('tbody tr td').at(1).text()).to.equal('Cooking foxes - 08902')
+        expect(wrapper.find('tbody tr td').at(0).text()).to.equal('Cooking foxes - 08902')
       })
       it('contains formatted referral date', () => {
-        expect(wrapper.find('tbody tr td').at(2).text()).to.equal('18/10/2018')
+        expect(wrapper.find('tbody tr td').at(1).text()).to.equal('18/10/2018')
       })
       describe('clicking on an event', () => {
         it('callback called with offenderId and convictionId', () => {
@@ -150,10 +150,10 @@ describe('Convictions component', () => {
       })
 
       it('contains conviction status as active', () => {
-        expect(wrapper.find('tbody tr td').at(3).text()).to.equal('Active')
+        expect(wrapper.find('tbody tr td').at(2).text()).to.equal('Active')
       })
       it('displays conviction status in green', () => {
-        expect(wrapper.find('tbody tr td').at(3).find('p').hasClass('moj-!-color-green')).to.equal(true)
+        expect(wrapper.find('tbody tr td').at(2).find('p').hasClass('moj-!-color-green')).to.equal(true)
       })
     })
 
@@ -168,7 +168,7 @@ describe('Convictions component', () => {
       })
 
       it('contains conviction status of terminated', () => {
-        expect(wrapper.find('tbody tr td').at(3).text()).to.equal('Terminated')
+        expect(wrapper.find('tbody tr td').at(2).text()).to.equal('Terminated')
       })
     })
 
@@ -184,10 +184,10 @@ describe('Convictions component', () => {
       })
 
       it('contains conviction status of breached', () => {
-        expect(wrapper.find('tbody tr td').at(3).text()).to.equal('Breached')
+        expect(wrapper.find('tbody tr td').at(2).text()).to.equal('Breached')
       })
       it('displays conviction status in red', () => {
-        expect(wrapper.find('tbody tr td').at(3).find('p').hasClass('moj-!-color-red')).to.equal(true)
+        expect(wrapper.find('tbody tr td').at(2).find('p').hasClass('moj-!-color-red')).to.equal(true)
       })
     })
 

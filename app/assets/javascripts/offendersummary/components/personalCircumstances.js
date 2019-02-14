@@ -27,8 +27,8 @@ class PersonalCircumstances extends Component {
         const {fetching, error, circumstances, viewOffenderPersonalCircumstances, offenderId} = this.props;
 
         return (
-            <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" role="group" ref={this.setDetailsRef}>
-                <summary className="govuk-details__summary js-analytics-personal-circumstances" role=" button" aria-controls="details-content-circumstances" aria-expanded="false">
+            <details className="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-0" ref={this.setDetailsRef}>
+                <summary className="govuk-details__summary js-analytics-personal-circumstances" aria-controls="details-content-circumstances" aria-expanded="false">
                     <span className="govuk-details__summary-text">Personal circumstances</span>
                 </summary>
                 <div className="govuk-details__text moj-details__text--no-border" id="details-content-circumstances" aria-hidden="true">
@@ -38,7 +38,7 @@ class PersonalCircumstances extends Component {
                         <div><p className="govuk-body moj-!-text-align-center qa-no-pc-recorded-message">No personal circumstance recorded</p></div>
                         }
                         {circumstances.length > 0 &&
-                        <table className="govuk-table moj-table moj-table--split-rows" role="presentation">
+                        <table className="govuk-table moj-table moj-table--split-rows">
                             <thead>
                             <tr>
                                 <th>Type</th>
