@@ -4647,10 +4647,10 @@ govuk-frontend@2.5.1:
   resolved "https://registry.yarnpkg.com/govuk-frontend/-/govuk-frontend-2.5.1.tgz#96082aedfef23bfce6591c3520b06d803be2d7fa"
   integrity sha512-DDi1HGRTNRH/UmqOYACOR01V+aae36pnHHf5/g08spscJO5AazA/BQTenlNm8WFJ4UAeikb1TrCbgGWJE4Vypw==
 
-govuk-frontend@2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/govuk-frontend/-/govuk-frontend-2.6.0.tgz#373153a14868b39fe19372c3fb9c3ca9c946e6e1"
-  integrity sha512-JA1tk0MpkxJzoVjJ367JaoRIDHxUK9QqpG11aLlXlhEVcgCX3WBAxsVpx/dC7SwKBmM+F1C4yao0PLQzDFvmkg==
+govuk-frontend@2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/govuk-frontend/-/govuk-frontend-2.7.0.tgz#6a12baf514426653220dd3cdef55b1e1d97f52a6"
+  integrity sha512-IZvho72ExUAOmMOZHbE7s//HdtpSoO1aLn3fcXTnuIUi20UTsz6j+5i1Ztyqr4KUEb8OB/jNMYt4kuYyJnEMRQ==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.15"
@@ -8514,7 +8514,16 @@ prompts@^0.1.9:
     kleur "^2.0.1"
     sisteransi "^0.1.1"
 
-prop-types@15.6.2, prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@15.7.2:
+  version "15.7.2"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
+  integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.8.1"
+
+prop-types@^15.6.1, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   integrity sha512-3pboPvLiWD7dkI3qf3KbUe6hKFKa52w+AE0VCqECtf+QHAKgOL37tTaNCnuX1nAAQ4ZhyP+kYVKf8rLmJ/feDQ==
