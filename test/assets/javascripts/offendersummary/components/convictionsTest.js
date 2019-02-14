@@ -295,10 +295,10 @@ describe('Convictions component', () => {
           expect(wrapper.find('tbody tr')).to.have.length(3 * ROWS_PER_CONVICTIONS)
         })
         it('should show a link to show more events', () => {
-          expect(wrapper.find({ children: 'Show more events' }).exists()).to.be.true
+          expect(wrapper.find({ children: 'View more events' }).exists()).to.be.true
         })
         it('clicking show more events calls showMoreConvictions callback', () => {
-          wrapper.find({ children: 'Show more events' }).simulate('click')
+          wrapper.find({ children: 'View more events' }).simulate('click')
           expect(showMoreConvictions).to.be.calledOnce
         })
       })
@@ -319,7 +319,7 @@ describe('Convictions component', () => {
           expect(wrapper.find('tbody tr')).to.have.length(3 * ROWS_PER_CONVICTIONS)
         })
         it('should not show a link to show more events', () => {
-          expect(wrapper.find({ children: 'Show more events' }).exists()).to.be.false
+          expect(wrapper.find({ children: 'View more events' }).exists()).to.be.false
         })
       })
     })

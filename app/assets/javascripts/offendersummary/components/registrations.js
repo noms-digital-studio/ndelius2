@@ -41,7 +41,7 @@ class Registrations extends Component {
                         </table>
                         }
                         <p className="govuk-body app-align-right">
-                            <a className="govuk-link govuk-link--no-visited-state" href="javascript:void(0);" onClick={() => viewOffenderRegistrations(offenderId)}>View more registers and warnings</a>
+                            <a className="govuk-link govuk-link--no-visited-state" href="javascript:void(0);" onClick={() => viewOffenderRegistrations(offenderId)}>Edit registers and warnings</a>
                         </p>
                     </div>
                     }

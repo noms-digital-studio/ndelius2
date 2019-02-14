@@ -73,7 +73,7 @@ class OffenderDetails extends Component {
                             <td className="qa-aliases">{ offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && 'Yes (' + offenderDetails.offenderAliases.length + ')' || 'No' }</td>
                             <td className="qa-aliases-link" style={ { textAlign: 'right', width: '100px' } }>
                                 { offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && (
-                                    <a href="javascript:void(0);" className='qa-view-offender-aliases' onClick={() => viewOffenderAliases(offenderDetails.offenderId)}>View all</a>) }
+                                    <a href="javascript:void(0);" className='qa-view-offender-aliases' onClick={() => viewOffenderAliases(offenderDetails.offenderId)}>View</a>) }
                             </td>
                         </tr>
                         {middleNames() && (

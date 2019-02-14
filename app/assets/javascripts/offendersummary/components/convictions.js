@@ -60,7 +60,7 @@ class Convictions extends Component {
             {convictions.length > maxConvictionsVisible &&
             <div className='moj-timeline__item moj-timeline__item--more-items govuk-!-margin-top-4'>
               <p className='govuk-body moj-!-text-align-center govuk-!-margin-bottom-0'>
-                <a href='javascript:' onClick={showMoreConvictions}>Show more events</a>
+                <a href='javascript:' onClick={showMoreConvictions}>View more events</a>
               </p>
             </div>
             }

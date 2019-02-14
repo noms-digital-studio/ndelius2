@@ -34,7 +34,7 @@ Feature: Offender Summary: Events
       | Town and Country Planning Act 1990/Planning (Listed Buildings and Conservation Areas) Act 1990/Planning (Hazardous Substances Act) - 09400 | ORA Suspended Sentence Order (24 Months) | ORA Suspended Sentence Order (24 Months) | 10/06/2017 | Active     |
     And they navigate to the offender summary page
     And they expand the "Events" accordion
-    And they select "Show more events" hyperlink from the UI
+    And they select "View more events" hyperlink from the UI
     Then they should see the following event information
       | Outcome                                  | Main Offence                                                                                                                               | App Date   | Status     |
       | Hearing date changed                     | Acknowledging bail in false name - 08303                                                                                                   | 29/11/2018 | Terminated |
@@ -74,7 +74,7 @@ Feature: Offender Summary: Events
       | Hearing date changed            | Acknowledging bail in false name - 08303                                                    | 29/11/2018 | Terminated |
       | Adjourned - Pre-Sentence Report | Abstracting electricity - 04300                                                             | 05/11/2018 | Active     |
       | Deferred Sentence               | Detaining and threatening to kill or injure a hostage (Taking of Hostages Act 1982) - 03604 | 26/10/2018 | Active     |
-    And they select "Show more events" hyperlink from the UI
+    And they select "View more events" hyperlink from the UI
     Then they should see the following event information
       | Outcome                                  | Main Offence                                                                                                                               | App Date   | Status     |
       | Hearing date changed                     | Acknowledging bail in false name - 08303                                                                                                   | 29/11/2018 | Terminated |
@@ -90,7 +90,7 @@ Feature: Offender Summary: Events
       | ORA Suspended Sentence Order (12 Months) | Abstracting electricity - 04300                                                                                                            | 05/11/2016 | Terminated |
       | ORA Suspended Sentence Order (18 Months) | Stealing mail bags or postal packets or unlawfully taking away or opening mail bag - 04200                                                 | 23/05/2016 | Terminated |
       | ORA Suspended Sentence Order (12 Months) | Stealing mail bags or postal packets or unlawfully taking away or opening mail bag - 04200                                                 | 10/05/2016 | Terminated |
-    And they select "Show more events" hyperlink from the UI
+    And they select "View more events" hyperlink from the UI
     Then they should see the following event information
       | Outcome                                  | Main Offence                                                                                                                               | App Date   | Status     |
       | Hearing date changed                     | Acknowledging bail in false name - 08303                                                                                                   | 29/11/2018 | Terminated |
