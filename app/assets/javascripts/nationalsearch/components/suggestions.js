@@ -13,7 +13,7 @@ const Suggestions = ({searchTerm, searchType, probationAreasFilter, suggestions,
                 <span key={index}>
                     &nbsp;
                     <a className='white' tabIndex="1" href='javascript:'
-                       aria-label={`Search again using ${suggestion.text}`}
+                       title={`Search again using ${suggestion.text}`}
                        onClick={() => search(replace(searchTerm, suggestion.original, suggestion.text), searchType, probationAreasFilter)}>
                      {suggestion.text}
                      </a>

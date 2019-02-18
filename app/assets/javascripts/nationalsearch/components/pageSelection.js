@@ -11,7 +11,7 @@ const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm, proba
         }
         return (<span className='margin-right'>
             <a  tabIndex={tabIndex} href='#offender-results'
-                aria-label={`Page ${linkPageNumber}`}
+                title={`Page ${linkPageNumber}`}
                 className='clickable'
                 onClick={() => gotoPage(searchTerm, searchType, probationAreasFilter, linkPageNumber)}>{linkPageNumber}</a></span>)
     }
@@ -23,7 +23,7 @@ const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm, proba
         <span>
             {notOnFirstPage(pageNumber) &&
             <span>
-                <a tabIndex="1" href='#offender-results' id='previous-page-link' aria-label='Previous Page'
+                <a tabIndex="1" href='#offender-results' id='previous-page-link' title="Previous Page"
                    className='clickable margin-right'
                    onClick={() => gotoPage(searchTerm, searchType, probationAreasFilter, pageNumber - 1)}>&lt; Previous</a>
                 <span className='margin-right'>-</span>
@@ -38,7 +38,7 @@ const PageSelection = ({pageSize, pageNumber, total, gotoPage, searchTerm, proba
             {notOnLastPage(pageNumber, totalPages(pageSize, total)) &&
             <span>
                 <span className="margin-right">-</span>
-                <a tabIndex="1" href='#offender-results' id='next-page-link' aria-label='Next Page'
+                <a tabIndex="1" href='#offender-results' id='next-page-link' title="Next Page"
                    className='clickable'
                    onClick={() => gotoPage(searchTerm, searchType, probationAreasFilter, pageNumber + 1)}>Next &gt;</a>
             </span>

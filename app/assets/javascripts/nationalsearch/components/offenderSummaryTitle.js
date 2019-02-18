@@ -4,7 +4,7 @@ import MT from '../containers/markableTextContainer'
 import moment from 'moment'
 
 const OffenderSummaryTitle = ({showOffenderDetails, offenderId, rankIndex, firstName, surname, dateOfBirth, highlight, tabIndex}) => (
-    <a tabIndex={tabIndex} href='javascript:' className='heading-large no-underline offender-summary-title' onClick={() => showOffenderDetails(offenderId, rankIndex, highlight)}>
+    <a tabIndex={tabIndex} href='javascript:' title={`View offender record for ${surname}, ${firstName}` } className='heading-large no-underline offender-summary-title' onClick={() => showOffenderDetails(offenderId, rankIndex, highlight)}>
         <span><MT text={surname} highlight={highlight} highlightFieldName='surname'/></span>
         <span>, </span>
         <span><MT text={firstName} highlight={highlight} highlightFieldName='firstName' allowSingleCharacter/></span>

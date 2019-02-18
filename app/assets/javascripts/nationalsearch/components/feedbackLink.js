@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types';
 
 const FeedbackLink = ({ children, tabIndex }) => (
-    <a href={ window.feedbackLink } tabIndex={tabIndex} className="clickable" target="_blank">{ children }</a>
+    <a href={ window.feedbackLink } title="Feedback: opens in a new window" tabIndex={tabIndex} className="clickable" target="_blank">{ children }</a>
 );
 
 FeedbackLink.propTypes = {
