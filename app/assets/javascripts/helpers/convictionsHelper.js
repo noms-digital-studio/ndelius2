@@ -1,8 +1,15 @@
 import moment from 'moment'
 
 const convictionDescription = conviction => {
-  return conviction.sentence && `${conviction.sentence.description} (${conviction.sentence.originalLength} ${conviction.sentence.originalLengthUnits})`
-    || conviction.latestCourtAppearanceOutcome.description
+  return conviction.sentence && `${conviction.sentence.description}${sentenceLength(conviction)}` ||
+    conviction.latestCourtAppearanceOutcome.description
+}
+
+const sentenceLength = conviction => {
+  if (typeof conviction.sentence.originalLength === 'undefined' || typeof conviction.sentence.originalLengthUnits === 'undefined') {
+    return ''
+  }
+  return ` (${conviction.sentence.originalLength} ${conviction.sentence.originalLengthUnits})`
 }
 
 const convictionSorter = (first, second) => {

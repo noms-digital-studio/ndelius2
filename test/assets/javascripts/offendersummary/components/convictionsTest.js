@@ -212,6 +212,25 @@ describe('Convictions component', () => {
         expect(wrapper.find('tbody tr').at(0).text()).to.equal('Cold bloodied murder (999 Months)')
       })
     })
+    context('a conviction with a sentence without a length', () => {
+      beforeEach(() => {
+        wrapper = shallow(<Convictions convictions={[
+          aConviction({
+            sentence: {
+              description: 'Cold bloodied murder'
+            },
+            latestCourtAppearanceOutcome: {
+              code: '329',
+              description: 'Bail Review'
+            }
+          })
+        ]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+      })
+
+      it('uses sentence without length as title', () => {
+        expect(wrapper.find('tbody tr').at(0).text()).to.equal('Cold bloodied murder')
+      })
+    })
     context('a conviction without a sentence', () => {
       beforeEach(() => {
         const conviction = aConviction({
