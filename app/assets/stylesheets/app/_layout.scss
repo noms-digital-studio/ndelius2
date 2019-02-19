@@ -2,3 +2,25 @@
   float: right;
   @include govuk-clearfix();
 }
+
+.moj-width-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.moj-scroll-container {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 130px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  padding-right: $govuk-gutter-half;
+
+  @include govuk-media-query($from: tablet) {
+    padding-right: $govuk-gutter;
+  }
+}

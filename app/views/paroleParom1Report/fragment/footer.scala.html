@@ -3,7 +3,7 @@
 @import helper._
 
 @(page: Int, reportForm: Form[ParoleParom1ReportData], encrypter: String => String, nextText: Option[(String, Option[String])] = None, showCloseButton: Boolean = true, showNextButton: Boolean = true)
-<div class="moj-footer-compensate"></div>
+<p>&nbsp;</p>
 <footer class="moj-report-footer">
     <div class="moj-report-footer__container-left">
         <button class="govuk-button moj-button--secondary moj-tooltip govuk-!-margin-bottom-1" id="draftReport" type="button" data-target="@relative(routes.ParoleParom1ReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))">

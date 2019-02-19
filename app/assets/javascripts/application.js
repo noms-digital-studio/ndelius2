@@ -392,19 +392,6 @@ function openPopup(url, name, top, left) {
                 }
             }
 
-            function ensureCaretInView() {
-                var footer = $('footer');
-                var footerPosition = footer.offset();
-                var position = $(id).find('.ql-editor').caret('offset');
-
-                // ensure caret position doesn't go below footer
-                if (position.top + (position.height * 2) > footerPosition.top) {
-                    $('html, body').animate({
-                        scrollTop: position.top - footer.height()
-                    }, 100);
-                }
-            }
-
             function withModifier(text) {
                 if (/Mac/i.test(navigator.platform)) {
                     return text;
@@ -449,7 +436,6 @@ function openPopup(url, name, top, left) {
             editor.on('selection-change', function (range) {
                 if (range) {
                     $(id).next().removeClass('govuk-visually-hidden');
-                    ensureCaretInView();
                 } else {
                     $(id).next().addClass('govuk-visually-hidden');
                 }
@@ -459,7 +445,6 @@ function openPopup(url, name, top, left) {
                 saveAndUpdateTextLimits($(id), function () {
                     return editor.getText().trim().length;
                 });
-                ensureCaretInView();
             });
 
             // add classes to reduce margins
@@ -493,23 +478,6 @@ function openPopup(url, name, top, left) {
 
         var elementSelector = '.ql-editor,input[type!=hidden],textarea';
         $('form:first').find(elementSelector).first().focus();
-
-        function ensureFieldInView() {
-            var element = $(this);
-            var footer = $('footer');
-            var footerPosition = footer.offset();
-            var position = element.offset();
-
-            // ensure no focused element falls below footer
-            if (position.top + element.height() > footerPosition.top) {
-                $('html, body').animate({
-                    scrollTop: element.offset().top - footer.height()
-                }, 100);
-            }
-        }
-
-
-        $(elementSelector).focus(ensureFieldInView);
 
         // disable back button as a browser back button else report data can easily be lost
         $(window).keydown(function (event) {

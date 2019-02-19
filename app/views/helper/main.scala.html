@@ -37,8 +37,8 @@
                 }
         </style>
 
-        <div class="govuk-width-container">
-            <main class="govuk-main-wrapper" id="content">
+        <div class="govuk-width-container@if(!hashName.contains(1) && !hashName.contains("cancelled") && !hashName.contains("completed")) { moj-width-container}">
+            <main class="govuk-main-wrapper@if(!hashName.contains(1) && !hashName.contains("cancelled") && !hashName.contains("completed")) { moj-scroll-container}" id="content">
 
                 @if(banner) {
                     <div class="govuk-phase-banner">
@@ -47,8 +47,6 @@
                 }
 
                 @content
-
-                <div class="margin-top medium">&nbsp;</div>
 
             </main>
         </div>
