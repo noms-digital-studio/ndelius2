@@ -12,7 +12,7 @@ const RestrictedOffenderSearchSummary = ({offenderSummary, showOffenderDetails})
             <div role='group' className='panel panel-border-narrow offender-summary'>
                 <p>
                     <span>
-                        <a className='heading-large no-underline offender-summary-title' onClick={() => showOffenderDetails(offenderSummary.offenderId, offenderSummary.rankIndex, {})}>
+                        <a className='heading-large no-underline offender-summary-title' tabIndex="1" title="Restricted access" onClick={() => showOffenderDetails(offenderSummary.offenderId, offenderSummary.rankIndex, {})}>
                             <span>Restricted access</span>
                         </a>
                     </span>
@@ -33,7 +33,7 @@ const RestrictedOffenderSearchSummary = ({offenderSummary, showOffenderDetails})
                         <span className='margin-right' aria-labelledby="officer-label">{officer(offenderSummary)}</span>
                     </span>
                 </p>
-                <p><AddContactLink offenderId={offenderSummary.offenderId} rankIndex={offenderSummary.rankIndex}/></p>
+                <p><AddContactLink tabIndex="1" offenderId={offenderSummary.offenderId} rankIndex={offenderSummary.rankIndex}/></p>
             </div>
         </div>
     </li>
