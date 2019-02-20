@@ -177,6 +177,7 @@ public interface OffenderApi {
         private Boolean mainOffence;
         private String offenceDate;
         private OffenceDetail detail;
+        private Long offenceCount;
 
         public String offenceDescription() {
             return Optional.ofNullable(offenceDate)
@@ -191,10 +192,15 @@ public interface OffenderApi {
 
         public String offenceShortDescription() {
             return Optional.ofNullable(offenceDate)
-                .map(ignored -> String.format("%s - %s",
-                    detail.getSubCategoryDescription(),
-                    formatDateTime(offenceDate)))
-                .orElse(detail.getSubCategoryDescription());
+                .map(ignored -> String.format("%s - %s", descriptionWithCount(), formatDateTime(offenceDate)))
+                .orElse(descriptionWithCount());
+        }
+
+        private String descriptionWithCount() {
+            return hasMultipleOffences() ? String.format("%s x %d", detail.getSubCategoryDescription(), offenceCount): detail.getSubCategoryDescription();
+        }
+        private boolean hasMultipleOffences() {
+            return Optional.ofNullable(offenceCount).map(count -> count > 1).orElse(false);
         }
     }
 
