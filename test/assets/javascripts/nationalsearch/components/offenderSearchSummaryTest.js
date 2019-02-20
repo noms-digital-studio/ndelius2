@@ -406,7 +406,7 @@ describe('OffenderSearchSummary component', () => {
                 expect(summary.find('#provider-123').text().trim()).to.equal('Provider: CPA Thames Valley')
             })
             it('renders active officer', () => {
-                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name: Annette Anld')
+                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name: Anld, Annette')
             })
         })
         context('with active and inactive offender managers', () => {
@@ -456,7 +456,7 @@ describe('OffenderSearchSummary component', () => {
                 expect(summary.find('#provider-123').text().trim()).to.equal('Provider: CPA Thames Valley')
             })
             it('renders active officer', () => {
-                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name: Annette Anld')
+                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name: Anld, Annette')
             })
         })
         context('with many active offender managers', () => {
@@ -506,7 +506,7 @@ describe('OffenderSearchSummary component', () => {
                 expect(summary.find('#provider-123').text().trim()).to.equal('Provider: CPA Thames Valley')
             })
             it('renders first active officer', () => {
-                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name: Annette Anld')
+                expect(summary.find('#officer-123').text().trim()).to.equal('Officer name: Anld, Annette')
             })
         })
     })

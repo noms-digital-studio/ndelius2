@@ -19,7 +19,7 @@ const activeOffenderManager = offenderSummary => {
 const officer = offenderSummary => {
   const activeManager = activeOffenderManager(offenderSummary)
   if (activeManager && activeManager.staff) {
-    return activeManager.staff.forenames + ' ' + activeManager.staff.surname
+    return `${activeManager.staff.surname}, ${activeManager.staff.forenames}`
   }
 }
 

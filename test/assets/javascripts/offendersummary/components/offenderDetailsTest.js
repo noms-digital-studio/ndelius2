@@ -8,6 +8,11 @@ describe('Offender Details component', () => {
   let offenderDetails
 
   beforeEach(() => {
+
+    global.document = {
+      querySelector: stub()
+    }
+
     offenderDetails = {
       gender: 'Male',
       offenderId: 123,
