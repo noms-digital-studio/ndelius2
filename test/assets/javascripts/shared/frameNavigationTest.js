@@ -6,7 +6,7 @@ describe('FrameNavigation component', () => {
   context('a close navigation event', () => {
     it('postmessage on parent frame called', () => {
       let message
-      global.parent.postMessage = (param) => message = param
+      global.parent.postMessage = (param) => { message = param }
       const navigationData = {
         shouldClose: true,
         action: 'SomePage',
@@ -23,7 +23,7 @@ describe('FrameNavigation component', () => {
   context('a close navigation event with no data', () => {
     it('postmessage on parent frame called', () => {
       let message
-      global.parent.postMessage = (param) => message = param
+      global.parent.postMessage = (param) => { message = param }
       const navigationData = {
         shouldClose: true,
         action: 'SomePage'
@@ -39,7 +39,7 @@ describe('FrameNavigation component', () => {
   context('no navigation event', () => {
     it('postmessage on parent frame not called', () => {
       let message
-      global.parent.postMessage = (param) => message = param
+      global.parent.postMessage = (param) => { message = param }
       const navigationData = {
         shouldClose: false
       }

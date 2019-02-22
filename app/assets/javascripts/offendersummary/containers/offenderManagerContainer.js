@@ -5,11 +5,7 @@ import offenderManager from '../components/offenderManager'
 const mapStateToProps = state => ({
   fetching: state.offenderSummary.offenderDetails.fetching,
   error: state.offenderSummary.offenderDetails.offenderDetailsLoadError,
-  offenderManager: state.offenderSummary.offenderDetails.offenderManagers
-    && findActiveOffenderManager(state.offenderSummary.offenderDetails.offenderManagers)
+  offenderManager: state.offenderSummary.offenderDetails.offenderManagers && findActiveOffenderManager(state.offenderSummary.offenderDetails.offenderManagers)
 })
 
-export default connect(
-  mapStateToProps,
-  null
-)(offenderManager)
+export default connect(mapStateToProps, null)(offenderManager)

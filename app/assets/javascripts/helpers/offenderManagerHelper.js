@@ -24,7 +24,7 @@ const officer = offenderSummary => {
 }
 
 const staff = staff => {
-  return staff && staff.forenames && staff.forenames.indexOf('Unallocated Staff') === -1 && `${staff.surname}, ${staff.forenames}` || 'Unallocated'
+  return (staff && staff.forenames && staff.forenames.indexOf('Unallocated Staff') === -1 && `${staff.surname}, ${staff.forenames}`) || 'Unallocated'
 }
 
 export { findActiveOffenderManager, provider, officer, staff }

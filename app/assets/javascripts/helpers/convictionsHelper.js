@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 const convictionDescription = conviction => {
-  return conviction.sentence && `${conviction.sentence.description}${sentenceLength(conviction)}` ||
+  return (conviction.sentence && `${conviction.sentence.description}${sentenceLength(conviction)}`) ||
     conviction.latestCourtAppearanceOutcome.description
 }
 

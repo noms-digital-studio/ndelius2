@@ -9,7 +9,4 @@ const mapStateToProps = state => ({
   error: state.offenderSummary.offenderRegistrations.loadError
 
 })
-export default connect(
-  mapStateToProps,
-  { getOffenderRegistrations, viewOffenderRegistrations }
-)(registrations)
+export default connect(mapStateToProps, { getOffenderRegistrations, viewOffenderRegistrations })(registrations)

@@ -1,8 +1,8 @@
-$(function() {
+$(function () {
 
-    window.addEventListener('message', function(e) {
-      $('#message').val(e.data);
-      $('form').submit();
-    });
+  window.addEventListener('message', function (e) {
+    $('#message').val(e.data)
+    $('form').submit()
+  })
 
-});
+})

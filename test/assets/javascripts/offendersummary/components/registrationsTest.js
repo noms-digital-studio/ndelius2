@@ -43,7 +43,9 @@ describe('Registrations component', () => {
   context('on mount', () => {
     it('offender registrations are requested', () => {
       const getOffenderRegistrations = stub()
-      shallow(<Registrations registrations={[]} error={false} fetching getOffenderRegistrations={getOffenderRegistrations} viewOffenderRegistrations={stub()} offenderId={123} />)
+      shallow(<Registrations registrations={[]} error={false} fetching
+                             getOffenderRegistrations={getOffenderRegistrations} viewOffenderRegistrations={stub()}
+                             offenderId={123} />)
 
       expect(getOffenderRegistrations).to.be.calledOnce
     })
@@ -52,7 +54,9 @@ describe('Registrations component', () => {
   describe('registration rendering', () => {
     context('no registrations', () => {
       beforeEach(() => {
-        wrapper = shallow(<Registrations registrations={[]} error={false} fetching={false} getOffenderRegistrations={stub()} viewOffenderRegistrations={stub()} offenderId={123} />)
+        wrapper = shallow(<Registrations registrations={[]} error={false} fetching={false}
+                                         getOffenderRegistrations={stub()} viewOffenderRegistrations={stub()}
+                                         offenderId={123} />)
       })
 
       it('contains registration count of zero', () => {
@@ -66,7 +70,9 @@ describe('Registrations component', () => {
 
     context('some registrations', () => {
       beforeEach(() => {
-        wrapper = shallow(<Registrations registrations={someRegistrations()} error={false} fetching={false} getOffenderRegistrations={stub()} viewOffenderRegistrations={stub()} offenderId={123} />)
+        wrapper = shallow(<Registrations registrations={someRegistrations()} error={false} fetching={false}
+                                         getOffenderRegistrations={stub()} viewOffenderRegistrations={stub()}
+                                         offenderId={123} />)
       })
 
       it('contains registration count', () => {
@@ -79,7 +85,13 @@ describe('Registrations component', () => {
 
     context('a high rosh registration', () => {
       beforeEach(() => {
-        wrapper = shallow(<Registrations registrations={[aRegistration({ type: { description: 'Very High RoSH' }, register: { description: 'RoSH' }, startDate: '2018-12-11', riskColour: 'Red' })]} error={false} fetching={false} getOffenderRegistrations={stub()} viewOffenderRegistrations={stub()} offenderId={123} />)
+        wrapper = shallow(<Registrations registrations={[aRegistration({
+          type: { description: 'Very High RoSH' },
+          register: { description: 'RoSH' },
+          startDate: '2018-12-11',
+          riskColour: 'Red'
+        })]} error={false} fetching={false} getOffenderRegistrations={stub()}
+                                         viewOffenderRegistrations={stub()} offenderId={123} />)
       })
 
       it('contains register type', () => {
@@ -100,7 +112,13 @@ describe('Registrations component', () => {
     })
     context('a low rosh registration', () => {
       beforeEach(() => {
-        wrapper = shallow(<Registrations registrations={[aRegistration({ type: { description: 'Low RoSH' }, register: { description: 'RoSH' }, startDate: '2018-12-11', riskColour: 'Green' })]} error={false} fetching={false} getOffenderRegistrations={stub()} viewOffenderRegistrations={stub()} offenderId={123} />)
+        wrapper = shallow(<Registrations registrations={[aRegistration({
+          type: { description: 'Low RoSH' },
+          register: { description: 'RoSH' },
+          startDate: '2018-12-11',
+          riskColour: 'Green'
+        })]} error={false} fetching={false} getOffenderRegistrations={stub()}
+                                         viewOffenderRegistrations={stub()} offenderId={123} />)
       })
 
       it('contains register type', () => {
@@ -123,11 +141,32 @@ describe('Registrations component', () => {
     describe('sorting', () => {
       beforeEach(() => {
         wrapper = shallow(<Registrations registrations={[
-          aRegistration({ registrationId: 1, type: { description: 'AA' }, register: { description: 'MM' }, riskColour: 'Green' }),
-          aRegistration({ registrationId: 2, type: { description: 'AA' }, register: { description: 'DD' }, riskColour: 'Green' }),
-          aRegistration({ registrationId: 3, type: { description: 'BB' }, register: { description: 'DD' }, riskColour: 'Red' }),
-          aRegistration({ registrationId: 4, type: { description: 'AA' }, register: { description: 'DD' }, riskColour: 'Red' })
-        ]} error={false} fetching={false} getOffenderRegistrations={stub()} viewOffenderRegistrations={stub()} offenderId={123} />)
+          aRegistration({
+            registrationId: 1,
+            type: { description: 'AA' },
+            register: { description: 'MM' },
+            riskColour: 'Green'
+          }),
+          aRegistration({
+            registrationId: 2,
+            type: { description: 'AA' },
+            register: { description: 'DD' },
+            riskColour: 'Green'
+          }),
+          aRegistration({
+            registrationId: 3,
+            type: { description: 'BB' },
+            register: { description: 'DD' },
+            riskColour: 'Red'
+          }),
+          aRegistration({
+            registrationId: 4,
+            type: { description: 'AA' },
+            register: { description: 'DD' },
+            riskColour: 'Red'
+          })
+        ]} error={false} fetching={false} getOffenderRegistrations={stub()} viewOffenderRegistrations={stub()}
+                                         offenderId={123} />)
       })
 
       it('is ordered by register type, risk colour and alert type', () => {
@@ -142,7 +181,9 @@ describe('Registrations component', () => {
       let viewOffenderRegistrations
       beforeEach(() => {
         viewOffenderRegistrations = stub()
-        wrapper = shallow(<Registrations registrations={someRegistrations()} error={false} fetching={false} getOffenderRegistrations={stub()} viewOffenderRegistrations={viewOffenderRegistrations} offenderId={123} />)
+        wrapper = shallow(<Registrations registrations={someRegistrations()} error={false} fetching={false}
+                                         getOffenderRegistrations={stub()}
+                                         viewOffenderRegistrations={viewOffenderRegistrations} offenderId={123} />)
       })
 
       it('callback called with offenderId', () => {

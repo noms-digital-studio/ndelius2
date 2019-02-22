@@ -110,7 +110,7 @@ export const getOffenderConvictions = () => dispatch => {
 }
 
 export const showMoreConvictions = () => dispatch => {
-  trackEvent('show-more', 'Offender summary > Events', 'Show more events');
+  trackEvent('show-more', 'Offender summary > Events', 'Show more events')
   dispatch(incrementMaxConvictionsVisibleCount(10))
 }
 
@@ -128,31 +128,31 @@ export const getOffenderPersonalCircumstances = () => dispatch => {
 }
 
 export const viewOffenderAliases = offenderId => dispatch => {
-  trackEvent('delius-link', 'Offender summary > Offender details', 'View aliases');
+  trackEvent('delius-link', 'Offender summary > Offender details', 'View aliases')
   dispatch(navigateToViewOffenderAliases(offenderId))
 }
 
 export const viewOffenderAddresses = offenderId => dispatch => {
-  trackEvent('delius-link', 'Offender summary > Offender details > Contact details', 'View address history');
+  trackEvent('delius-link', 'Offender summary > Offender details > Contact details', 'View address history')
   dispatch(navigateToViewOffenderAddresses(offenderId))
 }
 
 export const viewOffenderPersonalCircumstances = offenderId => dispatch => {
-  trackEvent('delius-link', 'Offender summary > Offender manager > Personal Circumstances', 'View more personal circumstances');
+  trackEvent('delius-link', 'Offender summary > Offender manager > Personal Circumstances', 'View more personal circumstances')
   dispatch(navigateToViewOffenderPersonalCircumstances(offenderId))
 }
 
 export const viewOffenderRegistrations = offenderId => dispatch => {
-  trackEvent('delius-link', 'Offender summary > Active registers and warnings', 'View more registers and warnings');
+  trackEvent('delius-link', 'Offender summary > Active registers and warnings', 'View more registers and warnings')
   dispatch(navigateToViewOffenderRegistrations(offenderId))
 }
 
 export const viewOffenderEvent = (offenderId, eventId) => dispatch => {
-  trackEvent('delius-link', 'Offender summary > Events', 'View offender event');
+  trackEvent('delius-link', 'Offender summary > Events', 'View offender event')
   dispatch(navigateToViewOffenderEvent(offenderId, eventId))
 }
 
 export const transferInactiveOffender = offenderId => dispatch => {
-  trackEvent('delius-link', 'Offender summary > Not current', 'Transfer in');
+  trackEvent('delius-link', 'Offender summary > Not current', 'Transfer in')
   dispatch(navigateToTransferInactiveOffender(offenderId))
 }

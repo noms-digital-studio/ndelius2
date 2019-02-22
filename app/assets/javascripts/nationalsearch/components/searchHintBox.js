@@ -1,16 +1,14 @@
 import React from 'react'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-const SearchHintBox = ({hint}) => (
-    <p className="margin-top margin-bottom large">
-        <span className="search-hint">
-            <span className="font-medium">{hint}</span>
-        </span>
-    </p>
-);
+const SearchHintBox = ({ hint }) => (
+  <p className='margin-top margin-bottom large'>
+    <span className='search-hint font-medium'>{hint}</span>
+  </p>
+)
 
 SearchHintBox.propTypes = {
-    hint: PropTypes.string
-};
+  hint: PropTypes.string
+}
 
-export default SearchHintBox;
+export default SearchHintBox

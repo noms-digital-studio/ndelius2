@@ -2,18 +2,18 @@ import { expect } from 'chai'
 import { stub } from 'sinon'
 import offender from '../api/offender'
 import {
-  getOffenderDetails,
-  getOffenderRegistrations,
-  getOffenderConvictions,
-  showMoreConvictions,
   getNextAppointment,
+  getOffenderConvictions,
+  getOffenderDetails,
   getOffenderPersonalCircumstances,
-  viewOffenderAliases,
+  getOffenderRegistrations,
+  showMoreConvictions,
+  transferInactiveOffender,
   viewOffenderAddresses,
-  viewOffenderPersonalCircumstances,
-  viewOffenderRegistrations,
+  viewOffenderAliases,
   viewOffenderEvent,
-  transferInactiveOffender
+  viewOffenderPersonalCircumstances,
+  viewOffenderRegistrations
 } from './index'
 
 describe('offender summary action', () => {
@@ -132,7 +132,10 @@ describe('offender summary action', () => {
         getOffenderPersonalCircumstances()(dispatch)
       })
       it('dispatches RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES with details', () => {
-        expect(dispatch).to.be.calledWith({ type: 'RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES', circumstances: [{ type: 'Bad' }] })
+        expect(dispatch).to.be.calledWith({
+          type: 'RECEIVE_OFFENDER_PERSONAL_CIRCUMSTANCES',
+          circumstances: [{ type: 'Bad' }]
+        })
       })
     })
     context('unsuccessful response', () => {

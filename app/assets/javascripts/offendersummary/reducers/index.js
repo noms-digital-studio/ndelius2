@@ -7,10 +7,10 @@ import offenderPersonalCircumstances from './offenderPersonalCircumstances'
 import navigate from './navigate'
 
 export default combineReducers({
-    offenderDetails,
-    offenderRegistrations,
-    offenderConvictions,
-    nextAppointment,
-    offenderPersonalCircumstances,
-    navigate
+  offenderDetails,
+  offenderRegistrations,
+  offenderConvictions,
+  nextAppointment,
+  offenderPersonalCircumstances,
+  navigate
 })

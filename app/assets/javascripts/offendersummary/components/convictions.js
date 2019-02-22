@@ -6,10 +6,6 @@ import { dateFromISO } from '../../helpers/formatters'
 import { convictionDescription, convictionSorter, mainOffenceDescription } from '../../helpers/convictionsHelper'
 
 class Convictions extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   componentWillMount () {
     const { getOffenderConvictions } = this.props
     getOffenderConvictions()
@@ -25,15 +21,19 @@ class Convictions extends Component {
         <Fragment key={conviction.convictionId}>
           <tr>
             <th className='moj-!-border-0 govuk-!-padding-bottom-0' colSpan='3'>
-              <a className='govuk-!-margin-0 govuk-heading-s govuk-link govuk-link--no-visited-state' href='javascript:void(0);' onClick={() => viewOffenderEvent(offenderId, conviction.convictionId)}>{convictionDescription(conviction)}</a>
+              <a className='govuk-!-margin-0 govuk-heading-s govuk-link govuk-link--no-visited-state'
+                 href='javascript:void(0);'
+                 onClick={() => viewOffenderEvent(offenderId, conviction.convictionId)}>{convictionDescription(conviction)}</a>
             </th>
           </tr>
           <tr>
             <td className='govuk-!-padding-top-0'><p
-              className='govuk-body moj-!-color-grey govuk-!-margin-bottom-0'>{mainOffenceDescription(conviction)}</p></td>
-            <td className='govuk-!-padding-top-0' style={ { width: "110px" } }><p
-              className='govuk-body moj-!-color-grey govuk-!-margin-bottom-0'>{dateFromISO(conviction.referralDate)}</p></td>
-            <td className='govuk-!-padding-top-0' style={ { width: "100px" } }><p
+              className='govuk-body moj-!-color-grey govuk-!-margin-bottom-0'>{mainOffenceDescription(conviction)}</p>
+            </td>
+            <td className='govuk-!-padding-top-0' style={{ width: '110px' }}><p
+              className='govuk-body moj-!-color-grey govuk-!-margin-bottom-0'>{dateFromISO(conviction.referralDate)}</p>
+            </td>
+            <td className='govuk-!-padding-top-0' style={{ width: '100px' }}><p
               className={`govuk-body govuk-!-font-size-19 moj-!-text-align-right govuk-!-margin-bottom-0 ${colorClass()}`}>{status()}</p>
             </td>
           </tr>
@@ -52,7 +52,7 @@ class Convictions extends Component {
             {convictions.length > 0 &&
             <table className='govuk-table moj-table moj-table--split-rows govuk-!-margin-0'>
               <tbody>
-                {convictions.sort(convictionSorter).slice(0, maxConvictionsVisible).map(renderConviction)}
+              {convictions.sort(convictionSorter).slice(0, maxConvictionsVisible).map(renderConviction)}
               </tbody>
             </table>
             }
@@ -87,34 +87,34 @@ Convictions.propTypes = {
   offenderId: PropTypes.number.isRequired,
   convictions: PropTypes.arrayOf(
     PropTypes.shape({
-      offences: PropTypes.arrayOf(
-        PropTypes.shape({
-          mainOffence: PropTypes.bool.isRequired,
-          detail: PropTypes.shape(
-            {
-              description: PropTypes.string.isRequired
-            }
-          ).isRequired
-        }).isRequired
-      ).isRequired,
-      referralDate: PropTypes.string.isRequired,
-      active: PropTypes.bool.isRequired,
-      inBreach: PropTypes.bool.isRequired,
-      convictionId: PropTypes.number.isRequired,
-      sentence: PropTypes.shape(
-        {
-          description: PropTypes.string.isRequired,
-          originalLengthUnits: PropTypes.string.isRequired,
-          originalLength: PropTypes.number.isRequired
-        }
-      ),
-      latestCourtAppearanceOutcome: PropTypes.shape(
-        {
-          description: PropTypes.string.isRequired
-        }
-      )
+        offences: PropTypes.arrayOf(
+          PropTypes.shape({
+            mainOffence: PropTypes.bool.isRequired,
+            detail: PropTypes.shape(
+              {
+                description: PropTypes.string.isRequired
+              }
+            ).isRequired
+          }).isRequired
+        ).isRequired,
+        referralDate: PropTypes.string.isRequired,
+        active: PropTypes.bool.isRequired,
+        inBreach: PropTypes.bool.isRequired,
+        convictionId: PropTypes.number.isRequired,
+        sentence: PropTypes.shape(
+          {
+            description: PropTypes.string.isRequired,
+            originalLengthUnits: PropTypes.string.isRequired,
+            originalLength: PropTypes.number.isRequired
+          }
+        ),
+        latestCourtAppearanceOutcome: PropTypes.shape(
+          {
+            description: PropTypes.string.isRequired
+          }
+        )
 
-    }.isRequired
+      }.isRequired
     ))
 
 }

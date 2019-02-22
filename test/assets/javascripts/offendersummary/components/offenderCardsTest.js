@@ -5,7 +5,6 @@ import OffenderCards from './offenderCards'
 import { stub } from 'sinon'
 
 describe('OffenderCards component', () => {
-
   let wrapper
   let offenderConvictions = []
   let offenderManager = {
@@ -60,37 +59,35 @@ describe('OffenderCards component', () => {
     }, conviction)
 
   describe('Events card', () => {
-
     context('When the offender has no events', () => {
-
       beforeEach(() => {
         offenderConvictions = {
           convictions: []
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={ offenderConvictions } offenderManager={ offenderManager } transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
+                         transferInactiveOffender={stub()} offenderId={123} />
         )
       })
 
       it('Should display no events', () => {
         expect(wrapper.find('.qa-card-events').text()).to.equal('0 events')
       })
-
     })
 
     context('When the offender has only inactive events', () => {
-
       beforeEach(() => {
         offenderConvictions = {
           convictions: [
-            aConviction({convictionId: 1, active: false}),
-            aConviction({convictionId: 2, active: false})
+            aConviction({ convictionId: 1, active: false }),
+            aConviction({ convictionId: 2, active: false })
           ]
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={ offenderConvictions } offenderManager={ offenderManager } transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
+                         transferInactiveOffender={stub()} offenderId={123} />
         )
       })
 
@@ -101,17 +98,18 @@ describe('OffenderCards component', () => {
       it('Should not display any event data', () => {
         expect(wrapper.find('.qa-card-active-event').exists()).equal(false)
       })
-
     })
 
     context('When the offender has active and inactive events', () => {
-
       beforeEach(() => {
         offenderConvictions = {
           convictions: [
-            aConviction({convictionId: 1, active: true}),
+            aConviction({ convictionId: 1, active: true }),
             aConviction({
-              convictionId: 2, active: true, referralDate: '2018-12-19', sentence: {
+              convictionId: 2,
+              active: true,
+              referralDate: '2018-12-19',
+              sentence: {
                 description: 'ORA Community Order',
                 originalLength: 12,
                 originalLengthUnits: 'Months',
@@ -119,12 +117,13 @@ describe('OffenderCards component', () => {
                 lengthInDays: 365
               }
             }),
-            aConviction({convictionId: 3, active: false})
+            aConviction({ convictionId: 3, active: false })
           ]
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={ offenderConvictions } offenderManager={ offenderManager } transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
+                         transferInactiveOffender={stub()} offenderId={123} />
         )
       })
 
@@ -139,13 +138,10 @@ describe('OffenderCards component', () => {
       it('Should display the latest active event description', () => {
         expect(wrapper.find('.qa-card-active-event').text()).to.equal('Last active event: ORA Community Order (12 Months)')
       })
-
     })
-
   })
 
   describe('Offender manager card', () => {
-
     context('When the offender has NO active events', () => {
       let transferInactiveOffender
 
@@ -162,16 +158,16 @@ describe('OffenderCards component', () => {
 
         offenderConvictions = {
           convictions: [
-            aConviction({convictionId: 1, active: false})
+            aConviction({ convictionId: 1, active: false })
           ]
         }
 
         transferInactiveOffender = stub()
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={ offenderConvictions } offenderManager={ offenderManager } transferInactiveOffender={transferInactiveOffender} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
+                         transferInactiveOffender={transferInactiveOffender} offenderId={123} />
         )
-
       })
 
       it('Should display offender status as not current', () => {
@@ -194,24 +190,22 @@ describe('OffenderCards component', () => {
       it('Should NOT display the offender manager details', () => {
         expect(wrapper.find('.qa-card-offender-manager').exists()).equal(false)
       })
-
     })
 
     context('When the offender has active events but has no assigned offender manager details', () => {
-
       beforeEach(() => {
         offenderManager = {}
 
         offenderConvictions = {
           convictions: [
-            aConviction({convictionId: 1, active: true})
+            aConviction({ convictionId: 1, active: true })
           ]
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={ offenderConvictions } offenderManager={ offenderManager } transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
+                         transferInactiveOffender={stub()} offenderId={123} />
         )
-
       })
 
       it('Should display offender status as current offender', () => {
@@ -232,7 +226,6 @@ describe('OffenderCards component', () => {
     })
 
     context('When the offender has active events and has an assigned offender manager', () => {
-
       beforeEach(() => {
         offenderManager = {
           probationArea: {
@@ -246,14 +239,14 @@ describe('OffenderCards component', () => {
 
         offenderConvictions = {
           convictions: [
-            aConviction({convictionId: 1, active: true})
+            aConviction({ convictionId: 1, active: true })
           ]
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={ offenderConvictions } offenderManager={ offenderManager } transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
+                         transferInactiveOffender={stub()} offenderId={123} />
         )
-
       })
 
       it('Should display offender status as current offender', () => {
@@ -271,9 +264,6 @@ describe('OffenderCards component', () => {
       it('Should NOT display the offender manager details', () => {
         expect(wrapper.find('.qa-card-offender-manager').text()).to.equal('Offender manager: Smith, John')
       })
-
     })
-
   })
-
 })

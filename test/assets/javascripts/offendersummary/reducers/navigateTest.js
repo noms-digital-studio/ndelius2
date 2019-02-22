@@ -1,10 +1,10 @@
 import {
-  NAVIGATE_TO_VIEW_OFFENDER_ALIASES,
+  NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER,
   NAVIGATE_TO_VIEW_OFFENDER_ADDRESS_HISTORY,
-  NAVIGATE_TO_VIEW_OFFENDER_PERSONAL_CIRCUMSTANCES,
-  NAVIGATE_TO_VIEW_OFFENDER_REGISTRATIONS,
+  NAVIGATE_TO_VIEW_OFFENDER_ALIASES,
   NAVIGATE_TO_VIEW_OFFENDER_EVENT,
-  NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER
+  NAVIGATE_TO_VIEW_OFFENDER_PERSONAL_CIRCUMSTANCES,
+  NAVIGATE_TO_VIEW_OFFENDER_REGISTRATIONS
 } from '../constants/ActionTypes'
 import navigate from './navigate'
 import { expect } from 'chai'
@@ -54,7 +54,10 @@ describe('navigate reducer', () => {
     let state
 
     beforeEach(() => {
-      state = navigate({ shouldClose: false }, { type: NAVIGATE_TO_VIEW_OFFENDER_PERSONAL_CIRCUMSTANCES, offenderId: '123' })
+      state = navigate({ shouldClose: false }, {
+        type: NAVIGATE_TO_VIEW_OFFENDER_PERSONAL_CIRCUMSTANCES,
+        offenderId: '123'
+      })
     })
 
     it('shouldClose is true', () => {
@@ -88,7 +91,11 @@ describe('navigate reducer', () => {
     let state
 
     beforeEach(() => {
-      state = navigate({ shouldClose: false }, { type: NAVIGATE_TO_VIEW_OFFENDER_EVENT, offenderId: '123', eventId: '999' })
+      state = navigate({ shouldClose: false }, {
+        type: NAVIGATE_TO_VIEW_OFFENDER_EVENT,
+        offenderId: '123',
+        eventId: '999'
+      })
     })
 
     it('shouldClose is true', () => {

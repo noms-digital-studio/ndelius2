@@ -5,13 +5,12 @@ import analytics from './nationalsearch/reducers/analylticsReducer'
 import localStorage from './nationalsearch/reducers/localStorageReducer'
 import offenderSummary from './offendersummary/reducers'
 
-
 const app = combineReducers({
-    search,
-    navigate,
-    analytics,
-    localStorage,
-    offenderSummary
+  search,
+  navigate,
+  analytics,
+  localStorage,
+  offenderSummary
 })
 
 export default app

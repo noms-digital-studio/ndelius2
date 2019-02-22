@@ -18,15 +18,15 @@ import reducer from './reducers'
 const store = createStore(reducer, applyMiddleware(thunkMiddleware))
 
 ReactDOM.render(
-  <Provider store={ store }>
+  <Provider store={store}>
     <Router>
       <Switch>
-        <Route path="(.*)/help" component={ HelpPage }/>
-        <Route path="(.*)/analytics" component={ AnalyticsPage }/>
-        <Route path="(.*)/satisfaction" component={ SatisfactionPage }/>
-        <Route path="(.*)/offenderSummary" component={ OffenderSummaryPage }/>
-        <Route path="(.*)/nationalSearch" component={ OffenderSearchPage }/>
-        <Route path="(.*)/features" component={ () => <FeatureSwitchPage/> }/>
+        <Route path='(.*)/help' component={HelpPage} />
+        <Route path='(.*)/analytics' component={AnalyticsPage} />
+        <Route path='(.*)/satisfaction' component={SatisfactionPage} />
+        <Route path='(.*)/offenderSummary' component={OffenderSummaryPage} />
+        <Route path='(.*)/nationalSearch' component={OffenderSearchPage} />
+        <Route path='(.*)/features' component={() => <FeatureSwitchPage />} />
       </Switch>
     </Router>
   </Provider>,

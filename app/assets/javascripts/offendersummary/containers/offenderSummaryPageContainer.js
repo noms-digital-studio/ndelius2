@@ -8,7 +8,4 @@ const mapStateToProps = state => ({
   childrenFetching: state.offenderSummary.offenderConvictions.fetching || state.offenderSummary.offenderRegistrations.fetching
 })
 
-export default connect(
-  mapStateToProps,
-  {getOffenderDetails}
-)(offenderSummaryPage)
+export default connect(mapStateToProps, { getOffenderDetails })(offenderSummaryPage)

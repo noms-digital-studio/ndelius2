@@ -8,7 +8,6 @@ const mapStateToProps = state => ({
   fetching: state.offenderSummary.offenderConvictions.fetching,
   error: state.offenderSummary.offenderConvictions.loadError,
   maxConvictionsVisible: state.offenderSummary.offenderConvictions.maxConvictionsVisible
-
 })
 export default connect(
   mapStateToProps,

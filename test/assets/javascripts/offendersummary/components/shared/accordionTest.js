@@ -4,13 +4,11 @@ import { shallow } from 'enzyme'
 import Accordion from './accordion'
 
 describe('Accordion component (shared)', () => {
-
   let wrapper
 
   describe('Accordion', () => {
-
     beforeEach(() => {
-      wrapper = shallow(<Accordion label="Offender details" id="1">
+      wrapper = shallow(<Accordion label='Offender details' id='1'>
         <Fragment>Content goes here</Fragment>
       </Accordion>)
     })

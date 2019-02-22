@@ -52,7 +52,8 @@ describe('Convictions component', () => {
   context('on mount', () => {
     it('offender convictions are requested', () => {
       const getOffenderConvictions = stub()
-      shallow(<Convictions convictions={[]} error={false} fetching getOffenderConvictions={getOffenderConvictions} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+      shallow(<Convictions convictions={[]} error={false} fetching getOffenderConvictions={getOffenderConvictions}
+                           maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
 
       expect(getOffenderConvictions).to.be.calledOnce
     })
@@ -61,7 +62,9 @@ describe('Convictions component', () => {
   describe('conviction rendering', () => {
     context('no convictions', () => {
       beforeEach(() => {
-        wrapper = shallow(<Convictions convictions={[]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+        wrapper = shallow(<Convictions convictions={[]} error={false} fetching={false}
+                                       getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={stub()} offenderId={123} />)
       })
 
       it('contains conviction count of zero', () => {
@@ -75,7 +78,9 @@ describe('Convictions component', () => {
 
     context('some convictions', () => {
       beforeEach(() => {
-        wrapper = shallow(<Convictions convictions={someConvictions()} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+        wrapper = shallow(<Convictions convictions={someConvictions()} error={false} fetching={false}
+                                       getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={stub()} offenderId={123} />)
       })
 
       it('contains conviction count', () => {
@@ -123,7 +128,8 @@ describe('Convictions component', () => {
 
             ]
 
-          })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={viewOffenderEvent} offenderId={123} />)
+          })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={viewOffenderEvent} offenderId={123} />)
       })
 
       it('contains main offence', () => {
@@ -146,7 +152,8 @@ describe('Convictions component', () => {
             convictionId: 1,
             active: true
 
-          })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+          })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={stub()} offenderId={123} />)
       })
 
       it('contains conviction status as active', () => {
@@ -164,7 +171,8 @@ describe('Convictions component', () => {
             convictionId: 1,
             active: false
 
-          })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+          })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={stub()} offenderId={123} />)
       })
 
       it('contains conviction status of terminated', () => {
@@ -180,7 +188,8 @@ describe('Convictions component', () => {
             active: true,
             inBreach: true
 
-          })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+          })]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={stub()} offenderId={123} />)
       })
 
       it('contains conviction status of breached', () => {
@@ -205,7 +214,8 @@ describe('Convictions component', () => {
               description: 'Bail Review'
             }
           })
-        ]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+        ]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={stub()} offenderId={123} />)
       })
 
       it('uses sentence has title', () => {
@@ -224,7 +234,8 @@ describe('Convictions component', () => {
               description: 'Bail Review'
             }
           })
-        ]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+        ]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={stub()} offenderId={123} />)
       })
 
       it('uses sentence without length as title', () => {
@@ -242,7 +253,8 @@ describe('Convictions component', () => {
         delete conviction.sentence
         wrapper = shallow(<Convictions convictions={[
           conviction
-        ]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+        ]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={stub()} offenderId={123} />)
       })
 
       it('uses last court outcome as title', () => {
@@ -280,7 +292,8 @@ describe('Convictions component', () => {
               originalLengthUnits: 'Months'
             }
           })
-        ]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+        ]} error={false} fetching={false} getOffenderConvictions={stub()} maxConvictionsVisible={3}
+                                       viewOffenderEvent={stub()} offenderId={123} />)
       })
 
       it('is ordered by referral date', () => {
@@ -305,7 +318,9 @@ describe('Convictions component', () => {
             aConviction({ convictionId: 2 }),
             aConviction({ convictionId: 3 }),
             aConviction({ convictionId: 4 })
-          ]} error={false} fetching={false} getOffenderConvictions={stub()} showMoreConvictions={showMoreConvictions} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+          ]} error={false} fetching={false} getOffenderConvictions={stub()}
+                                         showMoreConvictions={showMoreConvictions} maxConvictionsVisible={3}
+                                         viewOffenderEvent={stub()} offenderId={123} />)
         })
         it('contains conviction count', () => {
           expect(wrapper.find({ label: 'Events (4)' }).exists()).to.be.true
@@ -329,7 +344,9 @@ describe('Convictions component', () => {
             aConviction({ convictionId: 1 }),
             aConviction({ convictionId: 2 }),
             aConviction({ convictionId: 3 })
-          ]} error={false} fetching={false} getOffenderConvictions={stub()} showMoreConvictions={showMoreConvictions} maxConvictionsVisible={3} viewOffenderEvent={stub()} offenderId={123} />)
+          ]} error={false} fetching={false} getOffenderConvictions={stub()}
+                                         showMoreConvictions={showMoreConvictions} maxConvictionsVisible={3}
+                                         viewOffenderEvent={stub()} offenderId={123} />)
         })
         it('contains conviction count', () => {
           expect(wrapper.find({ label: 'Events (3)' }).exists()).to.be.true
