@@ -66,12 +66,12 @@ public class DateTimeHelper {
 
     public static String format(String dateString) {
         val date = parse(dateString, ISO_LOCAL_DATE);
-        return date.format(DateTimeFormatter.ofPattern("dd/MM/YYYY"));
+        return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
     public static String formatDateTime(String dateString) {
         val date = parse(dateString, ISO_LOCAL_DATE_TIME);
-        return date.format(DateTimeFormatter.ofPattern("dd/MM/YYYY"));
+        return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
     public static LocalDate convert(String dateString) {

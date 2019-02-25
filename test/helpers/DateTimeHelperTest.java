@@ -103,6 +103,11 @@ public class DateTimeHelperTest {
     }
 
     @Test
+    public void formatsADateCorrectlyInFirstWeekOfNewYear() {
+        assertThat(format("1993-01-03")).isEqualTo("03/01/1993");
+    }
+
+    @Test
     public void convertsADateCorrectly() {
         assertThat(convert("2018-06-29")).isEqualTo(LocalDate.of(2018, 6,29));
     }
