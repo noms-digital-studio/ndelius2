@@ -62,7 +62,7 @@ public class PrisonerDetailsSteps {
 
         page.clickRadioButtonWithLabelWithinLegend("A", "Current prison category");
         page.fillTextArea("Offence", "Aggravated assault");
-        page.fillTextArea("Sentence", "20 years");
+        page.fillTextArea("Sentence length", "20 years");
         page.clickRadioButtonWithLabelWithinLegend("No", "Does the prisoner have an indeterminate sentence?");
         page.clickElementWithId("prisonerDetailsDeterminateSentenceType_extended");
         page.fillInputInSectionWithLegend("Parole eligibility date", "Day", new SimpleDateFormat("dd").format(date));

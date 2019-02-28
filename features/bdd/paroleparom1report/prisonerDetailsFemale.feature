@@ -10,7 +10,7 @@ Feature: Parole Report
 
     Given that the delius user want to enter for Female prisoner who has Indeterminate sentence
     And they enter the following information
-      | Sentence | 5 years |
+      | Sentence length | 5 years |
     And they select the "Yes" option on the "Does the prisoner have an indeterminate sentence?"
     And they input the following information
       | Tariff length | 5 years |
@@ -32,7 +32,7 @@ Feature: Parole Report
     Given that the delius user want to enter for Female prisoner who has Determinate sentence
     And they select the "Closed" option on the "Current prison category"
     And they enter the following information
-      | Sentence | 20 years |
+      | Sentence length | 20 years |
     And they select the "No" option on the "Does the prisoner have an indeterminate sentence?"
     And they select the "Extended" option on the "Sentence type"
     And they enter the date "08/12/2021" for "Parole eligibility date"

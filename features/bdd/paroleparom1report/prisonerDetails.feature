@@ -16,7 +16,7 @@ Feature: Parole Report
     Given that the delius user want to enter for Male prisoner who has Indeterminate sentence
     And they select the "A" option on the "Current prison category"
     And they enter the following information
-      | Sentence | 4 years |
+      | Sentence length | 4 years |
     And they select the "Yes" option on the "Does the prisoner have an indeterminate sentence?"
     And they input the following information
       | Tariff length | 5 years |
@@ -39,7 +39,7 @@ Feature: Parole Report
     Given that the delius user want to enter for Male prisoner who has Determinate sentence
     And they select the "C" option on the "Current prison category"
     And they enter the following information
-      | Sentence | 20 years |
+      | Sentence length | 20 years |
     And they select the "No" option on the "Does the prisoner have an indeterminate sentence?"
     And they enter the date "08/11/2031" for "Parole eligibility date"
     And they select the "Extended" option on the "Sentence type"
@@ -68,7 +68,7 @@ Feature: Parole Report
     When  they select the "Continue" button
     Then  the following error messages are displayed
       | Offence                                           | Enter the offence                                     |
-      | Sentence                                          | Enter the sentence                                    |
+      | Sentence length                                   | Enter the sentence length                             |
       | Does the prisoner have an indeterminate sentence? | Specify if the prisoner has an indeterminate sentence |
 
   Scenario: Delius user does not complete all the relevant fields on the UI for an offender whom has indeterminate sentence
@@ -79,7 +79,7 @@ Feature: Parole Report
     When  they select the "Continue" button
     Then  the following error messages are displayed
       | Offence            | Enter the offence            |
-      | Sentence           | Enter the sentence           |
+      | Sentence length    | Enter the sentence length    |
       | Tariff length      | Enter the tariff length      |
       | Tariff expiry date | Enter the tariff expiry date |
 
@@ -91,7 +91,7 @@ Feature: Parole Report
     When  they select the "Continue" button
     Then  the following error messages are displayed
       | Offence                 | Enter the offence                 |
-      | Sentence                | Enter the sentence                |
+      | Sentence length         | Enter the sentence length         |
       | Sentence type           | Select the sentence type          |
       | Parole eligibility date | Enter the parole eligibility date |
 
