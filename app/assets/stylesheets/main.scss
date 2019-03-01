@@ -4,68 +4,9 @@ $govuk-fonts-path: '../fonts/';
 @import "../../../node_modules/@mojdigital/pattern-library/all";
 @import "quill";
 
+@import 'app/form';
 @import 'app/layout';
 @import 'app/offender-header';
 @import 'app/typography';
-
-.new-window {
-  @include govuk-font(16);
-  span {
-    background-image: url("../images/new-window.png");
-    background-position: 100% 50%;
-    background-repeat: no-repeat;
-    padding-right: 20px;
-  }
-}
-
-.govuk-width-container {
-  // Left align since we are in an iframe within Delius
-  @include govuk-media-query($and: "(min-width: #{($govuk-page-width + $govuk-gutter * 2)})") {
-    margin: 0 $govuk-gutter;
-  }
-}
-#content {
-  padding-top: $govuk-gutter-half;
-}
-
-.js-hidden {
-  display: none;
-}
-
-.row-counting-table {
-  counter-reset: rowNumber;
-}
-
-.row-counting-table tr {
-  counter-increment: rowNumber;
-}
-
-.row-counting-table tr td:first-child::before {
-  content: counter(rowNumber);
-  min-width: 1em;
-}
-
-.offender-image {
-  width: 165px;
-  border: white 10px solid;
-}
-
-.app-float-left {
-  float: left;
-  @include govuk-clearfix();
-
-  &.app-float-left__not-narrow {
-    @include govuk-media-query(mobile, tablet) {
-      display: block;
-      float: none;
-    }
-  }
-}
-
-.moj-textarea {
-  margin-bottom: 0 !important;
-}
-
-.ql-toolbar.ql-snow {
-  margin-bottom: 0;
-}
+@import 'app/utils';
+@import 'app/vendor-overrides';

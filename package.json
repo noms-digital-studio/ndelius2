@@ -31,12 +31,12 @@
     "chai-shallow-deep-equal": "1.4.6",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.10.0",
-    "sinon": "7.2.4",
+    "sinon": "7.2.5",
     "sinon-chai": "3.3.0"
   },
   "dependencies": {
     "@babel/polyfill": "7.2.5",
-    "@mojdigital/pattern-library": "0.0.1-alpha.30",
+    "@mojdigital/pattern-library": "0.0.1-beta.1",
     "govuk-frontend": "2.7.0",
     "history": "4.7.2",
     "localforage": "1.7.3",

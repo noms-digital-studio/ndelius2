@@ -125,7 +125,7 @@ public class ReportPage extends FluentPage {
 
     public String statusTextForPage(String pageName) {
         val row = $(By.linkText(pageName)).find(By.xpath("../.."));
-        val statusCell = row.find(By.cssSelector("td:nth-child(3)"));
+        val statusCell = row.find(By.cssSelector("td:nth-child(2)"));
         return statusCell.text();
     }
 

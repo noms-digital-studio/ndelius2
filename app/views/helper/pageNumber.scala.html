@@ -5,7 +5,7 @@
 <input type="hidden" id="jumpNumber" name="jumpNumber" value="@jumpNumber.getOrElse("")" />
 <input type="hidden" id="pageNumber" name="pageNumber" value="@pageNumber"/>
 
-<button class="govuk-button govuk-!-margin-bottom-2 moj-tooltip tooltip button@if(nextText.exists(_._1.contains("now"))) { button-start govuk-button--start moj-button--inverted govuk-!-margin-top-6 } @className.getOrElse("")" id="nextButton" type="submit" aria-label="@nextText.getOrElse(defaultText)._1">
+<button class="govuk-button govuk-!-margin-bottom-2 moj-tooltip @if(nextText.exists(_._1.contains("now"))) { govuk-button--start moj-button--inverted govuk-!-margin-top-6 } @className.getOrElse("")" id="nextButton" type="submit" aria-label="@nextText.getOrElse(defaultText)._1">
     @nextText.getOrElse(defaultText)._1
     @hintText.map(text => Html(s"<span>$text</span>"))
 </button>

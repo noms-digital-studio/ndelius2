@@ -3,8 +3,7 @@
 @(entry: Int, title: String, pageStatus: PageStatus)
 
 <tr>
-    <td class="govuk-body-l" width="30">.</td>
-    <td><a href="javascript:void(0);" class="nav-item govuk-body-l" data-target="@entry">@title</a></td>
+    <td class="govuk-body-l"><a href="javascript:void(0);" class="js-nav-item govuk-link govuk-link--no-visited-state govuk-body-l" data-target="@entry">@title</a></td>
     <td align="right" class="govuk-!-padding-right-0" width="80">
         @if(pageStatus.isVisited && pageStatus.isValid) {
             <strong class="moj-page-status-tag moj-page-status-tag--saved">SAVED</strong>

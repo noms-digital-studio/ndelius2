@@ -24,3 +24,26 @@
     padding-right: $govuk-gutter;
   }
 }
+
+.govuk-width-container {
+  // Left align since we are in an iframe within Delius
+  @include govuk-media-query($and: "(min-width: #{($govuk-page-width + $govuk-gutter * 2)})") {
+    margin: 0 $govuk-gutter;
+  }
+}
+
+#content {
+  padding-top: $govuk-gutter-half;
+}
+
+.app-float-left {
+  float: left;
+  @include govuk-clearfix();
+
+  &.app-float-left__not-narrow {
+    @include govuk-media-query(mobile, tablet) {
+      display: block;
+      float: none;
+    }
+  }
+}
