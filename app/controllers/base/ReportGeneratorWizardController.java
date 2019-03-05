@@ -13,6 +13,7 @@ import interfaces.OffenderApi;
 import interfaces.OffenderApi.Offender;
 import interfaces.PdfGenerator;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cglib.beans.BeanMap;
 import org.webjars.play.WebJarsUtil;
 import play.Environment;
@@ -23,6 +24,8 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -162,6 +165,23 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     }
 
     protected abstract Map<String, String> storeOffenderDetails(Map<String, String> params, Offender offender);
+    protected Offender storeReportFilename(Map<String, String> params, Offender offender) {
+        params.put(
+                "reportFilename",
+                String.format("%s_%s_%s_%s_%s.pdf",
+                        templateName(),
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss")),
+                        offender.getSurname().toUpperCase(),
+                        firstLetter(offender.getFirstName()).orElse(""),
+                        params.get("crn")));
+        return offender;
+    }
+
+    private Optional<String> firstLetter(String name) {
+        return StringUtils.isBlank(name) ?
+                Optional.empty() :
+                Optional.of(String.valueOf(name.charAt(0)));
+    }
 
     private String currentPageButNotInterstitialOrCompletion(String pageNumber) {
         // never allow jumping from interstitial  to interstitial, which would happen on
@@ -232,6 +252,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         val crn = params.get("crn");
         return offenderApi.getOffenderByCrn(session(OFFENDER_API_BEARER_TOKEN), crn)
+            .thenApply(offender -> storeReportFilename(params, offender))
             .thenApply(offender -> storeOffenderDetails(params, offender))
             .thenCompose(updatedParams -> generateAndStoreReport(wizardForm.bind(updatedParams).value().orElseGet(this::newWizardData)).
                 exceptionally(error -> {
@@ -289,7 +310,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
     private CompletionStage<Map<String, String>> storeReport(T data, Byte[] document) {
 
-        val filename = templateName() + ".pdf";
+        val filename = storedFilename(data);
         val metaData = JsonHelper.stringify(ImmutableMap.of(
                 "templateName", templateName(),
                 "values", convertDataToMap(data)
@@ -321,6 +342,12 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
             Logger.info("Store result: " + stored);
             return stored;
         });
+    }
+
+    private String storedFilename(T data) {
+        return StringUtils.isBlank(data.getReportFilename()) ?
+                templateName() + ".pdf" :
+                data.getReportFilename();
     }
 
     protected abstract String documentEntityType();

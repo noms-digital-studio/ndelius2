@@ -41,4 +41,6 @@ public class ReportGeneratorWizardData extends WizardData {
     @JsonProperty("_WATERMARK_")
     private String watermark;
 
+    @JsonIgnore
+    private String reportFilename;
 }
