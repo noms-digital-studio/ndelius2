@@ -95,13 +95,13 @@ Feature: Parole Report
       | Sentence type           | Select the sentence type          |
       | Parole eligibility date | Enter the parole eligibility date |
 
-  Scenario: Delius user enters dates in the past for Parole Eligibility and Automatic release date / non parole eligibility date
+  Scenario: Delius user enters a date before the conviction date for Parole eligibility
 
     Given they select the "No" option on the "Does the prisoner have an indeterminate sentence?"
-    And they enter the date "YESTERDAY" for "Parole eligibility date"
-    When  they select the "Continue" button
-    Then  the following error messages are displayed
-      | Parole eligibility date | The parole eligibility date must be in the future |
+    And they enter the date "OVER_6_MONTHS_AGO" for "Parole eligibility date"
+    When they select the "Continue" button
+    Then the following error messages are displayed
+      | Parole eligibility date | The parole eligibility date must be after the conviction date |
 
   Scenario: Delius user enters a date before the conviction date for Tariff expiry
 

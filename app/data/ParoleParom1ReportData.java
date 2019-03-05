@@ -105,8 +105,8 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
             invalidMessage = "Enter a real parole eligibility date",
             onlyIfField = "prisonerDetailsSentenceType",
             onlyIfFieldMatchValue = "determinate",
-            minDate = "Today",
-            outOfRangeMessage = "The parole eligibility date must be in the future")
+            earliestDateField = "convictionDate",
+            beforeEarliestDateMessage = "The parole eligibility date must be after the conviction date")
     private String prisonerDetailsParoleEligibilityDate;
     private String prisonerDetailsParoleEligibilityDate_day;
     private String prisonerDetailsParoleEligibilityDate_month;
