@@ -28,8 +28,8 @@ describe('localStorageReducer', () => {
     it('pageNumber will be 1', () => {
       expect(state.pageNumber).to.equal(1)
     })
-    it('searchType will be `broad`', () => {
-      expect(state.searchType).to.equal('broad')
+    it('searchType will be `exact`', () => {
+      expect(state.searchType).to.equal('exact')
     })
   })
 

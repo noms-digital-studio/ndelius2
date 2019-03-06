@@ -12,7 +12,7 @@ import { removeIn, setIn } from '../../helpers/immutable'
 
 const localStorage = (state = {
   searchTerm: '',
-  searchType: 'broad',
+  searchType: 'exact',
   probationAreasFilter: {},
   pageNumber: 1
 }, action) => {
