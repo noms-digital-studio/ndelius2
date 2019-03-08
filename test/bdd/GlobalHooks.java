@@ -9,6 +9,7 @@ import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import interfaces.AnalyticsStore;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.fluentlenium.configuration.ConfigurationProperties;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.TestBrowser;

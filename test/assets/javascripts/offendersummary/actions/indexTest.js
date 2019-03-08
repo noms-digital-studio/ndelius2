@@ -7,6 +7,8 @@ import {
   getOffenderDetails,
   getOffenderPersonalCircumstances,
   getOffenderRegistrations,
+  offenderSummaryClose,
+  offenderSummaryViewPrevious,
   showMoreConvictions,
   transferInactiveOffender,
   viewOffenderAddresses,
@@ -194,6 +196,22 @@ describe('offender summary action', () => {
     })
     it('dispatches NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER with offenderId', () => {
       expect(dispatch).to.be.calledWith({ type: 'NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER', offenderId: 1234 })
+    })
+  })
+  describe('on offenderSummaryViewPrevious', () => {
+    beforeEach(() => {
+      offenderSummaryViewPrevious(1234)(dispatch)
+    })
+    it('dispatches NAVIGATE_TO_PREVIOUS_OFFENDER_SUMMARY with offenderId', () => {
+      expect(dispatch).to.be.calledWith({ type: 'NAVIGATE_TO_PREVIOUS_OFFENDER_SUMMARY', offenderId: 1234 })
+    })
+  })
+  describe('on offenderSummaryClose', () => {
+    beforeEach(() => {
+      offenderSummaryClose()(dispatch)
+    })
+    it('dispatches NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY with offenderId', () => {
+      expect(dispatch).to.be.calledWith({ type: 'NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY' })
     })
   })
 })

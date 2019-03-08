@@ -1,4 +1,6 @@
 import {
+  NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY,
+  NAVIGATE_TO_PREVIOUS_OFFENDER_SUMMARY,
   NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER,
   NAVIGATE_TO_VIEW_OFFENDER_ADDRESS_HISTORY,
   NAVIGATE_TO_VIEW_OFFENDER_ALIASES,
@@ -25,6 +27,10 @@ const navigate = (state = { shouldClose: false }, action) => {
       }
     case NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER:
       return { shouldClose: true, action: 'transferInactiveOffender', data: action.offenderId }
+    case NAVIGATE_TO_PREVIOUS_OFFENDER_SUMMARY:
+      return { shouldClose: true, action: 'viewOffenderLegacy', data: action.offenderId }
+    case NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY:
+      return { shouldClose: true, action: 'close' }
     default:
       return state
   }

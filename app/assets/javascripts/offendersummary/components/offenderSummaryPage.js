@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import * as PropTypes from 'prop-types'
-import GovUkPhaseBanner from './govukPhaseBanner'
+import GovUkPhaseBanner from '../containers/govukPhaseBannerContainer'
 import ErrorMessage from './errorMessage'
 import OffenderIdentity from '../containers/offenderIdentityContainer'
 import OffenderCards from '../containers/offenderCardsContainer'
@@ -11,6 +11,7 @@ import Convictions from '../containers/convictionsContainer'
 import Notes from '../containers/notesContainer'
 import OffenderManager from '../containers/offenderManagerContainer'
 import FrameNavigation from '../containers/frameNavigationContainer'
+import CloseLink from '../containers/closeLinkContainer'
 
 import { configureOffenderSummaryAccordionTracking } from '../../helpers/offenderSummaryAccordionAnalyticsHelper'
 
@@ -36,23 +37,24 @@ class OffenderSummaryPage extends Component {
 
     return (
       <Fragment>
-        <GovUkPhaseBanner />
         <FrameNavigation />
         {!fetching && !error &&
-        <div className='qa-main-content'>
-
-          <OffenderIdentity />
-          <OffenderCards />
-          <SeriousRegistrations />
-          <div className='govuk-accordion' data-module='accordion' id='accordion-offender-summary'>
-            <Registrations />
-            <Convictions />
-            <OffenderManager />
-            <OffenderDetails />
+        <Fragment>
+          <GovUkPhaseBanner />
+          <div className='qa-main-content'>
+            <OffenderIdentity />
+            <OffenderCards />
+            <SeriousRegistrations />
+            <div className='govuk-accordion' data-module='accordion' id='accordion-offender-summary'>
+              <Registrations />
+              <Convictions />
+              <OffenderManager />
+              <OffenderDetails />
+            </div>
+            <Notes />
+            <CloseLink />
           </div>
-          <Notes />
-
-        </div>
+        </Fragment>
         }
         {!fetching && error &&
         <ErrorMessage

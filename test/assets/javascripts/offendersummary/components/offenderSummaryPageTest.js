@@ -30,9 +30,6 @@ describe('OffenderSummaryPage component', () => {
       it('no main content is displayed', () => {
         expect(page.find('.qa-main-content').exists()).to.be.false
       })
-      it('banner is displayed', () => {
-        expect(page.find('GovUkPhaseBanner').exists()).to.be.true
-      })
       it('frame navigation is rendered', () => {
         expect(page.find('Connect(FrameNavigation)').exists()).to.be.true
       })
@@ -61,7 +58,7 @@ describe('OffenderSummaryPage component', () => {
         expect(page.find('Connect(Notes)').exists()).to.be.true
       })
       it('banner is displayed', () => {
-        expect(page.find('GovUkPhaseBanner').exists()).to.be.true
+        expect(page.find('Connect(GovUkPhaseBanner)').exists()).to.be.true
       })
       it('frame navigation is rendered', () => {
         expect(page.find('Connect(FrameNavigation)').exists()).to.be.true
@@ -77,9 +74,6 @@ describe('OffenderSummaryPage component', () => {
       })
       it('error is displayed', () => {
         expect(page.find('ErrorMessage').exists()).to.be.true
-      })
-      it('banner is displayed', () => {
-        expect(page.find('GovUkPhaseBanner').exists()).to.be.true
       })
       it('frame navigation is rendered', () => {
         expect(page.find('Connect(FrameNavigation)').exists()).to.be.true

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import * as PropTypes from 'prop-types'
 
 const FrameNavigation = ({ navigate }) => {
@@ -14,7 +14,7 @@ const FrameNavigation = ({ navigate }) => {
       }
     }
   }
-  return (<span />)
+  return (<Fragment />)
 }
 
 const toMessage = ({ action, data = null }) =>
