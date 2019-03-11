@@ -1,27 +1,27 @@
 import 'whatwg-fetch'
 
 export default {
-  getDetails: (cb, rejected) => fetch('offender/detail', { cache: 'no-store' })
+  getDetails: (cb, rejected) => fetch('offender/detail', options)
     .then(jsonOrError)
     .then(data => cb(data))
     .catch(error => rejected(error)),
 
-  getRegistrations: (cb, rejected) => fetch('offender/registrations', { cache: 'no-store' })
+  getRegistrations: (cb, rejected) => fetch('offender/registrations', options)
     .then(jsonOrError)
     .then(data => cb(data))
     .catch(error => rejected(error)),
 
-  getConvictions: (cb, rejected) => fetch('offender/convictions', { cache: 'no-store' })
+  getConvictions: (cb, rejected) => fetch('offender/convictions', options)
     .then(jsonOrError)
     .then(data => cb(data))
     .catch(error => rejected(error)),
 
-  getNextAppointment: (cb, noDataCb, rejected) => fetch('offender/nextAppointment', { cache: 'no-store' })
+  getNextAppointment: (cb, noDataCb, rejected) => fetch('offender/nextAppointment', options)
     .then(jsonOrError)
     .then(data => cb(data))
     .catch(error => error.message === '404' ? noDataCb() : rejected(error)),
 
-  getPersonalCircumstances: (cb, rejected) => fetch('offender/personalCircumstances', { cache: 'no-store' })
+  getPersonalCircumstances: (cb, rejected) => fetch('offender/personalCircumstances', options)
     .then(jsonOrError)
     .then(data => cb(data))
     .catch(error => rejected(error))
@@ -35,4 +35,9 @@ const jsonOrError = response => {
   } else {
     throw response.error()
   }
+}
+
+const options = {
+  credentials: 'same-origin',
+  cache: 'no-store'
 }
