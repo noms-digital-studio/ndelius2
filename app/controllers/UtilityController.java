@@ -49,7 +49,6 @@ public class UtilityController extends Controller {
     @Inject
     public UtilityController(PdfGenerator pdfGenerator,
                              DocumentStore documentStore,
-                             AnalyticsStore analyticsStore,
                              OffenderSearch offenderSearch,
                              OffenderApi offenderApi,
                              PrisonerApi prisonerApi,
@@ -62,7 +61,6 @@ public class UtilityController extends Controller {
         healthChecks = ImmutableMap.<Definition, Supplier<CompletableFuture<HealthCheckResult>>>builder().
                 put(definition("pdf-generator", true), () -> pdfGenerator.isHealthy().toCompletableFuture()).
                 put(definition("document-store", true), () -> documentStore.isHealthy().toCompletableFuture()).
-                put(definition("analytics-store", false), analyticsStore::isUp).
                 put(definition("offender-search", true), () -> offenderSearch.isHealthy().toCompletableFuture()).
                 put(definition("offender-api", true), () -> offenderApi.isHealthy().toCompletableFuture()).
                 put(definition("custody-api", true), () -> prisonerApi.isHealthy().toCompletableFuture()).

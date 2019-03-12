@@ -6,12 +6,7 @@ import com.mongodb.rx.client.MongoClient;
 import helpers.DateTimeHelper;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
-import interfaces.DocumentStore;
-import interfaces.OffenderApi;
-import interfaces.PdfGenerator;
-import interfaces.PrisonerApi;
-import interfaces.PrisonerCategoryApi;
+import interfaces.*;
 import lombok.val;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
@@ -148,7 +143,6 @@ public class ParoleParom1ReportController_RetrieveOffenderData_Test extends With
                 overrides(
                         bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(documentStore),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(OffenderApi.class).toInstance(offenderApi),
                         bind(PrisonerApi.class).toInstance(prisonerApi),
                         bind(PrisonerCategoryApi.class).toInstance(prisonerCategoryApi),

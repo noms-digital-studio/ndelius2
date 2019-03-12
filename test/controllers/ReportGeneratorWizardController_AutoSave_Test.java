@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import data.ShortFormatPreSentenceReportData;
 import helpers.Encryption;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import lombok.val;
@@ -28,9 +27,7 @@ import java.util.function.Function;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.contains;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
@@ -208,7 +205,6 @@ public class ReportGeneratorWizardController_AutoSave_Test extends WithApplicati
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
                 bind(DocumentStore.class).toInstance(alfrescoDocumentStore),
-                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                 bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                 bind(MongoClient.class).toInstance(mock(MongoClient.class))
             )

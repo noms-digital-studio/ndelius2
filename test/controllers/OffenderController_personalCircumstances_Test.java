@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mongodb.rx.client.MongoClient;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.PrisonerApi;
 import lombok.Builder;
@@ -156,7 +155,6 @@ public class OffenderController_personalCircumstances_Test extends WithApplicati
                 overrides(
                         bind(OffenderApi.class).toInstance(offenderApi),
                         bind(PrisonerApi.class).toInstance(mock(PrisonerApi.class)),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                         bind(MongoClient.class).toInstance(mock(MongoClient.class))
                 )

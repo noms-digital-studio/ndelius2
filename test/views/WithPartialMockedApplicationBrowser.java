@@ -1,7 +1,6 @@
 package views;
 
 import com.mongodb.rx.client.MongoClient;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.PdfGenerator;
@@ -21,9 +20,6 @@ public class WithPartialMockedApplicationBrowser extends WithBrowser {
     protected OffenderApi offenderApi;
     @Mock
     protected DocumentStore documentStore;
-    @Mock
-    protected AnalyticsStore analyticsStore;
-
     @Override
     protected Application provideApplication() {
         return new GuiceApplicationBuilder().
@@ -31,7 +27,6 @@ public class WithPartialMockedApplicationBrowser extends WithBrowser {
                         bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(documentStore),
                         bind(OffenderApi.class).toInstance(offenderApi),
-                        bind(AnalyticsStore.class).toInstance(analyticsStore),
                         bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                         bind(MongoClient.class).toInstance(mock(MongoClient.class))
                 )

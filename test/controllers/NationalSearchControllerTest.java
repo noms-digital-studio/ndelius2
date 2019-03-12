@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import lombok.val;
@@ -313,7 +312,6 @@ public class NationalSearchControllerTest extends WithApplication {
             overrides(
                 bind(OffenderSearch.class).toInstance(elasticOffenderSearch),
                 bind(OffenderApi.class).toInstance(offenderApi),
-                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                 bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                 bind(MongoClient.class).toInstance(mock(MongoClient.class))
             )

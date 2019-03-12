@@ -5,18 +5,12 @@ import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
-import interfaces.OffenderApi.Court;
-import interfaces.OffenderApi.CourtAppearance;
-import interfaces.OffenderApi.CourtAppearances;
-import interfaces.OffenderApi.CourtReport;
-import interfaces.OffenderApi.Offences;
+import interfaces.OffenderApi.*;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.junit.Before;
 import org.junit.Test;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
@@ -32,10 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -44,11 +35,7 @@ import static play.api.test.CSRFTokenHelper.addCSRFToken;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.BAD_REQUEST;
-import static play.test.Helpers.GET;
-import static play.test.Helpers.POST;
-import static play.test.Helpers.route;
-import static utils.CourtAppearanceHelpers.aCourtReport;
+import static play.test.Helpers.*;
 import static utils.OffenderHelper.*;
 
 public class ShortFormatPreSentenceReportControllerTest extends WithApplication {
@@ -1418,7 +1405,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 overrides(
                         bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(documentStore),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(OffenderApi.class).toInstance(offenderApi),
                         bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                         bind(MongoClient.class).toInstance(mock(MongoClient.class))

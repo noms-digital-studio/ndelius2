@@ -11,22 +11,6 @@ GET     /api/*url                                   controllers.UtilityControlle
 
 GET     /nationalSearch                             controllers.NationalSearchController.index(user: String, t: String)
 GET     /searchOffender/:searchTerm                 controllers.NationalSearchController.searchOffender(searchTerm, searchType: String, areasFilter: java.util.Optional[String], pageSize: Int ?=10, pageNumber: Int ?=1)
-GET     /nationalSearch/analytics                   controllers.NationalSearchAnalyticsController.index
-GET     /nationalSearch/analytics/filterCounts      controllers.NationalSearchAnalyticsController.filterCounts(from: String ?= null)
-GET     /nationalSearch/analytics/uniqueUserVisits                  controllers.NationalSearchAnalyticsController.uniqueUserVisits(from: String ?= null)
-GET     /nationalSearch/analytics/allVisits                         controllers.NationalSearchAnalyticsController.allVisits(from: String ?= null)
-GET     /nationalSearch/analytics/allSearches                       controllers.NationalSearchAnalyticsController.allSearches(from: String ?= null)
-GET     /nationalSearch/analytics/rankGrouping                      controllers.NationalSearchAnalyticsController.rankGrouping(from: String ?= null)
-GET     /nationalSearch/analytics/durationBetweenStartEndSearch     controllers.NationalSearchAnalyticsController.durationBetweenStartEndSearch(from: String ?= null)
-GET     /nationalSearch/analytics/eventOutcome                      controllers.NationalSearchAnalyticsController.eventOutcome(from: String ?= null)
-GET     /nationalSearch/analytics/searchFieldMatch                  controllers.NationalSearchAnalyticsController.searchFieldMatch(from: String ?= null)
-GET     /nationalSearch/analytics/userAgentTypeCounts               controllers.NationalSearchAnalyticsController.userAgentTypeCounts(from: String ?= null)
-GET     /nationalSearch/analytics/searchTypeCounts      controllers.NationalSearchAnalyticsController.searchTypeCounts(from: String ?= null)
-GET     /nationalSearch/satisfaction                controllers.FeedbackController.viewSatisfaction
-GET     /nationalSearch/analytics/satisfaction      controllers.NationalSearchAnalyticsController.satisfaction
-GET     /feedback                                   controllers.FeedbackController.viewNationalSearchFeedback
-GET     /feedback/nationalSearch                    controllers.FeedbackController.viewNationalSearchFeedback
-GET     /feedback/sfpsr                             controllers.FeedbackController.viewSfpsrFeedback
 
 GET     /offender/oneTimeNomisRef/:reference/image  controllers.OffenderController.image(reference: String)
 GET     /offender/detail                            controllers.OffenderController.detail

@@ -314,7 +314,6 @@ public class ParoleParom1ReportController_RetrievePrisonerData_Test  extends Wit
                 overrides(
                         bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(documentStore),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(OffenderApi.class).toInstance(offenderApi),
                         bind(PrisonerApi.class).toInstance(prisonerApi),
                         bind(PrisonerCategoryApi.class).toInstance(prisonerCategoryApi),
