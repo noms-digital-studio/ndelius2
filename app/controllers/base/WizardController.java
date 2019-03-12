@@ -100,18 +100,17 @@ public abstract class WizardController<T extends WizardData> extends Controller 
             }
 
         }, ec.current()).
-            exceptionally(throwable -> {
+                handleAsync((result, e) -> Optional.ofNullable(e).map(throwable -> {
+                    Logger.error("Wizard Get failure", throwable);
 
-                Logger.error("Wizard Get failure", throwable);
+                    if (throwable instanceof CompletionException &&
+                            throwable.getCause() instanceof InvalidCredentialsException) {
 
-                if (throwable instanceof CompletionException &&
-                    throwable.getCause() instanceof InvalidCredentialsException) {
+                        return ((InvalidCredentialsException) throwable.getCause()).getErrorResult();
+                    }
 
-                    return ((InvalidCredentialsException) throwable.getCause()).getErrorResult();
-                }
-
-                return internalServerError();
-            });
+                    return internalServerError(renderErrorMessage("We are unable to process your request. Please try again later."));
+                }).orElse(result), ec.current());
     }
 
     public final CompletionStage<Result> wizardPost() {

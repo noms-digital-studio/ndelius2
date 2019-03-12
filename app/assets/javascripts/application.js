@@ -74,9 +74,9 @@ function openPopup (url, name, top, left) {
     })
 
     // Empty the error message list and repopulate with correct ordered list
-    $('.govuk-error-summary__list').empty()
+    $('.govuk-error-summary__list:not(.app-fixed-order)').empty()
     $('.govuk-error-message:not(.govuk-visually-hidden)').each(function (index, element) {
-      $('.govuk-error-summary__list').append('<li><a href="#' + $('[id*="-error"]', $(element).parent()).attr('id') + '" class="error-message">' + $(element).text() + '</a></li>')
+      $('.govuk-error-summary__list:not(.app-fixed-order)').append('<li><a href="#' + $('[id*="-error"]', $(element).parent()).attr('id') + '" class="error-message">' + $(element).text() + '</a></li>')
     })
 
     /**
