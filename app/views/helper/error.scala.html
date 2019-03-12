@@ -1,0 +1,39 @@
+@import helper._
+@import org.webjars.play.WebJarsUtil
+@import com.typesafe.config.Config
+
+@(title: String, error: String)(implicit webJarsUtil: WebJarsUtil, configuration: Config)
+
+<style type="text/css">
+        body, html {
+            height: 100%;
+        }
+</style>
+
+@main(title, false) {
+
+    <div aria-labelledby='error-summary-title' class='govuk-error-summary' role='alert' tabIndex='-1'>
+        <h2 class='govuk-error-summary__title' id='error-summary-title'>There is a problem</h2>
+        <div class='govuk-error-summary__body'>
+            <ul class='govuk-list govuk-error-summary__list app-fixed-order'>
+                <li>@error</li>
+            </ul>
+        </div>
+    </div>
+
+
+    <input class="govuk-button" type="submit" value="Close"/>
+
+    <script type="text/javascript">
+        $(function () {
+            $('input').click(function () {
+              if (top === self) {
+                window.close()
+              } else {
+                parent.postMessage(JSON.stringify({ action: 'documentList', data: null }), '*')
+              }
+            })
+        })
+    </script>
+
+}

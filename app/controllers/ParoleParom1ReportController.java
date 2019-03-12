@@ -210,5 +210,10 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
         return ok(analyticsTesterTemplate.render());
     }
 
+    @Override
+    protected Content renderErrorMessage(String errorMessage) {
+
+        return views.html.helper.error.render("Error - PAROM 1 Report", errorMessage, webJarsUtil, configuration);
+    }
 
 }

@@ -118,7 +118,7 @@ public class AlfrescoStore implements DocumentStore {
     @Override
     public CompletionStage<OriginalData> retrieveOriginalData(String documentId, String onBehalfOfUser) {
         return getDocumentMetaData(documentId, onBehalfOfUser).
-                 thenApply(result -> new OriginalData(result.get("userData"), dateTimeOrNow(result.get("lastModifiedDate"))));
+                thenApply(result -> new OriginalData(result.get("userData"), dateTimeOrNow(result.get("lastModifiedDate"))));
     }
 
     @Override
@@ -152,11 +152,6 @@ public class AlfrescoStore implements DocumentStore {
                 onBehalfOfUser,
                 "uploadandrelease/" + documentId,
                 ImmutableMap.of("author", onBehalfOfUser)).
-                exceptionally(error -> {
-
-                    Logger.error("Upload and Release error", error);
-                    return ImmutableMap.of();
-                }).
                 thenCompose(singleResult -> {
 
                     multiResult.putAll(singleResult);
@@ -165,11 +160,6 @@ public class AlfrescoStore implements DocumentStore {
                             post(Source.from(new ArrayList<>(mapToParts(ImmutableMap.of("userData", updatedData))))).
                             thenApply(WSResponse::asJson).
                             thenApply(JsonHelper::jsonToMap);
-                }).
-                exceptionally(error -> {
-
-                    Logger.error("Update Meta Data error", error);
-                    return ImmutableMap.of();
                 }).
                 thenApply(singleResult -> {
 
@@ -238,7 +228,7 @@ public class AlfrescoStore implements DocumentStore {
 
             Logger.error("Upload error", ex);
 
-            return CompletableFuture.supplyAsync(ImmutableMap::of);
+            throw new RuntimeException(ex);
         }
     }
 
