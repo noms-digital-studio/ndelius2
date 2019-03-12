@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.mongodb.rx.client.MongoClient;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderApi.CourtAppearances;
@@ -29,16 +28,11 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.RequestBuilder;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.BAD_REQUEST;
-import static play.test.Helpers.GET;
-import static play.test.Helpers.UNAUTHORIZED;
-import static play.test.Helpers.route;
+import static play.test.Helpers.*;
 import static utils.OffenderHelper.anOffenderWithNoContactDetails;
 
 public class ShortFormatPreSentenceReportController_userCredsValidation_Test extends WithApplication {
@@ -157,7 +151,6 @@ public class ShortFormatPreSentenceReportController_userCredsValidation_Test ext
                 overrides(
                         bind(PdfGenerator.class).toInstance(pdfGenerator),
                         bind(DocumentStore.class).toInstance(documentStore),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(OffenderApi.class).toInstance(offenderApi),
                         bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                         bind(MongoClient.class).toInstance(mock(MongoClient.class))

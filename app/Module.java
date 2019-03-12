@@ -23,7 +23,6 @@ public class Module extends AbstractModule {
 
         bind(PdfGenerator.class).to(RestPdfGenerator.class);
         bind(OffenderSearch.class).to(ElasticOffenderSearch.class);
-        bind(AnalyticsStore.class).to(MongoDbStore.class);
 
         bind(PrisonerApi.class).toProvider(PrisonerApiProvider.class);
         bind(PrisonerCategoryApi.class).toProvider(PrisonerCategoryApiProvider.class);

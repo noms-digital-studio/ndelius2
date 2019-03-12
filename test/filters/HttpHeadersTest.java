@@ -1,7 +1,6 @@
 package filters;
 
 import helpers.Encryption;
-import interfaces.AnalyticsStore;
 import interfaces.DocumentStore;
 import interfaces.PdfGenerator;
 import lombok.val;
@@ -62,8 +61,7 @@ public class HttpHeadersTest extends WithApplication {
         return new GuiceApplicationBuilder().
             overrides(
                 bind(PdfGenerator.class).toInstance(pdfGenerator),
-                bind(DocumentStore.class).toInstance(documentStore),
-                bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class))
+                bind(DocumentStore.class).toInstance(documentStore)
             )
             .build();
     }

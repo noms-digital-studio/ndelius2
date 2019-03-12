@@ -43,9 +43,6 @@ public class UtilityControllerTest extends WithApplication {
     public  WireMockRule wireMock = new WireMockRule(wireMockConfig().port(PORT).jettyStopTimeout(10000L));
 
     @Mock
-    private AnalyticsStore analyticsStore;
-
-    @Mock
     private OffenderSearch offenderSearch;
 
     @Mock
@@ -62,7 +59,6 @@ public class UtilityControllerTest extends WithApplication {
         stubPdfGeneratorWithStatus("OK");
         stubDocumentStoreToReturn(ok("{}"));
         stubOffenderApiToReturn(ok("{}"));
-        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
         when(offenderSearch.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
         when(prisonerApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
         when(prisonerCategoryApi.isHealthy()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::healthy));
@@ -164,44 +160,6 @@ public class UtilityControllerTest extends WithApplication {
         assertEquals(OK, result.status());
         assertThat(dependencies(result)).contains(entry("document-store", "FAILED"));
         assertThat(convertToJson(result).get("status")).isEqualTo("FAILED");
-    }
-
-    @Test
-    public void healthEndpointIndicatesOkWhenAnalyticsStoreIsHealthy() {
-        val request = new RequestBuilder().method(GET).uri("/healthcheck");
-
-        val result = route(app, request);
-
-        assertEquals(OK, result.status());
-        assertThat(dependencies(result)).contains(entry("analytics-store", "OK"));
-        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
-    }
-
-    @Test
-    public void healthEndpointIndicatesOkWithDetailWhenAnalyticsStoreIsHealthy() {
-        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(() -> HealthCheckResult.healthy("some detail")));
-        val request = new RequestBuilder().method(GET).uri("/healthcheck?detail=true");
-
-        val result = route(app, request);
-
-        assertEquals(OK, result.status());
-        assertThat(dependenciesWithDetail(result))
-                .contains(entry(
-                        "analytics-store",
-                        ImmutableMap.of("healthy", Boolean.TRUE, "detail", "some detail")));
-        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
-    }
-
-    @Test
-    public void healthEndpointIndicatesOkWhenAnalyticsStoreIsUnhealthy() {
-        when(analyticsStore.isUp()).thenReturn(CompletableFuture.supplyAsync(HealthCheckResult::unhealthy));
-        val request = new RequestBuilder().method(GET).uri("/healthcheck");
-
-        val result = route(app, request);
-
-        assertEquals(OK, result.status());
-        assertThat(dependencies(result)).contains(entry("analytics-store", "FAILED"));
-        assertThat(convertToJson(result).get("status")).isEqualTo("OK");
     }
 
     @Test
@@ -399,7 +357,6 @@ public class UtilityControllerTest extends WithApplication {
             .configure("store.alfresco.url", String.format("http://localhost:%d/alfresco/service/", PORT))
             .configure("offender.api.url", String.format("http://localhost:%d/api/", PORT))
             .overrides(
-                bind(AnalyticsStore.class).toInstance(analyticsStore),
                 bind(OffenderSearch.class).toInstance(offenderSearch),
                 bind(PrisonerApi.class).toInstance(prisonerApi),
                 bind(PrisonerCategoryApi.class).toInstance(prisonerCategoryApi),

@@ -3,7 +3,6 @@ package controllers;
 import com.mongodb.rx.client.MongoClient;
 import helpers.Encryption;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import lombok.val;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -30,7 +29,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static play.inject.Bindings.bind;
 import static play.mvc.Http.Status.*;
-import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.test.Helpers.GET;
 import static play.test.Helpers.route;
 
@@ -192,7 +190,6 @@ public class OffenderSummaryControllerTest extends WithApplication {
         return new GuiceApplicationBuilder().
                 overrides(
                         bind(OffenderApi.class).toInstance(offenderApi),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                         bind(MongoClient.class).toInstance(mock(MongoClient.class))
                 )

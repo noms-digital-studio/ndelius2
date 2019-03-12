@@ -2,7 +2,6 @@ package controllers;
 
 import com.mongodb.rx.client.MongoClient;
 import helpers.JwtHelperTest;
-import interfaces.AnalyticsStore;
 import interfaces.OffenderApi;
 import interfaces.PrisonerApi;
 import lombok.val;
@@ -91,7 +90,6 @@ public class OffenderController_convictions_Test extends WithApplication impleme
                 overrides(
                         bind(OffenderApi.class).toInstance(offenderApi),
                         bind(PrisonerApi.class).toInstance(mock(PrisonerApi.class)),
-                        bind(AnalyticsStore.class).toInstance(mock(AnalyticsStore.class)),
                         bind(RestHighLevelClient.class).toInstance(mock(RestHighLevelClient.class)),
                         bind(MongoClient.class).toInstance(mock(MongoClient.class))
                 )
