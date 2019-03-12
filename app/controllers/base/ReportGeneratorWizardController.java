@@ -255,11 +255,6 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
             .thenApply(offender -> storeReportFilename(params, offender))
             .thenApply(offender -> storeOffenderDetails(params, offender))
             .thenCompose(updatedParams -> generateAndStoreReport(wizardForm.bind(updatedParams).value().orElseGet(this::newWizardData)).
-                exceptionally(error -> {
-
-                    Logger.error("Initial Params: Generation or Storage error - " + updatedParams.toString(), error);
-                    return ImmutableMap.of("errorMessage", ThrowableHelper.toMessageCauseStack(error));
-                }).
                 thenApply(stored -> {
 
                     updatedParams.put("documentId", stored.get("ID"));
