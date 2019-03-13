@@ -47,3 +47,11 @@
     }
   }
 }
+
+.app-position-relative {
+  position: relative;
+}
+
+.app-clearfix {
+  @include govuk-clearfix();
+}

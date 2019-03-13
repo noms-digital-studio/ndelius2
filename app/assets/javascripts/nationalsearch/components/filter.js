@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 
 class Filter extends Component {
@@ -36,13 +36,13 @@ class Filter extends Component {
     const countSelected = () => currentFilter.filter(code => isPresentInThisFilter(code)).length
 
     return (
-      <div className='js-stick-at-top-when-scrolling'>
+      <Fragment>
         {shouldDisplayFilter(filterValues) &&
-        <div className='filter'>
+        <div className='app-national-search-filter'>
           <button tabIndex='3' onClick={() => this.toggleExpanded()} type='button' aria-expanded={expanded}
                   aria-controls={`filters-${name}`} className={expanded ? 'open' : 'closed'}>
-            <span id='provider-select-label' className='bold-small'>{title}</span>
-            <span id='selected' className='font-xsmall'>{countSelected()} selected</span>
+            <span id='provider-select-label' className='govuk-body govuk-!-font-weight-bold'>{title}</span> <span
+            id='selected' className='govuk-body'>{countSelected()} selected</span>
           </button>
           <div role='group' aria-labelledby='provider-select-label' id={`filters-${name}`}
                className={expanded ? 'open filter-container' : 'closed filter-container'}>
@@ -62,7 +62,7 @@ class Filter extends Component {
           </div>
         </div>
         }
-      </div>
+      </Fragment>
     )
   }
 }

@@ -5,7 +5,7 @@ import moment from 'moment'
 
 const OffenderSummaryTitle = ({ showOffenderDetails, offenderId, rankIndex, firstName, surname, dateOfBirth, highlight, tabIndex }) => (
   <a tabIndex={tabIndex} href='javascript:' title={`View offender record for ${surname}, ${firstName}`}
-     className='heading-large no-underline offender-summary-title'
+     className='govuk-link govuk-heading-m govuk-link--no-visited-state'
      onClick={() => showOffenderDetails(offenderId, rankIndex, highlight)}>
     <span><MT text={surname} highlight={highlight} highlightFieldName='surname' /></span>
     <span>, </span>

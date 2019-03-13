@@ -10,22 +10,21 @@ import SearchTypeSelector from '../containers/searchTypeSelectorContainer'
 import PropTypes from 'prop-types'
 
 const OffenderSearchResults = ({ results }) => (
-  <div className='key-content' aria-live='polite'>
-    <div className='padded mobile-pad' id='offender-results'>
+  <div id='offender-results' aria-live='polite'>
 
       <SearchResultsTitle />
 
-      <div className='grid-row'>
-        <div className='column-one-third'>
+      <div className='govuk-grid-row'>
+        <div className='govuk-grid-column-one-third'>
 
           <SearchTypeSelector />
           <MyAreasFilter />
           <OtherAreasFilter />
 
         </div>
-        <div className='column-two-thirds'>
+        <div className='govuk-grid-column-two-thirds'>
 
-          <ul id='live-offender-results'>
+          <ul id='live-offender-results' className='govuk-list'>
             {results.map(offenderSummary => (
               renderSummary(offenderSummary)
             ))}
@@ -34,7 +33,6 @@ const OffenderSearchResults = ({ results }) => (
 
         </div>
       </div>
-    </div>
   </div>
 )
 

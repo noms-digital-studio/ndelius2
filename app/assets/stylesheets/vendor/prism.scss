@@ -5,21 +5,19 @@
 //  based on prism default theme
 //  Based on dabblet (http://dabblet.com)
 
-@import "../colours";
-
 // Use GOV.UK colour palette where possible, or tints thereof to meet contrast rules
-$code-text: $text-colour;
-$code-grey: darken($secondary-text-colour, 2%); // grey #6a7276 4.62:1
-$code-background: scale-color($highlight-colour, $lightness:50%); // light grey
-$code-light-red: darken($mellow-red, 2%);
-$code-dark-red: darken($red, 7%);
-$code-blue: $govuk-blue;
+$code-text: govuk-colour('black');
+$code-grey: govuk-colour('grey'); // grey #6a7276 4.62:1
+$code-background: govuk-colour('light-grey'); // light grey
+$code-light-red: govuk-colour('bright-red');
+$code-dark-red: govuk-colour('red');
+$code-blue: govuk-colour('blue');
 $code-green: #1E8400;
 
 code[class*="language-"],
 pre[class*="language-"] {
   color: $code-text;
-  text-shadow: 0 1px $white;
+  text-shadow: 0 1px govuk-colour('white');
   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   font-size: 14px;
   direction: ltr;
@@ -67,7 +65,7 @@ code[class*="language-"] ::selection {
 
 // Code blocks
 pre[class*="language-"] {
-  border: 1px solid $grey-2;
+  border: 1px solid $code-grey;
   padding: 1em;
   margin: 0 0 30px 0;
   overflow: auto;

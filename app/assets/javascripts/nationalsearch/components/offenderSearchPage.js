@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 import OffenderSearchResults from '../containers/offenderSearchResultsContainer'
@@ -19,44 +19,42 @@ const OffenderSearchPage = ({ firstTimeIn, showWelcomeBanner, reloadRecentSearch
   }
 
   return (
-    <Fragment>
-      <main id='root'>
+    <div className='govuk-width-container govuk-!-padding-top-0'>
+      <main className='govuk-main-wrapper govuk-!-padding-top-0' id='root'>
+
         <GovUkPhaseBanner />
-        <div className='govuk-box-highlight blue'>
-          <div className='key-content search relative'>
 
-            <div className='search'>
+        <div className='moj-interrupt govuk-!-padding-5 govuk-!-margin-bottom-0 app-position-relative' style={{'minHeight': '148px'}}>
 
-              <h1 className='heading-large margin-bottom medium no-margin-top'>Search for an offender</h1>
+          <h1 className='govuk-heading-l moj-!-color-white govuk-!-margin-bottom-2'>Search for an offender</h1>
 
-              <div className='national-search-add'>
-                <AddNewOffenderLink tabIndex='3' />
-              </div>
-
-              <OffenderSearch />
-
-              <div className='grid-row'>
-                <div className='column-two-thirds'>
-                  <Suggestions />
-                </div>
-              </div>
-
-            </div>
-
-            <div className='national-search-help'>
-              <Link tabIndex='2' to='help' title='View tips for getting better results'
-                    className='bold clickable white'>Tips for getting better results</Link>
-            </div>
-
+          <div className='app-national-search-add'>
+            <AddNewOffenderLink tabIndex='3' />
           </div>
+
+          <div className='app-national-search-help govuk-!-margin-right-5'>
+            <Link tabIndex='2' to='help' title='View tips for getting better results'
+                  className='govuk-body govuk-link govuk-link--no-visited-state govuk-!-font-weight-bold moj-!-color-white'>Tips
+              for getting better results</Link>
+          </div>
+
+          <OffenderSearch />
+
+          <div className='govuk-grid-row'>
+            <div className='govuk-grid-column-two-thirds'>
+              <Suggestions />
+            </div>
+          </div>
+
         </div>
-        <div>
-          {showWelcomeBanner && <SearchFooter />}
-          {!showWelcomeBanner && <OffenderSearchResults />}
-        </div>
+
+        {showWelcomeBanner && <SearchFooter />}
+        {!showWelcomeBanner && <OffenderSearchResults />}
+
+        <FrameNavigation />
+
       </main>
-      <FrameNavigation />
-    </Fragment>
+    </div>
   )
 }
 

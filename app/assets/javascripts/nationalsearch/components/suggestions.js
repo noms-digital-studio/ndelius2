@@ -7,11 +7,11 @@ const Suggestions = ({ searchTerm, searchType, probationAreasFilter, suggestions
     return (<span />)
   }
   return (
-    <p className='margin-top medium no-margin-bottom'>
+    <p className='govuk-body moj-!-color-white govuk-!-margin-0'>
       <span>Did you mean</span>
       {suggestionsToOrderedMapping(suggestions).map((suggestion, index) =>
         <span key={index}>&nbsp;
-          <a className='white' tabIndex='1' href='javascript:' title={`Search again using ${suggestion.text}`}
+          <a className='govuk-link govuk-link--no-visited-state moj-!-color-white' tabIndex='1' href='javascript:' title={`Search again using ${suggestion.text}`}
              onClick={() => search(replace(searchTerm, suggestion.original, suggestion.text), searchType, probationAreasFilter)}>{suggestion.text}</a>
         </span>)}
       <span>?</span>

@@ -8,29 +8,31 @@ import { officer, provider } from '../../helpers/offenderManagerHelper'
 
 const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
   <li id={`offenderSummary${offenderSummary.offenderId}`}>
-    <div className='offenderDetailsRow clearfix'>
-      <div className='offenderImageContainer'>
+    <div className='govuk-grid-row qa-offender-details-row'>
+      <div className='govuk-grid-column-one-quarter govuk-!-margin-0 moj-!-text-align-center'>
         {offenderSummary.oneTimeNomisRef &&
         <img alt={`Image of ${offenderSummary.firstName} ${offenderSummary.surname}`} className='offenderImage'
-             src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`} />}
+             src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`} width='120'
+             height='150' />}
         {!offenderSummary.oneTimeNomisRef &&
-        <img alt='No offender image available' className='offenderImage' src='assets/images/NoPhoto@2x.png' />}
+        <img alt='No offender image available' className='offenderImage' src='assets/images/NoPhoto@2x.png' width='120'
+             height='150' />}
       </div>
 
-      <div role='group' className='panel panel-border-narrow offender-summary'>
-        <div className='offenderTextBlock'>
+      <div role='group' className='govuk-grid-column-three-quarters govuk-!-margin-0'>
+        <div className='govuk-inset-text app-inset-text govuk-!-margin-top-0 govuk-!-margin-left-0 govuk-!-padding-top-0'>
           <p>
             <OffenderSummaryTitle {...offenderSummary} tabIndex='1' />
           </p>
-          <p>
-            <span id={`crn-label-${offenderSummary.offenderId}`} className='bold'>CRN:&nbsp;</span>
-            <span className='bold margin-right' aria-labelledby={`crn-label-${offenderSummary.offenderId}`}>
+          <p className='govuk-body'>
+            <span id={`crn-label-${offenderSummary.offenderId}`} className='govuk-!-font-weight-bold'>CRN:&nbsp;</span>
+            <span className='govuk-!-font-weight-bold govuk-!-margin-right-1' aria-labelledby={`crn-label-${offenderSummary.offenderId}`}>
               <MT text={offenderSummary.otherIds.crn} highlight={offenderSummary.highlight}
                   highlightFieldName='otherIds.crn' />
             </span>
             <Risk risk={offenderSummary.offenderProfile.riskColour} />
             <CurrentOffender current={offenderSummary.currentDisposal} />
-            <span className='margin-right'>
+            <span className='govuk-!-margin-left-1 govuk-!-margin-right-1'>
                 <span aria-label='Gender'>
                   <MT text={offenderSummary.gender} highlight={offenderSummary.highlight}
                       highlightFieldName='gender' />,&nbsp;</span>
@@ -39,13 +41,13 @@ const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
             <br />
             <span id={`provider-${offenderSummary.offenderId}`}>
                 <span id={`provider-label-${offenderSummary.offenderId}`}>Provider:&nbsp;</span>
-                <span className='margin-right'
+                <span className='govuk-!-margin-right-1'
                       aria-labelledby={`provider-label-${offenderSummary.offenderId}`}>{provider(offenderSummary)}</span>
             </span>
             <br />
             <span id={`officer-${offenderSummary.offenderId}`}>
                 <span id={`officer-label-${offenderSummary.offenderId}`}>Officer name:&nbsp;</span>
-                <span className='margin-right'
+                <span className='govuk-!-margin-right-1'
                       aria-labelledby={`officer-label-${offenderSummary.offenderId}`}>{officer(offenderSummary)}</span>
             </span>
           </p>
@@ -54,14 +56,14 @@ const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
             <span id={`pncNumber-label-${offenderSummary.offenderId}`}>PNC:&nbsp;</span>
             <span id={`pncNumber-${offenderSummary.offenderId}`}
                   aria-labelledby={`pncNumber-label-${offenderSummary.offenderId}`}
-                  className='margin-right mark'>{offenderSummary.otherIds.pncNumber}</span>
+                  className='govuk-!-margin-right-1 app-mark'>{offenderSummary.otherIds.pncNumber}</span>
           </p>
           }
           {matchesHighlightedField(offenderSummary.highlight, 'otherIds.nomsNumber') &&
           <p>
             <span id={`nomsNumber-label-${offenderSummary.offenderId}`}>NOMS:&nbsp;</span>
             <span id={`nomsNumber-${offenderSummary.offenderId}`}
-                  aria-labelledby={`nomsNumber-label-${offenderSummary.offenderId}`} className='margin-right'>
+                  aria-labelledby={`nomsNumber-label-${offenderSummary.offenderId}`} className='govuk-!-margin-right-1'>
               <MT text={offenderSummary.otherIds.nomsNumber} highlight={offenderSummary.highlight}
                   highlightFieldName='otherIds.nomsNumber' />
             </span>
@@ -71,7 +73,7 @@ const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
           <p>
             <span id={`niNumber-label-${offenderSummary.offenderId}`}>National Insurance Number:&nbsp;</span>
             <span id={`niNumber-${offenderSummary.offenderId}`}
-                  aria-labelledby={`niNumber-label-${offenderSummary.offenderId}`} className='margin-right'><MT
+                  aria-labelledby={`niNumber-label-${offenderSummary.offenderId}`} className='govuk-!-margin-right-1'><MT
               text={offenderSummary.otherIds.niNumber} highlight={offenderSummary.highlight}
               highlightFieldName='otherIds.niNumber' /></span>
           </p>
@@ -80,7 +82,7 @@ const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
           <p>
             <span id={`croNumber-label-${offenderSummary.offenderId}`}>CRO:&nbsp;</span>
             <span id={`croNumber-${offenderSummary.offenderId}`}
-                  aria-labelledby={`croNumber-label-${offenderSummary.offenderId}`} className='margin-right'><MT
+                  aria-labelledby={`croNumber-label-${offenderSummary.offenderId}`} className='govuk-!-margin-right-1'><MT
               text={offenderSummary.otherIds.croNumber} highlight={offenderSummary.highlight}
               highlightFieldName='otherIds.croNumberLowercase' /></span>
           </p>
@@ -92,7 +94,7 @@ const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
           {matchesAnyHighlightedField(offenderSummary.highlight, ['offenderAliases.surname', 'offenderAliases.firstName']) &&
           offenderSummary.aliases.map((alias, index) => (
             <p key={index}>
-              <span className='margin-right'>Alias:</span>
+              <span className='govuk-!-margin-right-1'>Alias:</span>
               <span><MT text={alias.surname} highlight={offenderSummary.highlight}
                         highlightFieldName='offenderAliases.surname' /></span>
               <span>,&nbsp;</span>
@@ -113,7 +115,7 @@ const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
               'contactDetails.addresses.postcode']) &&
           offenderSummary.addresses.map((address, index) => (
             <p key={index}>
-              <span className='margin-right'>Address:</span>
+              <span className='govuk-!-margin-right-1'>Address:</span>
               <Address address={address} highlight={offenderSummary.highlight} />
             </p>
           ))
@@ -177,22 +179,22 @@ OffenderSearchSummary.propTypes = {
 
 const Risk = ({ risk }) => {
   if (risk) {
-    return (<span aria-label={`risk alert colour`} className='margin-right'>Risk <span
-      className={`risk-icon ${mapRiskColor(risk)}`} /><span className='visually-hidden'>{risk}</span>&nbsp;|</span>)
+    return (<span aria-label={`risk alert colour`} className='govuk-!-margin-right-1'>Risk <span
+      className={`app-risk-icon ${mapRiskColor(risk)}`} /><span className='govuk-visually-hidden'>{risk}</span>&nbsp;|</span>)
   }
   return (<span />)
 }
 
 const CurrentOffender = ({ current }) => {
   if (current && current === '1') {
-    return (<span className='margin-right'>Current offender&nbsp;|</span>)
+    return (<span className='govuk-!-margin-right-1'>Current offender&nbsp;|</span>)
   }
   return (<span />)
 }
 
 const MiddleNames = ({ middleNames, highlight, highlightFieldName }) => (
   <p>
-    <span className='margin-right'>Middle Names:</span>
+    <span className='govuk-!-margin-right-1'>Middle Names:</span>
     {middleNames.map((middleName, index) => (
       <span key={index}>
           <span><MT text={middleName} highlight={highlight} highlightFieldName={highlightFieldName} /></span>
@@ -228,7 +230,7 @@ const Address = ({ address, highlight }) => {
   return (
     <span>
       {lines.map((line, index) => (
-        <span className='margin-right' key={index}><MT text={line.text} highlight={highlight}
+        <span className='govuk-!-margin-right-1' key={index}><MT text={line.text} highlight={highlight}
                                                        highlightFieldName={line.highlightFieldName} />{index + 1 < lines.length ? ',' : ''}</span>
       ))}
     </span>
@@ -240,7 +242,7 @@ const firstAddressLine = (number = '', street = '') => `${number} ${street}`.tri
 const PreviousSurname = ({ name, highlight }) => {
   if (name) {
     return (<p>
-      <span className='margin-right'>Previous surname:</span>
+      <span className='govuk-!-margin-right-1'>Previous surname:</span>
       <span><MT text={name} highlight={highlight} highlightFieldName='previousSurnames' /></span>
     </p>)
   }
@@ -250,11 +252,11 @@ const PreviousSurname = ({ name, highlight }) => {
 const mapRiskColor = (risk = '') => {
   switch (risk.toLowerCase()) {
     case 'red':
-      return 'risk-red'
+      return 'app-risk-icon--red'
     case 'amber':
-      return 'risk-amber'
+      return 'app-risk-icon-risk-amber'
     case 'green':
-      return 'risk-green'
+      return 'app-risk-icon-risk-green'
   }
   return ''
 }

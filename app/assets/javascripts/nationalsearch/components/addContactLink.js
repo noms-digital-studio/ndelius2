@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 
 const AddContactLink = ({ offenderId, rankIndex, surname, firstName, addContact, highlight, tabIndex }) => (
   <span>
-        <a tabIndex={tabIndex} href='javascript:' className='clickable'
-           title={surname ? `Add contact to ${surname}, ${firstName}` : 'Add contact'}
-           onClick={() => addContact(offenderId, rankIndex, highlight)}>Add contact</a>
-    </span>
+    <a tabIndex={tabIndex} href='javascript:' className='govuk-link govuk-link--no-visited-state'
+       title={surname ? `Add contact to ${surname}, ${firstName}` : 'Add contact'}
+       onClick={() => addContact(offenderId, rankIndex, highlight)}>Add contact</a>
+  </span>
 )
 
 AddContactLink.propTypes = {

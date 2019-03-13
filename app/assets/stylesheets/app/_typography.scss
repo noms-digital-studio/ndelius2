@@ -1,3 +1,11 @@
 .app-align-right {
   text-align: right;
 }
+
+.moj-\!-color-white {
+  color: govuk-colour("white") !important;
+}
+
+.app-inset-text {
+  border-left-width: 5px;
+}

@@ -7,7 +7,7 @@ const SearchResultsTitle = ({ pageNumber, pageSize, total, resultsReceived }) =>
   }
 
   return (
-    <h2 aria-live='polite' className='heading-medium margin-top medium search-results-title'>
+    <h2 aria-live='polite' className='govuk-body-lead moj-!-color-grey govuk-!-margin-top-4 govuk-!-margin-bottom-0'>
       {renderHeader(pageNumber, pageSize, total)}
     </h2>
   )

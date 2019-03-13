@@ -7,11 +7,11 @@ const MAX_PAGES = 10
 const PageSelection = ({ pageSize, pageNumber, total, gotoPage, searchTerm, probationAreasFilter, searchType }) => {
   const PageLink = ({ linkPageNumber, tabIndex }) => {
     if (pageNumber === linkPageNumber) {
-      return (<span className='margin-right'>{linkPageNumber}</span>)
+      return (<span className='govuk-!-margin-right-1'>{linkPageNumber}</span>)
     }
     return (
       <span className='margin-right'>
-        <a tabIndex={tabIndex} href='#offender-results' title={`Page ${linkPageNumber}`} className='clickable'
+        <a tabIndex={tabIndex} href='#offender-results' title={`Page ${linkPageNumber}`} className='govuk-link govuk-link--no-visited-state'
            onClick={() => gotoPage(searchTerm, searchType, probationAreasFilter, linkPageNumber)}>{linkPageNumber}</a>
       </span>
     )
@@ -24,9 +24,9 @@ const PageSelection = ({ pageSize, pageNumber, total, gotoPage, searchTerm, prob
         {notOnFirstPage(pageNumber) &&
         <span>
           <a tabIndex='1' href='#offender-results' id='previous-page-link' title='Previous Page'
-             className='clickable margin-right'
+             className='govuk-link govuk-link--no-visited-state govuk-!-margin-right-1'
              onClick={() => gotoPage(searchTerm, searchType, probationAreasFilter, pageNumber - 1)}>&lt; Previous</a>
-          <span className='margin-right'>-</span>
+          <span className='govuk-!-margin-right-1'>-</span>
         </span>
         }
         {range(Math.min(totalPages(pageSize, total), MAX_PAGES))
@@ -37,8 +37,8 @@ const PageSelection = ({ pageSize, pageNumber, total, gotoPage, searchTerm, prob
         }
         {notOnLastPage(pageNumber, totalPages(pageSize, total)) &&
         <span>
-          <span className='margin-right'>-</span>
-          <a tabIndex='1' href='#offender-results' id='next-page-link' title='Next Page' className='clickable'
+          <span className='govuk-!-margin-right-1'>-</span>
+          <a tabIndex='1' href='#offender-results' id='next-page-link' title='Next Page' className='govuk-link govuk-link--no-visited-state'
              onClick={() => gotoPage(searchTerm, searchType, probationAreasFilter, pageNumber + 1)}>Next &gt;</a>
         </span>
         }

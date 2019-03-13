@@ -27,7 +27,7 @@ describe('Filter component', () => {
           name='some-filter'
           title='Some filter'
         />)
-        expect(filter.find('.filter')).to.have.length(0)
+        expect(filter.find('.app-national-search-filter')).to.have.length(0)
       })
     })
 
@@ -43,7 +43,7 @@ describe('Filter component', () => {
           name='some-filter'
           title='Some filter'
         />)
-        expect(filter.find('.filter')).to.have.length(1)
+        expect(filter.find('.app-national-search-filter')).to.have.length(1)
       })
     })
 
@@ -63,7 +63,7 @@ describe('Filter component', () => {
           name='some-filter'
           title='Some filter'
         />)
-        expect(filter.find('.filter label')).to.have.length(2)
+        expect(filter.find('.app-national-search-filter label')).to.have.length(2)
       })
     })
   })

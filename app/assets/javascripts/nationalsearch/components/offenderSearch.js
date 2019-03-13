@@ -9,10 +9,10 @@ const OffenderSearch = ({ searchTerm, probationAreasFilter, search, searchType }
   }
 
   return (
-    <form role='search' className='padding-left-right' onSubmit={(event) => onSubmit(event)}>
-      <label htmlFor='searchTerms' className='visually-hidden'>Results will be updated as you type</label>
+    <form role='search' className='govuk-form-groupt' onSubmit={(event) => onSubmit(event)}>
+      <label htmlFor='searchTerms' className='govuk-visually-hidden'>Results will be updated as you type</label>
       <input id='searchTerms' name='searchTerms' type='search' tabIndex='1'
-             autoFocus className='form-control national-search'
+             autoFocus className='govuk-body-l govuk-input govuk-!-padding-4'
              placeholder='Any combination of names, dates of birth, ID numbers, towns and postcodes'
              value={searchTerm}
              onChange={event => search(event.target.value, searchType, probationAreasFilter)} />

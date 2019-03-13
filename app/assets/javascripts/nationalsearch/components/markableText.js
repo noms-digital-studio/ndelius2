@@ -18,7 +18,7 @@ const MarkableText = ({ text, searchTerm, isDate, highlight, highlightFieldName,
 
 const Text = ({ text, highlight }) => {
   return (
-    <span className={highlight ? 'mark' : ''}>{text}</span>
+    <span className={highlight ? 'app-mark' : ''}>{text}</span>
   )
 }
 

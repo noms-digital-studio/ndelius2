@@ -11,7 +11,7 @@ describe('SearchFooter component', () => {
     })
 
     it('contains a initial help text', () => {
-      expect(searchFooter.find('.background-box')).to.have.length(1)
+      expect(searchFooter.find('.moj-warning-text')).to.have.length(1)
     })
   })
 })
