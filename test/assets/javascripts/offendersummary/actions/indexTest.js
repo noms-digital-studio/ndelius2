@@ -10,7 +10,6 @@ import {
   offenderSummaryClose,
   offenderSummaryViewPrevious,
   showMoreConvictions,
-  transferInactiveOffender,
   viewOffenderAddresses,
   viewOffenderAliases,
   viewOffenderEvent,
@@ -188,14 +187,6 @@ describe('offender summary action', () => {
     })
     it('dispatches NAVIGATE_TO_VIEW_OFFENDER_EVENT with offenderId and eventId', () => {
       expect(dispatch).to.be.calledWith({ type: 'NAVIGATE_TO_VIEW_OFFENDER_EVENT', offenderId: 1234, eventId: 999 })
-    })
-  })
-  describe('on navigateToTransferInactiveOffender', () => {
-    beforeEach(() => {
-      transferInactiveOffender(1234)(dispatch)
-    })
-    it('dispatches NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER with offenderId', () => {
-      expect(dispatch).to.be.calledWith({ type: 'NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER', offenderId: 1234 })
     })
   })
   describe('on offenderSummaryViewPrevious', () => {

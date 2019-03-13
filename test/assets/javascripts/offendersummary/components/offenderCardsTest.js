@@ -2,7 +2,6 @@ import React from 'react'
 import { expect } from 'chai'
 import { shallow } from 'enzyme'
 import OffenderCards from './offenderCards'
-import { stub } from 'sinon'
 
 describe('OffenderCards component', () => {
   let wrapper
@@ -66,8 +65,7 @@ describe('OffenderCards component', () => {
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
-                         transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager} />
         )
       })
 
@@ -86,8 +84,7 @@ describe('OffenderCards component', () => {
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
-                         transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager} />
         )
       })
 
@@ -122,8 +119,7 @@ describe('OffenderCards component', () => {
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
-                         transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager} />
         )
       })
 
@@ -143,8 +139,6 @@ describe('OffenderCards component', () => {
 
   describe('Offender manager card', () => {
     context('When the offender has NO active events', () => {
-      let transferInactiveOffender
-
       beforeEach(() => {
         offenderManager = {
           probationArea: {
@@ -162,25 +156,13 @@ describe('OffenderCards component', () => {
           ]
         }
 
-        transferInactiveOffender = stub()
-
         wrapper = shallow(
-          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
-                         transferInactiveOffender={transferInactiveOffender} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager} />
         )
       })
 
       it('Should display offender status as not current', () => {
         expect(wrapper.find('.qa-card-current-status').text()).to.equal('Not current')
-      })
-
-      it('Should display transfer in link', () => {
-        expect(wrapper.find('a').text()).to.equal('Transfer in')
-      })
-
-      it('clicking link should call callback', () => {
-        wrapper.find('a').simulate('click')
-        expect(transferInactiveOffender).to.be.calledWith(123)
       })
 
       it('Should NOT display the provider details', () => {
@@ -203,17 +185,12 @@ describe('OffenderCards component', () => {
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
-                         transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager} />
         )
       })
 
       it('Should display offender status as current offender', () => {
         expect(wrapper.find('.qa-card-current-status').text()).to.equal('Current offender')
-      })
-
-      it('Should NOT display transfer in link', () => {
-        expect(wrapper.find('a').exists()).to.equal(false)
       })
 
       it('Should NOT display the provider details', () => {
@@ -244,17 +221,12 @@ describe('OffenderCards component', () => {
         }
 
         wrapper = shallow(
-          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager}
-                         transferInactiveOffender={stub()} offenderId={123} />
+          <OffenderCards offenderConvictions={offenderConvictions} offenderManager={offenderManager} />
         )
       })
 
       it('Should display offender status as current offender', () => {
         expect(wrapper.find('.qa-card-current-status').text()).to.equal('Current offender')
-      })
-
-      it('Should NOT display transfer in link', () => {
-        expect(wrapper.find('a').exists()).to.equal(false)
       })
 
       it('Should display the provider details', () => {

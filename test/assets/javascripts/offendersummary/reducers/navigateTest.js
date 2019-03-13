@@ -1,5 +1,4 @@
 import {
-  NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER,
   NAVIGATE_TO_VIEW_OFFENDER_ADDRESS_HISTORY,
   NAVIGATE_TO_VIEW_OFFENDER_ALIASES,
   NAVIGATE_TO_VIEW_OFFENDER_EVENT,
@@ -109,23 +108,6 @@ describe('navigate reducer', () => {
     })
     it('data is set with eventId', () => {
       expect(state.data.eventId).to.equal('999')
-    })
-  })
-  describe('when NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER action received', () => {
-    let state
-
-    beforeEach(() => {
-      state = navigate({ shouldClose: false }, { type: NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER, offenderId: '123' })
-    })
-
-    it('shouldClose is true', () => {
-      expect(state.shouldClose).to.equal(true)
-    })
-    it('action is transferInactiveOffender', () => {
-      expect(state.action).to.equal('transferInactiveOffender')
-    })
-    it('data is set to offenderId', () => {
-      expect(state.data).to.equal('123')
     })
   })
 })

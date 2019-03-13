@@ -87,11 +87,6 @@ const navigateToViewOffenderEvent = (offenderId, eventId) => ({
   eventId
 })
 
-const navigateToTransferInactiveOffender = offenderId => ({
-  type: types.NAVIGATE_TO_TRANSFER_INACTIVE_OFFENDER,
-  offenderId
-})
-
 const navigateToOffenderSummaryViewPrevious = offenderId => ({
   type: types.NAVIGATE_TO_PREVIOUS_OFFENDER_SUMMARY,
   offenderId
@@ -159,11 +154,6 @@ export const viewOffenderRegistrations = offenderId => dispatch => {
 export const viewOffenderEvent = (offenderId, eventId) => dispatch => {
   trackEvent('delius-link', 'Offender summary > Events', 'View offender event')
   dispatch(navigateToViewOffenderEvent(offenderId, eventId))
-}
-
-export const transferInactiveOffender = offenderId => dispatch => {
-  trackEvent('delius-link', 'Offender summary > Not current', 'Transfer in')
-  dispatch(navigateToTransferInactiveOffender(offenderId))
 }
 
 export const offenderSummaryViewPrevious = offenderId => dispatch => {

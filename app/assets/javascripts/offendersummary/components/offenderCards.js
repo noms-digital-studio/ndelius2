@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types'
 import { convictionDescription, convictionSorter } from '../../helpers/convictionsHelper'
 import { staff } from '../../helpers/offenderManagerHelper'
 
-const OffenderCards = ({ offenderConvictions, offenderManager, offenderId, transferInactiveOffender }) => {
+const OffenderCards = ({ offenderConvictions, offenderManager}) => {
   let activeEvents
   let activeCount
   let totalCount
@@ -39,12 +39,6 @@ const OffenderCards = ({ offenderConvictions, offenderManager, offenderId, trans
               )}
             </Fragment>
           )}
-          {!activeCount &&
-          <p className='govuk-body govuk-!-margin-0 moj-!-color-white'>
-            <a className='moj-!-color-white' href='javascript:void(0);'
-               onClick={() => transferInactiveOffender(offenderId)}>Transfer in</a>
-          </p>
-          }
         </div>
       </div>
       <div className='govuk-grid-column-one-half moj-flex'>
@@ -67,8 +61,6 @@ const OffenderCards = ({ offenderConvictions, offenderManager, offenderId, trans
 }
 
 OffenderCards.propTypes = {
-  offenderId: PropTypes.number.isRequired,
-  transferInactiveOffender: PropTypes.func,
   offenderConvictions: PropTypes.shape({
     convictions: PropTypes.arrayOf(PropTypes.shape({
       active: PropTypes.bool,
