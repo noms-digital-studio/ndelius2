@@ -199,10 +199,10 @@ describe('offender summary action', () => {
   })
   describe('on offenderSummaryClose', () => {
     beforeEach(() => {
-      offenderSummaryClose(1234)(dispatch)
+      offenderSummaryClose()(dispatch)
     })
     it('dispatches NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY with offenderId', () => {
-      expect(dispatch).to.be.calledWith({ type: 'NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY', offenderId: 1234  })
+      expect(dispatch).to.be.calledWith({ type: 'NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY' })
     })
   })
 })

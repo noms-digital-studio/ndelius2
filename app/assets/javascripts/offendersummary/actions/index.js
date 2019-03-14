@@ -92,9 +92,8 @@ const navigateToOffenderSummaryViewPrevious = offenderId => ({
   offenderId
 })
 
-const navigateToOffenderSummaryClose = offenderId => ({
-  type: types.NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY,
-  offenderId
+const navigateToOffenderSummaryClose = () => ({
+  type: types.NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY
 })
 
 export const getOffenderDetails = () => dispatch => {
@@ -162,7 +161,7 @@ export const offenderSummaryViewPrevious = offenderId => dispatch => {
   dispatch(navigateToOffenderSummaryViewPrevious(offenderId))
 }
 
-export const offenderSummaryClose = offenderId => dispatch => {
+export const offenderSummaryClose = () => dispatch => {
   trackEvent('delius-link', 'Offender summary', 'Close')
-  dispatch(navigateToOffenderSummaryClose(offenderId))
+  dispatch(navigateToOffenderSummaryClose())
 }
