@@ -27,7 +27,7 @@ const navigate = (state = { shouldClose: false }, action) => {
     case NAVIGATE_TO_PREVIOUS_OFFENDER_SUMMARY:
       return { shouldClose: true, action: 'viewOffenderLegacy', data: action.offenderId }
     case NAVIGATE_TO_CLOSE_OFFENDER_SUMMARY:
-      return { shouldClose: true, action: 'close' }
+      return { shouldClose: true, action: 'close', data: action.offenderId }
     default:
       return state
   }
