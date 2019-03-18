@@ -9,7 +9,7 @@ import { officer, provider } from '../../helpers/offenderManagerHelper'
 const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
   <li id={`offenderSummary${offenderSummary.offenderId}`}>
     <div className='govuk-grid-row qa-offender-details-row'>
-      <div className='govuk-grid-column-one-quarter govuk-!-margin-0 moj-!-text-align-center'>
+      <div className='govuk-grid-column-one-quarter govuk-!-margin-0 moj-!-text-align-center app-hide-tablet'>
         {offenderSummary.oneTimeNomisRef &&
         <img alt={`Image of ${offenderSummary.firstName} ${offenderSummary.surname}`} className='offenderImage'
              src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`} width='120'

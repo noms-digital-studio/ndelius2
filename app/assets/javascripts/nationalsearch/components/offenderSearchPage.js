@@ -32,13 +32,13 @@ const OffenderSearchPage = ({ firstTimeIn, showWelcomeBanner, reloadRecentSearch
             <AddNewOffenderLink tabIndex='3' />
           </div>
 
-          <div className='app-national-search-help govuk-!-margin-right-5'>
+          <OffenderSearch />
+
+          <div className='app-national-search-help'>
             <Link tabIndex='2' to='help' title='View tips for getting better results'
                   className='govuk-body govuk-link govuk-link--no-visited-state govuk-!-font-weight-bold moj-!-color-white'>Tips
               for getting better results</Link>
           </div>
-
-          <OffenderSearch />
 
           <div className='govuk-grid-row'>
             <div className='govuk-grid-column-two-thirds'>
