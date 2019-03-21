@@ -42,7 +42,7 @@
 
                 @if(banner) {
                     <div class="govuk-phase-banner">
-                        <p class="govuk-phase-banner__content"><strong class="govuk-tag govuk-phase-banner__content__tag">BETA</strong><span class="govuk-phase-banner__text"> This is a new service – your <a class="govuk-link govuk-link--no-visited-state" id="feedback-link" href="@configuration.getString("feedback.form.url")" target="_blank">feedback</a> will help us to improve it. </span></p>
+                        <p class="govuk-phase-banner__content"><strong class="govuk-tag govuk-phase-banner__content__tag">BETA</strong><span class="govuk-phase-banner__text"> This is a new service – your <a class="govuk-link govuk-link--no-visited-state" id="feedback-link" href="@configuration.getString("feedback.form.url")" target="_blank" title="Feedback: opens in a new window">feedback</a> will help us to improve it. </span></p>
                     </div>
                 }
 
@@ -52,7 +52,7 @@
         </div>
 
         <script src='@relative(routes.Assets.versioned("javascripts/vendor/jquery/autosize.min.js"))' type="text/javascript"></script>
-        <script src='@relative(routes.Assets.versioned("javascripts/vendor/govuk/govuk-frontend-2.7.0.min.js"))' type="text/javascript"></script>
+        <script src='@relative(routes.Assets.versioned("javascripts/vendor/govuk/govuk-frontend-2.9.0.min.js"))' type="text/javascript"></script>
         <script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/quilljs/quill.js"))'></script>
         <script src='@relative(routes.Assets.versioned("javascripts/application.js"))' type="text/javascript"></script>
 

@@ -17,7 +17,6 @@
 
     <div class="moj-interrupt">
 
-
         <h1 class="govuk-heading-xl govuk-!-margin-top-6 govuk-!-margin-bottom-2 moj-!-color-white">
             @reportForm("prisonerStatus").getValue.map(  {
                 case "ok" => "Start a PAROM 1"
@@ -35,7 +34,6 @@
                 <li>save and close the report at any point - it also saves as you write</li>
                 <li>check the progress of your report</li>
             </ul>
-
 
             <table class="govuk-!-margin-top-6 govuk-!-margin-bottom-6" role="presentation" width="100%">
                 <tbody>
@@ -91,8 +89,6 @@
                     </tr>
                 </tbody>
             </table>
-
-
             }
         }
 
@@ -133,11 +129,8 @@
             </div>
         }
     </div>
-    <a class="govuk-back-link" tabindex="1" href="javascript:documentList()">Back to document list</a>
-
-
+    <a class="govuk-back-link" href="javascript:documentList()" title="Back to document list">Back to document list</a>
 }
-
 
 <script type="text/javascript">
     var isExistingReport = @reportForm("lastUpdated").getValue.map( _ => "true").orElse("false");
@@ -169,7 +162,6 @@
     }
 </script>
 
-
 @asDuration(dateTime: String) = @{
     val duration = Duration.between(OffsetDateTime.parse(dateTime), OffsetDateTime.now())
 
@@ -183,7 +175,6 @@
 
     s"$number $unit${plural(number)} ago"
 }
-
 
 @plural(number: Long) = @{
     if (number > 1) "s" else ""

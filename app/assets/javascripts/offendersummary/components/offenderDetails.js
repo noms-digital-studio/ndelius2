@@ -70,7 +70,7 @@ class OffenderDetails extends Component {
                 className='qa-aliases'>{(offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && 'Yes (' + offenderDetails.offenderAliases.length + ')') || 'No'}</td>
               <td className='qa-aliases-link' style={{ textAlign: 'right', width: '100px' }}>
                 {offenderDetails.offenderAliases && offenderDetails.offenderAliases.length > 0 && (
-                  <a href='javascript:void(0);' className='qa-view-offender-aliases'
+                  <a href='javascript:void(0);' className='qa-view-offender-aliases govuk-link govuk-link--no-visited-state'
                      onClick={() => viewOffenderAliases(offenderDetails.offenderId)}>View</a>)}
               </td>
             </tr>
