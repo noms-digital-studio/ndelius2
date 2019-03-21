@@ -15,8 +15,8 @@
   "aliases": [
     {
       "nomsId": "G8020GG",
-      "firstName": "John",
-      "surname": "Smith",
+      "firstName": "Some",
+      "surname": "Other-Alias",
       "dateOfBirth": "1973-08-06",
       "gender": {
         "code": "M",
@@ -30,8 +30,8 @@
     },
     {
       "nomsId": "G8020GG",
-      "firstName": "Jack",
-      "surname": "Jones",
+      "firstName": "Johnny",
+      "surname": "Alias",
       "dateOfBirth": "1973-07-25",
       "gender": {
         "code": "M",
@@ -48,7 +48,7 @@
     {
       "bookingId": 4692,
       "bookingNo": "LH5058",
-      "offenderId": 1005296,
+      "offenderId": 1005298,
       "rootOffenderId": 1005296,
       "agencyLocation": {
         "agencyLocationId": "ZZGHI",

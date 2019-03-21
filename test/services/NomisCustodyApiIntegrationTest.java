@@ -273,6 +273,36 @@ public class NomisCustodyApiIntegrationTest  extends WithApplication {
     }
 
     @Test
+    public void prisonerNameFromRootOffenderWhenActiveBookingIsRoot() {
+        wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/G8020GG"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomsoffender/offender_G8020GG.json"))));
+
+
+
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(maybeOffender.orElseThrow(() -> new AssertionError("No offender found")).getSurname()).isEqualTo("CUHBCEOLE");
+        assertThat(maybeOffender.orElseThrow(() -> new AssertionError("No offender found")).getFirstName()).isEqualTo("YLQRENHAR");
+    }
+
+    @Test
+    public void prisonerNameFromAliasOffenderWhenActiveBookingIsAgainstNonRoot() {
+        wireMock.stubFor(
+                get(urlMatching("/custodyapi/api/offenders/nomsId/G8020GG"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomsoffender/offender_G8020TT.json"))));
+
+
+
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(maybeOffender.orElseThrow(() -> new AssertionError("No offender found")).getSurname()).isEqualTo("Alias");
+        assertThat(maybeOffender.orElseThrow(() -> new AssertionError("No offender found")).getFirstName()).isEqualTo("Johnny");
+    }
+
+    @Test
     public void prisonerOffenderIsNotReturnedWhenNotFound() {
         wireMock.stubFor(
                 get(urlMatching("/custodyapi/api/offenders/nomsId/G8020GG"))

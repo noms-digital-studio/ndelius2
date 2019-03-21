@@ -31,6 +31,10 @@ public class NomisCustodyApi  implements PrisonerApi {
     private final WSClient wsClient;
     private final PrisonerApiToken apiToken;
 
+    interface HasName {
+        String getFirstName();
+        String getSurname();
+    }
     @Value
     static private class NomisImageMetaData {
         private String offenderImageId;
@@ -51,17 +55,30 @@ public class NomisCustodyApi  implements PrisonerApi {
         private AgencyLocation agencyLocation;
         private long bookingSequence;
         private long bookingId;
+        private long offenderId;
+        private long rootOffenderId;
         private String bookingNo;
         private boolean activeFlag;
     }
     @Value
     @Builder(toBuilder = true)
-    static class OffenderEntity {
+    static class OffenderEntity implements HasName {
         private String firstName;
         private String surname;
+        private List<Alias> aliases;
         private List<Booking> bookings;
     }
 
+    @Value
+    @Builder(toBuilder = true)
+    static class Alias implements HasName {
+        private String firstName;
+        private String surname;
+        private long offenderId;
+        HasName asName() {
+            return this; // avoid cast in Stream operation
+        }
+    }
 
 
 
@@ -187,8 +204,8 @@ public class NomisCustodyApi  implements PrisonerApi {
                     .orElseThrow(() -> new RuntimeException("No current booking for offender found"));
             return Offender
                     .builder()
-                    .firstName(offenderEntity.getFirstName())
-                    .surname(offenderEntity.getSurname())
+                    .firstName(nameForActiveBooking(offenderEntity).getFirstName())
+                    .surname(nameForActiveBooking(offenderEntity).getSurname())
                     .mostRecentPrisonerNumber(String.valueOf(mostRecentBooking.getBookingNo()))
                     .institution(
                             Institution
@@ -198,5 +215,19 @@ public class NomisCustodyApi  implements PrisonerApi {
                     .build();
 
         }
+    }
+
+    private static HasName nameForActiveBooking(OffenderEntity offenderEntity) {
+        val activeBooking = offenderEntity.getBookings().stream().filter(Booking::isActiveFlag).findFirst();
+
+        return activeBooking.map(booking -> {
+            if (booking.getOffenderId() != booking.getRootOffenderId()) {
+                val maybeAlias = offenderEntity.getAliases().stream().filter(alias -> alias.getOffenderId() == booking.getOffenderId()).findFirst();
+
+                return maybeAlias.map(Alias::asName).orElse(offenderEntity);
+            }
+            return offenderEntity;
+
+        }).orElse(offenderEntity);
     }
 }
