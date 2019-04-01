@@ -86,14 +86,16 @@ browserifyTask := {
     OpInputHasher[File](f => OpInputHash.hashString(f.getCanonicalPath))
   val sources = (sourceDir ** ((includeFilter in browserifyTask in Assets).value -- DirectoryFilter)).get
   val outputFile = browserifyOutputDir.value / "bundle.js"
+  val outputFile2 = browserifyOutputDir.value / "reports.js"
 
   val results = incremental.syncIncremental((streams in Assets).value.cacheDirectory / "run", sources) {
     modifiedSources: Seq[File] =>
       if (modifiedSources.nonEmpty) {
         ( npmNodeModules in Assets ).value
         val inputFile = baseDirectory.value / "app/assets/javascripts/index.js"
-        browserifyOutputDir.value.mkdirs
+        val inputFile2 = baseDirectory.value / "app/assets/javascripts/app.js"
         val modules =  (baseDirectory.value / "node_modules").getAbsolutePath
+        browserifyOutputDir.value.mkdirs
         executeJs(state.value,
           engineType.value,
           None,
@@ -102,11 +104,19 @@ browserifyTask := {
           Seq(inputFile.getPath, outputFile.getPath),
           60.seconds)
         ()
+        executeJs(state.value,
+          engineType.value,
+          None,
+          Seq(modules),
+          baseDirectory.value / "browserify.js",
+          Seq(inputFile2.getPath, outputFile2.getPath),
+          60.seconds)
+        ()
       }
 
       val opResults: Map[File, OpResult] =
         modifiedSources.map(file => (file, OpSuccess(Set(file), Set(outputFile)))).toMap
-      (opResults, List(outputFile))
+      (opResults, List(outputFile, outputFile2))
   }(fileHasherIncludingOptions)
 
   results._2

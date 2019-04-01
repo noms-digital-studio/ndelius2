@@ -129,37 +129,39 @@
             </div>
         }
     </div>
-    <a class="govuk-back-link" href="javascript:documentList()" title="Back to document list">Back to document list</a>
+    <a class="js-back-link govuk-back-link" href="#" title="Back to document list">Back to document list</a>
 }
 
 <script type="text/javascript">
-    var isExistingReport = @reportForm("lastUpdated").getValue.map( _ => "true").orElse("false");
+    var isExistingReport = @reportForm("lastUpdated").getValue.map( _ => "true").orElse("false")
+    var $form = document.getElementById('ndForm')
 
-    $('.popup-launcher').click(function (e) {
-        e.preventDefault();
+    function encodeValue(selector) {
+      return encodeURIComponent(document.querySelector(selector).value)
+    }
+
+    document.querySelector('.popup-launcher').addEventListener('click', function (event) {
+      event.preventDefault()
+
         if (isExistingReport) {
-            var onBehalfOfUser = encodeURIComponent($('#onBehalfOfUser').val())
-            var documentId = encodeURIComponent($('#documentId').val())
-            var user = encodeURIComponent($('#user').val())
-            var t = encodeURIComponent($('#t').val())
-
-            var url = $('form').attr('action') + '?documentId=' + documentId +
-                '&onBehalfOfUser=' + onBehalfOfUser
-                + '&continue=true'
-                + '&user=' + user
-                + '&t=' + t;
-            openPopup(url)
+            var onBehalfOfUser = encodeValue('#onBehalfOfUser')
+            var documentId = encodeValue('#documentId')
+            var user = encodeValue('#user')
+            var t = encodeValue('#t')
+            var url = `${ $form.getAttribute('action') }?documentId=${ documentId }&onBehalfOfUser=${ onBehalfOfUser }&continue=true&user=${ user }&t=${ t }`
+            window.openPopup(url)
         } else {
-            openPopup('about:blank')
-            $('form').attr("target", "reportpopup")
-            $('form').submit()
+            window.openPopup('about:blank')
+            $form.setAttribute("target", "reportpopup")
+            $form.submit()
             isExistingReport = true
         }
     });
 
-    function documentList () {
+    document.querySelector('.js-back-link').addEventListener('click', function (event) {
+        event.preventDefault()
         parent.postMessage(JSON.stringify({ action: 'documentList', data: null }), '*')
-    }
+    })
 </script>
 
 @asDuration(dateTime: String) = @{
