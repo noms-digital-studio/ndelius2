@@ -45,16 +45,19 @@
      * Save
      */
     function saveProgress (elem) {
-      if ($('form').length) {
+      var $form = document.getElementById('ndForm')
+      var formData = new FormData($form)
+
+      if ($form) {
         startSaveIcon(elem)
-        $.ajax({
-          type: 'POST',
-          url: $('form').attr('action') + '/save',
-          data: formWithZeroJumpNumber($('form')),
-          complete: function (response) {
-            _.delay(endSaveIcon, 500, elem, response.status !== 200)
-          }
-        })
+        formData.append('jumpNumber', '0')
+
+        var xhr = new XMLHttpRequest()
+        xhr.open('POST', `${ $form.getAttribute('action') }/save`)
+        xhr.onload = function() {
+          _.delay(endSaveIcon, 500, elem, xhr.status !== 200)
+        }
+        xhr.send(formData)
       }
     }
 
@@ -74,7 +77,6 @@
       } else {
         messageHolder.addClass('govuk-visually-hidden')
       }
-
     }
 
     $('textarea').keyup(function () {
@@ -268,22 +270,6 @@
         })
       }
     })
-
-    function trackViewDraft () {
-      gtag('event', 'click', {
-        'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - View draft',
-        'event_label': 'Page: ' + $('h1').text()
-      })
-    }
-
-    $('#draftReport').click(function (e) {
-      trackViewDraft()
-    })
-
-    $('.js-view-draft').click(function (e) {
-      trackViewDraft()
-    })
-
   })
 
 })(window.jQuery)
