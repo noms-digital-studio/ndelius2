@@ -9,12 +9,11 @@
      * @param elem
      */
     function startSaveIcon (elem) {
-      var saveIcon = $('#save_indicator'),
-        spinner = $('.spinner, .moj-auto-save__spinner', saveIcon)
+      var spinner = document.querySelector('.moj-auto-save__spinner')
 
-      saveIcon.removeClass('govuk-visually-hidden')
-      spinner.removeClass('error')
-      spinner.addClass('active')
+      document.getElementById('save_indicator').classList.remove('govuk-visually-hidden')
+      spinner.classList.remove('error')
+      spinner.classList.add('active')
     }
 
     /**
@@ -23,21 +22,20 @@
      * @param error
      */
     function endSaveIcon (elem, error) {
-      var saveIcon = $('#save_indicator'),
-        spinner = $('.spinner, .moj-auto-save__spinner', saveIcon),
-        errorMessage = $('#' + elem.attr('id') + '-autosave_error'),
-        formGroup = $(elem).closest('.form-group')
+      document.querySelector('.moj-auto-save__spinner').classList.remove('active')
 
       if (error) {
-        saveIcon.addClass('govuk-visually-hidden')
-        spinner.removeClass('active')
-        errorMessage.removeClass('govuk-visually-hidden')
-        formGroup.addClass('form-group-autosave-error')
+        document.getElementById('save_indicator').classList.add('govuk-visually-hidden')
+        elem.closest('.form-group').classList.add('form-group-autosave-error')
+        document.getElementById(`${ elem.id }-autosave_error`).classList.remove('govuk-visually-hidden')
       } else {
         // remove all autosave errors on this page
-        $('.form-group-autosave-error').removeClass('form-group-autosave-error')
-        $('.autosave-error-message').addClass('govuk-visually-hidden')
-        spinner.removeClass('active')
+        var autosaveError = document.querySelector('.form-group-autosave-error')
+        var autosaveErrorMessage = document.querySelector('.autosave-error-message')
+        if (autosaveError && autosaveErrorMessage) {
+          autosaveError.classList.remove('form-group-autosave-error')
+          autosaveErrorMessage.classList.add('govuk-visually-hidden')
+        }
       }
     }
 
@@ -54,7 +52,7 @@
 
         var xhr = new XMLHttpRequest()
         xhr.open('POST', `${ $form.getAttribute('action') }/save`)
-        xhr.onload = function() {
+        xhr.onload = function () {
           _.delay(endSaveIcon, 500, elem, xhr.status !== 200)
         }
         xhr.send(formData)
