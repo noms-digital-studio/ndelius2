@@ -1,8 +1,83 @@
+function formWithZeroJumpNumber (form) {
+  return _.map(form.serializeArray(), function (entry) {
+    if (entry.name === 'jumpNumber') {
+      entry.value = 0
+    }
+    return entry
+  })
+}
+
+function openPopup (url, name, top, left) {
+  window.open(url, (name || 'reportpopup'), 'top=' + (top || '200') + ',left=' + (left || '0') + ',width=1024,height=768,resizable=yes,scrollbars=yes,location=no,menubar=no,status=yes,toolbar=no').focus()
+}
+
 (function ($) {
 
   'use strict'
 
   $(function () {
+
+    var isSfr = window.location.pathname.indexOf('shortFormatPreSentenceReport') !== -1
+    var isParom = window.location.pathname.indexOf('paroleParom1Report') !== -1
+
+    // Init GOVUKFrontend
+    if (window.hasOwnProperty('GOVUKFrontend')) {
+      window.GOVUKFrontend.initAll()
+
+      var nodeListForEach = function (nodes, callback) {
+        if (window.NodeList.prototype.forEach) {
+          return nodes.forEach(callback)
+        }
+        for (var i = 0; i < nodes.length; i++) {
+          callback.call(window, nodes[i], i, nodes)
+        }
+      }
+
+      // @TODO: If this is to be a pattern, refine and include in the MOJ Pattern Library
+      nodeListForEach(document.querySelectorAll('[data-module="progressive-radios"]'), function ($module) {
+
+        var $inputs = $module.querySelectorAll('input[type="radio"]')
+        nodeListForEach($inputs, function ($input) {
+          var controls = $input.getAttribute('data-aria-controls')
+          controls = controls ? controls.substr(0, controls.lastIndexOf('-')) + '-progressive' : ''
+
+          // Check if input controls anything and content exists.
+          if (!controls || !$module.querySelector('#' + controls)) {
+            return
+          }
+
+          $input.setAttribute('data-aria-controls', controls)
+          $input.removeAttribute('_')
+          $input.addEventListener('click', function () {
+            activate(controls)
+          })
+
+          if ($input.checked) {
+            activate(controls)
+          }
+        })
+
+        function activate ($id) {
+          $module.querySelector('#' + $id).classList.toggle('govuk-radios__conditional--hidden', false)
+
+          nodeListForEach($inputs, function ($input) {
+            $input.setAttribute('aria-expanded', $input.checked)
+          })
+        }
+      })
+    }
+
+    // Feedback links
+    $('#feedbackForm,#footerFeedbackForm').click(function (e) {
+      e.preventDefault()
+      openPopup($(this).attr('href'), 'feedbackForm', 250, 50)
+    })
+
+    // Empty the error message list and repopulate with correct ordered list
+    $('.govuk-error-summary__list:not(.app-fixed-order)').empty()
+    $('.govuk-error-message:not(.govuk-visually-hidden)').each(function (index, element) {
+      $('.govuk-error-summary__list:not(.app-fixed-order)').append('<li><a href="#' + $('[id*="-error"]', $(element).parent()).attr('id') + '" class="error-message">' + $(element).text() + '</a></li>')
+    })
 
     /**
      * Start save icon
@@ -77,6 +152,27 @@
 
     }
 
+    // Analytics for 'What to include' links on SFR and PAROM1
+    $('summary').click(function () {
+
+      if (isSfr || isParom) {
+        var details = $(this).parent(),
+          isOpen = details.attr('data-open') === 'true',
+          label = details.parent().find('.govuk-caption-xl').text() ||
+            details.parent().parent().find('legend').find('span').text() ||
+            details.parent().parent().find('legend').text() ||
+            details.prev('span:not(.govuk-hint)').text() ||
+            details.prev('span').prev('span').text() || 'Unknown field'
+
+        isOpen ? details.removeAttr('data-open') : details.attr('data-open', 'true')
+
+        gtag('event', isOpen ? 'close' : 'open', {
+          'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - What to include',
+          'event_label': $('h1').text() + ' > ' + label.trim()
+        })
+      }
+    })
+
     $('textarea').keyup(function () {
       var editor = $(this)
       saveAndUpdateTextLimits(editor, function () {
@@ -94,14 +190,88 @@
       quietSaveProgress(editor)
     })
 
-    $('textarea:not(.classic)').each(function (i, elem) {
-      convertToEditor($(elem))
+    /**
+     * Navigation items
+     * Includes side menu and links from cancelled and completed report pages
+     */
+    $('.js-nav-item, .moj-subnav__link').click(function (e) {
+      e.preventDefault()
+      var target = $(this).data('target')
+      if (target && !$(this).hasClass('active')) {
+        $('#jumpNumber').val(target)
+        $('form').submit()
+      }
     })
 
-    // toggle editors back to visible previous hidden while quill initialises
-    $('textarea').each(function (i, elem) {
-      $(elem).css('visibility', 'visible')
+    function trackViewDraft () {
+      gtag('event', 'click', {
+        'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - View draft',
+        'event_label': 'Page: ' + $('h1').text()
+      })
+    }
+
+    $('#draftReport').click(function (e) {
+
+      trackViewDraft()
+
+      var target = $(this).data('target')
+      var form = $('form')
+      $.ajax({
+        type: 'POST',
+        url: form.attr('action') + '/save',
+        data: formWithZeroJumpNumber(form),
+        complete: function (response) {
+          window.location = target
+        }
+      })
     })
+
+    $('.js-view-draft').click(function (e) {
+      trackViewDraft()
+    })
+
+    /**
+     * Ensure jumpNumber is cleared if next after clicking browser back button
+     */
+    $('#nextButton:not(.popup-launcher)').click(function () {
+
+      if ($(this).text().indexOf('Submit') !== -1) {
+        gtag('event', 'submit', {
+          'event_category': isSfr ? 'SFR' : 'PAROM1',
+          'event_label': 'Report submitted'
+        })
+      }
+
+      $('#jumpNumber').val('')
+    })
+
+    /**
+     * Save and exit
+     */
+    $('#exitLink').click(function (e) {
+      e.preventDefault()
+      $('#jumpNumber').val(0)
+      $('form').submit()
+    })
+
+    // Progressive enhancement for browsers > IE8
+    if (!$('html').is('.lte-ie8')) {
+      // Autosize all Textarea elements (does not support IE8).
+      autosize(document.querySelectorAll('textarea.classic'))
+
+      // htmlunit no longer supports IE8 or conditionals so also check agent to rule out IE8
+      // not needing once we upgrade away from HTMLUnit
+      if (navigator.userAgent.indexOf('MSIE 8.0') === -1) {
+        $('textarea:not(.classic)').each(function (i, elem) {
+          convertToEditor($(elem))
+        })
+      }
+      // toggle editors back to visible previous hidden while quill initialises
+      $('textarea').each(function (i, elem) {
+        $(elem).css('visibility', 'visible')
+      })
+
+    }
 
     function replaceTextArea (textArea) {
       var attributesNotToBeCopied = ['name', 'placeholder', 'role']
@@ -241,49 +411,35 @@
       addTooltipsToToolbar()
     }
 
-    //===========================================
-    // ANALYTICS
-    //===========================================
+    var elementSelector = '.ql-editor,input[type!=hidden],textarea'
+    $('form:first').find(elementSelector).first().focus()
+  });
 
-    var isSfr = window.location.pathname.indexOf('shortFormatPreSentenceReport') !== -1
-    var isParom = window.location.pathname.indexOf('paroleParom1Report') !== -1
+  (function (global) {
 
-    // Analytics for 'What to include' links on SFR and PAROM1
-    $('summary').click(function () {
-
-      if (isSfr || isParom) {
-        var details = $(this).parent(),
-          isOpen = details.attr('data-open') === 'true',
-          label = details.parent().find('.govuk-caption-xl').text() ||
-            details.parent().parent().find('legend').find('span').text() ||
-            details.parent().parent().find('legend').text() ||
-            details.prev('span:not(.govuk-hint)').text() ||
-            details.prev('span').prev('span').text() || 'Unknown field'
-
-        isOpen ? details.removeAttr('data-open') : details.attr('data-open', 'true')
-
-        gtag('event', isOpen ? 'close' : 'open', {
-          'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - What to include',
-          'event_label': $('h1').text() + ' > ' + label.trim()
-        })
-      }
-    })
-
-    function trackViewDraft () {
-      gtag('event', 'click', {
-        'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - View draft',
-        'event_label': 'Page: ' + $('h1').text()
-      })
+    if (typeof (global) === 'undefined') {
+      throw new Error('window is undefined')
     }
 
-    $('#draftReport').click(function (e) {
-      trackViewDraft()
-    })
+    var _hash = '!'
+    var noBackPlease = function () {
+      global.location.href += '#'
 
-    $('.js-view-draft').click(function (e) {
-      trackViewDraft()
-    })
+      global.setTimeout(function () {
+        global.location.href += '!'
+      }, 50)
+    }
 
-  })
+    global.onhashchange = function () {
+      if (global.location.hash !== _hash) {
+        global.location.hash = _hash
+      }
+    }
+
+    global.onload = function () {
+      noBackPlease()
+    }
+
+  })(window)
 
 })(window.jQuery)

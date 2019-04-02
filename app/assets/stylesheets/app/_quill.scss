@@ -1,5 +1,9 @@
 // Quill specific styling that is compatible with both major versions of govuk stylesheets
 
+textarea {
+  visibility: hidden;
+}
+
 .govuk-form-group {
 
   .ql-editor:focus {
