@@ -10,7 +10,6 @@ describe('Error messages component', () => {
   })
 
   test('should reorder error messages based on position within form', () => {
-    expect(true).toBe(true)
+    expect(true).toBe(false)
   })
-
 })
