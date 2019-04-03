@@ -9,7 +9,8 @@ const presets = [
                 chrome: "69"
 
             },
-            useBuiltIns: "usage"
+            useBuiltIns: "usage",
+            corejs: '3.0.0'
         }
     ],
     "@babel/preset-react"

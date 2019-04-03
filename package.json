@@ -1,5 +1,8 @@
 {
   "private": true,
+  "jest": {
+    "verbose": true
+  },
   "standard": {
     "globals": [
       "_",
@@ -19,32 +22,35 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "7.2.3",
-    "@babel/core": "7.3.4",
-    "@babel/plugin-transform-modules-commonjs": "7.2.0",
-    "@babel/preset-env": "7.3.4",
+    "@babel/cli": "7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-transform-modules-commonjs": "7.4.3",
+    "@babel/preset-env": "7.4.3",
     "@babel/preset-react": "7.0.0",
-    "@babel/register": "7.0.0",
+    "@babel/register": "7.4.0",
+    "babel-jest": "24.7.0",
     "babelify": "10.0.0",
     "browserify": "16.2.3",
     "chai": "4.2.0",
     "chai-shallow-deep-equal": "1.4.6",
+    "core-js": "3.0.0",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.11.2",
-    "sinon": "7.2.7",
+    "jest": "24.7.0",
+    "sinon": "7.3.1",
     "sinon-chai": "3.3.0"
   },
   "dependencies": {
-    "@babel/polyfill": "7.2.5",
+    "@babel/polyfill": "7.4.3",
     "@mojdigital/pattern-library": "0.0.1-beta.1",
     "govuk-frontend": "2.9.0",
     "history": "4.9.0",
     "localforage": "1.7.3",
     "moment": "2.24.0",
     "prop-types": "15.7.2",
-    "react": "16.8.4",
-    "react-cookie": "3.0.8",
-    "react-dom": "16.8.4",
+    "react": "16.8.6",
+    "react-cookie": "3.1.2",
+    "react-dom": "16.8.6",
     "react-redux": "6.0.1",
     "react-router-dom": "5.0.0",
     "redux": "4.0.1",
