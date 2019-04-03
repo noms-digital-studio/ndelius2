@@ -11,7 +11,7 @@ const reorderErrorMessages = () => {
   nodeListForEach(document.querySelectorAll('.govuk-error-message:not(.govuk-visually-hidden)'), $errorMessage => {
     const markup = `<li><a href="#${ $errorMessage.parentNode.querySelector('[id*="-error"]').id }" class="error-message">${ $errorMessage.textContent }</a></li>`
     const content = new DOMParser().parseFromString(markup, 'text/html')
-    $container.appendChild(content.childNodes[0])
+    $container.appendChild(content.querySelector('li'))
   })
 }
 
