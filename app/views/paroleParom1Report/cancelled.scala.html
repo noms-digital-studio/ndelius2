@@ -30,7 +30,7 @@
                     <td style="width: 36px; vertical-align: top;"><span class="moj-icon moj-icon--pdf" /></td>
                     <td>
                         <p class="govuk-body" id="view-pdf">Review and print your draft 'Parole Report - Parom 1'<br>
-                            <a class="js-view-draft" href="@relative(routes.ParoleParom1ReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your draft PDF report</a>
+                            <a class="js-view-draft govuk-link govuk-link--no-visited-state" href="@relative(routes.ParoleParom1ReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your draft PDF report</a>
                         </p>
                     </td>
                 </tr>
@@ -38,7 +38,7 @@
                     <td style="vertical-align: top;"><span class="moj-icon moj-icon--edit" /></td>
                     <td>
                         <p class="govuk-body" id="edit-pdf">Check or edit your report again<br>
-                            <a class="js-nav-item" href="javascript:void(0);" data-target="@reviewPage" aria-label="Update report">Select a section to update or change</a>
+                            <a class="js-nav-item govuk-link govuk-link--no-visited-state" href="javascript:void(0);" data-target="@reviewPage" aria-label="Update report">Select a section to update or change</a>
                         </p>
                     </td>
                 </tr>
@@ -46,7 +46,7 @@
                     <td style="vertical-align: top;"><span class="moj-icon moj-icon--list" /></td>
                     <td>
                         <p class="govuk-body" id="close-report">Close this report<br>
-                            <a href="javascript:closePopup()" aria-label="Return to Delius">Return back to the main Delius window</a>
+                            <a class="govuk-link govuk-link--no-visited-state" href="javascript:closePopup()" aria-label="Return to Delius">Return back to the main Delius window</a>
                         </p>
                     </td>
                 </tr>
@@ -56,7 +56,7 @@
     </div>
 
     <p class="govuk-body">
-        <a class="govuk-link feedback-link" href="@configuration.getString("feedback.parom1.form.url")" target="_blank" id="footerFeedbackForm" title="feedback">
+        <a class="govuk-link govuk-link--no-visited-state feedback-link" href="@configuration.getString("feedback.parom1.form.url")" target="_blank" id="footerFeedbackForm" title="feedback">
             What did you think of this service?</a> (takes 30 seconds)
     </p>
 

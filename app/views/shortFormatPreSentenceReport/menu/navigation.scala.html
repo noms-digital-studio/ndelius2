@@ -17,7 +17,7 @@
 
 @navigationEntries(renderNavigation, entries => {
 
-    if (pageStatuses.values().drop(1).dropRight(1).exists { pageStatus => !pageStatus.isValid })
+    if (pageStatuses.values().drop(1).dropRight(1).exists { pageStatus => !(pageStatus.isVisited && pageStatus.isValid) })
         entries.dropRight(1)
     else
         entries
