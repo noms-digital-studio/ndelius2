@@ -3,7 +3,7 @@ import { nodeListForEach } from '../utilities/nodeListForEach'
 /**
  * Covers left-hand report section navigation and check your report pages
  */
-const initNavigation = () => {
+const initReportNavigation = () => {
   nodeListForEach(document.querySelectorAll('.js-nav-item'), $navItem => {
     $navItem.addEventListener('click', event => {
       event.preventDefault()
@@ -17,5 +17,5 @@ const initNavigation = () => {
 }
 
 export {
-  initNavigation
+  initReportNavigation
 }

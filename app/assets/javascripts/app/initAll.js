@@ -2,7 +2,7 @@ import { initProgressiveRadioButtons } from './components/progressiveRadioButton
 import { initFeedbackLinks } from './components/feedbackLinks'
 import { initExitLink } from './components/exitLink'
 import { reorderErrorMessages } from './components/errorMessages'
-import { initNavigation } from './components/reportNavigation'
+import { initReportNavigation } from './components/reportNavigation'
 import { initViewDraftLinks } from './components/viewDraftReport'
 import { noBackPlease } from './utilities/noBackPlease'
 
@@ -11,7 +11,7 @@ const initAppAll = () => {
   initFeedbackLinks()
   initExitLink()
   reorderErrorMessages()
-  initNavigation()
+  initReportNavigation()
   initViewDraftLinks()
   noBackPlease()
 }

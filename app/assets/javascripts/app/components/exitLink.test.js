@@ -13,6 +13,10 @@ describe('Exit link component', () => {
     document.getElementById('exitLink').click()
   })
 
+  afterEach(() => {
+    mockFormSubmitMethod.mockClear()
+  })
+
   test('should set jumpNumber to zero', () => {
     expect(document.getElementById('jumpNumber').value).toBe('0')
   })
