@@ -297,11 +297,11 @@ function openPopup (url, name, top, left) {
       var id = '#' + textArea.attr('id')
       var areaAttributes = replaceTextArea(textArea)
 
-      var toolbarId = 'toolbar-'+textArea.attr('id');
-      var undoId = 'undo-'+textArea.attr('id');
+      var toolbarId = 'toolbar-'+textArea.attr('id')
+      var undoId = 'undo-'+textArea.attr('id')
       var undoSvg = "<svg version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 485.183 485.183\" style=\"enable-background:new 0 0 485.183 485.183;\" xml:space=\"preserve\"><g><path d=\"M257.751,113.708c-74.419,0-140.281,35.892-181.773,91.155L0,128.868v242.606h242.606l-82.538-82.532 c21.931-66.52,84.474-114.584,158.326-114.584c92.161,0,166.788,74.689,166.788,166.795 C485.183,215.524,383.365,113.708,257.751,113.708z\"/></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>"
       var toolbarElement = "<div class='ql-toolbar' id='"+toolbarId+"'><span class='ql-formats'><button class='ql-undo' id='"+undoId+"'>"+undoSvg+"</button></span><span class='ql-formats'><button class='ql-bold'></button><button class='ql-italic'></button><button class='ql-underline'></button></span><span class='ql-formats'><button class='ql-align' value=''></button><button class='ql-align' value='justify'></button></span><span class='ql-formats'><button class='ql-list' value='ordered'></button><button class='ql-list' value='bullet'></button></span><span class='ql-formats'><button class='ql-clean'></button></span></div>"
-      $('.govuk-grid-row').append(toolbarElement);
+      $('.govuk-grid-row').append(toolbarElement)
 
       var editor = new Quill(id, {
         placeholder: areaAttributes.placeholder,
@@ -317,10 +317,10 @@ function openPopup (url, name, top, left) {
         }
       })
 
-      var undoButton = document.querySelector('#'+undoId);
+      var undoButton = document.querySelector('#'+undoId)
       undoButton.addEventListener('click', function() {
-        editor.history.undo();
-      });
+        editor.history.undo()
+      })
 
       $(id).find('.ql-editor').attr('role', areaAttributes.role)
 
