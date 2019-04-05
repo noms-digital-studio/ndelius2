@@ -5,6 +5,7 @@ import { reorderErrorMessages } from './components/errorMessages'
 import { initReportNavigation } from './components/reportNavigation'
 import { initViewDraftLinks } from './components/viewDraftReport'
 import { noBackPlease } from './utilities/noBackPlease'
+import { initSummaryAnalytics } from './components/summary'
 
 const initAppAll = () => {
   initProgressiveRadioButtons()
@@ -13,6 +14,7 @@ const initAppAll = () => {
   reorderErrorMessages()
   initReportNavigation()
   initViewDraftLinks()
+  initSummaryAnalytics()
   noBackPlease()
 }
 

@@ -240,34 +240,6 @@
 
       addTooltipsToToolbar()
     }
-
-    //===========================================
-    // ANALYTICS
-    //===========================================
-
-    var isSfr = window.location.pathname.indexOf('shortFormatPreSentenceReport') !== -1
-    var isParom = window.location.pathname.indexOf('paroleParom1Report') !== -1
-
-    // Analytics for 'What to include' links on SFR and PAROM1
-    $('summary').click(function () {
-
-      if (isSfr || isParom) {
-        var details = $(this).parent(),
-          isOpen = details.attr('data-open') === 'true',
-          label = details.parent().find('.govuk-caption-xl').text() ||
-            details.parent().parent().find('legend').find('span').text() ||
-            details.parent().parent().find('legend').text() ||
-            details.prev('span:not(.govuk-hint)').text() ||
-            details.prev('span').prev('span').text() || 'Unknown field'
-
-        isOpen ? details.removeAttr('data-open') : details.attr('data-open', 'true')
-
-        gtag('event', isOpen ? 'close' : 'open', {
-          'event_category': (isSfr ? 'SFR' : 'PAROM1') + ' - What to include',
-          'event_label': $('h1').text() + ' > ' + label.trim()
-        })
-      }
-    })
   })
 
 })(window.jQuery)

@@ -13,16 +13,16 @@ describe('Progressive radio buttons component', () => {
       '    </legend>' +
       '    <div class="govuk-radios">' +
       '      <div class="govuk-radios__item">' +
-      '        <input id="radioItems_one" name="radioItems" type="radio" value="one" class="govuk-radios__input" data-aria-controls="qa-progressive-content" aria-expanded="false" />' +
+      '        <input id="radioItems_one" name="radioItems" type="radio" value="one" class="govuk-radios__input" data-aria-controls="qa-content-progressive" aria-expanded="false" />' +
       '        <label for="radioItems_one" class="govuk-label govuk-radios__label">Radio 1</label>' +
       '      </div>' +
       '      <div class="govuk-radios__item">' +
-      '        <input id="radioItems_two" name="radioItems" type="radio" value="two" class="govuk-radios__input" data-aria-controls="qa-progressive-content" aria-expanded="false" />' +
+      '        <input id="radioItems_two" name="radioItems" type="radio" value="two" class="govuk-radios__input" data-aria-controls="qa-content-progressive" aria-expanded="false" />' +
       '        <label for="radioItems_two" class="govuk-label govuk-radios__label">Radio 2</label>' +
       '      </div>' +
       '    </div>' +
       '  </fieldset>' +
-      '  <div id="qa-progressive-content" class="govuk-radios__conditional govuk-radios__conditional--hidden">' +
+      '  <div id="qa-content-progressive" class="govuk-radios__conditional govuk-radios__conditional--hidden">' +
       '    <p id="qa-nested-content">Progressive content one</p>' +
       '  </div>' +
       '</div>'
@@ -31,7 +31,7 @@ describe('Progressive radio buttons component', () => {
   })
 
   test('should render with the progressive content hidden', () => {
-    expect(document.getElementById('qa-progressive-content').classList.contains('govuk-radios__conditional--hidden')).toBeTruthy()
+    expect(document.getElementById('qa-content-progressive').classList.contains('govuk-radios__conditional--hidden')).toBeTruthy()
   })
 
   test('should display progressive content when the relevant radio button is clicked', () => {
@@ -39,6 +39,6 @@ describe('Progressive radio buttons component', () => {
     radioButton.click();
 
     expect(radioButton.getAttribute('aria-expanded')).toBe('true')
-    expect(document.getElementById('qa-progressive-content').classList.contains('govuk-radios__conditional--hidden')).toBeFalsy()
+    expect(document.getElementById('qa-content-progressive').classList.contains('govuk-radios__conditional--hidden')).toBeFalsy()
   })
 })
