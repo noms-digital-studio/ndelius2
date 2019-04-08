@@ -11,8 +11,10 @@ const initSummaryAnalytics = () => {
     if (parent) {
       if (parent.querySelector('.govuk-caption-xl')) {
         label = parent.querySelector('.govuk-caption-xl').textContent
-      } else if (parent.parentElement && parent.parentElement.querySelector('span:not(.govuk-details__summary-text)')) {
-        label = parent.parentElement.querySelector('span:not(.govuk-details__summary-text)').textContent
+      } else if(parent.previousElementSibling && parent.previousElementSibling.querySelector('.govuk-caption-xl')) {
+        label = parent.previousElementSibling.querySelector('.govuk-caption-xl').textContent
+      } else if (parent.parentElement && parent.parentElement.querySelector('label > span')) {
+        label = parent.parentElement.querySelector('label > span').textContent
       } else if (parent.parentElement && parent.parentElement.parentElement && parent.parentElement.parentElement.parentElement && parent.parentElement.parentElement.parentElement.querySelector('legend > span')) {
         label = parent.parentElement.parentElement.parentElement.querySelector('legend > span').textContent
       } else if (parent.parentElement && parent.parentElement.parentElement && parent.parentElement.parentElement.parentElement && parent.parentElement.parentElement.parentElement.querySelector('legend')) {
