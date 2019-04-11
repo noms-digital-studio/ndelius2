@@ -27,7 +27,7 @@
       if (error) {
         document.getElementById('save_indicator').classList.add('govuk-visually-hidden')
         elem.closest('.form-group').classList.add('form-group-autosave-error')
-        document.getElementById(`${ elem.id }-autosave_error`).classList.remove('govuk-visually-hidden')
+        document.getElementById(elem.id + '-autosave_error').classList.remove('govuk-visually-hidden')
       } else {
         // remove all autosave errors on this page
         var autosaveError = document.querySelector('.form-group-autosave-error')
@@ -51,7 +51,7 @@
         formData.append('jumpNumber', '0')
 
         var xhr = new XMLHttpRequest()
-        xhr.open('POST', `${ $form.getAttribute('action') }/save`)
+        xhr.open('POST', $form.getAttribute('action') + '/save')
         xhr.onload = function () {
           _.delay(endSaveIcon, 500, elem, xhr.status !== 200)
         }

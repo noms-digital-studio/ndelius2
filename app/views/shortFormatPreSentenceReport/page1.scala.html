@@ -80,7 +80,7 @@
       if (isExistingReport) {
             var onBehalfOfUser = encodeValue('#onBehalfOfUser')
             var documentId = encodeValue('#documentId')
-            var url = `${ $form.getAttribute('action') }?documentId=${ documentId }&onBehalfOfUser=${ onBehalfOfUser }&continue=true`
+            var url = $form.getAttribute('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true'
             window.openPopup(url)
         } else {
             window.openPopup('about:blank')
