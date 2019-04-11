@@ -40,6 +40,10 @@ jobs:
                   - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
                   - v2-ndelius-new-tech-
             - run:
+                name: Unit tests (Jest)
+                command: |
+                  yarn jest /app/assets/javascripts/app
+            - run:
                 name: Unit tests
                 command: |
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
