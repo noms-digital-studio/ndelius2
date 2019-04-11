@@ -1,0 +1,14 @@
+.moj-auto-save__spinner {
+
+  &.error {
+    .moj-auto-save__spinner__double-bounce1, .moj-auto-save__spinner__double-bounce2 {
+      opacity: 1;
+      background-color: govuk-colour("red");
+    }
+    .moj-auto-save__spinner__double-bounce2 {
+      &::before {
+        display: none;
+      }
+    }
+  }
+}

@@ -16,7 +16,6 @@
 
         <link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/main.css"))' />
         <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
-        <link rel="stylesheet" type="text/css" media="all" href='@relative(routes.Assets.versioned("stylesheets/vendor/quill.snow.css"))' />
 
         @googleAnalyticsHead(hashName)
 
@@ -48,10 +47,7 @@
         </div>
 
         <script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/polyfills/element-closest.min.js"))'></script>
-        <script type='text/javascript' src='@relative(webJarsUtil.url("underscorejs", "underscore.js").get)'></script>
-        <script type='text/javascript' src='@relative(webJarsUtil.url("jquery", "jquery.js").get)'></script>
-        <script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/quilljs/quill.js"))'></script>
         <script src='@relative(routes.Assets.versioned("reports.js"))'></script>
-        <script src='@relative(routes.Assets.versioned("javascripts/application.js"))' type="text/javascript"></script>
+
     </body>
 </html>

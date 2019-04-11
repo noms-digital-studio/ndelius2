@@ -31,8 +31,6 @@ const initSummaryAnalytics = () => {
       const isOpen = details.dataset.open
       const label = getLabel(details)
 
-      console.info('Label:', label.trim())
-
       isOpen ? delete details.dataset.open : details.dataset.open = true
 
       trackEvent(isOpen ? 'close' : 'open', `${ isShortFormatReport() ? 'SFR' : 'PAROM1' } - What to include`, `${ document.querySelector('h1').textContent } > ${ label.trim() }`)
