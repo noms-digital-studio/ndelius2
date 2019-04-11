@@ -148,7 +148,7 @@
             var documentId = encodeValue('#documentId')
             var user = encodeValue('#user')
             var t = encodeValue('#t')
-            var url = $form.getAttribute('action') + '?documentId=${ documentId }&onBehalfOfUser=' + onBehalfOfUser + '&continue=true&user=' + user + '&t=' + t
+            var url = $form.getAttribute('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true&user=' + user + '&t=' + t
             window.openPopup(url)
         } else {
             window.openPopup('about:blank')
