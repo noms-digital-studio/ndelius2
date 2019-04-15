@@ -2,7 +2,6 @@ package data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import data.annotations.DateOnPage;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredDateOnPage;
@@ -11,6 +10,7 @@ import data.annotations.RequiredOnPage;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@ToString(of = {"prisonerDetailsPrisonersFullName", "prisonerDetailsNomisNumber"}, callSuper = true)
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ParoleParom1ReportData extends ReportGeneratorWizardData {

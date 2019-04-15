@@ -8,6 +8,7 @@ import data.annotations.*;
 import data.base.ReportGeneratorWizardData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import play.data.validation.ValidationError;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@ToString(of = {"name"}, callSuper = true)
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData {

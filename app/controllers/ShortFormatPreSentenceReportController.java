@@ -1,17 +1,14 @@
 package controllers;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
 import controllers.base.ReportGeneratorWizardController;
 import data.ShortFormatPreSentenceReportData;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
-import interfaces.OffenderApi.CourtAppearances;
-import interfaces.OffenderApi.Offences;
-import interfaces.OffenderApi.Offender;
-import interfaces.OffenderApi.CourtReport;
-import interfaces.OffenderApi.Court;
+import interfaces.OffenderApi.*;
 import interfaces.PdfGenerator;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +20,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -30,9 +28,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
-import static helpers.DateTimeHelper.calculateAge;
-import static helpers.DateTimeHelper.format;
-import static helpers.DateTimeHelper.formatDateTime;
+import static helpers.DateTimeHelper.*;
 import static java.time.Clock.systemUTC;
 import static java.util.Optional.ofNullable;
 
@@ -109,15 +105,16 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
             .flatMap(OffenderApi.ContactDetails::mainAddress)
             .map(OffenderApi.OffenderAddress::render)
             .ifPresent(address -> {
-                Logger.info("Using the main address obtained from the API");
+                Logger.debug("Using the main address obtained from the API");
                 params.put("address", address);
                 params.put("addressSupplied", Boolean.TRUE.toString());
             });
 
-        Logger.info("Creating report. Params: " + params);
+        Logger.info("Report params: " + asLoggableLine(params));
 
         return params;
     }
+
 
     @Override
     protected CompletionStage<Map<String, String>> initialParams() {
@@ -146,9 +143,9 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
                                                CourtReport courtReport,
                                                Offences offences) {
 
-        Logger.info("CourtAppearances: " + courtAppearances);
-        Logger.info("Offences: " + offences);
-        Logger.info("Params: " + params);
+        Logger.debug("CourtAppearances: " + courtAppearances);
+        Logger.debug("Offences: " + offences);
+        Logger.debug("Params: " + params);
         return Optional.ofNullable(params.get("entityId"))
             .map(Long::parseLong)
             .flatMap(courtAppearances::findForCourtReportId)
@@ -244,4 +241,9 @@ public class ShortFormatPreSentenceReportController extends ReportGeneratorWizar
 
         return views.html.helper.error.render("Error - Short Format Pre Sentence Report", errorMessage, webJarsUtil, configuration);
     }
+
+    protected List<String> paramsToBeLogged() {
+        return ImmutableList.<String>builder().addAll(super.paramsToBeLogged()).add("name").build();
+    }
+
 }
