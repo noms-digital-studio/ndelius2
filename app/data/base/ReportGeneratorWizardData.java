@@ -2,19 +2,14 @@ package data.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
 import data.annotations.Encrypted;
 import data.annotations.OnPage;
 import data.annotations.RequiredOnPage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import play.data.validation.ValidationError;
+import lombok.ToString;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
+@ToString(callSuper = true)
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class ReportGeneratorWizardData extends WizardData {
