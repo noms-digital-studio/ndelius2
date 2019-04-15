@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.base.EncryptedFormFactory;
@@ -17,6 +18,7 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -150,8 +152,7 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     }
 
     private Map<String, String> storeOffenderData(Map<String, String> params, OffenderApi.InstitutionalReport institutionalReport) {
-        Logger.info("institutionalReport: " + institutionalReport);
-        Logger.info("Params: " + params);
+        Logger.debug("institutionalReport: " + institutionalReport);
 
         if (isCreateJourney(params)) {
             params.put("prisonerDetailsOffence", Optional.ofNullable(institutionalReport.getConviction())
@@ -165,6 +166,8 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
         Optional.ofNullable(institutionalReport.getConviction())
             .flatMap(conviction -> Optional.ofNullable(conviction.getConvictionDate()))
             .map(date -> params.put("convictionDate", DateTimeHelper.format(date)));
+
+        Logger.info("Report params: " + asLoggableLine(params));
 
         return params;
     }
@@ -214,6 +217,10 @@ public class ParoleParom1ReportController extends ReportGeneratorWizardControlle
     protected Content renderErrorMessage(String errorMessage) {
 
         return views.html.helper.error.render("Error - PAROM 1 Report", errorMessage, webJarsUtil, configuration);
+    }
+
+    protected List<String> paramsToBeLogged() {
+        return ImmutableList.<String>builder().addAll(super.paramsToBeLogged()).add("prisonerDetailsPrisonersFullName", "prisonerDetailsNomisNumber").build();
     }
 
 }

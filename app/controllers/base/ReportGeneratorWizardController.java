@@ -1,13 +1,13 @@
 package controllers.base;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import controllers.ParamsValidator;
 import data.base.ReportGeneratorWizardData;
 import helpers.InvalidCredentialsException;
 import helpers.JsonHelper;
-import helpers.ThrowableHelper;
 import interfaces.DocumentStore;
 import interfaces.OffenderApi;
 import interfaces.OffenderApi.Offender;
@@ -24,13 +24,13 @@ import play.mvc.Result;
 import play.twirl.api.Content;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static controllers.SessionKeys.OFFENDER_API_BEARER_TOKEN;
 import static helpers.FluentHelper.not;
@@ -348,6 +348,26 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
     protected abstract String documentEntityType();
 
     protected abstract String documentTableName();
+
+    protected String asLoggableLine(Map<String, String> params) {
+        val keysToKeep = paramsToBeLogged();
+        return params
+                .keySet()
+                .stream()
+                .filter(keysToKeep::contains)
+                .filter(key -> params.get(key) != null)
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        params::get,
+                        (v1, v2) -> { throw new RuntimeException(String.format("Duplicate key for values %s and %s", v1, v2));},
+                        TreeMap::new))
+                .toString();
+    }
+
+    protected List<String> paramsToBeLogged() {
+        return ImmutableList.of("pageNumber", "reportFilename", "crn", "entityId", "visitedPages", "documentId", "lastUpdated");
+    }
+
 
     private Map<String, Object> convertDataToMap(T data) {
         BeanMap beanMap = BeanMap.create(data);

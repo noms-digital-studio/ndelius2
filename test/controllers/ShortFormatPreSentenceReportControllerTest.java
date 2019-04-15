@@ -1372,7 +1372,6 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         assertEquals(OK, result.status());
     }
 
-
     @Override
     protected Application provideApplication() {
         PdfGenerator pdfGenerator = mock(PdfGenerator.class);
