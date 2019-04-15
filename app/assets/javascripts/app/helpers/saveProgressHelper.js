@@ -21,8 +21,10 @@ const autoSaveProgress = $editor => {
     hideAutoSaveErrors()
   }, () => {
     saveIconError()
-    errorMessage.classList.remove('govuk-visually-hidden')
-    errorMessage.closest('.govuk-form-group').classList.add('govuk-form-group--error')
+    if (errorMessage) {
+      errorMessage.classList.remove('govuk-visually-hidden')
+      errorMessage.closest('.govuk-form-group').classList.add('govuk-form-group--error')
+    }
   })
 }
 

@@ -25,6 +25,10 @@ function updateTextLimits ($editor) {
   }
 }
 
+function updateFormElement($editor) {
+  document.getElementById($editor.id).value = $editor.getContent()
+}
+
 const initTextAreas = () => {
   tinymce.init({
     branding: false,
@@ -35,9 +39,11 @@ const initTextAreas = () => {
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     setup: $editor => {
       $editor.on('blur', () => {
+        updateFormElement($editor)
         autoSaveProgress(document.getElementById($editor.id))
       })
       $editor.on('keyup', debounce(() => {
+        updateFormElement($editor)
         autoSaveProgress(document.getElementById($editor.id))
       }))
       $editor.on('input', () => {
