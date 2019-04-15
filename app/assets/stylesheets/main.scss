@@ -4,3 +4,8 @@ $govuk-fonts-path: '../fonts/';
 @import "../../../node_modules/@mojdigital/pattern-library/all";
 
 @import 'app/all';
+
+
+.moj-tooltip {
+  overflow: visible;
+}
