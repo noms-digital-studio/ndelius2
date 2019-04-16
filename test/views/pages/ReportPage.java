@@ -40,7 +40,7 @@ public class ReportPage extends FluentPage {
 
     public void fillTextArea(String label, String text) {
         val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
-        $(cssSelector(String.format("#%s .ql-editor", fieldId))).fill().with(text);
+        $(cssSelector(String.format("#%s_ifr .mce-content-body", fieldId))).fill().with(text);
     }
 
     public void fillClassicTextArea(String label, String text) {
