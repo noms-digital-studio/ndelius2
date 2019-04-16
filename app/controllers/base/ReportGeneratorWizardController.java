@@ -334,7 +334,7 @@ public abstract class ReportGeneratorWizardController<T extends ReportGeneratorW
 
         return result.thenApply(stored -> {
 
-            Logger.info("Store result: " + stored);
+            Logger.debug("Store result: " + stored);
             return stored;
         });
     }
