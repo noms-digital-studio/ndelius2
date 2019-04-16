@@ -11,7 +11,7 @@ function updateTextLimits ($editor) {
   const messageTarget = document.getElementById(`${ $editor.id }-count`)
 
   if (!messageHolder || !messageTarget) {
-    return;
+    return
   }
 
   const limit = document.getElementById($editor.id).dataset.limit
@@ -25,7 +25,7 @@ function updateTextLimits ($editor) {
   }
 }
 
-function updateFormElement($editor) {
+function updateFormElement ($editor) {
   document.getElementById($editor.id).value = $editor.getContent()
 }
 
@@ -34,6 +34,7 @@ const initTextAreas = () => {
     branding: false,
     menubar: false,
     browser_spellcheck: true,
+    allow_conditional_comments: true,
     selector: '.govuk-textarea ',
     plugins: ['autoresize lists'],
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',

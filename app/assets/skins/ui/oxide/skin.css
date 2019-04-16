@@ -39,7 +39,7 @@
   font-size: inherit;
 }
 .tox-tinymce {
-  border: 1px solid #cccccc;
+  border: none;
   border-radius: 0;
   box-shadow: none;
   box-sizing: border-box;
@@ -54,9 +54,6 @@
   flex: 1 1 auto;
   flex-direction: column;
   overflow: hidden;
-}
-.tox-editor-container > *:first-child {
-  border-top: none !important;
 }
 .tox-tinymce-aux {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -1748,7 +1745,7 @@ body.tox-dialog__disable-scroll {
   background-color: #fff;
   border-top: 1px solid #cccccc;
   color: rgba(34, 47, 62, 0.6);
-  display: flex;
+  display: none;
   flex: 0 0 auto;
   font-size: 12px;
   height: 18px;
@@ -1980,6 +1977,7 @@ body.tox-dialog__disable-scroll {
   box-shadow: none;
   color: rgba(34, 47, 62, 0.5);
 }
+.tox .tox-toolbar{border: 1px solid #ccc;}
 .tox .tox-toolbar,
 .tox .tox-toolbar__primary,
 .tox .tox-toolbar__overflow {
