@@ -39,9 +39,22 @@ const initTextAreas = () => {
     plugins: ['autoresize lists'],
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     setup: $editor => {
+      $editor.on('init', () => {
+        const container = document.getElementById($editor.id).parentNode.querySelector('.tox-editor-container')
+        const toolbar = container.querySelector('.tox-toolbar')
+        toolbar.style.display = 'none'
+        container.appendChild(toolbar)
+      })
+      $editor.on('focus', () => {
+        const container = document.getElementById($editor.id).parentNode.querySelector('.tox-editor-container')
+        const toolbar = container.querySelector('.tox-toolbar')
+        toolbar.style.display = 'flex'
+      })
       $editor.on('blur', () => {
         updateFormElement($editor)
         autoSaveProgress(document.getElementById($editor.id))
+        const toolbar = document.getElementById($editor.id).parentNode.querySelector('.tox-toolbar')
+        toolbar.style.display = 'none'
       })
       $editor.on('keyup', debounce(() => {
         updateFormElement($editor)

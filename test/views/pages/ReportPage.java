@@ -38,9 +38,14 @@ public class ReportPage extends FluentPage {
         $(By.xpath(String.format("//button[contains(text(),'%s')]", button))).click();
     }
 
+    public void fillTextAreaById(String id, String text) {
+        control.executeScript(String.format("tinymce.get('" + id + "').setContent('" + text + "')"));
+        control.executeScript(String.format("tinymce.get('" + id + "').fire('Blur')"));
+    }
+
     public void fillTextArea(String label, String text) {
-        val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
-        $(cssSelector(String.format("#%s_ifr .mce-content-body", fieldId))).fill().with(text);
+        String fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
+        this.fillTextAreaById(fieldId, text);
     }
 
     public void fillClassicTextArea(String label, String text) {
@@ -49,8 +54,8 @@ public class ReportPage extends FluentPage {
     }
 
     public void fillInput(String label, String text) {
-        val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
-        $(name(fieldId)).fill().with(text);
+        String fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
+        this.fillInputWithId(fieldId, text);
     }
 
     public void fillInputWithId(String fieldId, String text) {

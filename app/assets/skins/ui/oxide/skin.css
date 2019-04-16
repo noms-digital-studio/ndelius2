@@ -50,6 +50,7 @@
   visibility: inherit !important;
 }
 .tox-editor-container {
+  position: relative;
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
@@ -988,7 +989,6 @@ body.tox-dialog__disable-scroll {
   margin: 0 0 16px 0;
 }
 .tox .tox-edit-area {
-  border-top: 1px solid #cccccc;
   display: flex;
   flex: 1;
   -ms-flex-preferred-size: auto;
@@ -1977,7 +1977,6 @@ body.tox-dialog__disable-scroll {
   box-shadow: none;
   color: rgba(34, 47, 62, 0.5);
 }
-.tox .tox-toolbar{border: 1px solid #ccc;}
 .tox .tox-toolbar,
 .tox .tox-toolbar__primary,
 .tox .tox-toolbar__overflow {
@@ -1991,6 +1990,12 @@ body.tox-dialog__disable-scroll {
   margin-bottom: -1px;
   padding: 0 0;
 }
+
+.tox .tox-toolbar {
+  display: none;
+  border: 1px solid #ccc;
+}
+
 .tox .tox-toolbar__overflow.tox-toolbar__overflow--closed {
   display: none;
 }
