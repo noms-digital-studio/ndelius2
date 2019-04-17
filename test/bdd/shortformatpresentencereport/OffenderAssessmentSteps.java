@@ -22,8 +22,9 @@ public class OffenderAssessmentSteps {
         page.clickCheckboxWithLabel("Accommodation");
         page.clickRadioButtonWithLabelWithinLegend("Yes", "Is there evidence of the offender experiencing trauma?");
         page.clickRadioButtonWithLabelWithinLegend("Yes", "Does the offender have caring responsibilities for children or adults, or have they ever had caring responsibilities for children or adults?");
-        page.fillTextArea("Experience of trauma", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
-        page.fillTextArea("Caring responsibilities", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.fillTextArea("Provide a brief assessment for accommodation", "Some brief assessment for accommodation");
+        page.fillTextArea("Experience of trauma", "Some experience of trauma");
+        page.fillTextArea("Caring responsibilities", "Some caring responsibilities");
         page.clickButton("Continue");
     }
 }

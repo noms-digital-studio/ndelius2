@@ -66,15 +66,17 @@ public class ReportPage extends FluentPage {
         val fieldId = findSectionFromLegend(legend).find(xpath(String.format(".//label[contains(., '%s')]", label))).attribute("for");
         $(id(fieldId)).fill().with(text);
     }
+
     public String fieldNameFromLabel(String label) {
         val fieldId = $(xpath(String.format("//label[span[text()='%s']]", label))).attribute("for");
-        return Optional.ofNullable(fieldId).orElseGet(() ->  Optional.ofNullable(dateGroupFieldIdFromLegend(label)).orElseGet(() -> radioFieldNameFromLegend(label)));
+        return Optional.ofNullable(fieldId).orElseGet(() -> Optional.ofNullable(dateGroupFieldIdFromLegend(label)).orElseGet(() -> radioFieldNameFromLegend(label)));
     }
 
     private String radioFieldNameFromLegend(String legend) {
         // find any radio input within section with legend - we just need the name of form field name
         return findSectionFromLegend(legend).find(By.cssSelector("input[type='radio']")).attribute("name");
     }
+
     private String dateGroupFieldIdFromLegend(String legend) {
         // find any radio input within section with legend - we just need the name of form field name
         return findSectionFromLegend(legend).find(By.cssSelector(".govuk-date-input")).attribute("id");
