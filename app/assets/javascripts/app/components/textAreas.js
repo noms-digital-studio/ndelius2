@@ -6,6 +6,69 @@ import 'tinymce/plugins/lists'
 import { autoSaveProgress } from '../helpers/saveProgressHelper'
 import { debounce } from '../utilities/debounce'
 
+/**
+ *
+ * @param $editor
+ */
+function configureEditor ($editor) {
+  const container = $editor.getElement().parentNode.querySelector('.tox-editor-container')
+  const toolbar = container.querySelector('.tox-toolbar')
+  toolbar.style.display = 'none'
+  container.appendChild(toolbar)
+
+  if ($editor.getElement().classList.contains('moj-textarea--prefilled')) {
+    container.classList.add('tox-editor-container--prefilled')
+  }
+}
+
+/**
+ *
+ * @param $editor
+ */
+function showToolbar ($editor) {
+  const toolbar = $editor.getContainer().querySelector('.tox-toolbar')
+  toolbar.style.display = 'flex'
+}
+
+/**
+ *
+ * @param $editor
+ */
+function hideToolbar ($editor) {
+  const toolbar = $editor.getContainer().querySelector('.tox-toolbar')
+  toolbar.style.display = 'none'
+}
+
+/**
+ *
+ * @param $editor
+ */
+function addPlaceholder ($editor) {
+  if (!$editor.getContent({ format: 'text' }).trim().length) {
+    $editor.getContainer().classList.add('tox-tinymce--placeholder')
+  }
+}
+
+/**
+ *
+ * @param $editor
+ */
+function removePlaceholder ($editor) {
+  $editor.getContainer().classList.remove('tox-tinymce--placeholder')
+}
+
+/**
+ *
+ * @param $editor
+ */
+function updateFormElement ($editor) {
+  $editor.getElement().value = $editor.getContent()
+}
+
+/**
+ *
+ * @param $editor
+ */
 function updateTextLimits ($editor) {
   const messageHolder = document.getElementById(`${ $editor.id }-countHolder`)
   const messageTarget = document.getElementById(`${ $editor.id }-count`)
@@ -15,7 +78,7 @@ function updateTextLimits ($editor) {
   }
 
   const limit = document.getElementById($editor.id).dataset.limit
-  const current = $editor.getContent().replace(/(<([^>]+)>)/ig, '').replace('&nbsp;', '').trim().length
+  const current = $editor.getContent({ format: 'text' }).trim().length
 
   if (limit && current > 0) {
     messageHolder.classList.remove('govuk-visually-hidden')
@@ -25,10 +88,9 @@ function updateTextLimits ($editor) {
   }
 }
 
-function updateFormElement ($editor) {
-  document.getElementById($editor.id).value = $editor.getContent()
-}
-
+/**
+ *
+ */
 const initTextAreas = () => {
   tinymce.init({
     branding: false,
@@ -40,25 +102,23 @@ const initTextAreas = () => {
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     setup: $editor => {
       $editor.on('init', () => {
-        const container = document.getElementById($editor.id).parentNode.querySelector('.tox-editor-container')
-        const toolbar = container.querySelector('.tox-toolbar')
-        toolbar.style.display = 'none'
-        container.appendChild(toolbar)
+        configureEditor($editor)
+        addPlaceholder($editor)
+        updateFormElement($editor)
       })
       $editor.on('focus', () => {
-        const container = document.getElementById($editor.id).parentNode.querySelector('.tox-editor-container')
-        const toolbar = container.querySelector('.tox-toolbar')
-        toolbar.style.display = 'flex'
+        showToolbar($editor)
+        removePlaceholder($editor)
       })
       $editor.on('blur', () => {
+        hideToolbar($editor)
+        addPlaceholder($editor)
         updateFormElement($editor)
-        autoSaveProgress(document.getElementById($editor.id))
-        const toolbar = document.getElementById($editor.id).parentNode.querySelector('.tox-toolbar')
-        toolbar.style.display = 'none'
+        autoSaveProgress($editor.getElement())
       })
       $editor.on('keyup', debounce(() => {
         updateFormElement($editor)
-        autoSaveProgress(document.getElementById($editor.id))
+        autoSaveProgress($editor.getElement())
       }))
       $editor.on('input', () => {
         updateTextLimits($editor)
