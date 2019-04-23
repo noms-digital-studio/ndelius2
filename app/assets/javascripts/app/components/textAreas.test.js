@@ -1,5 +1,36 @@
+import tinymce from 'tinymce/tinymce'
+import { initTextAreas } from './textAreas'
+
+jest.mock('tinymce/tinymce')
+jest.mock('../components/saveIcon')
+jest.mock('../utilities/xhrPromisify', () => ({
+  promisifyXMLHttpRequest: jest.fn().mockImplementation(() => {
+    return new Promise((resolve) => {
+      process.nextTick(() => resolve())
+    })
+  })
+}))
+
 describe('textarea component', () => {
-  it('should HAVE SOME TESTS', () => {
-    expect(true).toBeTruthy()
+
+  beforeEach(() => {
+    document.body.innerHTML =
+      '<form id="ndForm" action="/some/form/url">' +
+      '  <div class="govuk-form-group">' +
+      '    <div class="testTextArea-autosave_error">Auto save error</div>' +
+      '    <label class="govuk-label" for="testTextArea">Test text area</label>' +
+      '    <textarea id="testTextArea" class="govuk-textarea govuk-visually-hidden" data-limit="2000"></textarea>' +
+      '    <input id="jumpNumber" value="2" type="hidden" />' +
+      '    <div id="testTextArea-countHolder" class="govuk-visually-hidden">' +
+      '      <div id="testTextArea-count"></div>' +
+      '    </div>' +
+      '  </div>' +
+      '</form>'
+
+    initTextAreas()
+  })
+
+  it('should initialise the tinymce instance', () => {
+    expect(tinymce.init).toHaveBeenCalled()
   })
 })

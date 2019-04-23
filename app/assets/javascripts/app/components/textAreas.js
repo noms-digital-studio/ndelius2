@@ -11,7 +11,7 @@ import { debounce } from '../utilities/debounce'
  * @param $editor
  */
 function configureEditor ($editor) {
-  const container = $editor.getElement().parentNode.querySelector('.tox-editor-container')
+  const container = $editor.getContainer().querySelector('.tox-editor-container')
   const toolbar = container.querySelector('.tox-toolbar')
   toolbar.style.display = 'none'
   container.appendChild(toolbar)
@@ -77,7 +77,7 @@ function updateTextLimits ($editor) {
     return
   }
 
-  const limit = document.getElementById($editor.id).dataset.limit
+  const limit = $editor.getElement().dataset.limit
   const current = $editor.getContent({ format: 'text' }).trim().length
 
   if (limit && current > 0) {

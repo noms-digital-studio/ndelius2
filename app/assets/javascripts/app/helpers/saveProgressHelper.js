@@ -28,7 +28,7 @@ const autoSaveProgress = $editor => {
   })
 }
 
-const saveReportProgress = ($form) => {
+const saveReportProgress = $form => {
   return promisifyXMLHttpRequest({
     method: 'POST',
     url: `${ $form.getAttribute('action') }/save`,
