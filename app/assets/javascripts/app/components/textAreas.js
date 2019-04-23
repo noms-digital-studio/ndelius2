@@ -119,7 +119,7 @@ const initTextAreas = () => {
       $editor.on('keyup', debounce(() => {
         updateFormElement($editor)
         autoSaveProgress($editor.getElement())
-      }))
+      }, 5000))
       $editor.on('input', () => {
         updateTextLimits($editor)
       })

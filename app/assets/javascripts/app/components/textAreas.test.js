@@ -1,6 +1,12 @@
 import tinymce from 'tinymce/tinymce'
 import { initTextAreas } from './textAreas'
 
+/**
+ * @TODO: We cannot test with tinymce as jsdom have not implemented range methods
+ *        It will have to be mocked correctly...?
+ * @see: https://github.com/tinymce/tinymce-react/issues/61
+ */
+
 jest.mock('tinymce/tinymce')
 jest.mock('../components/saveIcon')
 jest.mock('../utilities/xhrPromisify', () => ({
