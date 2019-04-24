@@ -100,6 +100,7 @@ const initTextAreas = () => {
     selector: '.govuk-textarea:not(.moj-textarea--classic) ',
     plugins: ['autoresize lists'],
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
+    min_height: 145,
     setup: $editor => {
       $editor.on('init', () => {
         configureEditor($editor)
