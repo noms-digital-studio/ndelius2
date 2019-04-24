@@ -2,6 +2,14 @@
   border: 2px solid black !important;
 }
 
+.tox-tinymce {
+  visibility: visible !important;
+}
+
+.tox-statusbar {
+  visibility: hidden;
+}
+
 .tox-tinymce--placeholder {
   position: relative !important;
   &::after {

@@ -97,9 +97,10 @@ const initTextAreas = () => {
     menubar: false,
     browser_spellcheck: true,
     allow_conditional_comments: true,
-    selector: '.govuk-textarea:not(.moj-textarea--classic) ',
+    selector: '.govuk-textarea:not(.moj-textarea--classic)',
     plugins: ['autoresize lists'],
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
+    width: '100%',
     min_height: 145,
     setup: $editor => {
       $editor.on('init', () => {
