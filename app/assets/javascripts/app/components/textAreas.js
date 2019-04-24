@@ -102,6 +102,7 @@ const initTextAreas = () => {
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     width: '100%',
     min_height: 145,
+    skin_url: '/assets/skins/ui/oxide',
     setup: $editor => {
       $editor.on('init', () => {
         configureEditor($editor)
