@@ -22,8 +22,8 @@ public class OffenceDetailsPage extends ShortFormatPreSentencePopupReportPage {
     }
 
     public OffenceDetailsPage gotoNext() {
-        $(id("offenceSummary")).fill().with("Offence summary");
-        $(id("mainOffence")).fill().with("Main offence");
+        fillTextAreaById("mainOffence", "Main offence");
+        fillTextAreaById("offenceSummary", "Offence summary");
         $(id("nextButton")).click();
         return this;
     }

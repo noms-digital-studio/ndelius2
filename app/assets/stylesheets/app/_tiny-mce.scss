@@ -1,0 +1,22 @@
+.tox-editor-container--prefilled {
+  border: 2px solid black !important;
+}
+
+.tox-statusbar {
+  visibility: hidden;
+}
+
+.tox-tinymce--placeholder {
+  position: relative !important;
+  &::after {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    pointer-events: none;
+    display: inline-block;
+    content: "Start typing here...";
+    font-family: "nta",Arial,sans-serif;
+    font-size: 24px;
+    color: govuk-colour("grey-2");
+  }
+}

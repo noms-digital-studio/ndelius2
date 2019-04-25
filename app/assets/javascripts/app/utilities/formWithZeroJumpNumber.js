@@ -1,6 +1,9 @@
+import { updateFormData } from '../helpers/formDataHelper'
+
 const formWithZeroJumpNumber = $form => {
   const formData = new FormData($form)
-  formData.append('jumpNumber', '0')
+  updateFormData(formData)
+  formData.set('jumpNumber', '0')
   return formData
 }
 

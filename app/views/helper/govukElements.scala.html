@@ -89,7 +89,7 @@
 
         @if(elements.args.get(Symbol("data-limit"))) {
             <div class="govuk-visually-hidden" id="@elements.id-countHolder">
-                <p class="govuk-hint" id="@elements.id-count" />
+                <p class="govuk-hint" id="@elements.id-count"></p>
             </div>
         }
     } else if(elements.input.body.contains("select id=")) {

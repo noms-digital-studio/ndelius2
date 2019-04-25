@@ -1,7 +1,6 @@
-import { formWithZeroJumpNumber } from '../utilities/formWithZeroJumpNumber'
-import { promisifyXMLHttpRequest } from '../utilities/xhrPromisify'
 import { isShortFormatReport } from '../helpers/locationHelper'
 import { trackEvent } from '../../helpers/analyticsHelper'
+import { saveReportProgress } from '../helpers/saveProgressHelper'
 
 const trackDraftClick = () => {
   trackEvent('click', `${ isShortFormatReport ? 'SFR' : 'PAROM1' } - View draft`, document.getElementsByTagName('h1')[0].textContent)
@@ -18,11 +17,7 @@ const initViewDraftLinks = () => {
 
       trackDraftClick()
 
-      promisifyXMLHttpRequest({
-        method: 'POST',
-        url: `${ $form.getAttribute('action') }/save`,
-        body: formWithZeroJumpNumber($form)
-      }).finally(() => {
+      saveReportProgress($form).finally(() => {
         window.location = target
       })
     })

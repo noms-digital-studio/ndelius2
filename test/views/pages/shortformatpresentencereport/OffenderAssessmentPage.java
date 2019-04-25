@@ -25,7 +25,7 @@ public class OffenderAssessmentPage extends ShortFormatPreSentencePopupReportPag
     }
 
     public OffenderAssessmentPage gotoNext() {
-        tick("Relationships");
+        clickCheckboxWithLabel("Relationships");
         fillDetailsWith("Relationships", "Relationships details");
         $(id("experienceTrauma_no")).click();
         $(id("caringResponsibilities_no")).click();
@@ -46,11 +46,6 @@ public class OffenderAssessmentPage extends ShortFormatPreSentencePopupReportPag
 
     public List<String> issues() {
         return $(cssSelector("label[for*='issue'] span")).texts();
-    }
-
-    public OffenderAssessmentPage tick(String optionLabel) {
-        $(xpath(String.format("//label[span[text()='%s']]", optionLabel))).click();
-        return this;
     }
 
     public OffenderAssessmentPage fillDetailsWith(String optionLabel, String text) {

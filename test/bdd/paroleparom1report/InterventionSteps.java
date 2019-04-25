@@ -19,12 +19,6 @@ public class InterventionSteps {
         // no page action required
     }
 
-    @Given("^that the Delius user has entered details into \"([^\"]*)\" and \"([^\"]*)\" field$")
-    public void thatTheDeliusUserHasEnteredDetailsIntoAndField(String label1, String label2) {
-        page.fillTextArea(label1, String.format("Any text for %s", label1));
-        page.fillTextArea(label2, String.format("Any text for %s", label2));
-    }
-
     @Given("^Delius User completes the \"Interventions\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
         page.fillTextArea("Detail the interventions the prisoner has completed", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");

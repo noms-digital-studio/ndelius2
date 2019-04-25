@@ -22,7 +22,7 @@ public class ProposalPage extends ShortFormatPreSentencePopupReportPage {
     }
 
     public ProposalPage gotoNext() {
-        $(id("proposal")).fill().with("Proposal");
+        fillInputWithId("proposal", "Proposal");
         $(id("nextButton")).click();
         return this;
     }

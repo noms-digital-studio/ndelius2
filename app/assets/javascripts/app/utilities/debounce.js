@@ -1,19 +1,9 @@
-const debounce = (func, wait = 500, immediate) => {
-  let timeout
-  return function () {
-    const context = this
-    const later = () => {
-      timeout = null
-      if (!immediate) {
-        func.apply(context, arguments)
-      }
-    }
-    const callNow = immediate && !timeout
+const debounce = (callback, wait = 500) => {
+  let timeout = null
+  return (...args) => {
+    const next = () => callback(...args)
     clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
-    if (callNow) {
-      func.apply(context, arguments)
-    }
+    timeout = setTimeout(next, wait)
   }
 }
 

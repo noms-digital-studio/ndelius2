@@ -22,10 +22,10 @@ public class RiskAssessmentPage extends ShortFormatPreSentencePopupReportPage {
     }
 
     public RiskAssessmentPage gotoNext() {
-        $(id("likelihoodOfReOffending")).fill().with("Likelihood Of ReOffending");
-        $(id("riskOfSeriousHarm")).fill().with("Risk of Serious Harm");
+        fillTextAreaById("likelihoodOfReOffending", "Likelihood Of ReOffending");
+        fillTextAreaById("riskOfSeriousHarm", "Likelihood Of ReOffending");
         $(id("previousSupervisionResponse_Good")).click();
-        $(id("additionalPreviousSupervision")).fill().with("Additional previous supervision");
+        fillTextAreaById("additionalPreviousSupervision", "Additional previous supervision");
         $(id("nextButton")).click();
         return this;
     }

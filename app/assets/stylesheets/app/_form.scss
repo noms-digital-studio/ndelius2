@@ -1,3 +1,7 @@
+textarea:not(.moj-textarea--classic) {
+  visibility: hidden;
+}
+
 .moj-textarea {
   margin-bottom: 0 !important;
 }

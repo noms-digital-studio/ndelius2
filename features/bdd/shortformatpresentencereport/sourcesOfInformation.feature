@@ -11,7 +11,7 @@ Feature: Short Format Pre-sentence Report - Sources of information
     Then  the following error messages are displayed
       | Other source(s) of information | Enter the other information source details |
 
-  Scenario: Delius user completes all options on the "Offender assessment" UI
+  Scenario: Delius user completes all options on the "Sources of information" UI
 
     Given that the "Interview" is ticked
     And that the "Service records" is ticked
