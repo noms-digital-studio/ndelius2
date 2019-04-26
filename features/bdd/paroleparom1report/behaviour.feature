@@ -8,11 +8,12 @@ Feature: Parole report
 
     Given that the Delius user wants to enter details of the offender's behaviour in Prison in the offender parole report
     When  they enter the following information
+      | Detail the prisoner`s behaviour whilst in prison | Some behaviour whilst in prison text. |
+      | RoTL summary                                     | Some RoRTL summary text.              |
 
-      | Detail the prisoner`s behaviour whilst in prison  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. |
-      | RoTL summary                                      | Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.                                                                             |
-
-    Then this information should be saved in the report
+    Then the following information should be saved in the report
+      | behaviourDetail | Some behaviour whilst in prison text. |
+      | rotlSummary     | Some RoRTL summary text.              |
 
   Scenario: Delius user wants to leave the "Behaviour in Prison" page without entering any details into the "Detail the prisoner`s behaviour whilst in prison" free text fields
 
@@ -20,7 +21,7 @@ Feature: Parole report
     When  they select the "Continue" button
     Then  the following error messages are displayed
       | Detail the prisoner`s behaviour whilst in prison | Enter details of the prisoner's behaviour in prison |
-      | RoTL summary                                     | Enter the RoTL summary |
+      | RoTL summary                                     | Enter the RoTL summary                              |
 
   Scenario: Delius user wants to continue populating the Parole Report with information
 
