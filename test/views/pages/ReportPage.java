@@ -39,8 +39,10 @@ public class ReportPage extends FluentPage {
     }
 
     public void fillTextAreaById(String id, String text) {
+        control.executeScript(String.format("tinymce.get('%s').fire('focus')", id));
         control.executeScript(String.format("tinymce.get('%s').setContent('%s')", id, text.replace("'", "\\'")));
-        control.executeScript(String.format("tinymce.get('%s').fire('Blur')", id));
+        control.executeScript(String.format("tinymce.get('%s').fire('keyup')", id));
+        control.executeScript(String.format("tinymce.get('%s').fire('blur')", id));
     }
 
     public void fillTextArea(String label, String text) {
