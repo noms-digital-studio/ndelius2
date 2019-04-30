@@ -90,6 +90,14 @@ function updateTextLimits ($editor) {
 
 /**
  *
+ * @param $editor
+ */
+function toggleFocusRectangle ($editor) {
+  $editor.getContainer().querySelector('.tox-editor-container').classList.toggle('tox-tinymce--focus-rect')
+}
+
+/**
+ *
  */
 const initTextAreas = () => {
   tinymce.init({
@@ -102,6 +110,13 @@ const initTextAreas = () => {
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     width: '100%',
     min_height: 145,
+    invalid_elements: 'span',
+    valid_classes: {
+      'p': ''
+    },
+    valid_styles: {
+      'p': 'text-align'
+    },
     skin_url: '/assets/skins/ui/oxide',
     setup: $editor => {
       $editor.on('init', () => {
@@ -110,10 +125,12 @@ const initTextAreas = () => {
         updateFormElement($editor)
       })
       $editor.on('focus', () => {
+        toggleFocusRectangle($editor)
         showToolbar($editor)
         removePlaceholder($editor)
       })
       $editor.on('blur', () => {
+        toggleFocusRectangle($editor)
         hideToolbar($editor)
         addPlaceholder($editor)
         updateFormElement($editor)

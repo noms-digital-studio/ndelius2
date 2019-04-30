@@ -20,3 +20,7 @@
     color: govuk-colour("grey-2");
   }
 }
+
+.tox-tinymce--focus-rect {
+  border: 3px solid govuk-colour("yellow") !important;
+}
