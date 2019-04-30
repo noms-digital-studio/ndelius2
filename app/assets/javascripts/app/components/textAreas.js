@@ -90,6 +90,14 @@ function updateTextLimits ($editor) {
 
 /**
  *
+ * @param $editor
+ */
+function toggleFocusRectangle ($editor) {
+  $editor.getContainer().querySelector('.tox-editor-container').classList.toggle('tox-tinymce--focus-rect')
+}
+
+/**
+ *
  */
 const initTextAreas = () => {
   tinymce.init({
@@ -110,10 +118,12 @@ const initTextAreas = () => {
         updateFormElement($editor)
       })
       $editor.on('focus', () => {
+        toggleFocusRectangle($editor)
         showToolbar($editor)
         removePlaceholder($editor)
       })
       $editor.on('blur', () => {
+        toggleFocusRectangle($editor)
         hideToolbar($editor)
         addPlaceholder($editor)
         updateFormElement($editor)
