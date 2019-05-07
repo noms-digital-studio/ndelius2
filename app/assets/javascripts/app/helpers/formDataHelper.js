@@ -4,8 +4,8 @@ const updateFormData = ($formData) => {
   }
   const RICH_TEXT = '<!-- RICH_TEXT -->'
   $formData.forEach(($item, $key) => {
-    if ($item.indexOf('<p') !== -1 && $item.indexOf(RICH_TEXT) === -1) {
-      console.info(`Update form data for ${ $key } with ${ RICH_TEXT }`)
+    $item = $item.replace(`<p>${ RICH_TEXT }</p>`, '') // Correct an edge case where this is wrapped in a paragraph
+    if (/<\s*[a-z]+[^>]*>(.*?)<\s*\/\s*[a-z]+>/ig.test($item) && $item.indexOf(RICH_TEXT) === -1) {
       $formData.set($key, RICH_TEXT + $item)
       const $formElement = document.getElementById($key)
       if ($formElement) {
