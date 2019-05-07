@@ -4,6 +4,9 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  */
+body {
+  font-size: 19px;
+}
 p {
   margin-block-start: 0 !important;
   margin-block-end: 0 !important;
