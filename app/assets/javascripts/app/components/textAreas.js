@@ -101,7 +101,9 @@ function toggleFocusRectangle ($editor) {
  *
  */
 function updateTooltips ($editor) {
-  const $control = navigator.platform.toUpperCase().indexOf('MAC') === -1 ? 'Ctrl' : '⌘'
+  const isMac = navigator.platform.toUpperCase().indexOf('MAC') !== -1
+  const $control = isMac ? '⌘' : 'Ctrl-'
+  const $shift = isMac ? '⇧' : 'Shift-'
 
   nodeListForEach($editor.getContainer().querySelectorAll('.tox-tbtn'), $module => {
     switch ($module.title) {
@@ -121,10 +123,10 @@ function updateTooltips ($editor) {
         $module.title = `Underline (${ $control }U)`
         break
       case 'Align left':
-        $module.title = `Align left (${ $control }⇧L)`
+        $module.title = `Align left (${ $control }${ $shift }L)`
         break
       case 'Justify':
-        $module.title = `Justify (${ $control }⇧J)`
+        $module.title = `Justify (${ $control }${ $shift }J)`
         break
     }
   })
