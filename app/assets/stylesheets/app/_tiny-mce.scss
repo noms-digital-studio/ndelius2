@@ -21,6 +21,10 @@
   }
 }
 
-.tox-tinymce--focus-rect {
-  border: 3px solid govuk-colour("yellow") !important;
+.tox-editor-container {
+  border: 3px solid white !important;
+
+  &.tox-tinymce--focus-rect {
+    border-color: govuk-colour("yellow") !important;
+  }
 }

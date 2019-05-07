@@ -2,6 +2,7 @@ import tinymce from 'tinymce/tinymce'
 import 'tinymce/themes/silver/theme'
 import 'tinymce/plugins/autoresize'
 import 'tinymce/plugins/lists'
+import 'tinymce/plugins/paste'
 
 import { autoSaveProgress } from '../helpers/saveProgressHelper'
 import { debounce } from '../utilities/debounce'
@@ -142,7 +143,7 @@ const initTextAreas = () => {
     browser_spellcheck: true,
     allow_conditional_comments: true,
     selector: '.govuk-textarea:not(.moj-textarea--classic)',
-    plugins: ['autoresize lists'],
+    plugins: ['autoresize lists paste'],
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     width: '100%',
     min_height: 145,
@@ -155,6 +156,8 @@ const initTextAreas = () => {
       'p': 'text-align',
       'span': 'text-decoration'
     },
+    paste_enable_default_filters: 'false',
+    paste_word_valid_elements: 'p,b,i,strong,em,ol,ul,li',
     skin_url: '/assets/skins/ui/oxide',
     setup: $editor => {
       $editor.on('init', () => {
