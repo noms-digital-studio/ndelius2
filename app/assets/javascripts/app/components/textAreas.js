@@ -5,6 +5,7 @@ import 'tinymce/plugins/lists'
 
 import { autoSaveProgress } from '../helpers/saveProgressHelper'
 import { debounce } from '../utilities/debounce'
+import { nodeListForEach } from '../utilities/nodeListForEach'
 
 /**
  *
@@ -99,6 +100,39 @@ function toggleFocusRectangle ($editor) {
 /**
  *
  */
+function updateTooltips ($editor) {
+  const $control = navigator.platform.toUpperCase().indexOf('MAC') === -1 ? 'Ctrl' : '⌘'
+
+  nodeListForEach($editor.getContainer().querySelectorAll('.tox-tbtn'), $module => {
+    switch ($module.title) {
+      case 'Undo':
+        $module.title = `Undo (${ $control }Z)`
+        break
+      case 'Redo':
+        $module.title = `Redo (${ $control }Y)`
+        break
+      case 'Bold':
+        $module.title = `Bold (${ $control }B)`
+        break
+      case 'Italic':
+        $module.title = `Italic (${ $control }I)`
+        break
+      case 'Underline':
+        $module.title = `Underline (${ $control }U)`
+        break
+      case 'Align left':
+        $module.title = `Align left (${ $control }⇧L)`
+        break
+      case 'Justify':
+        $module.title = `Justify (${ $control }⇧J)`
+        break
+    }
+  })
+}
+
+/**
+ *
+ */
 const initTextAreas = () => {
   tinymce.init({
     branding: false,
@@ -110,12 +144,14 @@ const initTextAreas = () => {
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     width: '100%',
     min_height: 145,
-    invalid_elements: 'span',
+    valid_elements: 'p,span[style],ul,ol,li,strong/b,em/i,br',
     valid_classes: {
-      'p': ''
+      'p': '',
+      'span': ''
     },
     valid_styles: {
-      'p': 'text-align'
+      'p': 'text-align',
+      'span': 'text-decoration'
     },
     skin_url: '/assets/skins/ui/oxide',
     setup: $editor => {
@@ -125,6 +161,7 @@ const initTextAreas = () => {
         updateFormElement($editor)
       })
       $editor.on('focus', () => {
+        updateTooltips($editor)
         toggleFocusRectangle($editor)
         showToolbar($editor)
         removePlaceholder($editor)
