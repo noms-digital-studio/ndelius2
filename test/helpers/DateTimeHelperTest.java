@@ -2,10 +2,7 @@ package helpers;
 
 import org.junit.Test;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
 
 import static helpers.DateTimeHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -112,5 +109,39 @@ public class DateTimeHelperTest {
         assertThat(convert("2018-06-29")).isEqualTo(LocalDate.of(2018, 6,29));
     }
 
+    @Test
+    public void dateVariationsSwapsDayAndMonthWhenValid() {
+        assertThat(dateVariations(LocalDate.of(1965, Month.JULY, 1)))
+                .contains(LocalDate.of(1965, Month.JANUARY, 7));
+    }
+
+    @Test
+    public void dateVariationsUsesAllPossibleMonthsExceptCorrectMonth() {
+        assertThat(dateVariations(LocalDate.of(1965, Month.JULY, 1)))
+                .contains(LocalDate.of(1965, Month.JANUARY, 1))
+                .contains(LocalDate.of(1965, Month.FEBRUARY, 1))
+                .contains(LocalDate.of(1965, Month.MARCH, 1))
+                .contains(LocalDate.of(1965, Month.APRIL, 1))
+                .contains(LocalDate.of(1965, Month.MAY, 1))
+                .contains(LocalDate.of(1965, Month.JUNE, 1))
+                .contains(LocalDate.of(1965, Month.AUGUST, 1))
+                .contains(LocalDate.of(1965, Month.SEPTEMBER, 1))
+                .contains(LocalDate.of(1965, Month.OCTOBER, 1))
+                .contains(LocalDate.of(1965, Month.NOVEMBER, 1))
+                .contains(LocalDate.of(1965, Month.DECEMBER, 1))
+                .doesNotContain(LocalDate.of(1965, Month.JULY, 1));
+    }
+
+    @Test
+    public void dateVariationsOnlyContainsValidDates() {
+        assertThat(dateVariations(LocalDate.of(1965, Month.JULY, 31)))
+                .containsExactly(
+                        LocalDate.of(1965, Month.JANUARY, 31),
+                        LocalDate.of(1965, Month.MARCH, 31),
+                        LocalDate.of(1965, Month.MAY, 31),
+                        LocalDate.of(1965, Month.AUGUST, 31),
+                        LocalDate.of(1965, Month.OCTOBER, 31),
+                        LocalDate.of(1965, Month.DECEMBER, 31));
+    }
 
 }

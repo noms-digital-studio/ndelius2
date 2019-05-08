@@ -12,11 +12,14 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import play.Logger;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static helpers.DateTimeHelper.dateVariations;
 import static helpers.DateTimeHelper.termsThatLookLikeDates;
 import static helpers.FluentHelper.not;
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.stream.Collectors.joining;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.CROSS_FIELDS;
 import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.MOST_FIELDS;
@@ -203,4 +206,69 @@ public class SearchQueryBuilder {
             .addSuggestion("surname", termSuggestion("surname").text(searchTerm))
             .addSuggestion("firstName", termSuggestion("firstName").text(searchTerm));
     }
+
+    public static SearchSourceBuilder searchSourceForPNCWithSurname(String pncNumber, String surname) {
+        val boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.must().add(multiMatchQuery(PncHelper.covertToCanonicalPnc(pncNumber))
+                .field("otherIds.pncNumberLongYear")
+                .field("otherIds.pncNumberShortYear")
+                .analyzer("whitespace"));
+
+        boolQueryBuilder.must().add(multiMatchQuery(surname)
+                .field("surname")
+                .field("offenderAliases.surname"));
+
+        return toSimpleSearchSource(boolQueryBuilder);
+    }
+
+    public static SearchSourceBuilder searchSourceForNameWithDateOfBirth(String firstName, String surname, LocalDate dateOfBirth) {
+        val boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must().add(multiMatchQuery(surname)
+                .field("surname")
+                .field("offenderAliases.surname"));
+
+        boolQueryBuilder.must().add(multiMatchQuery(firstName)
+                .field("firstName")
+                .field("offenderAliases.firstName"));
+
+
+        boolQueryBuilder.must().add(termQuery("dateOfBirth", dateOfBirth.format(ISO_LOCAL_DATE)));
+
+        return toSimpleSearchSource(boolQueryBuilder);
+    }
+
+    public static SearchSourceBuilder searchSourceForNameWithDateOfBirthVariations(String firstName, String surname, LocalDate dateOfBirth) {
+        val boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must().add(multiMatchQuery(surname)
+                .field("surname")
+                .field("offenderAliases.surname"));
+
+        boolQueryBuilder.must().add(multiMatchQuery(firstName)
+                .field("firstName")
+                .field("offenderAliases.firstName"));
+
+
+
+        dateVariations(dateOfBirth).forEach(date -> {
+            boolQueryBuilder.should().add(termQuery("dateOfBirth", date.format(ISO_LOCAL_DATE)));
+        });
+
+        boolQueryBuilder.minimumShouldMatch(1);
+
+        return toSimpleSearchSource(boolQueryBuilder);
+    }
+
+    private static SearchSourceBuilder toSimpleSearchSource(BoolQueryBuilder boolQueryBuilder) {
+        boolQueryBuilder.mustNot(termQuery("softDeleted", true));
+        val searchSource = new SearchSourceBuilder()
+                .query(boolQueryBuilder)
+                .explain(Logger.isDebugEnabled());
+
+        Logger.debug(searchSource.toString());
+
+        return searchSource;
+    }
+
+
 }
