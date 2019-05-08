@@ -27,6 +27,10 @@ public class MatchedOffenders {
         return new MatchedOffenders(DefendantMatchConfidence.HIGH, response);
     }
 
+    public static MatchedOffenders duplicateMediumConfidence(List<ObjectNode> response) {
+        return new MatchedOffenders(DefendantMatchConfidence.MEDIUM, response);
+    }
+
     public static MatchedOffenders duplicateLowConfidence(List<ObjectNode> response) {
         return new MatchedOffenders(DefendantMatchConfidence.LOW, response);
     }

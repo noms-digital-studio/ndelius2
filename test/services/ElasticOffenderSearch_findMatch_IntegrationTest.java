@@ -82,7 +82,7 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
 
 
     @Test
-    public void pncPresentWillSearchByPNCAndSurnameFollowedByNameWithDateOfBirthWhenNotMatched() {
+    public void pncPresentWillSearchByPNCAndSurnameFollowedPNCOnlyFollwoedByNameWithDateOfBirthWhenNotMatched() {
 
         wireMock.stubFor(
             get(anyUrl())
@@ -90,8 +90,16 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
                     .whenScenarioStateIs(STARTED)
                     .willReturn(
                         okForContentType("application/json", response("/elasticsearchdata/noMatches.json")))
-                    .willSetStateTo("Name search"));
+                    .willSetStateTo("PNC only search"));
 
+
+        wireMock.stubFor(
+            get(anyUrl())
+                    .inScenario("Search")
+                    .whenScenarioStateIs("PNC only search")
+                    .willReturn(
+                        okForContentType("application/json", response("/elasticsearchdata/noMatches.json")))
+                    .willSetStateTo("Name search"));
 
         wireMock.stubFor(
             get(anyUrl())
@@ -103,7 +111,7 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
         elasticOffenderSearch.findMatch(JwtHelperTest.generateToken(), new CourtDefendant("2018/0123456X", "SMITH", "JOHN", LocalDate.of(1978, 1, 6))).toCompletableFuture().join();
 
         wireMock.verify(
-                2,
+                3,
                 getRequestedFor(urlPathEqualTo("/offender/_search")));
 
 
@@ -112,6 +120,11 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
                 getRequestedFor(urlPathEqualTo("/offender/_search"))
                         .withRequestBody(containing("2018/123456x"))
                         .withRequestBody(containing("SMITH")));
+
+        wireMock.verify(
+                2,
+                getRequestedFor(urlPathEqualTo("/offender/_search"))
+                        .withRequestBody(containing("2018/123456x")));
 
         wireMock.verify(
                 1,
@@ -126,12 +139,22 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
     public void pncPresentWillSearchByPNCAndSurnameFollowedByNameWithDateOfBirthFollowedByDateOfBirthVariationsWhenNotMatched() {
 
         wireMock.stubFor(
-            get(anyUrl())
-                    .inScenario("Search")
-                    .whenScenarioStateIs(STARTED)
-                    .willReturn(
-                        okForContentType("application/json", response("/elasticsearchdata/noMatches.json")))
-                    .willSetStateTo("Name search"));
+                get(anyUrl())
+                        .inScenario("Search")
+                        .whenScenarioStateIs(STARTED)
+                        .willReturn(
+                                okForContentType("application/json", response("/elasticsearchdata/noMatches.json")))
+                        .willSetStateTo("PNC only search"));
+
+
+        wireMock.stubFor(
+                get(anyUrl())
+                        .inScenario("Search")
+                        .whenScenarioStateIs("PNC only search")
+                        .willReturn(
+                                okForContentType("application/json", response("/elasticsearchdata/noMatches.json")))
+                        .willSetStateTo("Name search"));
+
 
 
         wireMock.stubFor(
@@ -153,7 +176,7 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
         elasticOffenderSearch.findMatch(JwtHelperTest.generateToken(), new CourtDefendant("2018/0123456X", "SMITH", "JOHN", LocalDate.of(1978, 1, 6))).toCompletableFuture().join();
 
         wireMock.verify(
-                3,
+                4,
                 getRequestedFor(urlPathEqualTo("/offender/_search")));
 
 
@@ -162,6 +185,11 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
                 getRequestedFor(urlPathEqualTo("/offender/_search"))
                         .withRequestBody(containing("2018/123456x"))
                         .withRequestBody(containing("SMITH")));
+
+        wireMock.verify(
+                2,
+                getRequestedFor(urlPathEqualTo("/offender/_search"))
+                        .withRequestBody(containing("2018/123456x")));
 
         wireMock.verify(
                 1,
@@ -180,7 +208,7 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
     }
 
     @Test
-    public void willDoThreeSearchesWhenPNCPresentButNoMatches() {
+    public void willDoFourSearchesWhenPNCPresentButNoMatches() {
 
         wireMock.stubFor(
             get(anyUrl())
@@ -192,7 +220,7 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
         elasticOffenderSearch.findMatch(JwtHelperTest.generateToken(), new CourtDefendant("2018/0123456X", "SMITH", "JOHN", LocalDate.of(1978, 1, 6))).toCompletableFuture().join();
 
         wireMock.verify(
-                3,
+                4,
                 getRequestedFor(urlPathEqualTo("/offender/_search")));
 
 
@@ -248,6 +276,31 @@ public class ElasticOffenderSearch_findMatch_IntegrationTest {
         val result = elasticOffenderSearch.findMatch(JwtHelperTest.generateToken(), new CourtDefendant("2018/0123456X", "Smith", "JOHN", LocalDate.of(1978, 1, 6))).toCompletableFuture().join();
 
         assertThat(result.getConfidence()).isEqualTo(DefendantMatchConfidence.VERY_HIGH);
+
+    }
+
+    @Test
+    public void singlePNCMatchWithoutSurnameHasMediumConfidence() {
+        wireMock.stubFor(
+                get(anyUrl())
+                        .inScenario("Search")
+                        .whenScenarioStateIs(STARTED)
+                        .willReturn(
+                                okForContentType("application/json", response("/elasticsearchdata/noMatches.json")))
+                        .willSetStateTo("PNC only search"));
+
+
+        wireMock.stubFor(
+                get(anyUrl())
+                        .inScenario("Search")
+                        .whenScenarioStateIs("PNC only search")
+                        .willReturn(
+                                okForContentType("application/json", response("/elasticsearchdata/singleMatch.json"))));
+
+
+        val result = elasticOffenderSearch.findMatch(JwtHelperTest.generateToken(), new CourtDefendant("2018/0123456X", "Jones", "JOHN", LocalDate.of(1978, 1, 6))).toCompletableFuture().join();
+
+        assertThat(result.getConfidence()).isEqualTo(DefendantMatchConfidence.MEDIUM);
 
     }
 

@@ -222,6 +222,16 @@ public class SearchQueryBuilder {
         return toSimpleSearchSource(boolQueryBuilder);
     }
 
+    public static SearchSourceBuilder searchSourceForPNC(String pncNumber) {
+        val boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.must().add(multiMatchQuery(PncHelper.covertToCanonicalPnc(pncNumber))
+                .field("otherIds.pncNumberLongYear")
+                .field("otherIds.pncNumberShortYear")
+                .analyzer("whitespace"));
+
+        return toSimpleSearchSource(boolQueryBuilder);
+    }
     public static SearchSourceBuilder searchSourceForNameWithDateOfBirth(String firstName, String surname, LocalDate dateOfBirth) {
         val boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must().add(multiMatchQuery(surname)
