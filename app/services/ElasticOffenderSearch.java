@@ -143,6 +143,14 @@ public class ElasticOffenderSearch implements OffenderSearch {
         return listener.stage().thenComposeAsync(processResponse);
     }
 
+    /**
+     * This will attempt to match a defendant in court with an offender known to Probation.
+     * This implementation users a hammer approach of doing multiple searches using different
+     * requests. It should be possible to collapse these requests and inspect the results for
+     * what matched to work out what our confidence level is; e.g combine both variations on the
+     * PNC Number search in to a single search. For this spike we have gone for the less performant
+     * explicit approach since it will be easier it iterate on the algorithm.
+     */
     @Override
     public CompletionStage<MatchedOffenders> findMatch(String bearerToken, CourtDefendant offender) {
         val maybePNCSurnameRequest = pncSurnameSearchRequest(offender);
@@ -172,13 +180,28 @@ public class ElasticOffenderSearch implements OffenderSearch {
             return singleOffender(bearerToken, response).thenApply(MatchedOffenders::highConfidence);
         };
 
-        final Function<SearchResponse, CompletionStage<MatchedOffenders>> processPNCSurnameResponse = response -> {
+        final Function<SearchResponse, CompletionStage<MatchedOffenders>> processPNCOnlyResponse = response -> {
             val listener = new FutureListener<SearchResponse>();
             if (noMatches(response)) {
                 return maybeNameDateOfBirthRequest.map(request -> {
                     elasticSearchClient.searchAsync(request, listener);
                     return listener.stage().thenComposeAsync(processNameDateOfBirthResponse);
                 }).orElse(CompletableFuture.completedFuture(MatchedOffenders.noMatch()));
+            } else if (duplicateMatches(response)) {
+                return clearAndObviousActiveDuplicate(bearerToken, response)
+                        .thenApply(maybeOffenderNode -> maybeOffenderNode
+                                .map(MatchedOffenders::mediumConfidence)
+                                .orElseGet(() -> MatchedOffenders.duplicateMediumConfidence(toOffenderObjectNodes(response))));
+            }
+
+            return singleOffender(bearerToken, response).thenApply(MatchedOffenders::mediumConfidence);
+        };
+
+        final Function<SearchResponse, CompletionStage<MatchedOffenders>> processPNCSurnameResponse = response -> {
+            val listener = new FutureListener<SearchResponse>();
+            if (noMatches(response)) {
+                elasticSearchClient.searchAsync(pncOnlySearchRequest(offender), listener);
+                return listener.stage().thenComposeAsync(processPNCOnlyResponse);
             } else if (duplicateMatches(response)) {
                 return clearAndObviousActiveDuplicate(bearerToken, response)
                         .thenApply(maybeOffenderNode -> maybeOffenderNode
@@ -306,6 +329,11 @@ public class ElasticOffenderSearch implements OffenderSearch {
                 .map(pncNumber -> new SearchRequest("offender").source(
                         searchSourceForPNCWithSurname(offender.getPncNumber(), offender.getSurname())));
 
+    }
+
+    private SearchRequest pncOnlySearchRequest(CourtDefendant offender) {
+        return new SearchRequest("offender").source(
+                searchSourceForPNC(offender.getPncNumber()));
     }
     private Optional<SearchRequest> nameDateOfBirthRequest(CourtDefendant offender) {
         return Optional.ofNullable(offender.getDateOfBirth())
