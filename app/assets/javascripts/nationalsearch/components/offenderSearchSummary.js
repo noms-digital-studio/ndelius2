@@ -11,11 +11,11 @@ const OffenderSearchSummary = ({ offenderSummary, searchTerm }) => (
     <div className='govuk-grid-row qa-offender-details-row'>
       <div className='govuk-grid-column-one-quarter govuk-!-margin-0 moj-!-text-align-center app-hide-tablet'>
         {offenderSummary.oneTimeNomisRef &&
-        <img alt={`Image of ${offenderSummary.firstName} ${offenderSummary.surname}`} className='offenderImage'
+        <img alt={`Image of ${offenderSummary.firstName} ${offenderSummary.surname}`} className='app-offender-image'
              src={`offender/oneTimeNomisRef/${encodeURIComponent(offenderSummary.oneTimeNomisRef)}/image`} width='120'
              height='150' />}
         {!offenderSummary.oneTimeNomisRef &&
-        <img alt='No offender image available' className='offenderImage' src='assets/images/NoPhoto@2x.png' width='120'
+        <img alt='No offender image available' className='app-offender-image' src='assets/images/NoPhoto@2x.png' width='120'
              height='150' />}
       </div>
 
