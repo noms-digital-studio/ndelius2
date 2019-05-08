@@ -1,15 +1,17 @@
 package helpers;
 
+import com.google.common.collect.ImmutableList;
 import lombok.val;
 
 import java.time.Clock;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.time.LocalDate.now;
@@ -90,4 +92,39 @@ public class DateTimeHelper {
     private static DateTimeFormatterBuilder dateTimeBuilderFor(String datePattern) {
         return new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern(datePattern);
     }
+
+    public static List<LocalDate> dateVariations(LocalDate date) {
+        val possibleMistypedDates = ImmutableList.<LocalDate>builder();
+        return swapMonthDay(date)
+                .map(possibleMistypedDates::add)
+                .orElse(possibleMistypedDates)
+                .addAll(everyOtherValidMonth(date)).build();
+    }
+
+    private static List<LocalDate> everyOtherValidMonth(LocalDate date) {
+        return IntStream.range(1, 13)
+                .filter(month -> date.getMonthValue() != month)
+                .mapToObj(month -> setMonthDay(date, month))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toList());
+    }
+
+    private static Optional<LocalDate> swapMonthDay(LocalDate date) {
+        try {
+            return Optional.of(LocalDate.of(date.getYear(), date.getDayOfMonth(), date.getMonthValue()));
+        } catch (DateTimeException e) {
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<LocalDate> setMonthDay(LocalDate date, int monthValue) {
+        try {
+            return Optional.of(LocalDate.of(date.getYear(), monthValue, date.getDayOfMonth()));
+        } catch (DateTimeException e) {
+            return Optional.empty();
+        }
+    }
+
+
 }

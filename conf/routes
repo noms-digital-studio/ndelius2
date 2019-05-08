@@ -11,6 +11,10 @@ GET     /api/*url                                   controllers.UtilityControlle
 
 GET     /nationalSearch                             controllers.NationalSearchController.index(user: String, t: String)
 GET     /searchOffender/:searchTerm                 controllers.NationalSearchController.searchOffender(searchTerm, searchType: String, areasFilter: java.util.Optional[String], pageSize: Int ?=10, pageNumber: Int ?=1)
++ nocsrf
+POST    /findDefendantMatch                         controllers.CourtDefendantMatchController.findDefendantMatch()
+GET     /courtDefendantMatch                        controllers.CourtDefendantMatchController.index()
+POST     /courtDefendantMatch                        controllers.CourtDefendantMatchController.search()
 
 GET     /offender/oneTimeNomisRef/:reference/image  controllers.OffenderController.image(reference: String)
 GET     /offender/detail                            controllers.OffenderController.detail
