@@ -250,15 +250,7 @@ const PreviousSurname = ({ name, highlight }) => {
 }
 
 const mapRiskColor = (risk = '') => {
-  switch (risk.toLowerCase()) {
-    case 'red':
-      return 'app-risk-icon--red'
-    case 'amber':
-      return 'app-risk-icon-risk-amber'
-    case 'green':
-      return 'app-risk-icon-risk-green'
-  }
-  return ''
+  return `app-risk-icon--${ risk.toLowerCase() }`
 }
 
 export { OffenderSearchSummary as default, Address }
