@@ -1,5 +1,6 @@
 package data;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableList;
@@ -71,13 +72,13 @@ public class MatchedDefendants {
                         .findAny()
                         .map(node -> ImmutableList
                                 .<String>builder()
-                                .add(node.get("buildingName").asText())
-                                .add(node.get("addressNumber").asText())
-                                .add(node.get("streetName").asText())
-                                .add(node.get("district").asText())
-                                .add(node.get("town").asText())
-                                .add(node.get("county").asText())
-                                .add(node.get("postcode").asText())
+                                .add(Optional.ofNullable(node.get("buildingName")).map(JsonNode::asText).orElse(""))
+                                .add(Optional.ofNullable(node.get("addressNumber")).map(JsonNode::asText).orElse(""))
+                                .add(Optional.ofNullable(node.get("streetName")).map(JsonNode::asText).orElse(""))
+                                .add(Optional.ofNullable(node.get("district")).map(JsonNode::asText).orElse(""))
+                                .add(Optional.ofNullable(node.get("town")).map(JsonNode::asText).orElse(""))
+                                .add(Optional.ofNullable(node.get("county")).map(JsonNode::asText).orElse(""))
+                                .add(Optional.ofNullable(node.get("postcode")).map(JsonNode::asText).orElse(""))
                                 .build()
                                 .stream()
                                 .filter(StringUtils::isNotBlank)
