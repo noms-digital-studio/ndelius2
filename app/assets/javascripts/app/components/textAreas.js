@@ -162,6 +162,7 @@ const initTextAreas = () => {
     paste_enable_default_filters: 'false',
     paste_word_valid_elements: 'p,b,i,strong,em,ol,ul,li',
     document_base_url: `${ localPath.substr(0, localPath.indexOf('/') + 1) }`,
+    skin_url: `${ localPath }skins/ui/oxide`,
     setup: $editor => {
       $editor.on('init', () => {
         configureEditor($editor)
