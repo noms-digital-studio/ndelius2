@@ -1,13 +1,10 @@
-.tox-editor-container--prefilled {
-  border: 2px solid black !important;
-}
-
 .tox-statusbar {
   visibility: hidden;
 }
 
 .tox-tinymce--placeholder {
   position: relative !important;
+
   &::after {
     position: absolute;
     top: 5px;
@@ -23,6 +20,10 @@
 
 .tox-editor-container {
   border: 3px solid white !important;
+
+  &.tox-editor-container--prefilled {
+    border: 2px solid black !important;
+  }
 
   &.tox-tinymce--focus-rect {
     border-color: govuk-colour("yellow") !important;
