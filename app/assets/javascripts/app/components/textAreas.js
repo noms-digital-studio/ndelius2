@@ -150,7 +150,7 @@ const initTextAreas = () => {
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     width: '100%',
     min_height: 145,
-    valid_elements: 'p,span[style],ul,ol,li,strong/b,em/i,br',
+    valid_elements: 'p,p[style],span[style],ul,ol,li,strong/b,em/i,br',
     valid_classes: {
       'p': '',
       'span': ''
