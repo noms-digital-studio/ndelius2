@@ -1,6 +1,7 @@
 import tinymce from 'tinymce/tinymce'
 import 'tinymce/themes/silver/theme'
 import 'tinymce/plugins/autoresize'
+import 'tinymce/plugins/help'
 import 'tinymce/plugins/lists'
 import 'tinymce/plugins/paste'
 
@@ -146,7 +147,7 @@ const initTextAreas = () => {
     browser_spellcheck: true,
     allow_conditional_comments: true,
     selector: '.govuk-textarea:not(.moj-textarea--classic)',
-    plugins: ['autoresize lists paste'],
+    plugins: 'autoresize lists paste help',
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     width: '100%',
     min_height: 145,
