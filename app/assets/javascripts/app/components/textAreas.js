@@ -151,13 +151,14 @@ const initTextAreas = () => {
     toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
     width: '100%',
     min_height: 145,
-    valid_elements: 'p,p[style],span[style],ul,ol,li,strong/b,em/i,br',
+    valid_elements: 'p,p[style],span[style],ul,ol,li,li[style],strong/b,em/i,br',
     valid_classes: {
       'p': '',
       'span': ''
     },
     valid_styles: {
       'p': 'text-align',
+      'li': 'text-align',
       'span': 'text-decoration'
     },
     paste_enable_default_filters: 'false',
