@@ -16,7 +16,7 @@ import { nodeListForEach } from '../utilities/nodeListForEach'
 function configureEditor ($editor) {
   const container = $editor.getContainer().querySelector('.tox-editor-container')
   const toolbar = container.querySelector('.tox-toolbar')
-  toolbar.style.display = 'none'
+  toolbar.classList.add('govuk-visually-hidden')
   container.appendChild(toolbar)
 
   if ($editor.getElement().classList.contains('moj-textarea--prefilled')) {
@@ -30,7 +30,7 @@ function configureEditor ($editor) {
  */
 function showToolbar ($editor) {
   const toolbar = $editor.getContainer().querySelector('.tox-toolbar')
-  toolbar.style.display = 'flex'
+  toolbar.classList.remove('govuk-visually-hidden')
 }
 
 /**
@@ -39,7 +39,7 @@ function showToolbar ($editor) {
  */
 function hideToolbar ($editor) {
   const toolbar = $editor.getContainer().querySelector('.tox-toolbar')
-  toolbar.style.display = 'none'
+  toolbar.classList.add('govuk-visually-hidden')
 }
 
 /**
