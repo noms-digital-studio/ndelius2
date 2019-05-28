@@ -4,10 +4,12 @@ import 'tinymce/plugins/autoresize'
 import 'tinymce/plugins/help'
 import 'tinymce/plugins/lists'
 import 'tinymce/plugins/paste'
+import 'tinymce/plugins/spellchecker'
 
 import { autoSaveProgress } from '../helpers/saveProgressHelper'
 import { debounce } from '../utilities/debounce'
 import { nodeListForEach } from '../utilities/nodeListForEach'
+import { trackEvent } from '../../helpers/analyticsHelper'
 
 /**
  *
@@ -134,6 +136,39 @@ function updateTooltips ($editor) {
   })
 }
 
+function autoClickSpellchecker($editor) {
+  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  if(spellCheckButton.getAttribute("aria-pressed") == "true") {
+    $editor.execCommand('mceSpellCheck')
+    $editor.execCommand('mceSpellCheck')
+  }
+}
+
+function addClickHandlerToSpellCheck($editor) {
+  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  if(spellCheckButton.getAttribute('hasListener') != 'true' && spellCheckButton != null) {
+    spellCheckButton.addEventListener('click', () => handleSpellCheckClick(spellCheckButton, $editor))
+    spellCheckButton.setAttribute("hasListener", 'true')
+  }
+}
+
+function handleSpellCheckClick(spellCheckButton, $editor) {
+  if (spellCheckButton.getAttribute("aria-pressed") == "false") {
+    $editor.getBody().setAttribute('spellcheck', 'false')
+    trackEvent('spellcheck - on', "spellcheck", $editor.id)
+  } else {
+    $editor.getBody().setAttribute('spellcheck', 'true')
+    trackEvent('spellcheck - off', "spellcheck", $editor.id)
+  }
+}
+
+function enableSpellChecker($editor) {
+  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  if(spellCheckButton.getAttribute("aria-pressed") == "false") {
+    $editor.execCommand('mceSpellCheck')
+  }
+}
+
 /**
  *
  */
@@ -147,8 +182,8 @@ const initTextAreas = () => {
     browser_spellcheck: true,
     allow_conditional_comments: true,
     selector: '.govuk-textarea:not(.moj-textarea--classic)',
-    plugins: 'autoresize lists paste help',
-    toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist',
+    plugins: 'autoresize lists paste help spellchecker',
+    toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist | spellchecker',
     width: '100%',
     min_height: 145,
     valid_elements: 'p,p[style],span[style],ul,ol,li,li[style],strong/b,em/i,br',
@@ -165,6 +200,7 @@ const initTextAreas = () => {
     paste_word_valid_elements: 'p,b,i,strong,em,ol,ul,li',
     document_base_url: `${ localPath.substr(0, localPath.indexOf('/') + 1) }`,
     skin_url: 'assets/skins/ui/oxide',
+    spellchecker_languages: 'English=en',
     setup: $editor => {
       $editor.on('init', () => {
         configureEditor($editor)
@@ -176,6 +212,8 @@ const initTextAreas = () => {
         toggleFocusRectangle($editor)
         showToolbar($editor)
         removePlaceholder($editor)
+        addClickHandlerToSpellCheck($editor)
+        enableSpellChecker($editor)
       })
       $editor.on('blur', () => {
         toggleFocusRectangle($editor)
@@ -191,6 +229,27 @@ const initTextAreas = () => {
       $editor.on('input', () => {
         updateTextLimits($editor)
       })
+      $editor.on('keyup', debounce(() => {
+        autoClickSpellchecker($editor)
+      }, 1000))
+    },
+    spellchecker_callback: function (method, text, success, failure) {
+      if (method === "spellcheck") {
+        tinymce.util.JSONRequest.sendRPC({
+          url: "/spellcheck",
+          params: {
+            words: text.match(this.getWordCharPattern())
+          },
+          success: result => {
+            success(result);
+          },
+          error: (error, xhr) => {
+            failure("Spellcheck error:" + xhr.status);
+          }
+        });
+      } else {
+        failure('Unsupported spellcheck method');
+      }
     }
   })
 }
