@@ -1,7 +1,20 @@
 textarea:not(.moj-textarea--classic) {
-  visibility: hidden;
+  @include govuk-visually-hidden
 }
 
 .moj-textarea {
   margin-bottom: 0 !important;
+}
+
+.moj-rich-text-editor {
+  @include govuk-focusable
+
+  &.moj-textarea--prefilled {
+    border: 2px solid $govuk-text-colour;
+    @include govuk-responsive-padding(2);
+  }
+
+  &.moj-textarea--classic {
+    display: none;
+  }
 }

@@ -16,16 +16,16 @@ Feature: Parole Report
       | Tariff length | 5 years |
     And they enter the date "29/06/2019" for "Tariff expiry date"
     Then the following information should be saved in the report
-      | prisonerDetailsPrisonInstitution | HMP Humber                                                                                                      |
-      | prisonerDetailsPrisonersFullName | Jane Doe                                                                                                        |
-      | prisonerDetailsPrisonNumber      | LH5058                                                                                                          |
-      | prisonerDetailsNomisNumber       | F123456                                                                                                         |
-      | prisonerDetailsPrisonersCategory | restricted                                                                                                      |
-      | prisonerDetailsOffence           | <p>Stealing the limelight - 08/11/2018<br />Interrupting - 07/07/2017<br />Jumping the queue - 06/06/2016</p>   |
-      | prisonerDetailsSentence          | 5 years                                                                                                         |
-      | prisonerDetailsSentenceType      | indeterminate                                                                                                   |
-      | prisonerDetailsTariffLength      | 5 years                                                                                                         |
-      | prisonerDetailsTariffExpiryDate  | 29/06/2019                                                                                                      |
+      | prisonerDetailsPrisonInstitution | HMP Humber                                                                                         |
+      | prisonerDetailsPrisonersFullName | Jane Doe                                                                                           |
+      | prisonerDetailsPrisonNumber      | LH5058                                                                                             |
+      | prisonerDetailsNomisNumber       | F123456                                                                                            |
+      | prisonerDetailsPrisonersCategory | restricted                                                                                         |
+      | prisonerDetailsOffence           | Stealing the limelight - 08/11/2018<br>Interrupting - 07/07/2017<br>Jumping the queue - 06/06/2016 |
+      | prisonerDetailsSentence          | 5 years                                                                                            |
+      | prisonerDetailsSentenceType      | indeterminate                                                                                      |
+      | prisonerDetailsTariffLength      | 5 years                                                                                            |
+      | prisonerDetailsTariffExpiryDate  | 29/06/2019                                                                                         |
 
   Scenario: Delius user wants to enter details for Female prisoner whom has Determinate sentence
 
@@ -37,13 +37,13 @@ Feature: Parole Report
     And they select the "Extended" option on the "Sentence type"
     And they enter the date "08/12/2021" for "Parole eligibility date"
     Then the following information should be saved in the report
-      | prisonerDetailsPrisonInstitution       | HMP Humber                                                                                                      |
-      | prisonerDetailsPrisonersFullName       | Jane Doe                                                                                                        |
-      | prisonerDetailsPrisonNumber            | LH5058                                                                                                          |
-      | prisonerDetailsNomisNumber             | F123456                                                                                                         |
-      | prisonerDetailsPrisonersCategory       | closed                                                                                                          |
-      | prisonerDetailsOffence                 | <p>Stealing the limelight - 08/11/2018<br />Interrupting - 07/07/2017<br />Jumping the queue - 06/06/2016</p>   |
-      | prisonerDetailsSentence                | 20 years                                                                                                        |
-      | prisonerDetailsSentenceType            | determinate                                                                                                     |
-      | prisonerDetailsDeterminateSentenceType | extended                                                                                                        |
-      | prisonerDetailsParoleEligibilityDate   | 08/12/2021                                                                                                      |
+      | prisonerDetailsPrisonInstitution       | HMP Humber                                                                                         |
+      | prisonerDetailsPrisonersFullName       | Jane Doe                                                                                           |
+      | prisonerDetailsPrisonNumber            | LH5058                                                                                             |
+      | prisonerDetailsNomisNumber             | F123456                                                                                            |
+      | prisonerDetailsPrisonersCategory       | closed                                                                                             |
+      | prisonerDetailsOffence                 | Stealing the limelight - 08/11/2018<br>Interrupting - 07/07/2017<br>Jumping the queue - 06/06/2016 |
+      | prisonerDetailsSentence                | 20 years                                                                                           |
+      | prisonerDetailsSentenceType            | determinate                                                                                        |
+      | prisonerDetailsDeterminateSentenceType | extended                                                                                           |
+      | prisonerDetailsParoleEligibilityDate   | 08/12/2021                                                                                         |

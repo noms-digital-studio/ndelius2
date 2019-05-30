@@ -22,16 +22,16 @@ Feature: Parole Report
       | Tariff length | 5 years |
     And they enter the date "29/06/2019" for "Tariff expiry date"
     Then the following information should be saved in the report
-      | prisonerDetailsPrisonInstitution | HMP Humber                                                                                                      |
-      | prisonerDetailsPrisonersFullName | Jimmy Fizz                                                                                                      |
-      | prisonerDetailsPrisonNumber      | LH5058                                                                                                          |
-      | prisonerDetailsNomisNumber       | M123456                                                                                                         |
-      | prisonerDetailsPrisonersCategory | a                                                                                                               |
-      | prisonerDetailsOffence           | <p>Stealing the limelight - 08/11/2018<br />Interrupting - 07/07/2017<br />Jumping the queue - 06/06/2016</p>   |
-      | prisonerDetailsSentence          | 4 years                                                                                                         |
-      | prisonerDetailsSentenceType      | indeterminate                                                                                                   |
-      | prisonerDetailsTariffLength      | 5 years                                                                                                         |
-      | prisonerDetailsTariffExpiryDate  | 29/06/2019                                                                                                      |
+      | prisonerDetailsPrisonInstitution | HMP Humber                                                                                         |
+      | prisonerDetailsPrisonersFullName | Jimmy Fizz                                                                                         |
+      | prisonerDetailsPrisonNumber      | LH5058                                                                                             |
+      | prisonerDetailsNomisNumber       | M123456                                                                                            |
+      | prisonerDetailsPrisonersCategory | a                                                                                                  |
+      | prisonerDetailsOffence           | Stealing the limelight - 08/11/2018<br>Interrupting - 07/07/2017<br>Jumping the queue - 06/06/2016 |
+      | prisonerDetailsSentence          | 4 years                                                                                            |
+      | prisonerDetailsSentenceType      | indeterminate                                                                                      |
+      | prisonerDetailsTariffLength      | 5 years                                                                                            |
+      | prisonerDetailsTariffExpiryDate  | 29/06/2019                                                                                         |
 
 
   Scenario: Delius user wants to enter details for Male prisoner whom has Determinate sentence
@@ -44,16 +44,16 @@ Feature: Parole Report
     And they enter the date "08/11/2031" for "Parole eligibility date"
     And they select the "Extended" option on the "Sentence type"
     Then the following information should be saved in the report
-      | prisonerDetailsPrisonInstitution       | HMP Humber                                                                                                      |
-      | prisonerDetailsPrisonersFullName       | Jimmy Fizz                                                                                                      |
-      | prisonerDetailsPrisonNumber            | LH5058                                                                                                          |
-      | prisonerDetailsNomisNumber             | M123456                                                                                                         |
-      | prisonerDetailsPrisonersCategory       | c                                                                                                               |
-      | prisonerDetailsOffence                 | <p>Stealing the limelight - 08/11/2018<br />Interrupting - 07/07/2017<br />Jumping the queue - 06/06/2016</p>   |
-      | prisonerDetailsSentence                | 20 years                                                                                                        |
-      | prisonerDetailsSentenceType            | determinate                                                                                                     |
-      | prisonerDetailsDeterminateSentenceType | extended                                                                                                        |
-      | prisonerDetailsParoleEligibilityDate   | 08/11/2031                                                                                                      |
+      | prisonerDetailsPrisonInstitution       | HMP Humber                                                                                         |
+      | prisonerDetailsPrisonersFullName       | Jimmy Fizz                                                                                         |
+      | prisonerDetailsPrisonNumber            | LH5058                                                                                             |
+      | prisonerDetailsNomisNumber             | M123456                                                                                            |
+      | prisonerDetailsPrisonersCategory       | c                                                                                                  |
+      | prisonerDetailsOffence                 | Stealing the limelight - 08/11/2018<br>Interrupting - 07/07/2017<br>Jumping the queue - 06/06/2016 |
+      | prisonerDetailsSentence                | 20 years                                                                                           |
+      | prisonerDetailsSentenceType            | determinate                                                                                        |
+      | prisonerDetailsDeterminateSentenceType | extended                                                                                           |
+      | prisonerDetailsParoleEligibilityDate   | 08/11/2031                                                                                         |
 
 
   Scenario: Delius user wants to close the parole report

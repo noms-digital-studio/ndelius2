@@ -12,9 +12,9 @@ function hideAutoSaveErrors () {
   })
 }
 
-const autoSaveProgress = $editor => {
+const autoSaveProgress = $editorId => {
   const $form = document.getElementById('ndForm')
-  const errorMessage = document.getElementById(`${ $editor.id }-autosave_error`)
+  const errorMessage = document.getElementById(`${ $editorId }-autosave_error`)
   startSaveIcon()
   saveReportProgress($form).then(() => {
     endSaveIcon()

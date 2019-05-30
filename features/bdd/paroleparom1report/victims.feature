@@ -12,13 +12,13 @@ Feature:Parole Report - Victims
     And they enter the date "YESTERDAY" for "On what date did you contact the VLO?"
     And  they enter the following information
 
-      | Analyse the impact of the offence on the victims | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi scelerisque eu. |
+      | Analyse the impact of the offence on the victims | Some analysis of the impact of the offence on the victims |
 
     Then the following information should be saved in the report
 
       | victimsEngagedInVCS   | yes                                                                                                                                                                                     |
       | victimsSubmitVPS      | no                                                                                                                                                                                      |
-      | victimsImpactDetails  | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Egestas purus viverra accumsan in nisl nisi scelerisque eu. |
+      | victimsImpactDetails  | Some analysis of the impact of the offence on the victims |
 
   Scenario: Delius user wants to leave the "Victims" page without entering any details into the "Analyse the impact of the offence on the victims" field
 

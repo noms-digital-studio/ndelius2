@@ -29,3 +29,12 @@
     border-color: govuk-colour("yellow") !important;
   }
 }
+
+.moj-rich-text-editor {
+  min-height: 50px;
+  @include govuk-typography-common;
+
+  p {
+    @include govuk-responsive-padding(3, "bottom")
+  }
+}

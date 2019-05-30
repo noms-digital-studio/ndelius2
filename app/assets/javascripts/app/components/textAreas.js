@@ -15,33 +15,10 @@ import { trackEvent } from '../../helpers/analyticsHelper'
  *
  * @param $editor
  */
-function configureEditor ($editor) {
-  const container = $editor.getContainer().querySelector('.tox-editor-container')
-  const toolbar = container.querySelector('.tox-toolbar')
-  toolbar.classList.add('govuk-visually-hidden')
-  container.appendChild(toolbar)
-
-  if ($editor.getElement().classList.contains('moj-textarea--prefilled')) {
-    container.classList.add('tox-editor-container--prefilled')
-  }
-}
-
-/**
- *
- * @param $editor
- */
-function showToolbar ($editor) {
-  const toolbar = $editor.getContainer().querySelector('.tox-toolbar')
-  toolbar.classList.remove('govuk-visually-hidden')
-}
-
-/**
- *
- * @param $editor
- */
-function hideToolbar ($editor) {
-  const toolbar = $editor.getContainer().querySelector('.tox-toolbar')
-  toolbar.classList.add('govuk-visually-hidden')
+function attachToolbar ($editor) {
+  const $toolbar = document.getElementById('tinymce-toolbar')
+  const $container = $editor.getElement().parentElement
+  $container.appendChild($toolbar)
 }
 
 /**
@@ -50,7 +27,7 @@ function hideToolbar ($editor) {
  */
 function addPlaceholder ($editor) {
   if (!$editor.getContent({ format: 'text' }).trim().length) {
-    $editor.getContainer().classList.add('tox-tinymce--placeholder')
+    $editor.getElement().classList.add('tox-tinymce--placeholder')
   }
 }
 
@@ -59,7 +36,7 @@ function addPlaceholder ($editor) {
  * @param $editor
  */
 function removePlaceholder ($editor) {
-  $editor.getContainer().classList.remove('tox-tinymce--placeholder')
+  $editor.getElement().classList.remove('tox-tinymce--placeholder')
 }
 
 /**
@@ -67,7 +44,7 @@ function removePlaceholder ($editor) {
  * @param $editor
  */
 function updateFormElement ($editor) {
-  $editor.getElement().value = $editor.getContent()
+  document.getElementById($editor.getElement().dataset.id).value = $editor.getContent()
 }
 
 /**
@@ -75,8 +52,9 @@ function updateFormElement ($editor) {
  * @param $editor
  */
 function updateTextLimits ($editor) {
-  const messageHolder = document.getElementById(`${ $editor.id }-countHolder`)
-  const messageTarget = document.getElementById(`${ $editor.id }-count`)
+  const elementId = $editor.getElement().dataset.id
+  const messageHolder = document.getElementById(`${ elementId }-countHolder`)
+  const messageTarget = document.getElementById(`${ elementId }-count`)
 
   if (!messageHolder || !messageTarget) {
     return
@@ -96,13 +74,6 @@ function updateTextLimits ($editor) {
 /**
  *
  * @param $editor
- */
-function toggleFocusRectangle ($editor) {
-  $editor.getContainer().querySelector('.tox-editor-container').classList.toggle('tox-tinymce--focus-rect')
-}
-
-/**
- *
  */
 function updateTooltips ($editor) {
   const isMac = navigator.platform.toUpperCase().indexOf('MAC') !== -1
@@ -136,35 +107,34 @@ function updateTooltips ($editor) {
   })
 }
 
-function autoClickSpellchecker($editor) {
-  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
-  if(spellCheckButton.getAttribute("aria-pressed") == "true") {
+function autoClickSpellchecker ($editor) {
+  const $spellCheckButton = $editor.getElement().parentElement.querySelector('[title="Spellcheck"]')
+  if ($spellCheckButton && $spellCheckButton.getAttribute('aria-pressed') === 'true' && $editor.getContent({ format: 'text' }).trim().length) {
     $editor.execCommand('mceSpellCheck')
     $editor.execCommand('mceSpellCheck')
   }
 }
 
-function addClickHandlerToSpellCheck($editor) {
-  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
-  if(spellCheckButton.getAttribute('hasListener') != 'true' && spellCheckButton != null) {
-    spellCheckButton.addEventListener('click', () => handleSpellCheckClick(spellCheckButton, $editor))
-    spellCheckButton.setAttribute("hasListener", 'true')
+function addClickHandlerToSpellCheck ($editor) {
+  const $spellCheckButton = $editor.getElement().parentElement.querySelector('[title="Spellcheck"]')
+  if ($spellCheckButton && $spellCheckButton.getAttribute('hasListener') !== 'true') {
+    $spellCheckButton.addEventListener('click', () => handleSpellCheckClick($spellCheckButton, $editor))
+    $spellCheckButton.setAttribute('hasListener', 'true')
   }
 }
 
-function handleSpellCheckClick(spellCheckButton, $editor) {
-  if (spellCheckButton.getAttribute("aria-pressed") == "false") {
-    $editor.getBody().setAttribute('spellcheck', 'false')
-    trackEvent('spellcheck - on', "spellcheck", $editor.id)
-  } else {
-    $editor.getBody().setAttribute('spellcheck', 'true')
-    trackEvent('spellcheck - off', "spellcheck", $editor.id)
-  }
+function handleSpellCheckClick (spellCheckButton, $editor) {
+
+  console.info('Clicky:', $editor.getBody().id)
+
+  const ariaPressed = spellCheckButton.getAttribute('aria-pressed')
+  $editor.getBody().setAttribute('spellcheck', ariaPressed)
+  trackEvent(`spellcheck - ${ ariaPressed === 'false' ? 'on' : 'off' }`, 'spellcheck', $editor.id)
 }
 
-function enableSpellChecker($editor) {
-  const spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
-  if(spellCheckButton.getAttribute("aria-pressed") == "false") {
+function enableSpellChecker ($editor) {
+  const $spellCheckButton = $editor.getElement().parentElement.querySelector('[title="Spellcheck"]')
+  if ($spellCheckButton && $spellCheckButton.getAttribute('aria-pressed') === 'false' && $editor.getContent({ format: 'text' }).trim().length) {
     $editor.execCommand('mceSpellCheck')
   }
 }
@@ -177,16 +147,17 @@ const initTextAreas = () => {
   const localPath = window.localPath || '/'
 
   tinymce.init({
-    branding: false,
     menubar: false,
+    inline: true,
     browser_spellcheck: true,
     allow_conditional_comments: true,
-    selector: '.govuk-textarea:not(.moj-textarea--classic)',
+    fixed_toolbar_container: '#tinymce-toolbar',
+    selector: '.moj-rich-text-editor:not(.moj-textarea--classic)',
     plugins: 'autoresize lists paste help spellchecker',
-    toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist | spellchecker',
     width: '100%',
     min_height: 145,
     valid_elements: 'p,p[style],span[style],ul,ol,li,li[style],strong/b,em/i,br',
+    toolbar: 'undo redo | bold italic underline | alignleft alignjustify | numlist bullist | spellchecker',
     valid_classes: {
       'p': '',
       'span': ''
@@ -203,52 +174,53 @@ const initTextAreas = () => {
     spellchecker_languages: 'English=en',
     setup: $editor => {
       $editor.on('init', () => {
-        configureEditor($editor)
         addPlaceholder($editor)
-        updateFormElement($editor)
       })
       $editor.on('focus', () => {
+        attachToolbar($editor)
         updateTooltips($editor)
-        toggleFocusRectangle($editor)
-        showToolbar($editor)
         removePlaceholder($editor)
+      })
+      /*
+      $editor.on('focus', debounce(() => {
         addClickHandlerToSpellCheck($editor)
         enableSpellChecker($editor)
-      })
+      }), 50)
+      */
       $editor.on('blur', () => {
-        toggleFocusRectangle($editor)
-        hideToolbar($editor)
         addPlaceholder($editor)
         updateFormElement($editor)
-        autoSaveProgress($editor.getElement())
+        autoSaveProgress($editor.getElement().dataset.id)
       })
       $editor.on('keyup', debounce(() => {
         updateFormElement($editor)
-        autoSaveProgress($editor.getElement())
+        autoSaveProgress($editor.getElement().dataset.id)
       }, 5000))
-      $editor.on('input', () => {
-        updateTextLimits($editor)
-      })
+      /*
       $editor.on('keyup', debounce(() => {
         autoClickSpellchecker($editor)
       }, 1000))
+      */
+      $editor.on('input', () => {
+        updateTextLimits($editor)
+      })
     },
     spellchecker_callback: function (method, text, success, failure) {
-      if (method === "spellcheck") {
+      if (method === 'spellcheck') {
         tinymce.util.JSONRequest.sendRPC({
-          url: "/spellcheck",
+          url: '/spellcheck',
           params: {
             words: text.match(this.getWordCharPattern())
           },
           success: result => {
-            success(result);
+            success(result)
           },
           error: (error, xhr) => {
-            failure("Spellcheck error:" + xhr.status);
+            failure('Spellcheck error:' + xhr.status)
           }
-        });
+        })
       } else {
-        failure('Unsupported spellcheck method');
+        failure('Unsupported spellcheck method')
       }
     }
   })

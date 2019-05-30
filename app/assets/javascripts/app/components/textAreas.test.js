@@ -26,6 +26,7 @@ describe('textarea component', () => {
       '    <div class="testTextArea-autosave_error">Auto save error</div>' +
       '    <label class="govuk-label" for="testTextArea">Test text area</label>' +
       '    <textarea id="testTextArea" class="govuk-textarea govuk-visually-hidden" data-limit="2000"></textarea>' +
+      '    <div id="testTextArea-tinymce" class="moj-rich-text-editor"></div>' +
       '    <input id="jumpNumber" value="2" type="hidden" />' +
       '    <div id="testTextArea-countHolder" class="govuk-visually-hidden">' +
       '      <div id="testTextArea-count"></div>' +

@@ -50,13 +50,13 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
         given(documentStore.uploadNewPdf(any(), any(), any(), any(), any(), any()))
             .willReturn(CompletableFuture.supplyAsync(() -> ImmutableMap.of("ID", "123")));
 
-        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&foo=bar&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
+        val result = route(app, new RequestBuilder().method(GET).uri("/report/shortFormatPreSentenceReport?user=lJqZBRO%2F1B0XeiD2PhQtJg%3D%3D&t=T2DufYh%2B%2F%2F64Ub6iNtHDGg%3D%3D&crn=v5LH8B7tJKI7fEc9uM76SQ%3D%3D&foo=donkeydonkey&entityId=J5ASYr85DPHjd94ZC3ShNw%3D%3D"));
 
         assertEquals(OK, result.status());
         val content = Helpers.contentAsString(result);
         assertTrue(content.contains(encryptor.apply("Jimmy Jammy Fizz")));
         assertTrue(content.contains(encryptor.apply("court name from required by court")));
-        assertFalse(content.contains("bar"));
+        assertFalse(content.contains("donkeydonkey"));
     }
 
     @Test

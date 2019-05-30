@@ -38,7 +38,7 @@ public class VictimsSteps {
         cal.add(Calendar.DATE, -1);
         Date date = cal.getTime();
 
-        page.fillTextArea("Analyse the impact of the offence on the victims", "Victims impact detail text");
+        page.fillTextAreaById("victimsImpactDetails", "Victims impact detail text");
         page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Day", new SimpleDateFormat("dd").format(date));
         page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Month", new SimpleDateFormat("MM").format(date));
         page.fillInputInSectionWithLegend("On what date did you contact the VLO?", "Year", new SimpleDateFormat("yyyy").format(date));
