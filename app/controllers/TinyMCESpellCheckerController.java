@@ -10,6 +10,7 @@ import play.mvc.Result;
 import services.SpellcheckService;
 
 import javax.inject.Inject;
+import java.util.Map;
 import java.util.Optional;
 
 public class TinyMCESpellCheckerController extends Controller {
@@ -29,7 +30,11 @@ public class TinyMCESpellCheckerController extends Controller {
         val wordsRequested = wordsRequestedForm.bindFromRequest().get();
         Optional<Params> params = Optional.ofNullable(wordsRequested.getParams());
         return params
-                .map(result -> ok(spellcheckService.getSpellcheckSuggestionsString(params.get().getWords().toArray(new String[0]))))
+                .map(result -> ok(spellcheckService.getSpellCheckSuggestions(joinToSingleText(wordsRequested.getParams().getWords()))))
                 .orElse(ok("{ }"));
+    }
+
+    private String joinToSingleText(Map<String, String> strings) {
+        return String.join(" ", strings.values().toArray(new String[0]));
     }
 }

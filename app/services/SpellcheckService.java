@@ -1,40 +1,71 @@
 package services;
 
 import com.google.inject.Inject;
-import dk.dren.hunspell.Hunspell;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.languagetool.JLanguageTool;
+import org.languagetool.language.BritishEnglish;
+import org.languagetool.rules.RuleMatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class SpellcheckService {
 
-    private Hunspell.Dictionary dictionary;
+    private BritishEnglish britishEnglish;
     private final static Logger LOGGER = LoggerFactory.getLogger(SpellcheckService.class);
 
     @Inject
     public SpellcheckService() {
-        dictionary = loadDictionaries();
+        britishEnglish = new BritishEnglish();
     }
 
-    public String getSpellcheckSuggestionsString(String[] wordsToCheck) {
+    public String getSpellCheckSuggestions(String textToSpellCheck) {
         StringBuilder spellingMistakes = new StringBuilder();
-
-        Arrays.stream(wordsToCheck).forEach(word -> {
-                if (dictionary.misspelled(word)) {
-                    spellingMistakes.append("\"").append(word).append("\" : ");
-                    spellingMistakes.append(dictionary.suggest(word).stream().map(str -> "\"" + str + "\"").collect(Collectors.toList()));
+        List<RuleMatch> matches = getRuleMatches(textToSpellCheck);
+        if(matches != null && !matches.isEmpty()) {
+            matches.forEach(
+                ruleMatch -> {
+                    spellingMistakes.append("\"").append(textToSpellCheck, ruleMatch.getFromPos(), ruleMatch.getToPos()).append("\" : ");
+                    spellingMistakes.append(ruleMatch.getSuggestedReplacements().stream().map(str -> "\"" + str + "\"").collect(Collectors.toList()));
                     spellingMistakes.append(",");
                 }
-            }
-        );
-
+            );
+        }
         return constructResponse(spellingMistakes);
+    }
+
+
+    private List<RuleMatch> getRuleMatches(String textToSpellCheck) {
+        JLanguageTool languageTool = createLanguageTool();
+        List<RuleMatch> matches = Collections.emptyList();
+        try {
+            matches = languageTool.check(textToSpellCheck);
+        } catch (IOException e) {
+            LOGGER.error("Error occurred whilst checking spelling : ", e);
+        }
+        return matches;
+    }
+
+    private JLanguageTool createLanguageTool() {
+        JLanguageTool languageTool = new JLanguageTool(britishEnglish);
+        disableGrammarChecking(languageTool);
+        return languageTool;
+    }
+
+    private void disableGrammarChecking(JLanguageTool languageTool) {
+        languageTool.getAllRules().forEach(
+                rule -> {
+                    if (!rule.isDictionaryBasedSpellingRule()) {
+                        languageTool.disableRule(rule.getId());
+                    }
+                }
+
+        );
     }
 
     private String constructResponse(StringBuilder spellingMistakes) {
@@ -44,22 +75,5 @@ public class SpellcheckService {
             return String.format("{ \"result\" : { \"words\" : { %s } } }", spellingMistakesNoEndComma);
         }
         return "{ \"result\" : {}}";
-    }
-
-
-    private Hunspell.Dictionary loadDictionaries() {
-        try {
-            return Hunspell.getInstance().getDictionary(getDictionaryPath());
-        } catch (FileNotFoundException e) {
-            LOGGER.error("Dictionary can not be loaded", e);
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.error("Unsupported Encoding Exception", e);
-        }
-        return null;
-    }
-
-    private String getDictionaryPath() {
-        val dictionaryPath = getClass().getClassLoader().getResource("en_GB.dic").getPath();
-        return dictionaryPath.substring(0, dictionaryPath.lastIndexOf(".dic"));
     }
 }

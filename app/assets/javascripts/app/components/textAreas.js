@@ -107,34 +107,40 @@ function updateTooltips ($editor) {
   })
 }
 
-function autoClickSpellchecker ($editor) {
-  const $spellCheckButton = $editor.getElement().parentElement.querySelector('[title="Spellcheck"]')
-  if ($spellCheckButton && $spellCheckButton.getAttribute('aria-pressed') === 'true' && $editor.getContent({ format: 'text' }).trim().length) {
-    $editor.execCommand('mceSpellCheck')
-    $editor.execCommand('mceSpellCheck')
-  }
-}
+const spellCheckButtonHandlers = new Map()
 
 function addClickHandlerToSpellCheck ($editor) {
-  const $spellCheckButton = $editor.getElement().parentElement.querySelector('[title="Spellcheck"]')
-  if ($spellCheckButton && $spellCheckButton.getAttribute('hasListener') !== 'true') {
-    $spellCheckButton.addEventListener('click', () => handleSpellCheckClick($spellCheckButton, $editor))
-    $spellCheckButton.setAttribute('hasListener', 'true')
+  const $spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  if ($spellCheckButton && !spellCheckButtonHandlers.has($editor.id)) {
+    $spellCheckButton.addEventListener('click', () =>
+      handleSpellCheckClick($spellCheckButton, $editor)
+    )
+    spellCheckButtonHandlers.set($editor.id, true)
   }
 }
 
 function handleSpellCheckClick (spellCheckButton, $editor) {
-
-  console.info('Clicky:', $editor.getBody().id)
-
-  const ariaPressed = spellCheckButton.getAttribute('aria-pressed')
-  $editor.getBody().setAttribute('spellcheck', ariaPressed)
-  trackEvent(`spellcheck - ${ ariaPressed === 'false' ? 'on' : 'off' }`, 'spellcheck', $editor.id)
+  if (spellCheckButton.getAttribute("aria-pressed") === "false") {
+    $editor.getBody().setAttribute('spellcheck', 'false')
+    trackEvent('spellcheck - on', "spellcheck", $editor.id)
+  } else {
+    $editor.getBody().setAttribute('spellcheck', 'true')
+    trackEvent('spellcheck - off', "spellcheck", $editor.id)
+  }
 }
 
 function enableSpellChecker ($editor) {
-  const $spellCheckButton = $editor.getElement().parentElement.querySelector('[title="Spellcheck"]')
+  const $spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
   if ($spellCheckButton && $spellCheckButton.getAttribute('aria-pressed') === 'false' && $editor.getContent({ format: 'text' }).trim().length) {
+    $editor.getBody().setAttribute('spellcheck', 'false')
+    $editor.execCommand('mceSpellCheck')
+  }
+}
+
+function autoClickSpellchecker ($editor) {
+  const $spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  if ($spellCheckButton && $spellCheckButton.getAttribute('aria-pressed') === 'true' && $editor.getContent({ format: 'text' }).trim().length) {
+    $editor.execCommand('mceSpellCheck')
     $editor.execCommand('mceSpellCheck')
   }
 }
@@ -181,12 +187,10 @@ const initTextAreas = () => {
         updateTooltips($editor)
         removePlaceholder($editor)
       })
-      /*
       $editor.on('focus', debounce(() => {
         addClickHandlerToSpellCheck($editor)
-        enableSpellChecker($editor)
+        //enableSpellChecker($editor)
       }), 50)
-      */
       $editor.on('blur', () => {
         addPlaceholder($editor)
         updateFormElement($editor)
@@ -196,11 +200,9 @@ const initTextAreas = () => {
         updateFormElement($editor)
         autoSaveProgress($editor.getElement().dataset.id)
       }, 5000))
-      /*
       $editor.on('keyup', debounce(() => {
         autoClickSpellchecker($editor)
-      }, 1000))
-      */
+      }, 100))
       $editor.on('input', () => {
         updateTextLimits($editor)
       })

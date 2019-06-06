@@ -3,8 +3,6 @@ package services;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SpellcheckServiceTest {
@@ -17,17 +15,17 @@ public class SpellcheckServiceTest {
 
     @Test
     public void testThatMisspelledWordsReturnSuggestions() {
-        String[] wordsToCheck = Arrays.asList("speeling", "misteke").toArray(new String[0]);
-        String spellcheckSuggestionsString = spellcheckService.getSpellcheckSuggestionsString(wordsToCheck);
+        String wordsToCheck = "speeling misteke";
+        String spellcheckSuggestionsString = spellcheckService.getSpellCheckSuggestions(wordsToCheck);
 
-        String expectedSuggestions = "{ \"result\" : { \"words\" : { \"speeling\" : [\"sleeping\", \"peeling\", \"peelings\", \"spieling\", \"steeling\", \"spelling\", \"speeding\", \"s peeling\", \"splining\"],\"misteke\" : [\"mistake\", \"mist eke\", \"mist-eke\"] } } }";
+        String expectedSuggestions = "{ \"result\" : { \"words\" : { \"speeling\" : [\"spelling\", \"speeding\", \"peeling\", \"steeling\", \"spieling\", \"s peeling\"],\"misteke\" : [\"mistake\", \"mist eke\"] } } }";
         assertThat(spellcheckSuggestionsString).isEqualTo(expectedSuggestions);
     }
 
     @Test
     public void testThatWhenNoMisspelledWordsReturnsEmptySuggestions() {
-        String[] wordsToCheck = Arrays.asList("spelling", "mistake").toArray(new String[0]);
-        String spellcheckSuggestionsString = spellcheckService.getSpellcheckSuggestionsString(wordsToCheck);
+        String wordsToCheck = "spelling mistake";
+        String spellcheckSuggestionsString = spellcheckService.getSpellCheckSuggestions(wordsToCheck);
 
         String expectedSuggestions = "{ \"result\" : {}}";
         assertThat(spellcheckSuggestionsString).isEqualTo(expectedSuggestions);
