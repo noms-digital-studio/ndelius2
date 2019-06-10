@@ -1,6 +1,7 @@
 package views.pages;
 
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.fluentlenium.core.FluentPage;
 import org.fluentlenium.core.domain.FluentWebElement;
 import org.openqa.selenium.By;
@@ -8,6 +9,7 @@ import play.test.TestBrowser;
 
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.By.*;
 import static org.openqa.selenium.By.id;
@@ -41,8 +43,25 @@ public class ReportPage extends FluentPage {
     public void fillTextAreaById(String id, String text) {
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('focus')", id));
         control.executeScript(String.format("tinymce.get('%s-tinymce').setContent('%s')", id, text.replace("'", "\\'")));
+        handleSpellingMistakes(id, text);
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('keyup')", id));
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('blur')", id));
+    }
+
+    private void handleSpellingMistakes(String id, String text) {
+        String expression = String.format("//div[@id='%s-tinymce']//span[@class='mce-spellchecker-word']", id);
+        if(StringUtils.isNotBlank(text)) {
+            control.await().until(driver -> driver.find(By.className("tox-notifications-container")).present() || driver.find(By.xpath(expression)).present());
+            dismissNoSpellingModal("tox-notification__dismiss");
+        }
+    }
+
+    private void dismissNoSpellingModal(String modalClassName) {
+        boolean present = $(className(modalClassName)).present();
+        if(present) {
+            $(className(modalClassName)).click();
+            control.await().explicitlyFor(2000, TimeUnit.MILLISECONDS);
+        }
     }
 
     public void fillTextArea(String label, String text) {
@@ -90,7 +109,7 @@ public class ReportPage extends FluentPage {
 
     public void clickRadioButtonWithLabelWithinLegend(String label, String legend) {
         val fieldId = fieldNameFromLabelWithLegend(label, legend);
-        $(id(fieldId)).first().click();
+        $(id(fieldId)).first().scrollIntoView(true).click();
     }
 
     private String fieldNameFromLabelWithLegend(String label, String legend) {

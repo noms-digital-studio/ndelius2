@@ -189,7 +189,7 @@ const initTextAreas = () => {
       })
       $editor.on('focus', debounce(() => {
         addClickHandlerToSpellCheck($editor)
-        //enableSpellChecker($editor)
+        enableSpellChecker($editor)
       }), 50)
       $editor.on('blur', () => {
         addPlaceholder($editor)
