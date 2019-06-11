@@ -43,25 +43,8 @@ public class ReportPage extends FluentPage {
     public void fillTextAreaById(String id, String text) {
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('focus')", id));
         control.executeScript(String.format("tinymce.get('%s-tinymce').setContent('%s')", id, text.replace("'", "\\'")));
-        handleSpellingMistakes(id, text);
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('keyup')", id));
         control.executeScript(String.format("tinymce.get('%s-tinymce').fire('blur')", id));
-    }
-
-    private void handleSpellingMistakes(String id, String text) {
-        String expression = String.format("//div[@id='%s-tinymce']//span[@class='mce-spellchecker-word']", id);
-        if(StringUtils.isNotBlank(text)) {
-            control.await().until(driver -> driver.find(By.className("tox-notifications-container")).present() || driver.find(By.xpath(expression)).present());
-            dismissNoSpellingModal("tox-notification__dismiss");
-        }
-    }
-
-    private void dismissNoSpellingModal(String modalClassName) {
-        boolean present = $(className(modalClassName)).present();
-        if(present) {
-            $(className(modalClassName)).click();
-            control.await().explicitlyFor(2000, TimeUnit.MILLISECONDS);
-        }
     }
 
     public void fillTextArea(String label, String text) {
