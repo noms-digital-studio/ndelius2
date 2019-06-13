@@ -142,9 +142,11 @@ function autoClickSpellchecker ($editor) {
 }
 
 function setFocusIfSpellingMistakes() {
-  const nospellings = document.querySelector(".tox-notification__dismiss")
-  if(nospellings) {
-    nospellings.focus()
+  const nospellingsAlert = document.querySelector(".tox-notification__body")
+  const nospellingsClose = document.querySelector(".tox-notification__dismiss")
+  if(nospellingsAlert) {
+    nospellingsAlert.focus()
+    nospellingsClose.setAttribute("tabIndex", "0")
   }
 }
 
