@@ -19,6 +19,7 @@ function attachToolbar ($editor) {
   const $toolbar = document.getElementById('tinymce-toolbar')
   const $container = $editor.getElement().parentElement
   $container.appendChild($toolbar)
+  $editor.shortcuts.add('ctrl+shift+x', 'Enable spell checker', function () {onSpellCheckShortcutKeyPress($editor)})
 }
 
 /**
@@ -103,6 +104,9 @@ function updateTooltips ($editor) {
       case 'Justify':
         $module.title = `Justify (${ $control }${ $shift }J)`
         break
+      case 'Spellcheck':
+        $module.title = `Spellcheck (${ $control }${ $shift }X)`
+        break
     }
   })
 }
@@ -110,7 +114,7 @@ function updateTooltips ($editor) {
 const spellCheckButtonHandlers = new Map()
 
 function addClickHandlerToSpellCheck ($editor) {
-  const $spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  const $spellCheckButton = $editor.getContainer().querySelector('[aria-label="Spellcheck"]')
   if ($spellCheckButton && !spellCheckButtonHandlers.has($editor.id)) {
     $spellCheckButton.addEventListener('click', () =>
       handleSpellCheckClick($spellCheckButton, $editor)
@@ -130,11 +134,25 @@ function handleSpellCheckClick (spellCheckButton, $editor) {
 }
 
 function autoClickSpellchecker ($editor) {
-  const $spellCheckButton = $editor.getContainer().querySelector('[title="Spellcheck"]')
+  const $spellCheckButton = $editor.getContainer().querySelector('[aria-label="Spellcheck"]')
   if ($spellCheckButton && $spellCheckButton.getAttribute('aria-pressed') === 'true' && $editor.getContent({ format: 'text' }).trim().length) {
     $editor.execCommand('mceSpellCheck')
     $editor.execCommand('mceSpellCheck')
   }
+}
+
+function setFocusIfSpellingMistakes() {
+  const nospellings = document.querySelector(".tox-notification__dismiss")
+  if(nospellings) {
+    nospellings.focus()
+    nospellings.setAttribute("arial-label", "No misspellings found")
+  }
+}
+
+function onSpellCheckShortcutKeyPress($editor) {
+  const $spellCheckButton = $editor.getContainer().querySelector('[aria-label="Spellcheck"]')
+  handleSpellCheckClick ($spellCheckButton, $editor)
+  $editor.execCommand('mceSpellCheck')
 }
 
 /**
@@ -207,6 +225,7 @@ const initTextAreas = () => {
           },
           success: result => {
             success(result)
+            setFocusIfSpellingMistakes()
           },
           error: (error, xhr) => {
             failure('Spellcheck error:' + xhr.status)
