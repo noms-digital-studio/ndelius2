@@ -144,8 +144,10 @@ function autoClickSpellchecker ($editor) {
 function setFocusIfSpellingMistakes() {
   const nospellings = document.querySelector(".tox-notification__dismiss")
   if(nospellings) {
+    const closeButton = document.querySelector('[aria-label="Close"]')
+    closeButton.removeAttribute("aria-label")
+    closeButton.setAttribute("arial-label", "No misspellings found - Close")
     nospellings.focus()
-    nospellings.setAttribute("arial-label", "No misspellings found")
   }
 }
 
