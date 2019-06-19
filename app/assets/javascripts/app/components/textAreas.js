@@ -221,7 +221,7 @@ const initTextAreas = () => {
     spellchecker_callback: function (method, text, success, failure) {
       if (method === 'spellcheck') {
         tinymce.util.JSONRequest.sendRPC({
-          url: '/spellcheck',
+          url: '../spellcheck',
           params: {
             words: text.match(this.getWordCharPattern())
           },
