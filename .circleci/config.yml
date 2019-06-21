@@ -238,14 +238,16 @@ jobs:
         - checkout
         - attach_workspace:
             at: ~/workspace
-        - setup_remote_docker:
-            docker_layer_caching: true
-        - *install_aws_cli
         - run:
             name: debug
             command: |
+              pwd
               ls -ltr .
               ls -ltr workspace
+              ls -ltr /
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - *install_aws_cli
         - run:
             name: publish image to ecs
             command: |
