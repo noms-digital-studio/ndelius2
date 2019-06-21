@@ -6,6 +6,9 @@ defaults: &defaults
 deploy_container_config: &deploy_container_config
   docker:
     - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+      aws_auth:
+        aws_access_key_id: $AWS_ECR_ACCESS_KEY
+        aws_secret_access_key: $AWS_ECR_SECRET_KEY
       environment:
         GITHUB_TEAM_NAME_SLUG: probation-services
 
