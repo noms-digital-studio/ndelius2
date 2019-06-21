@@ -241,6 +241,11 @@ jobs:
             docker_layer_caching: true
         - *install_aws_cli
         - run:
+            name: debug
+            command: |
+              ls -ltr .
+              ls -ltr workspace
+        - run:
             name: publish image to ecs
             command: |
               aws configure --profile ecr set region eu-west-2
