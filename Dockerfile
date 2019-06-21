@@ -15,5 +15,5 @@ RUN chown -R appuser:appgroup /app
 
 USER 2000
 
-ENTRYPOINT ["/usr/bin/java", "-jar", "/app/ndelius2.jar"]
+ENTRYPOINT ["java", "-jar", "/app/ndelius2.jar"]
 
