@@ -16,10 +16,6 @@ install_aws_cli: &install_aws_cli
       sudo apt-get --assume-yes update
       sudo apt-get --assume-yes install python3-pip
       sudo pip3 install awscli
-      aws configure --profile ecr set region eu-west-2
-      aws configure --profile ecr set aws_access_key_id ${AWS_ECR_ACCESS_KEY}
-      aws configure --profile ecr set aws_secret_access_key ${AWS_ECR_SECRET_KEY}
-      login="$(aws ecr get-login --profile ecr --no-include-email)"
 
 version: 2
 general:
@@ -248,8 +244,9 @@ jobs:
             name: publish image to ecs
             command: |
               aws configure --profile ecr set region eu-west-2
-              aws configure --profile ecr set aws_access_key_id ${AWS_ECR_ACCESS_KEY}
-              aws configure --profile ecr set aws_secret_access_key ${AWS_ECR_SECRET_KEY}
+              echo aws configure --profile ecr set aws_access_key_id ${AWS_ECR_ACCESS_KEY}
+              echo aws configure --profile ecr set aws_secret_access_key ${AWS_ECR_SECRET_KEY}
+              aws configure --profile ecr list
               login="$(aws ecr get-login --profile ecr --no-include-email)"
               ${login}
               docker build -t ${ECR_ENDPOINT}/probation-services/ndelius-new-tech-service:${CIRCLE_SHA1} .
