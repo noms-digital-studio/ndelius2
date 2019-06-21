@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: ndelius-new-tech-service
+  name: ndelius-new-tech
   labels:
     app: ndelius-new-tech-app
 spec:
@@ -19,8 +19,8 @@ spec:
         app: ndelius-new-tech-app
     spec:
       containers:
-        - name: ndelius-new-tech-service
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/probation-services/ndelius-new-tech-service:latest
+        - name: ndelius-new-tech
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/probation-services/ndelius-new-tech:latest
           ports:
             - containerPort: 8000
           env:

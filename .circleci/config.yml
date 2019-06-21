@@ -236,12 +236,6 @@ jobs:
       steps:
         - attach_workspace:
             at: ~/ndelius-new-tech
-        - run:
-            name: debug
-            command: |
-              pwd
-              ls -ltr .
-              ls -ltr /
         - checkout
         - setup_remote_docker:
             docker_layer_caching: true
@@ -254,10 +248,10 @@ jobs:
               aws configure --profile ecr set aws_secret_access_key ${AWS_ECR_SECRET_KEY}
               login="$(aws ecr get-login --profile ecr --no-include-email)"
               ${login}
-              docker build -t ${ECR_ENDPOINT}/probation-services/ndelius-new-tech-service:${CIRCLE_SHA1} .
-              docker tag ${ECR_ENDPOINT}/probation-services/ndelius-new-tech-service:${CIRCLE_SHA1} ${ECR_ENDPOINT}/probation-services/ndelius-new-tech-service:latest
-              docker push "${ECR_ENDPOINT}/probation-services/ndelius-new-tech-service:latest"
-              docker push "${ECR_ENDPOINT}/probation-services/ndelius-new-tech-service:${CIRCLE_SHA1}"
+              docker build -t ${ECR_ENDPOINT}/probation-services/ndelius-new-tech:${CIRCLE_SHA1} .
+              docker tag ${ECR_ENDPOINT}/probation-services/ndelius-new-tech:${CIRCLE_SHA1} ${ECR_ENDPOINT}/probation-services/ndelius-new-tech:latest
+              docker push "${ECR_ENDPOINT}/probation-services/ndelius-new-tech:latest"
+              docker push "${ECR_ENDPOINT}/probation-services/ndelius-new-tech:${CIRCLE_SHA1}"
 
     deploy_dev:
       <<: *deploy_container_config
@@ -270,16 +264,12 @@ jobs:
         - run:
             name: Kubectl deployment dev setup
             command: |
-              aws configure --profile ecr set region eu-west-2
-              aws configure --profile ecr set aws_access_key_id ${AWS_ECR_ACCESS_KEY}
-              aws configure --profile ecr set aws_secret_access_key ${AWS_ECR_SECRET_KEY}
-              login="$(aws ecr get-login --profile ecr --no-include-email)"
               setup-kube-auth
               kubectl config use-context dev
         - deploy:
             name: Deploy to dev
             command: |
-              kubectl set image -f ./kube/deployment.yaml ndelius-new-tech-service=${ECR_ENDPOINT}/probation-services/ndelius-new-tech-service:${CIRCLE_SHA1} --local -o yaml \
+              kubectl set image -f ./kube/deployment.yaml ndelius-new-tech=${ECR_ENDPOINT}/probation-services/ndelius-new-tech:${CIRCLE_SHA1} --local -o yaml \
               | kubectl apply -f -
               kubectl apply -f ./kube/service.yaml
               kubectl apply -f ./kube/ingress.yaml
@@ -289,7 +279,7 @@ workflows:
     version: 2
     build-deploy-test:
         jobs:
-            - build
+#            - build
 #            - bddOther:
 #                requires:
 #                    - build
@@ -307,7 +297,7 @@ workflows:
 #                    - build
             - artifacts:
                 requires:
-                  - build
+#                  - build
 #                    - bddOther
 #                    - bddParom1
 #                    - bddSFR
