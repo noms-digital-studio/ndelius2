@@ -237,7 +237,7 @@ jobs:
       steps:
         - checkout
         - attach_workspace:
-            at: ~/workspace
+            at: /workspace
         - run:
             name: debug
             command: |
