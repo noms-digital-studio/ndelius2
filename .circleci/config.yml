@@ -303,7 +303,7 @@ workflows:
                     - build
             - artifacts:
                 requires:
-                  - build
+                    - build
                     - bddOther
                     - bddParom1
                     - bddSFR
