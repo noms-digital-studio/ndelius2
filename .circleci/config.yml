@@ -235,7 +235,7 @@ jobs:
       <<: *defaults
       steps:
         - attach_workspace:
-            at: /workspace
+            at: ~/ndelius-new-tech
         - run:
             name: debug
             command: |
