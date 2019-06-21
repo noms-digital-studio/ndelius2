@@ -246,8 +246,7 @@ jobs:
               aws configure --profile ecr set region eu-west-2
               aws configure --profile ecr set aws_access_key_id ${AWS_ECR_ACCESS_KEY}
               aws configure --profile ecr set aws_secret_access_key ${AWS_ECR_SECRET_KEY}
-              login="$(aws ecr get-login --profile ecr --no-include-email)"
-              ${login}
+              $(aws ecr get-login --profile ecr --no-include-email)
               docker build -t ${ECR_ENDPOINT}/probation-services/ndelius-new-tech:${CIRCLE_SHA1} .
               docker tag ${ECR_ENDPOINT}/probation-services/ndelius-new-tech:${CIRCLE_SHA1} ${ECR_ENDPOINT}/probation-services/ndelius-new-tech:latest
               docker push "${ECR_ENDPOINT}/probation-services/ndelius-new-tech:latest"
@@ -264,6 +263,10 @@ jobs:
         - run:
             name: Kubectl deployment dev setup
             command: |
+              aws configure --profile ecr set region eu-west-2
+              aws configure --profile ecr set aws_access_key_id ${AWS_ECR_ACCESS_KEY}
+              aws configure --profile ecr set aws_secret_access_key ${AWS_ECR_SECRET_KEY}
+              $(aws ecr get-login --profile ecr --no-include-email)
               setup-kube-auth
               kubectl config use-context dev
         - deploy:
