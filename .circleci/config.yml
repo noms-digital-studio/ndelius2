@@ -244,9 +244,8 @@ jobs:
             name: publish image to ecs
             command: |
               aws configure --profile ecr set region eu-west-2
-              echo aws configure --profile ecr set aws_access_key_id ${AWS_ECR_ACCESS_KEY}
-              echo aws configure --profile ecr set aws_secret_access_key ${AWS_ECR_SECRET_KEY}
-              aws configure --profile ecr list
+              aws configure --profile ecr set aws_access_key_id ${AWS_ECR_ACCESS_KEY}
+              aws configure --profile ecr set aws_secret_access_key ${AWS_ECR_SECRET_KEY}
               login="$(aws ecr get-login --profile ecr --no-include-email)"
               ${login}
               docker build -t ${ECR_ENDPOINT}/probation-services/ndelius-new-tech-service:${CIRCLE_SHA1} .
