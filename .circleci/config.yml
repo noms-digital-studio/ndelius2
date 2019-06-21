@@ -243,7 +243,6 @@ jobs:
             command: |
               pwd
               ls -ltr .
-              ls -ltr workspace
               ls -ltr /
         - setup_remote_docker:
             docker_layer_caching: true
