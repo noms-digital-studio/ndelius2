@@ -279,7 +279,7 @@ workflows:
     version: 2
     build-deploy-test:
         jobs:
-#            - build
+            - build
 #            - bddOther:
 #                requires:
 #                    - build
@@ -297,7 +297,7 @@ workflows:
 #                    - build
             - artifacts:
                 requires:
-#                  - build
+                  - build
 #                    - bddOther
 #                    - bddParom1
 #                    - bddSFR
