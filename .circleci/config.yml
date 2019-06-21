@@ -233,9 +233,7 @@ jobs:
                 eb deploy --label $(cat /workspace/version.txt)
     push_to_ecs:
       <<: *defaults
-      working_directory: ~/ndelius-new-tech
       steps:
-        - checkout
         - attach_workspace:
             at: /workspace
         - run:
@@ -244,6 +242,7 @@ jobs:
               pwd
               ls -ltr .
               ls -ltr /
+        - checkout
         - setup_remote_docker:
             docker_layer_caching: true
         - *install_aws_cli
