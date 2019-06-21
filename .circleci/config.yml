@@ -286,41 +286,41 @@ workflows:
     build-deploy-test:
         jobs:
             - build
-#            - bddOther:
-#                requires:
-#                    - build
-#            - bddParom1:
-#                requires:
-#                    - build
-#            - bddSFR:
-#                requires:
-#                    - build
-#            - bddOfffenderSummary:
-#                requires:
-#                    - build
-#            - unitTests:
-#                requires:
-#                    - build
+            - bddOther:
+                requires:
+                    - build
+            - bddParom1:
+                requires:
+                    - build
+            - bddSFR:
+                requires:
+                    - build
+            - bddOfffenderSummary:
+                requires:
+                    - build
+            - unitTests:
+                requires:
+                    - build
             - artifacts:
                 requires:
                   - build
-#                    - bddOther
-#                    - bddParom1
-#                    - bddSFR
-#                    - bddOfffenderSummary
-#                    - unitTests
-#            - deploysmoketest:
-#                requires:
-#                    - artifacts
-#            - smoketest:
-#                requires:
-#                    - deploysmoketest
-#            - deploy:
-#                requires:
-#                    - artifacts
-#                filters:
-#                    branches:
-#                      only: master
+                    - bddOther
+                    - bddParom1
+                    - bddSFR
+                    - bddOfffenderSummary
+                    - unitTests
+            - deploysmoketest:
+                requires:
+                    - artifacts
+            - smoketest:
+                requires:
+                    - deploysmoketest
+            - deploy:
+                requires:
+                    - artifacts
+                filters:
+                    branches:
+                      only: master
             - push_to_ecs:
                 requires:
                   - artifacts
