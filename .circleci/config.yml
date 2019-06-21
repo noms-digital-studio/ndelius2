@@ -233,7 +233,6 @@ jobs:
                 eb deploy --label $(cat /workspace/version.txt)
     push_to_ecs:
       <<: *defaults
-      working_directory: ~/ndelius-new-tech
       steps:
         - checkout
         - attach_workspace:

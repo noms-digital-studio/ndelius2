@@ -9,7 +9,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 
-COPY /workspace/ndelius2.jar /app/ndelius2.jar
+COPY workspace/ndelius2.jar /app/ndelius2.jar
 
 RUN chown -R appuser:appgroup /app
 
