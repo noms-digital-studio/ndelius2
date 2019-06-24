@@ -91,11 +91,16 @@ spec:
                 configMapKeyRef:
                   name: ndelius-new-tech-config
                   key: pdfGeneratorUrl
-            - name: STORE_PROVIDER
+            - name: STORE_ALFRESCO_URL
               valueFrom:
                 configMapKeyRef:
                   name: ndelius-new-tech-config
-                  key: storeProvider
+                  key: storeAlfescoUrl
+            - name: STORE_ALFRESCO_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: ndelius-new-tech-config
+                  key: storeAlfescoUser
 
 
 
