@@ -133,14 +133,6 @@ function handleSpellCheckClick (spellCheckButton, $editor) {
   }
 }
 
-function autoClickSpellchecker ($editor) {
-  const $spellCheckButton = $editor.getContainer().querySelector('[aria-label="Spellcheck"]')
-  if ($spellCheckButton && $spellCheckButton.getAttribute('aria-pressed') === 'true' && $editor.getContent({ format: 'text' }).trim().length) {
-    $editor.execCommand('mceSpellCheck')
-    $editor.execCommand('mceSpellCheck')
-  }
-}
-
 function setFocusIfSpellingMistakes() {
   const nospellings = document.querySelector(".tox-notification__dismiss")
   if(nospellings) {
@@ -211,9 +203,6 @@ const initTextAreas = () => {
         updateFormElement($editor)
         autoSaveProgress($editor.getElement().dataset.id)
       }, 5000))
-      $editor.on('keyup', debounce(() => {
-        autoClickSpellchecker($editor)
-      }, 100))
       $editor.on('input', () => {
         updateTextLimits($editor)
       })
