@@ -34,8 +34,10 @@
             document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled')
         </script>
 
-        <div class="govuk-width-container@if(!hashName.contains(1) && !hashName.contains("cancelled") && !hashName.contains("completed")) { moj-width-container}">
+        <div class="moj-width-container@if(hashName.contains(1) || hashName.contains("cancelled") || hashName.contains("completed")) { govuk-width-container }">
             <main class="govuk-main-wrapper@if(!hashName.contains(1) && !hashName.contains("cancelled") && !hashName.contains("completed")) { moj-scroll-container}" id="content">
+
+                <div class="@if(!hashName.contains(1) && !hashName.contains("cancelled") && !hashName.contains("completed")) { app-max-width-container }">
 
                 @if(banner) {
                     <div class="govuk-phase-banner">
@@ -49,6 +51,8 @@
                 @content
 
                 <div id="tinymce-toolbar"></div>
+
+                </div>
 
             </main>
         </div>

@@ -3,25 +3,52 @@
   @include govuk-clearfix();
 }
 
+.govuk-width-container {
+  max-width: $govuk-page-width !important;
+}
+
 .moj-width-container {
+  box-sizing: border-box;
   position: absolute;
   width: 100%;
   height: 100%;
-  padding-right: 0;
+  padding: 0;
   margin-right: 0;
 }
 
+.app-max-width-container {
+  max-width: calc(295px + 1200px);
+  padding: 0 govuk-spacing(4);
+}
+
 .moj-scroll-container {
+  box-sizing: border-box;
   position: relative;
   width: 100%;
-  height: calc(100% - 145px);
+  height: calc(100% - 90px);
+  padding: 0;
   overflow-x: hidden;
   overflow-y: scroll;
 
-  padding-right: $govuk-gutter-half;
-
   @include govuk-media-query($from: tablet) {
     padding-right: $govuk-gutter;
+  }
+}
+
+.app-grid-column-nav {
+  max-width: 295px;
+
+  @include govuk-media-query(mobile, tablet) {
+    max-width: 100%;
+  }
+}
+
+.app-grid-column-content {
+  width: calc(100% - 295px);
+  max-width: 1200px;
+
+  @include govuk-media-query(mobile, tablet) {
+    width: 100%;
   }
 }
 
