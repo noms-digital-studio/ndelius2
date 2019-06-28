@@ -261,7 +261,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("INTERVENTIONS_DETAIL")
     private String interventionsDetail;
 
-    @RequiredOnPage(value = 8, message = "Enter the interventions summary")
+    @RequiredOnPage(value = 8, message = "Enter the interventions analysis")
     @JsonProperty("INTERVENTIONS_SUMMARY")
     private String interventionsSummary;
 
@@ -491,7 +491,7 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RMP_CURRENT_SITUATION")
     private String currentSituation;
 
-    @RequiredOnPage(value = 16, message = "Enter the supporting agencies", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @RequiredOnPage(value = 16, message = "Enter the agencies", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RMP_SUPPORTING_AGENCIES")
     private String supportingAgencies;
 

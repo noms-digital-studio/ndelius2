@@ -10,7 +10,7 @@ Feature: Parole Report
     And they select the "Continue" button
     Then  the following error messages are displayed
       | Current situation                     | Enter the current situation                     |
-      | Supporting agencies                   | Enter the supporting agencies                   |
+      | Agencies                              | Enter the agencies                              |
       | Support                               | Enter the support                               |
       | Control                               | Enter the control                               |
       | Added measures for specific risks     | Enter the added measures for specific risks     |
@@ -24,7 +24,7 @@ Feature: Parole Report
     When they select the "Yes" option on the "Does the prisoner require a community RMP?"
     And they enter the following information
       | Current situation                     | Some current situation text                     |
-      | Supporting agencies                   | Some supporting agencies text                   |
+      | Agencies                              | Some agencies text                              |
       | Support                               | Some support text                               |
       | Control                               | Some control text                               |
       | Added measures for specific risks     | Some added measures for specific risks text     |
@@ -34,7 +34,7 @@ Feature: Parole Report
       | Contingency plan                      | Some contingency plan text                      |
     Then the following information should be saved in the report
       | currentSituation     | Some current situation text                     |
-      | supportingAgencies   | Some supporting agencies text                   |
+      | supportingAgencies   | Some agencies text                              |
       | support              | Some support text                               |
       | control              | Some control text                               |
       | riskMeasures         | Some added measures for specific risks text     |

@@ -22,7 +22,7 @@ public class InterventionSteps {
     @Given("^Delius User completes the \"Interventions\" UI within the Parole Report$")
     public void deliusUserCompletesThePageWithinTheParoleReport() throws Throwable {
         page.fillTextArea("Detail the interventions the prisoner has completed", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
-        page.fillTextArea("Interventions summary", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
+        page.fillTextArea("Interventions analysis", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.clickButton("Continue");
     }
 }

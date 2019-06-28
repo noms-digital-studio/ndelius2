@@ -9,10 +9,10 @@ Feature: Parole report Intervention UI
     Given they want to enter the intervention details for a prisoner
     When  they enter the following information
       | Detail the interventions the prisoner has completed | Some interventions that the prisoner has completed |
-      | Interventions summary                               | Some interventions summary text                    |
+      | Interventions analysis                               | Some interventions analysis text                    |
     Then the following information should be saved in the report
       | interventionsDetail | Some interventions that the prisoner has completed |
-      | interventionsSummary | Some interventions summary text |
+      | interventionsSummary | Some interventions analysis text |
 
   Scenario: Delius user wants to leave the "Interventions" screen without putting any details in the free text fields
 
@@ -20,7 +20,7 @@ Feature: Parole report Intervention UI
     When  they select the "Continue" button
     Then  the following error messages are displayed
       | Detail the interventions the prisoner has completed | Detail the interventions the prisoner has completed |
-      | Interventions summary                               | Enter the interventions summary                     |
+      | Interventions analysis                               | Enter the interventions analysis                     |
 
   Scenario: Delius user wants to continue entering Prisoner details in the Parole report
 

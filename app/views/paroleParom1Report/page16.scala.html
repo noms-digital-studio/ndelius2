@@ -16,6 +16,8 @@
 @currentSituationHint = {
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
         <li>Sentence details, relevant risk assessment scores (OGRS, OGP, OVP and RSR) and other specialist assessments such as RM2k, HCR-20, SARN and SARA.</li>
+        <li>Do not include raw scores from other specialist reports - include risk ratings or percentiles but not the actual numbers.</li>
+        <li>If there are several specialist reports note the differences relating to risk here.</li>
         <li>A summary of the RoSH scores for all victims and groups - include risk to self.</li>
         <li>A summary of the current circumstances linked to risk and engagement with other agencies when subject to MAPPA. This is pertinent for domestic or sexual abuse cases. For example, if you assess the prisoner as a RoSH to children be clear about their current and future contact with them.</li>
     </ul>
@@ -34,6 +36,7 @@
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
         <li>Positive and protective factors that encourage social capital, for example, accredited programmes, faith groups, supportive family, support from partnership agencies or employment opportunities - these could be current or in development.</li>
         <li>Consideration of how these factors will be used and what has worked in the past that could be used again.</li>
+        <li>Consideration of specialist report recommendations in relation to support.</li>
         <li>Information recorded under the correct heading, for example, support networks can encourage desistance (support) but would a partner be considered a support if there is an entrenched history of domestic abuse and a licence condition preventing contact (control)?</li>
         <li>Supporting explanation and analysis.</li>
         <li>IPP Case File Reviews (CFR): Refer to discussions with psychology staff (usually the CFR writer but not always) rather than the CFR itself as these form part of a wider consultation process. This will prevent CFRs being requested and forming part of the dossier. Cutting and pasting from the CFR should not happen as part of sentence planning.</li>
@@ -44,6 +47,7 @@
     <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-0">
         <li>Factors that manage the risk posed by the prisoner, for example, restrictive licence conditions or statutory requirements such as sexual harm prevention, violent offender or restraining orders.</li>
         <li>Consideration of how these factors will be used and what has worked in the past that could be used again.</li>
+        <li>Consideration of specialist report recommendations in relation to control.</li>
         <li>Information recorded under the correct heading, for example, support networks can encourage desistance (support) but would a partner be considered a support if there is an entrenched history of domestic abuse and a licence condition preventing contact (control)?</li>
         <li>Supporting explanation and analysis.</li>
         <li>IPP Case File Reviews (CFR): Refer to discussions with psychology staff (usually the CFR writer but not always) rather than the CFR itself as these form part of a wider consultation process. This will prevent CFRs being requested and forming part of the dossier. Cutting and pasting from the CFR should not happen as part of sentence planning.</li>
@@ -72,6 +76,7 @@
         <li>MAPPA review dates and actions, if relevant and disclosable.</li>
         <li>Clarification of the information to be provided to the VLO for cases registered with the VCS - include the time frame.</li>
         <li>Actions required by AP staff, if relevant.</li>
+        <li>Reference to child and adult social care, VLO involvement and MAPPA DTC, if disclosable.</li>
     </ul>
 }
 
@@ -133,12 +138,12 @@
             <span class="govuk-details__summary-text">RMP guidance</span>
         </summary>
         <div class="govuk-details__text panel panel-border-narrow">
-
+            <p>If the prisoner is pre-tariff the parole board do not require an RMP - it should be in the supporting OASys document.</p>
             <p>The community RMP must include what other agencies will do to manage the risk presented by the offender.</p>
-            <p>Providing a custodial based RMP will not assist the Parole Board to make an informed decision about release.</p>
+            <p>Providing a custodial (closed or open prison) based RMP will not assist the Parole Board to make an informed decision about release.</p>
             <p>Failure to provide a community RMP when one is required could cause further delay to proceedings and the prisoner pursuing action.</p>
             <p>The accompanying OASys can detail both a custodial and community RMP.</p>
-            <p>For those on or post-tariff your report must consider the Parole Board’s statutory release test: ‘that it is no longer necessary for the protection of the public that the offender be confined.’</p>
+            <p>For those on or post-tariff, your report must consider the Parole Board’s statutory release test: ‘that it is no longer necessary for the protection of the public that the offender be confined.’</p>
             <p>You do not need to state the test definition but you should be clear that manageability in the community has been considered, assessed and applied.</p>
 
         </div>
@@ -167,7 +172,7 @@
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
-            @textarea(reportForm("supportingAgencies"), '_label -> "Supporting agencies", '_hint -> supportingAgenciesHint, 'class -> "wide")
+            @textarea(reportForm("supportingAgencies"), '_label -> "Agencies", '_hint -> supportingAgenciesHint, 'class -> "wide")
 
             <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0"/>
 
