@@ -33,6 +33,8 @@
   &:before, &:after {
     content: "";
     position: absolute;
+    top: 0;
+    left: 0;
   }
 
   &:before {
@@ -40,8 +42,6 @@
     height: 50%;
     background: govuk-colour("grey-2");
     border-radius: 100% 0 0 0;
-    top: 0;
-    left: 0;
   }
   &:after {
     background: white;
@@ -49,8 +49,6 @@
     height: 85%;
     border-radius: 50%;
     margin: auto;
-    top: 0;
-    left: 0;
     bottom: 0;
     right: 0;
   }
