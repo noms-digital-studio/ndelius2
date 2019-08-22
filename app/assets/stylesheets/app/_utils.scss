@@ -25,3 +25,40 @@
     display: none;
   }
 }
+
+.app-spinner {
+  position: relative;
+  animation: rotate 1.4s infinite linear;
+
+  &:before, &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &:before {
+    width: 50%;
+    height: 50%;
+    background: govuk-colour("grey-2");
+    border-radius: 100% 0 0 0;
+  }
+  &:after {
+    background: white;
+    width: 85%;
+    height: 85%;
+    border-radius: 50%;
+    margin: auto;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -124,29 +124,42 @@ function addClickHandlerToSpellCheck ($editor) {
 }
 
 function handleSpellCheckClick (spellCheckButton, $editor) {
-  if (spellCheckButton.getAttribute("aria-pressed") === "false") {
+  if (spellCheckButton.getAttribute('aria-pressed') === 'false') {
     $editor.getBody().setAttribute('spellcheck', 'false')
-    trackEvent('spellcheck - on', "spellcheck", $editor.id)
+    trackEvent('spellcheck - on', 'spellcheck', $editor.id)
   } else {
     $editor.getBody().setAttribute('spellcheck', 'true')
-    trackEvent('spellcheck - off', "spellcheck", $editor.id)
+    trackEvent('spellcheck - off', 'spellcheck', $editor.id)
   }
 }
 
-function setFocusIfSpellingMistakes() {
-  const nospellings = document.querySelector(".tox-notification__dismiss")
-  if(nospellings) {
-    const closeButton = document.querySelector('[aria-label="Close"]')
-    closeButton.removeAttribute("aria-label")
-    closeButton.setAttribute("arial-label", "No misspellings found - Close")
+function setFocusIfSpellingMistakes () {
+  const nospellings = document.querySelector('.tox-notification__dismiss')
+  const closeButton = document.querySelector('[aria-label="Close"]')
+  if (nospellings && closeButton) {
+    closeButton.removeAttribute('aria-label')
+    closeButton.setAttribute('arial-label', 'No misspellings found - Close')
     nospellings.focus()
   }
 }
 
-function onSpellCheckShortcutKeyPress($editor) {
+function onSpellCheckShortcutKeyPress ($editor) {
   const $spellCheckButton = $editor.getContainer().querySelector('[aria-label="Spellcheck"]')
-  handleSpellCheckClick ($spellCheckButton, $editor)
+  handleSpellCheckClick($spellCheckButton, $editor)
   $editor.execCommand('mceSpellCheck')
+}
+
+function isSpellChecking($editor, isChecking) {
+  const $spellCheckButton = $editor.getContainer().querySelector('[aria-label="Spellcheck"]')
+  const $spellCheckButtonIcon = $spellCheckButton.querySelector('.tox-icon')
+  $spellCheckButton.disabled = isChecking
+  if (isChecking) {
+    $spellCheckButtonIcon.classList.add('govuk-visually-hidden')
+    $spellCheckButton.classList.add('app-spinner')
+  } else {
+    $spellCheckButtonIcon.classList.remove('govuk-visually-hidden')
+    $spellCheckButton.classList.remove('app-spinner')
+  }
 }
 
 /**
@@ -155,6 +168,7 @@ function onSpellCheckShortcutKeyPress($editor) {
 const initTextAreas = () => {
 
   const localPath = window.localPath || '/'
+  let currentEditor
 
   tinymce.init({
     menubar: false,
@@ -187,6 +201,7 @@ const initTextAreas = () => {
         addPlaceholder($editor)
       })
       $editor.on('focus', () => {
+        currentEditor = $editor
         attachToolbar($editor)
         updateTooltips($editor)
         removePlaceholder($editor)
@@ -209,16 +224,19 @@ const initTextAreas = () => {
     },
     spellchecker_callback: function (method, text, success, failure) {
       if (method === 'spellcheck') {
+        isSpellChecking(currentEditor, true)
         tinymce.util.JSONRequest.sendRPC({
           url: '../spellcheck',
           params: {
             words: text.match(this.getWordCharPattern())
           },
           success: result => {
+            isSpellChecking(currentEditor, false)
             success(result)
             setFocusIfSpellingMistakes()
           },
           error: (error, xhr) => {
+            isSpellChecking(currentEditor, false)
             failure('Spellcheck error:' + xhr.status)
           }
         })
