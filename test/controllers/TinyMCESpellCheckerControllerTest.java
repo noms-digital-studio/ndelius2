@@ -23,7 +23,7 @@ public class TinyMCESpellCheckerControllerTest extends WithApplication {
         val content = Helpers.contentAsString(result);
         assertEquals(OK, result.status());
 
-        val expectedSuggestions = "{ \"result\" : { \"words\" : { \"speeling\" : [\"spelling\", \"speeding\", \"peeling\", \"steeling\", \"spieling\", \"s peeling\"],\"misteke\" : [\"mistake\", \"mist eke\"] } } }";
+        val expectedSuggestions = asNormalisedJson(  "{ \"result\" : { \"words\" : { \"speeling\" : [\"spelling\", \"speeding\", \"peeling\", \"steeling\", \"spieling\", \"s peeling\"],\"misteke\" : [\"mistake\", \"mist eke\"] } } }");
         assertEquals(expectedSuggestions, content);
     }
 
@@ -37,7 +37,7 @@ public class TinyMCESpellCheckerControllerTest extends WithApplication {
         val content = Helpers.contentAsString(result);
         assertEquals(OK, result.status());
 
-        val expectedSuggestions = "{ \"result\" : {}}";
+        val expectedSuggestions = asNormalisedJson("{ \"result\" : {}}");
         assertEquals(expectedSuggestions, content);
     }
 
@@ -51,7 +51,11 @@ public class TinyMCESpellCheckerControllerTest extends WithApplication {
         val content = Helpers.contentAsString(result);
         assertEquals(OK, result.status());
 
-        val expectedSuggestions = "{ }";
+        val expectedSuggestions = asNormalisedJson("{ }");
         assertEquals(expectedSuggestions, content);
+    }
+
+    private String asNormalisedJson(String json) {
+        return Json.parse(json).toString();
     }
 }
