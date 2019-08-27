@@ -2,9 +2,11 @@ package controllers;
 
 import data.Params;
 import data.WordsRequested;
+import helpers.JsonHelper;
 import lombok.val;
 import play.data.Form;
 import play.data.FormFactory;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.SpellcheckService;
@@ -30,8 +32,8 @@ public class TinyMCESpellCheckerController extends Controller {
         val wordsRequested = wordsRequestedForm.bindFromRequest().get();
         Optional<Params> params = Optional.ofNullable(wordsRequested.getParams());
         return params
-                .map(result -> ok(spellcheckService.getSpellCheckSuggestions(joinToSingleText(wordsRequested.getParams().getWords()))))
-                .orElse(ok("{ }"));
+                .map(result -> ok(Json.parse(spellcheckService.getSpellCheckSuggestions(joinToSingleText(wordsRequested.getParams().getWords())))))
+                .orElse(ok(Json.parse("{ }")));
     }
 
     private String joinToSingleText(Map<String, String> strings) {
