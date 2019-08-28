@@ -1,0 +1,28 @@
+package:
+  openjdk8-jre:
+    installed: true
+file:
+  # Check for presence of New Tech Web jar file
+  /app/ndelius2.jar:
+    exists: true
+    filetype: file
+    mode: "0777"
+    owner: appuser
+    group: appgroup
+process:
+  java:
+    running: true
+port:
+  tcp:9000:
+    listening: true
+    ip:
+    - 0.0.0.0
+http:
+  # There is a /healthcheck endpoint, but it relies on upstream dependencies which won't be available during image building
+  # Use an endpoint (a slow one - hence timeout value) that is fully served by this app instead
+  http://localhost:9000/features:
+    status: 200
+    timeout: 10000
+    body: 
+    - "/HMPPS - Alpha feature switch/"
+

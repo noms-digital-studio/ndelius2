@@ -1,0 +1,24 @@
+FROM mojdigitalstudio/hmpps-base-java:latest
+# Build time variables
+ARG NEWTECHWEB_VERSION
+ENV NEWTECHWEB_VERSION=$NEWTECHWEB_VERSION
+
+MAINTAINER Nick Talbot <nick.talbot@digital.justice.gov.uk>
+USER root
+
+RUN apk add curl jq
+
+RUN addgroup -g 2000 -S appgroup && \
+    adduser -u 2000 -S -G appgroup appuser && \
+    mkdir -p /app
+WORKDIR /app
+
+COPY target/scala-2.12/ndelius2-${NEWTECHWEB_VERSION}.jar /app/ndelius2.jar
+
+RUN chown -R appuser:appgroup /app
+
+USER 2000
+
+EXPOSE 9000
+
+ENTRYPOINT ["java", "-jar", "/app/ndelius2.jar"]
