@@ -40,6 +40,7 @@ libraryDependencies ++= Seq(
   "org.apache.logging.log4j" % "log4j-to-slf4j" % "2.9.1",
   "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "6.0.1",
   "com.github.coveo" % "uap-java" % "1.3.1-coveo1",
+  "com.amazonaws" % "aws-java-sdk" % "1.11.46",
 
   "org.projectlombok" % "lombok" % "1.16.16" % "provided",
 
