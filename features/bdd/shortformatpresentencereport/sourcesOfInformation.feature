@@ -23,23 +23,25 @@ Feature: Short Format Pre-sentence Report - Sources of information
     And that the "Police information" is ticked
     And that the "Sentencing guidelines" is ticked
     And that the "Domestic abuse call out information" is ticked
+    And that the "Equality Information Form " is ticked
     And that the "Other (please specify below)" is ticked
     When they enter the following information
       | Other source(s) of information | Some other sources of information text |
 
     Then the following information should be saved in the report
-      | interviewInformationSource            | true                                   |
-      | serviceRecordsInformationSource       | true                                   |
-      | cpsSummaryInformationSource           | true                                   |
-      | oasysAssessmentsInformationSource     | true                                   |
-      | previousConvictionsInformationSource  | true                                   |
-      | victimStatementInformationSource      | true                                   |
-      | childrenServicesInformationSource     | true                                   |
-      | policeInformationSource               | true                                   |
-      | sentencingGuidelinesInformationSource | true                                   |
-      | domesticAbuseInformationSource        | true                                   |
-      | otherInformationSource                | true                                   |
-      | otherInformationDetails               | Some other sources of information text |
+      | interviewInformationSource                      | true                                   |
+      | serviceRecordsInformationSource                 | true                                   |
+      | cpsSummaryInformationSource                     | true                                   |
+      | oasysAssessmentsInformationSource               | true                                   |
+      | previousConvictionsInformationSource            | true                                   |
+      | victimStatementInformationSource                | true                                   |
+      | childrenServicesInformationSource               | true                                   |
+      | policeInformationSource                         | true                                   |
+      | sentencingGuidelinesInformationSource           | true                                   |
+      | domesticAbuseInformationSource                  | true                                   |
+      | equalityInformationFormInformationSource        | true                                   |
+      | otherInformationSource                          | true                                   |
+      | otherInformationDetails                         | Some other sources of information text |
 
   Scenario: Delius user wants to continue writing the Short Format Pre-sentence Report
 

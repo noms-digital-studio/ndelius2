@@ -12,22 +12,34 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @proposalHint = {
-    <p>Have you considered what equality and diversity issues are present and how they can help inform your proposal?</p>
-    <p>Have you used the effective proposal tool?</p>
-    <p>Be aware of the sentencing guidelines and relevant legislation. Remember to reference the sentencing intentions of the court, if they were made clear.</p>
-    <p>Consider all possible sentencing options, and whether or not the offender is past the custody threshold or suitable for a community order.</p>
-    <p>Consider and describe both aggravating or mitigating factors.</p>
-    <p>Consider whether specific needs such as gender, maturity, diversity make particular sentences more appropriate.</p>
-    <p>In cases of women, ensure that you think about women only disposals and that your proposal gives a robust community option.</p>
-    <p>Make clear how your proposals will manage risk.</p>
-    <p>What will the impact of the sentence be on the offender?</p>
-    <p>How will the proposed sentence affect the offender’s family and anyone for whom they have caring responsibilities?</p>
-    <p>Remember that evidence shows that imprisonment of mothers has significant impacts on those that they care for.</p>
-    <p>If relevant, what is not suitable in this case?</p>
-    <p>Are there any relevant alternative requirements that the offender may have been eligible for, but circumstances have made them unsuitable for participation?</p>
-    <p>Remember that your proposal should be commensurate with risk and need. Proposals should not be made for suspended sentence orders.</p>
+    <p>Have you used the Effective Proposal Framework?</p>
+    <p>Be aware of the sentencing guidelines and relevant legislation. Remember to refer to the sentencing intentions of the court, if they were made clear.</p>
+    <p>Be clear how your proposal will manage risk.</p>
+    <p>Consider the impact of the sentence on the offender.</p>
+    <p>Consider how the proposed sentence will affect the offender’s family and anyone for whom they have caring responsibilities. Remember, evidence shows that imprisoning mothers significantly impacts on children in their care.
+    </p>
+    <p>A persuasive proposal for sentence considers the relevance of other options. For example, when deciding between proposals for custody or a high end Community Order, explaining the reasons for the proposal adds to the confidence of sentencers.</p>
+    <p>When proposing a sentence for a high end Community Order, outlining why the proposal is being made - and explaining why a proposal for custody is not being made - makes the report more persuasive.</p>
+    <p>Likewise, when custody is not inevitable, being clear why custody is being proposed, and explaining why a Community Order is not manageable, assures the sentencer that options have been considered.</p>
+    <p>Consider what equality and diversity issues are present and how they can help inform your proposal. Do specific needs such as gender, diversity, maturity make particular sentences more appropriate?
+        For women offenders, ensure that you consider women-specific disposals.</p>
+    <p>Are there any relevant alternative requirements that the offender is eligible for, but circumstances make them unsuitable?</p>
+    <p>Remember, your proposal should be commensurate with risk and need. Proposals should not be made for Suspended Sentence Orders, if an offender is manageable in the community, a Community Order should be proposed.</p>
+
 }
 
+
+
+
 @popup(reportForm, encrypter, "Proposal", 8) {
+    <div class="govuk-form-group">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-label">I confirm that equalities and diversity information has been considered as part of preparing the report and proposal</legend>
+        <div class="govuk-checkboxes" data-module="progressive-radios">
+            @inputRadioGroup(reportForm("confirmEIF"), options = Seq("yes"->"Yes","no"->"No"))
+        </div>
+    </fieldset>
+    </div>
+
     @textarea(reportForm("proposal"), '_label -> "Enter a proposed sentence", '_hint -> proposalHint, Symbol("data-limit") -> "3000")
 }

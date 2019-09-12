@@ -1194,6 +1194,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
                 put("domesticAbuseInformationSource", "true");
+                put("equalityInformationFormInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 
@@ -1272,6 +1273,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
                 put("domesticAbuseInformationSource", "true");
+                put("equalityInformationFormInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 
@@ -1352,6 +1354,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("policeInformationSource", "true");
                 put("sentencingGuidelinesSource", "true");
                 put("domesticAbuseInformationSource", "true");
+                put("equalityInformationFormInformationSource", "true");
                 put("otherInformationSource", "true");
                 put("otherInformationDetails", "These notes are spelled correctly");
 

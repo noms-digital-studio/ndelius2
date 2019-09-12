@@ -215,6 +215,11 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @JsonProperty("_PROPOSAL_")
     private String proposal;
 
+    @RequiredOnPage(value = 8, message = "Confirm that you have considered equality and diversity information")
+    @JsonProperty("CONFIRM_EIF")
+    private String confirmEIF;
+
+
     // Page 9
 
     @OnPage(9)
@@ -256,6 +261,10 @@ public class ShortFormatPreSentenceReportData extends ReportGeneratorWizardData 
     @OnPage(9)
     @JsonProperty("DOMESTIC_ABUSE_INFORMATION_SOURCE")
     private boolean domesticAbuseInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("EQUALITY_INFORMATION_FORM_INFORMATION_SOURCE")
+    private boolean equalityInformationFormInformationSource;
 
     @OnPage(9)
     @JsonProperty("OTHER_INFORMATION_SOURCE")
