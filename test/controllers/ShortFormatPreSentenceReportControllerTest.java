@@ -1052,6 +1052,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("previousSupervisionResponse", "Good");
                 put("additionalPreviousSupervision", "Some previous supervision response");
 
+                put("confirmEIF", "true");
                 put("proposal", "Some proposal");
 
                 put("pageNumber", "8");
@@ -1116,6 +1117,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("previousSupervisionResponse", "Good");
                 put("additionalPreviousSupervision", "Some previous supervision response");
 
+                put("confirmEIF", "true");
                 put("proposal", "Some proposal");
 
                 put("otherInformationSource", "true");
@@ -1181,7 +1183,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
                 put("additionalPreviousSupervision", "Some previous supervision response");
-
+                put("confirmEIF", "true");
                 put("proposal", "Some proposal");
 
                 put("interviewInformationSource", "true");
@@ -1261,6 +1263,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
                 put("additionalPreviousSupervision", "Some previous supervision response");
+                put("confirmEIF", "true");
                 put("proposal", "Some proposal");
 
                 put("interviewInformationSource", "true");
@@ -1342,6 +1345,7 @@ public class ShortFormatPreSentenceReportControllerTest extends WithApplication 
                 put("riskOfSeriousHarm", "Some risk of serious harm");
                 put("previousSupervisionResponse", "Good");
                 put("additionalPreviousSupervision", "Some previous supervision response");
+                put("confirmEIF", "true");
                 put("proposal", "Some proposal");
 
                 put("interviewInformationSource", "true");
