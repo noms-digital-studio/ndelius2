@@ -22,6 +22,7 @@ public class ProposalPage extends ShortFormatPreSentencePopupReportPage {
     }
 
     public ProposalPage gotoNext() {
+        $(id("confirmEIF_yes")).click();
         fillInputWithId("proposal", "Proposal");
         $(id("nextButton")).click();
         return this;

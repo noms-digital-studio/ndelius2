@@ -23,7 +23,7 @@ Feature: Short Format Pre-sentence Report - Sources of information
     And that the "Police information" is ticked
     And that the "Sentencing guidelines" is ticked
     And that the "Domestic abuse call out information" is ticked
-    And that the "Equality Information Form " is ticked
+    And that the "Equality Information Form (EIF)" is ticked
     And that the "Other (please specify below)" is ticked
     When they enter the following information
       | Other source(s) of information | Some other sources of information text |
