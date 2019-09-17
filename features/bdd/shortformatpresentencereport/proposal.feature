@@ -16,6 +16,12 @@ Feature: Short Format Pre-sentence Report - Proposal
     And they select "What to include" hyperlink
     Then the UI should expand to show additional content to the end user
 
+  Scenario: Delius user confirms that they have considered equality and diversity information
+
+    Given that the user selects "yes" or "no" radio buttons
+    Then they can continue to enter a proposed sentence
+
+
   Scenario: Delius user completes all options on the "Risk assessment" UI
 
     Given they enter the following information

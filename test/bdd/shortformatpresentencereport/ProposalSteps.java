@@ -19,6 +19,8 @@ public class ProposalSteps {
 
     @Given("^Delius User completes the \"Proposal\" UI within the Short Format Pre-sentence Report$")
     public void deliusUserCompletesThePageWithinTheReport() throws Throwable {
+        page.clickRadioButtonWithLabelWithinLegend("Yes", "I confirm that equalities and diversity information has been considered as part of preparing the report and proposal");
+        page.clickRadioButtonWithLabelWithinLegend("No", "I confirm that equalities and diversity information has been considered as part of preparing the report and proposal");
         page.fillTextArea("Enter a proposed sentence", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec sem eget lacus euismod vulputate sit amet sed nulla.");
         page.clickButton("Continue");
     }
