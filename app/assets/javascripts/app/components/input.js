@@ -6,16 +6,13 @@ const initInputs = () => {
 
   nodeListForEach(document.querySelectorAll('input:not([type="hidden"])'), $input => {
     if ($input.type === 'checkbox' || $input.type === 'radio') {
-      $input.addEventListener('click', () => {
+      $input.addEventListener('click', debounce(() => {
         autoSaveProgress($input)
-      })
+      }, 1000))
     } else {
       $input.addEventListener('blur', () => {
         autoSaveProgress($input)
       })
-      $input.addEventListener('keyup', debounce(() => {
-        autoSaveProgress($input)
-      }))
     }
   })
 }
