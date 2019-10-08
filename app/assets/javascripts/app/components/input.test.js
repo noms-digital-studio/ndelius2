@@ -45,12 +45,6 @@ describe('input component', () => {
       triggerEvent($input, 'blur')
       expect(autoSaveProgress).toBeCalled()
     })
-
-    it('should auto save progress on keyup', () => {
-      triggerEvent($input, 'keyup')
-      jest.runAllTimers()
-      expect(autoSaveProgress).toBeCalled()
-    })
   })
 
   describe('hidden input', () => {
@@ -63,18 +57,13 @@ describe('input component', () => {
       triggerEvent($input, 'blur')
       expect(autoSaveProgress).not.toBeCalled()
     })
-
-    it('should NOT auto save progress on keyup', () => {
-      triggerEvent($input, 'keyup')
-      jest.runAllTimers()
-      expect(autoSaveProgress).not.toBeCalled()
-    })
   })
 
   describe('radio input', () => {
     it('should auto save progress on click', () => {
       $input = document.getElementById('radio-input')
       $input.click()
+      jest.runAllTimers()
       expect(autoSaveProgress).toBeCalled()
     })
   })
@@ -83,6 +72,7 @@ describe('input component', () => {
     it('should auto save progress on click', () => {
       $input = document.getElementById('checkbox-input')
       $input.click()
+      jest.runAllTimers()
       expect(autoSaveProgress).toBeCalled()
     })
   })
