@@ -18,9 +18,17 @@ Feature: Short Format Pre-sentence Report - Proposal
 
   Scenario: Delius user confirms that they have considered equality and diversity information
 
-    Given that the user selects "yes" or "no" radio buttons
-    Then they can continue to enter a proposed sentence
+    Given they select the radio button with id "confirmEIF_yes"
 
+    Then the following information should be saved in the report
+      | confirmEIF | yes |
+
+  Scenario: Delius user states that they have NOT considered equality and diversity information
+
+    Given they select the radio button with id "confirmEIF_no"
+
+    Then the following information should be saved in the report
+      | confirmEIF | no |
 
   Scenario: Delius user completes all options on the "Risk assessment" UI
 
