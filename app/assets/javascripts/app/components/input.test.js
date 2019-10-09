@@ -63,7 +63,6 @@ describe('input component', () => {
     it('should auto save progress on click', () => {
       $input = document.getElementById('radio-input')
       $input.click()
-      jest.runAllTimers()
       expect(autoSaveProgress).toBeCalled()
     })
   })
@@ -72,7 +71,6 @@ describe('input component', () => {
     it('should auto save progress on click', () => {
       $input = document.getElementById('checkbox-input')
       $input.click()
-      jest.runAllTimers()
       expect(autoSaveProgress).toBeCalled()
     })
   })
