@@ -208,7 +208,7 @@ const initTextAreas = () => {
       })
       $editor.on('focus', debounce(() => {
         addClickHandlerToSpellCheck($editor)
-      }), 50)
+      }))
       $editor.on('blur', () => {
         addPlaceholder($editor)
         updateFormElement($editor)
@@ -217,7 +217,7 @@ const initTextAreas = () => {
       $editor.on('keyup', debounce(() => {
         updateFormElement($editor)
         autoSaveProgress($editor.getElement().dataset.id)
-      }, 5000))
+      }, 25000))
       $editor.on('input', () => {
         updateTextLimits($editor)
       })

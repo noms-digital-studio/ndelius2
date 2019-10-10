@@ -25,8 +25,7 @@ Feature: Parole report
 
   Scenario: Delius user wants to continue populating the Parole Report with information
 
-    Given that the Delius user has entered details into "Detail the prisoner`s behaviour whilst in prison" and "RoTL summary" field
-    When  they select the "Continue" button
+    Given Delius User completes the "Behaviour in prison" UI within the Parole Report
     Then  the user should be directed to the "Interventions" UI
 
   Scenario: Delius user wants to leave the parole report

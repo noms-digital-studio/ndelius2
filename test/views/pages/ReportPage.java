@@ -64,11 +64,12 @@ public class ReportPage extends FluentPage {
 
     public void fillInputWithId(String fieldId, String text) {
         $(id(fieldId)).fill().with(text);
+        control.executeScript(String.format("document.getElementById('%s').blur()", fieldId));
     }
 
     public void fillInputInSectionWithLegend(String legend, String label, String text) {
-        val fieldId = findSectionFromLegend(legend).find(xpath(String.format(".//label[contains(., '%s')]", label))).attribute("for");
-        $(id(fieldId)).fill().with(text);
+        String fieldId = findSectionFromLegend(legend).find(xpath(String.format(".//label[contains(., '%s')]", label))).attribute("for");
+        this.fillInputWithId(fieldId, text);
     }
 
     public String fieldNameFromLabel(String label) {

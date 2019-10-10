@@ -1,5 +1,4 @@
 import { nodeListForEach } from '../utilities/nodeListForEach'
-import { debounce } from '../utilities/debounce'
 import { autoSaveProgress } from '../helpers/saveProgressHelper'
 
 const initInputs = () => {
@@ -13,9 +12,6 @@ const initInputs = () => {
       $input.addEventListener('blur', () => {
         autoSaveProgress($input)
       })
-      $input.addEventListener('keyup', debounce(() => {
-        autoSaveProgress($input)
-      }))
     }
   })
 }

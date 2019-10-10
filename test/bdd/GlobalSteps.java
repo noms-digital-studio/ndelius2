@@ -146,7 +146,7 @@ public class GlobalSteps {
     }
 
     @When("^they remove the stored date for \"([^\"]*)\"$")
-    public void theyEnterTheDateFor(String legend) throws ParseException {
+    public void theyRemoveTheDateFor(String legend) throws ParseException {
         page.fillInputInSectionWithLegend(legend, "Day", "");
         page.fillInputInSectionWithLegend(legend, "Month", "");
         page.fillInputInSectionWithLegend(legend, "Year", "");

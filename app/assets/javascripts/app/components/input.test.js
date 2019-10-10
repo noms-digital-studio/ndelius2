@@ -45,12 +45,6 @@ describe('input component', () => {
       triggerEvent($input, 'blur')
       expect(autoSaveProgress).toBeCalled()
     })
-
-    it('should auto save progress on keyup', () => {
-      triggerEvent($input, 'keyup')
-      jest.runAllTimers()
-      expect(autoSaveProgress).toBeCalled()
-    })
   })
 
   describe('hidden input', () => {
@@ -61,12 +55,6 @@ describe('input component', () => {
 
     it('should NOT auto save progress on blur', () => {
       triggerEvent($input, 'blur')
-      expect(autoSaveProgress).not.toBeCalled()
-    })
-
-    it('should NOT auto save progress on keyup', () => {
-      triggerEvent($input, 'keyup')
-      jest.runAllTimers()
       expect(autoSaveProgress).not.toBeCalled()
     })
   })
