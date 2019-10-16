@@ -13,7 +13,7 @@ RUN addgroup -g 2000 -S appgroup && \
     mkdir -p /app
 WORKDIR /app
 
-COPY target/scala-2.12/ndelius2-${NEWTECHWEB_VERSION}.jar /app/ndelius2.jar
+COPY target/scala-2.12/ndelius2-*.jar /app/ndelius2.jar
 
 RUN chown -R appuser:appgroup /app
 

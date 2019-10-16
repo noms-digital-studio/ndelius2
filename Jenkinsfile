@@ -1,13 +1,20 @@
 def get_newtechweb_version() {
-    sh '''
+    sh """
     #!/bin/bash +x
     # App version prefix is set in config and completed by appending the build job number at build time
-    BUILD_PREFIX=$(grep "app.version=" conf/application.conf | awk -F = '{print $2}' | sed 's/\"//g')
-    echo \$BUILD_PREFIX\$BUILD_NUMBER > ./newtechweb.version
-    '''
+    BUILD_PREFIX="\$(grep "app.version=" conf/application.conf | awk -F = '{print \$2}' | sed 's/\\"//g')${BUILD_NUMBER}"
+    branch=\$(echo ${GIT_BRANCH} | sed 's/\\//_/g')
+    if [ \\"\$branch\\" = \\"master\\" ] || [ \\"\$branch\\" = \\"origin_master\\" ]; then
+        echo "Master Branch build detected"
+        echo "\$BUILD_PREFIX" > ./newtechweb.version
+    else
+        echo "Non Master Branch build detected"
+        echo "\$BUILD_PREFIX-\$branch" > newtechweb.version;
+    fi
+    """
     return readFile("./newtechweb.version")
 }
-
+ 
 pipeline {
     agent { label "jenkins_slave" }
 
