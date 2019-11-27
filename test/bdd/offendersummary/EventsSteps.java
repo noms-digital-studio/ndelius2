@@ -49,7 +49,6 @@ public class EventsSteps {
     @Given("^that the offender has the following event information saved in Delius$")
     public void thatTheOffenderHasTheFollowingEventInformationSavedInDelius(DataTable data) {
         offenderApiMock.stubOffenderWithConvictions(toConvictions(data));
-
     }
 
     @Then("^they should see the following event information$")
@@ -78,6 +77,7 @@ public class EventsSteps {
                         .mainOffenceDescription(entry.getMainOffence())
                         .latestCourtAppearanceDescription(entry.getOutcome())
                         .referralDate(LocalDate.parse(entry.getAppDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                        .convictionDate(LocalDate.parse(entry.getAppDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy")))
                         .sentence(toSentence(entry.sentence))
                         .active(entry.getStatus().equalsIgnoreCase("Active"))
                         .inBreach(entry.isInBreach())

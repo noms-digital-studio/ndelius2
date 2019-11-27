@@ -53,6 +53,7 @@ public class OffenderApiMock {
     @Builder
     public static class Conviction {
         private LocalDate referralDate;
+        private LocalDate convictionDate;
         private String mainOffenceDescription;
         private String latestCourtAppearanceDescription;
         private boolean active;
@@ -346,6 +347,7 @@ public class OffenderApiMock {
                                                 .map(conviction -> {
                                                     val template = JsonHelper.jsonToObjectMap(loadResource("/deliusoffender/offenderConviction.json"));
                                                     template.replace("referralDate", conviction.getReferralDate().format(DateTimeFormatter.ISO_DATE));
+                                                    template.replace("convictionDate", conviction.getReferralDate().format(DateTimeFormatter.ISO_DATE));
                                                     val latestCourtAppearanceOutcome = (Map<String, Object>)template.get("latestCourtAppearanceOutcome");
                                                     latestCourtAppearanceOutcome.replace("description", conviction.getLatestCourtAppearanceDescription());
                                                     val offences = (List<Map<String, Object>>) template.get("offences");
