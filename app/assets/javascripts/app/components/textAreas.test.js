@@ -1,5 +1,4 @@
 import tinymce from 'tinymce/tinymce'
-import { initTextAreas } from './textAreas'
 
 /**
  * @TODO: We cannot test with tinymce as jsdom have not implemented range methods
@@ -16,6 +15,21 @@ jest.mock('../utilities/xhrPromisify', () => ({
     })
   })
 }))
+
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  }
+})
+
+import { initTextAreas } from './textAreas'
 
 describe('textarea component', () => {
 
