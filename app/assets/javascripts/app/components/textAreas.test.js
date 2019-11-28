@@ -1,4 +1,5 @@
 import tinymce from 'tinymce/tinymce'
+import { initTextAreas } from './textAreas'
 
 /**
  * @TODO: We cannot test with tinymce as jsdom have not implemented range methods
@@ -16,21 +17,6 @@ jest.mock('../utilities/xhrPromisify', () => ({
   })
 }))
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  }
-})
-
-import { initTextAreas } from './textAreas'
-
 describe('textarea component', () => {
 
   beforeEach(() => {
@@ -39,7 +25,7 @@ describe('textarea component', () => {
       '  <div class="govuk-form-group">' +
       '    <div class="testTextArea-autosave_error">Auto save error</div>' +
       '    <label class="govuk-label" for="testTextArea">Test text area</label>' +
-      '    <textarea id="testTextArea" class="govuk-textarea govuk-visually-hidden" data-limit="2000"></textarea>' +
+      '    <textarea id="testTextArea" class="govuk-textarea govuk-visually-hidden" data-limit="2000"/>' +
       '    <div id="testTextArea-tinymce" class="moj-rich-text-editor"></div>' +
       '    <input id="jumpNumber" value="2" type="hidden" />' +
       '    <div id="testTextArea-countHolder" class="govuk-visually-hidden">' +

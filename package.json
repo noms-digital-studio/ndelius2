@@ -1,7 +1,10 @@
 {
   "private": true,
   "jest": {
-    "verbose": true
+    "verbose": true,
+    "setupFiles": [
+      "<rootDir>/__mocks__/matchMediaMock.js"
+    ]
   },
   "standard": {
     "globals": [
@@ -11,7 +14,6 @@
       "virtualPageLoad",
       "Chart",
       "fetch",
-      "jest",
       "describe",
       "context",
       "before",
