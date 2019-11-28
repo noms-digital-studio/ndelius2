@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.4.3",
-    "@mojdigital/pattern-library": "0.0.1-beta.1",
+    "@mojdigital/pattern-library": "0.0.1-beta.3",
     "govuk-frontend": "2.9.0",
     "history": "4.9.0",
     "localforage": "1.7.3",
