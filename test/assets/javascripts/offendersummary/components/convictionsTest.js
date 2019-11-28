@@ -99,6 +99,7 @@ describe('Convictions component', () => {
           aConviction({
             convictionId: 1,
             referralDate: '2018-10-18',
+            convictionDate: '2018-10-18',
             active: true,
             offences: [
               {
@@ -135,7 +136,7 @@ describe('Convictions component', () => {
       it('contains main offence', () => {
         expect(wrapper.find('tbody tr td').at(0).text()).to.equal('Cooking foxes - 08902')
       })
-      it('contains formatted referral date', () => {
+      it('contains formatted conviction date', () => {
         expect(wrapper.find('tbody tr td').at(1).text()).to.equal('18/10/2018')
       })
       describe('clicking on an event', () => {
@@ -268,6 +269,7 @@ describe('Convictions component', () => {
           aConviction({
             convictionId: 1,
             referralDate: '2018-10-18',
+            convictionDate: '2018-10-18',
             sentence: {
               description: 'October conviction',
               originalLength: 18,
@@ -277,6 +279,7 @@ describe('Convictions component', () => {
           aConviction({
             convictionId: 2,
             referralDate: '2018-12-18',
+            convictionDate: '2018-12-18',
             sentence: {
               description: 'December conviction',
               originalLength: 18,
@@ -286,6 +289,7 @@ describe('Convictions component', () => {
           aConviction({
             convictionId: 3,
             referralDate: '2018-11-18',
+            convictionDate: '2018-11-18',
             sentence: {
               description: 'November conviction',
               originalLength: 18,
@@ -296,7 +300,7 @@ describe('Convictions component', () => {
                                        viewOffenderEvent={stub()} offenderId={123} />)
       })
 
-      it('is ordered by referral date', () => {
+      it('is ordered by conviction date', () => {
         expect(wrapper.find('tbody tr').at(0).text()).to.equal('December conviction (18 Months)')
         expect(wrapper.find('tbody tr').at(1 * 2).text()).to.equal('November conviction (18 Months)')
         expect(wrapper.find('tbody tr').at(2 * 2).text()).to.equal('October conviction (18 Months)')

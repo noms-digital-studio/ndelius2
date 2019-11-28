@@ -31,7 +31,7 @@ class Convictions extends Component {
               className='govuk-body moj-!-color-grey govuk-!-margin-bottom-0'>{mainOffenceDescription(conviction)}</p>
             </td>
             <td className='govuk-!-padding-top-0' style={{ width: '110px' }}><p
-              className='govuk-body moj-!-color-grey govuk-!-margin-bottom-0'>{dateFromISO(conviction.referralDate)}</p>
+              className='govuk-body moj-!-color-grey govuk-!-margin-bottom-0'>{!!conviction.convictionDate && dateFromISO(conviction.convictionDate)}</p>
             </td>
             <td className='govuk-!-padding-top-0' style={{ width: '100px' }}><p
               className={`govuk-body govuk-!-font-size-19 moj-!-text-align-right govuk-!-margin-bottom-0 ${colorClass()}`}>{status()}</p>
@@ -98,6 +98,7 @@ Convictions.propTypes = {
           }).isRequired
         ).isRequired,
         referralDate: PropTypes.string.isRequired,
+        convictionDate: PropTypes.string.isRequired,
         active: PropTypes.bool.isRequired,
         inBreach: PropTypes.bool.isRequired,
         convictionId: PropTypes.number.isRequired,

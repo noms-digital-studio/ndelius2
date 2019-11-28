@@ -29,9 +29,7 @@ describe('OffenderSearchSummary component', () => {
       }
     })
     const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Mr Bean'} />)
-
-    // ForwardRef is used because component is wrapped in WithCookies - TODO find a better way of identifying this component
-    expect(summary.find('ForwardRef').exists()).to.be.true
+    
     expect(summary.find('CurrentOffender').exists()).to.be.true
     expect(summary.find({ text: 'Marke' }).exists()).to.be.true
     expect(summary.find('PreviousSurname').exists()).to.be.true
@@ -56,8 +54,6 @@ describe('OffenderSearchSummary component', () => {
     })
     const summary = shallow(<OffenderSearchSummary offenderSummary={offenderSummary} searchTerm={'Mr Bean'} />)
 
-    // ForwardRef is used because component is wrapped in WithCookies - TODO find a better way of identifying this component
-    expect(summary.find('ForwardRef').exists()).to.be.true
     expect(summary.find('CurrentOffender').exists()).to.be.true
     expect(summary.find({ text: 'Marke' }).exists()).to.be.false
     expect(summary.find('PreviousSurname').exists()).to.be.false
