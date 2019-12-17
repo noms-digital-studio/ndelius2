@@ -25,10 +25,10 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "7.7.4",
-    "@babel/core": "7.7.4",
-    "@babel/plugin-transform-modules-commonjs": "7.7.4",
-    "@babel/preset-env": "7.7.4",
+    "@babel/cli": "7.7.5",
+    "@babel/core": "7.7.5",
+    "@babel/plugin-transform-modules-commonjs": "7.7.5",
+    "@babel/preset-env": "7.7.6",
     "@babel/preset-react": "7.7.4",
     "@babel/register": "7.7.4",
     "babel-jest": "24.9.0",
@@ -36,17 +36,17 @@
     "browserify": "16.5.0",
     "chai": "4.2.0",
     "chai-shallow-deep-equal": "1.4.6",
-    "core-js": "3.4.5",
+    "core-js": "3.5.0",
     "enzyme": "3.10.0",
     "enzyme-adapter-react-16": "1.15.1",
     "jest": "24.9.0",
     "sinon": "7.5.0",
     "sinon-chai": "3.3.0",
-    "tinymce": "5.1.2"
+    "tinymce": "5.1.4"
   },
   "dependencies": {
     "@babel/polyfill": "7.7.0",
-    "@mojdigital/pattern-library": "0.0.1-beta.3",
+    "@mojdigital/pattern-library": "0.0.1-beta.4",
     "govuk-frontend": "2.13.0",
     "history": "4.10.1",
     "localforage": "1.7.3",
