@@ -20,7 +20,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb, SbtJsEngi
 JsEngineKeys.engineType := JsEngineKeys.EngineType.Node
 MochaKeys.requires += "setup.js"
 
-resolvers ++= Seq("Spring Release Repository" at "http://repo.spring.io/plugins-release")
+resolvers ++= Seq("Spring Release Repository" at "https://repo.spring.io/plugins-release")
 
 scalaVersion := "2.12.2"
 pipelineStages := Seq(digest)
