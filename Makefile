@@ -9,7 +9,6 @@ all:
 	$(MAKE) sbt-clean
 	$(MAKE) sbt-assembly
 	$(MAKE) build
-	$(MAKE) test
 	$(MAKE) push
 	$(MAKE) clean-remote
 	$(MAKE) clean-local
@@ -38,9 +37,6 @@ tag:
 	$(info Tag repo $(ecr_repo) $(newtechweb_version))
 	docker tag $(ecr_repo) $(ecr_repo):$(newtechweb_version)
 
-test: ecr_repo = $(shell cat ./ecr.repo)
-test:
-	bash -c "GOSS_FILES_STRATEGY=cp GOSS_FILES_PATH="./docker/tests/" GOSS_SLEEP=10 dgoss run -e APPLICATION_SECRET=abcdefghijk $(ecr_repo):latest"
 
 push: ecr_repo = $(shell cat ./ecr.repo)
 push:
