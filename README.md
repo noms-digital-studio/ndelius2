@@ -1,12 +1,102 @@
 # 'NDelius New Technology' Web Application
 
-[![CircleCI](https://circleci.com/gh/noms-digital-studio/ndelius-new-tech.svg?style=svg)](https://circleci.com/gh/noms-digital-studio/ndelius-new-tech)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/ndelius-new-tech.svg?style=svg)](https://circleci.com/gh/ministryofjustice/ndelius-new-tech)
 
 A [Play Framework](https://www.playframework.com/) based website, developed in [Java 8](http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html) with additional [Lombok](https://projectlombok.org/features/all) support.
 
 Fully asynchronous and non-blocking from the ground up, with the potential to serve 10,000 concurrent users from a single server.
 
-### Building and running
+---
+
+## Development
+
+Prerequisites:
+- Java 8
+- [sbt](http://www.scala-sbt.org/release/docs) (Scala Build Tool)
+- Node [lts/dubnium](https://nodejs.org/download/release/latest-dubnium/)
+- [nDelius Wrapper](https://github.com/ministryofjustice/ndelius-wrapper)
+- [PDF Generator](https://github.com/ministryofjustice/pdf-generator)
+- Docker
+- Chrome
+- Postman
+
+### Chrome SameSite update
+
+Changes to Chrome mean we must disable SameSite by default cookies in order to run the project locally.
+
+To do this; in Chrome visit:
+
+[chrome://flags/](chrome://flags/)
+
+Change **SameSite by default cookies** to *Disabled*
+
+### Elasticsearch and MongoDB
+
+The project requires MongoDB and Eleasticsearch v6.x, the easiest way is to use Docker Compose:
+
+```
+docker-compose up
+```
+
+### Populate Elasticsearch
+
+Once Elasticsearch is running, you can populate the instance with a small number of dummy offender records with the included Postman collection:
+
+> Elasticsearch.postman_collection.json
+
+To run the collection with [Newman](https://github.com/postmanlabs/newman):
+
+```
+newman run Elasticsearch.postman_collection.json
+```
+
+### PDF Generator
+
+Clone the [PDF Generator](https://github.com/ministryofjustice/pdf-generator) repository and run:
+
+```
+./gradlew clean run
+```
+
+### Run nDelius New Tech
+
+#### Node dependencies
+
+Ensure you are using Node [lts/dubnium](https://nodejs.org/download/release/latest-dubnium/)
+
+```
+npm i
+```
+
+Pass the required environment variables and start the application:
+
+```
+OFFENDER_API_PROVIDER=stub ELASTIC_SEARCH_SCHEME=http STORE_PROVIDER=mongo PARAMS_USER_TOKEN_VALID_DURATION=10000d PRISONER_API_PROVIDER=stub sbt -Dlogback.application.level=DEBUG run
+```
+
+### nDelius Wrapper
+
+Clone the [nDelius Wrapper](https://github.com/ministryofjustice/ndelius-wrapper) repository.
+
+Install dependencies
+
+```
+npm i
+``` 
+
+Start the nDelius Wrapper
+
+```
+ELASTIC_SEARCH_URL=http://127.0.0.1:9200 NEW_TECH_BASE_URL=http://127.0.0.1:9000/ npm start
+```
+
+You can now use nDelius New Tech at:
+
+http://127.0.0.1:3000 
+
+---
+
+## Building and running
 
 Prerequisites:
 - sbt (Scala Build Tool) http://www.scala-sbt.org/release/docs
@@ -15,7 +105,8 @@ Prerequisites:
 Build command (includes running unit and integration tests):
 - `sbt assembly`
 
-Running locally:
+Environment variables
+
 `
 PARAMS_USER_TOKEN_VALID_DURATION=2000d \
 STORE_PROVIDER=mongo \
