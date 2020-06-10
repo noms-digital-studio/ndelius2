@@ -99,11 +99,6 @@
           @htmlLines.filter(_.startsWith("<option ")).map(Html(_))
       </select>
     } else {
-      @if(elements.args.get(Symbol("_form_hint"))) {
-          <span id="@elements.id-hint" class="govuk-hint">
-          @elements.args.get(Symbol("_form_hint"))
-          </span>
-      }
       <input class="govuk-input @if(elements.args.get(Symbol("_number"))) {govuk-!-width-one-half} @elements.args.get('class)@if(elements.hasErrors) { govuk-input--error}" @if(elements.args.get(Symbol("_number"))) {type="number"} else {type="text"} role="textbox" placeholder="@elements.args.get('placeholder)" id="@elements.id" name="@elements.field.name" value="@elements.field.value" maxlength="250" aria-described-by="@elements.id-error" @if(elements.args.get('required)) {aria-required="@elements.args.get('required)"} />
     }
   </div>

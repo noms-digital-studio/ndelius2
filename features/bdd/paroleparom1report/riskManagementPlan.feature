@@ -9,39 +9,30 @@ Feature: Parole Report
     When they select the "Yes" option on the "Does the prisoner require a community RMP?"
     And they select the "Continue" button
     Then  the following error messages are displayed
-      | Current situation                     | Enter the current situation                     |
-      | Agencies                              | Enter the agencies                              |
-      | Support                               | Enter the support                               |
-      | Control                               | Enter the control                               |
-      | Added measures for specific risks     | Enter the added measures for specific risks     |
-      | Agency actions                        | Enter the agency actions                        |
-      | Additional conditions or requirements | Enter the additional conditions or requirements |
-      | Level of contact                      | Enter the level of contact                      |
-      | Contingency plan                      | Enter the contingency plan                      |
+      | Current situation         | Enter the current situation         |
+      | Supervision               | Enter the supervision               |
+      | Monitoring / Control      | Enter the monitoring / control      |
+      | Interventions / Treatment | Enter the interventions / treatment |
+      | Victim safety planning    | Enter the victim safety planning    |
+      | Contingency plan          | Enter the contingency plan          |
 
   Scenario: Delius user wants to continue populating the Parole Report with information
 
     When they select the "Yes" option on the "Does the prisoner require a community RMP?"
     And they enter the following information
-      | Current situation                     | Some current situation text                     |
-      | Agencies                              | Some agencies text                              |
-      | Support                               | Some support text                               |
-      | Control                               | Some control text                               |
-      | Added measures for specific risks     | Some added measures for specific risks text     |
-      | Agency actions                        | Some agency actions text                        |
-      | Additional conditions or requirements | Some additional conditions or requirements text |
-      | Level of contact                      | Some level of contact text                      |
-      | Contingency plan                      | Some contingency plan text                      |
+      | Current situation         | Some current situation text         |
+      | Supervision               | Some supervision text               |
+      | Monitoring / Control      | Some monitoring / control text      |
+      | Interventions / Treatment | Some interventions / treatment text |
+      | Victim safety planning    | Some victim safety planning text    |
+      | Contingency plan          | Some contingency plan text          |
     Then the following information should be saved in the report
-      | currentSituation     | Some current situation text                     |
-      | supportingAgencies   | Some agencies text                              |
-      | support              | Some support text                               |
-      | control              | Some control text                               |
-      | riskMeasures         | Some added measures for specific risks text     |
-      | agencyActions        | Some agency actions text                        |
-      | additionalConditions | Some additional conditions or requirements text |
-      | levelOfContact       | Some level of contact text                      |
-      | contingencyPlan      | Some contingency plan text                      |
+      | currentSituation       | Some current situation text         |
+      | supervision            | Some supervision text               |
+      | monitoringControl      | Some monitoring / control text      |
+      | interventionsTreatment | Some interventions / treatment text |
+      | victimSafetyPlanning   | Some victim safety planning text    |
+      | contingencyPlan        | Some contingency plan text          |
 
     When they select the "Continue" button
     Then the user should be directed to the "Resettlement plan for release" UI
