@@ -10,4 +10,4 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.0.0")
 dependencyOverrides += "org.webjars.npm" % "graceful-readlink" % "1.0.1"
 dependencyOverrides += "org.webjars.npm" % "minimatch" % "3.0.4"
 
-resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
+resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"

@@ -491,33 +491,21 @@ public class ParoleParom1ReportData extends ReportGeneratorWizardData {
     @JsonProperty("RMP_CURRENT_SITUATION")
     private String currentSituation;
 
-    @RequiredOnPage(value = 16, message = "Enter the agencies", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RMP_SUPPORTING_AGENCIES")
-    private String supportingAgencies;
+    @RequiredOnPage(value = 16, message = "Enter the supervision", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("RMP_SUPERVISION")
+    private String supervision;
 
-    @RequiredOnPage(value = 16, message = "Enter the support", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RMP_SUPPORT")
-    private String support;
+    @RequiredOnPage(value = 16, message = "Enter the monitoring / control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("RMP_MONITORING_CONTROL")
+    private String monitoringControl;
 
-    @RequiredOnPage(value = 16, message = "Enter the control", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RMP_CONTROL")
-    private String control;
+    @RequiredOnPage(value = 16, message = "Enter the interventions / treatment", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("RMP_INTERVENTIONS_TREATMENT")
+    private String interventionsTreatment;
 
-    @RequiredOnPage(value = 16, message = "Enter the added measures for specific risks", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RMP_RISK_MEASURES")
-    private String riskMeasures;
-
-    @RequiredOnPage(value = 16, message = "Enter the agency actions", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RMP_AGENCY_ACTIONS")
-    private String agencyActions;
-
-    @RequiredOnPage(value = 16, message = "Enter the additional conditions or requirements", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RMP_ADDITIONAL_CONDITIONS")
-    private String additionalConditions;
-
-    @RequiredOnPage(value = 16, message = "Enter the level of contact", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("RMP_LEVEL_OF_CONTACT")
-    private String levelOfContact;
+    @RequiredOnPage(value = 16, message = "Enter the victim safety planning", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("RMP_VICTIM_SAFETY_PLANNING")
+    private String victimSafetyPlanning;
 
     @RequiredOnPage(value = 16, message = "Enter the contingency plan", onlyIfField = "riskManagementPlanRequired", onlyIfFieldMatchValue = "yes")
     @JsonProperty("RMP_CONTINGENCY_PLAN")

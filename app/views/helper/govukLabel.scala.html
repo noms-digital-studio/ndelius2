@@ -2,5 +2,10 @@
 
 <label class="govuk-label" for="@elements.id">
   <span>@elements.label</span>
+  @if(elements.args.get(Symbol("_form_hint"))) {
+    <span id="@elements.id-hint" class="govuk-hint">
+        @elements.args.get(Symbol("_form_hint"))
+    </span>
+  }
   @govukInfoErrors(elements)
 </label>
