@@ -2,7 +2,9 @@ package services;
 
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.google.common.io.ByteStreams;
 import helpers.JsonHelper;
+import interfaces.PrisonerApi;
 import interfaces.PrisonerCategoryApi;
 import lombok.val;
 import org.junit.Before;
@@ -14,8 +16,11 @@ import play.Mode;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.test.WithApplication;
 
+import java.io.IOException;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static scala.io.Source.fromInputStream;
@@ -23,6 +28,7 @@ import static scala.io.Source.fromInputStream;
 public class NomisElite2ApiIntegrationTest extends WithApplication {
 
     private PrisonerCategoryApi prisonerCategoryApi;
+    private PrisonerApi prisonerApi;
     private static final int PORT = 18080;
 
     @Rule
@@ -41,9 +47,15 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomsoffender/token.json"))));
 
+        wireMock.stubFor(
+                get(urlMatching("/elite2api/api/offenders/.*"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG.json"))));
+
 
 
         prisonerCategoryApi = instanceOf(PrisonerCategoryApi.class);
+        prisonerApi = instanceOf(PrisonerApi.class);
     }
 
     @Test
@@ -229,11 +241,67 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
         assertThat(maybeCategory.isPresent()).isFalse();
     }
 
+    @Test
+    public void willGetPrisonerDetailsFromEliteAPI() {
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(maybeOffender.isPresent()).isTrue();
+
+        wireMock.verify(getRequestedFor(urlMatching("/elite2api/api/offenders/G8020GG")));
+    }
+
+    @Test
+    public void willGetNamesFromPrisonerDetails() {
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(maybeOffender.orElseThrow(RuntimeException::new).getFirstName()).isEqualTo("YLQRENHAR");
+        assertThat(maybeOffender.orElseThrow(RuntimeException::new).getSurname()).isEqualTo("CUHBCEOLE");
+    }
+
+    @Test
+    public void willGetPrisonLocationFromPrisonerDetails() {
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(maybeOffender.orElseThrow(RuntimeException::new).getInstitution().getDescription()).isEqualTo("Ghost Holding Establishment");
+    }
+
+    @Test
+    public void willGetPrisonNumberFromBookingNumberFromPrisonerDetails() {
+        val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
+
+        assertThat(maybeOffender.orElseThrow(RuntimeException::new).getMostRecentPrisonerNumber()).isEqualTo("LH5058");
+    }
+
+    @Test
+    public void willGetImageFromElite() {
+        wireMock.stubFor(
+                get(urlMatching("/elite2api/api/bookings/offenderNo/.*/image/data"))
+                        .willReturn(
+                                ok().withHeader(CONTENT_TYPE, "image/jpeg").withBody(loadResourceBytes("/nomsoffender/image_3.jpeg"))));
+
+        prisonerApi.getImage("G8020GG").toCompletableFuture().join();
+
+        wireMock.verify(getRequestedFor(urlMatching("/elite2api/api/bookings/offenderNo/G8020GG/image/data")));
+    }
+
+    @Test
+    public void returnsBytesFromMatchingImage() {
+        wireMock.stubFor(
+                get(urlMatching("/elite2api/api/bookings/offenderNo/.*/image/data"))
+                        .willReturn(
+                                ok().withHeader(CONTENT_TYPE, "image/jpeg").withBody(loadResourceBytes("/nomsoffender/image_3.jpeg"))));
+
+        val imageBytes = prisonerApi.getImage("123").toCompletableFuture().join();
+
+        assertThat(imageBytes).isEqualTo(loadResourceBytes("/nomsoffender/image_3.jpeg"));
+    }
+
+
     @Override
     protected Application provideApplication() {
         return new GuiceApplicationBuilder()
                 .configure("nomis.api.url", String.format("http://localhost:%d/", PORT))
-                .configure("prisoner.api.provider", "custody")
+                .configure("prisoner.api.provider", "elite")
                 .configure("custody.api.auth.username", "my_username")
                 .configure("custody.api.auth.password", "my_password")
                 .configure("custody.api.token.cache.time.seconds", "1")
@@ -242,6 +310,15 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
 
     private static String loadResource(String resource) {
         return fromInputStream(new Environment(Mode.TEST).resourceAsStream(resource), "UTF-8").mkString();
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static byte[] loadResourceBytes(String resource) {
+        try {
+            return ByteStreams.toByteArray(new Environment(Mode.TEST).resourceAsStream(resource));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

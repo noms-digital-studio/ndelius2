@@ -4,6 +4,7 @@ import com.typesafe.config.Config;
 import interfaces.PrisonerApi;
 import play.inject.Injector;
 import services.NomisCustodyApi;
+import services.NomisElite2Api;
 import services.stubs.StubPrisonerApi;
 
 import javax.inject.Inject;
@@ -23,7 +24,9 @@ public class PrisonerApiProvider implements Provider<PrisonerApi> {
     @Override
     public PrisonerApi get() {
         return "stub".equals(prisonerApiProvider) ?
-                        injector.instanceOf(StubPrisonerApi.class) :
+                injector.instanceOf(StubPrisonerApi.class) :
+                "elite".equals(prisonerApiProvider) ?
+                        injector.instanceOf(NomisElite2Api.class) :
                         injector.instanceOf(NomisCustodyApi.class);
     }
 }

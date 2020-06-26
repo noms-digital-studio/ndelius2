@@ -18,13 +18,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static helpers.JsonHelper.readValue;
 import static interfaces.HealthCheckResult.healthy;
 import static interfaces.HealthCheckResult.unhealthy;
 import static play.mvc.Http.HeaderNames.AUTHORIZATION;
 import static play.mvc.Http.Status.*;
+import static services.NomisReponseHelper.checkForValidResponse;
 
 public class NomisCustodyApi  implements PrisonerApi {
     private final String apiBaseUrl;
@@ -96,8 +96,8 @@ public class NomisCustodyApi  implements PrisonerApi {
 
     @Override
     public CompletionStage<byte[]> getImage(String nomsNumber) {
-        Function<WSResponse, WSResponse> checkForValidOffenceResponse = (wsResponse) -> checkForValidResponse(wsResponse, () -> String.format("No offender found in NOMIS - check the noms number %s is correct", nomsNumber));
-        Function<WSResponse, WSResponse> checkForValidImageResponse = (wsResponse) -> checkForValidResponse(wsResponse, () -> String.format("No images found for offender %s", nomsNumber));
+        Function<WSResponse, WSResponse> checkForValidOffenceResponse = (wsResponse) -> checkForValidResponse(wsResponse, apiToken, () -> String.format("No offender found in NOMIS - check the noms number %s is correct", nomsNumber));
+        Function<WSResponse, WSResponse> checkForValidImageResponse = (wsResponse) -> checkForValidResponse(wsResponse, apiToken, () -> String.format("No images found for offender %s", nomsNumber));
         return apiToken
                 .getAsync()
                 .thenCompose(token -> wsClient
@@ -136,22 +136,6 @@ public class NomisCustodyApi  implements PrisonerApi {
         return OffenderTransformer.offenderOf(readValue(response.getBody(), OffenderEntity.class));
     }
 
-    private WSResponse checkForValidResponse(WSResponse wsResponse, Supplier<String> notFoundMessage) {
-        switch (wsResponse.getStatus()) {
-            case OK:
-                return wsResponse;
-            case NOT_FOUND:
-                throw new RuntimeException(notFoundMessage.get());
-            case UNAUTHORIZED:
-            case FORBIDDEN:
-                apiToken.clearToken();
-                Logger.error("NOMIS authentication token has expired or is invalid");
-                throw new RuntimeException("NOMIS authentication token has expired or is invalid");
-            default:
-                Logger.error("Failed to retrieve offender record from NOMIS. Status code {}", wsResponse.getStatus());
-                throw new RuntimeException(String.format("Failed to retrieve offender record from NOMIS. Status code %d", wsResponse.getStatus()));
-        }
-    }
 
     private Optional<WSResponse> checkForMaybeResponse(WSResponse wsResponse) {
         return NomisReponseHelper.checkForMaybeResponse(wsResponse, apiToken);
