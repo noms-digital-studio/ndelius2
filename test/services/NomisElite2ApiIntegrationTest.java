@@ -262,7 +262,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     public void willGetPrisonLocationFromPrisonerDetails() {
         val maybeOffender = prisonerApi.getOffenderByNomsNumber("G8020GG").toCompletableFuture().join();
 
-        assertThat(maybeOffender.orElseThrow(RuntimeException::new).getInstitution().getDescription()).isEqualTo("Ghost Holding Establishment");
+        assertThat(maybeOffender.orElseThrow(RuntimeException::new).getInstitution().getDescription()).isEqualTo("HMP Humber");
     }
 
     @Test

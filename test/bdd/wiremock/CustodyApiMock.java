@@ -38,9 +38,9 @@ public class CustodyApiMock {
                                 okForContentType("application/json", loadResource("/nomsoffender/token.json"))));
 
         custodyApiWireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                get(urlMatching("/elite2api/api/offenders/.*"))
                         .willReturn(
-                                okForContentType("application/json", loadResource("/nomsoffender/offender_G8020GG.json"))));
+                                okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG.json"))));
 
         custodyApiWireMock.stubFor(
                 get(urlMatching("/elite2api/api/bookings/offenderNo/.*"))
@@ -48,12 +48,7 @@ public class CustodyApiMock {
                                 okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG.json"))));
 
         custodyApiWireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/.*/images"))
-                        .willReturn(
-                                okForContentType("application/json", loadResource("/nomsoffender/images_123.json"))));
-
-        custodyApiWireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/.*/images/.*/thumbnail"))
+                get(urlMatching("/elite2api/api/bookings/offenderNo/.*/image/data"))
                         .willReturn(
                                 ok().withHeader(CONTENT_TYPE, "image/jpeg").withBody(loadResourceBytes("/nomsoffender/image_3.jpeg"))));
 
@@ -65,13 +60,13 @@ public class CustodyApiMock {
     }
 
     public CustodyApiMock stubOffenderWithName(String fullName) {
-        val offender = JsonHelper.jsonToObjectMap(loadResource("/nomsoffender/offender_G8020GG.json"));
+        val offender = JsonHelper.jsonToObjectMap(loadResource("/nomselite2offender/offender_G8020GG.json"));
         val firstName = fullName.split(" ")[0];
         val surname = fullName.split(" ")[1];
         offender.put("firstName", firstName);
-        offender.put("surname", surname);
+        offender.put("lastName", surname);
         custodyApiWireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                get(urlMatching("/elite2api/api/offenders/.*"))
                         .willReturn(ok().withBody(JsonHelper.stringify(offender))));
 
         return this;
@@ -79,7 +74,7 @@ public class CustodyApiMock {
 
     public CustodyApiMock stubOffenderNotFound() {
         custodyApiWireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                get(urlMatching("/elite2api/api/offenders/.*"))
                         .willReturn(notFound()));
 
         return this;
@@ -87,7 +82,7 @@ public class CustodyApiMock {
 
     public CustodyApiMock stubOffenderUnavailable() {
         custodyApiWireMock.stubFor(
-                get(urlMatching("/custodyapi/api/offenders/nomsId/.*"))
+                get(urlMatching("/elite2api/api/offenders/.*"))
                         .willReturn(serviceUnavailable()));
 
         return this;
