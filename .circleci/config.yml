@@ -1,7 +1,8 @@
 defaults: &defaults
   working_directory: ~/ndelius-new-tech
   docker:
-    - image: circleci/openjdk:8-node-browsers
+    - image: circleci/openjdk@sha256:0ab7db4ecdc5966baaa44f64075725c22a53dc63922492c26cabd98b7c961ae0
+# dangerous pinning to old version with node v12.18.1 - circleci/openjdk:8-node-browsers
 
 install_aws_cli: &install_aws_cli
   run:
