@@ -214,8 +214,12 @@ jobs:
         - run:
             name: Build and run test
             command: |
-                echo Will smoketest against $DELIUS_WRAPPER_URL
                 gradle test
+        - store_test_results:
+            path: ./build/reports/
+        - store_artifacts:
+            path: ./build/reports/
+            destination: reports
     deploy:
         docker:
           - image: paulodiovani/aws-eb-cli
