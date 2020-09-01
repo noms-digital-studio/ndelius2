@@ -11,6 +11,7 @@ import play.Application;
 import play.Environment;
 import play.Mode;
 import play.inject.guice.GuiceApplicationBuilder;
+import play.libs.Json;
 import play.test.WithApplication;
 import services.helpers.SearchQueryBuilder;
 
@@ -49,6 +50,10 @@ public class ProbationOffenderSearchIntegrationTest  extends WithApplication {
                 post(urlPathEqualTo("/auth/oauth/token"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomsoffender/token.json"))));
+        searchApiMock.stubFor(
+                post(urlPathEqualTo("/phrase"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/probationoffendersearch/singleResult.json"))));
     }
 
     @Test
@@ -63,6 +68,21 @@ public class ProbationOffenderSearchIntegrationTest  extends WithApplication {
         hmppsAuthWireMock.verify(
                 1,
                 postRequestedFor(urlPathEqualTo("/auth/oauth/token")).withQueryParam("username", equalTo("sandrablacknps")));
+    }
+
+    @Test
+    public void willCallProbationSearchWithToken() {
+        String expectedToken = Json.parse(loadResource("/nomsoffender/token.json")).get("access_token").asText();
+        probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                ImmutableList.of(),
+                "john smith",
+                10,
+                0,
+                SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        searchApiMock.verify(
+                1,
+                postRequestedFor(urlPathEqualTo("/phrase")).withHeader("Authorization", equalTo("Bearer " + expectedToken)));
     }
 
     private static String loadResource(String resource) {

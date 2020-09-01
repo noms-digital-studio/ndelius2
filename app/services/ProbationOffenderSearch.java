@@ -12,6 +12,7 @@ import lombok.val;
 import play.Logger;
 import play.cache.AsyncCacheApi;
 import play.libs.ws.WSClient;
+import play.libs.ws.WSResponse;
 import services.helpers.SearchQueryBuilder;
 
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ import java.util.concurrent.CompletionStage;
 import static interfaces.HealthCheckResult.healthy;
 import static interfaces.HealthCheckResult.unhealthy;
 import static play.libs.Json.parse;
+import static play.mvc.Http.HeaderNames.AUTHORIZATION;
 import static play.mvc.Http.Status.OK;
 
 public class ProbationOffenderSearch implements OffenderSearch {
@@ -45,11 +47,16 @@ public class ProbationOffenderSearch implements OffenderSearch {
     @Override
     public CompletionStage<Map<String, Object>> search(String bearerToken, List<String> probationAreasFilter, String searchTerm, int pageSize, int pageNumber, SearchQueryBuilder.QUERY_TYPE queryType) {
         return userAwareApiToken.get(JwtHelper.principal(bearerToken))
-                .thenApply(jwtToken -> ImmutableMap.of(
-                        "offenders", parse("[]"),
-                        "total", 0,
-                        "suggestions", parse("{}")
-                ));
+                .thenCompose(token -> wsClient
+                        .url(String.format("%sphrase", apiBaseUrl))
+                        .addHeader(AUTHORIZATION, "Bearer " + token)
+                        .post("")
+                        .thenApply(WSResponse::getBody)
+                        .thenApply(body -> ImmutableMap.of(
+                                "offenders", parse("[]"),
+                                "total", 0,
+                                "suggestions", parse("{}")
+                        )));
     }
 
     @Override
