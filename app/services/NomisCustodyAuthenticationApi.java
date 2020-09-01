@@ -31,10 +31,10 @@ public class NomisCustodyAuthenticationApi implements PrisonerApiToken {
     @Inject
     public NomisCustodyAuthenticationApi(Config configuration, WSClient wsClient, AsyncCacheApi cache) {
         this.wsClient = wsClient;
-        apiBaseUrl = configuration.getString("nomis.api.url");
-        cacheTime = configuration.getInt("custody.api.token.cache.time.seconds");
-        username =  configuration.getString("custody.api.auth.username");
-        password =  configuration.getString("custody.api.auth.password");
+        apiBaseUrl = configuration.getString("hmpps.auth.url");
+        cacheTime = configuration.getInt("hmpps.auth.token.cache.time.seconds");
+        username =  configuration.getString("hmpps.auth.username");
+        password =  configuration.getString("hmpps.auth.password");
         this.cache = cache;
     }
 

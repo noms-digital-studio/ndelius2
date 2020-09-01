@@ -16,10 +16,15 @@ public class JwtHelper {
     @NoArgsConstructor
     public static class User {
         private String sub;
+        private String uid;
         private List<String> probationAreaCodes;
     }
     public static String principal(String bearerToken) {
         return asUser(bearerToken).map(User::getSub).orElse("unknown");
+    }
+
+    public static String username(String bearerToken) {
+        return asUser(bearerToken).map(User::getUid).orElse("unknown");
     }
 
     public static List<String> probationAreaCodes(String bearerToken) {

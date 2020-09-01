@@ -27,9 +27,9 @@ public class UserAwareAuthenticationApi implements UserAwareApiToken {
     @Inject
     public UserAwareAuthenticationApi(Config configuration, WSClient wsClient) {
         this.wsClient = wsClient;
-        apiBaseUrl = configuration.getString("nomis.api.url");
-        username = configuration.getString("custody.api.auth.username");
-        password = configuration.getString("custody.api.auth.password");
+        apiBaseUrl = configuration.getString("hmpps.auth.url");
+        username =  configuration.getString("hmpps.auth.username");
+        password =  configuration.getString("hmpps.auth.password");
     }
 
     @Override
@@ -41,8 +41,8 @@ public class UserAwareAuthenticationApi implements UserAwareApiToken {
                 .post("grant_type=client_credentials")
                 .thenApply(this::assertOkResponse)
                 .thenApply(WSResponse::asJson)
-                .thenApply(JsonHelper::jsonToMap)
-                .thenApply(map -> map.get("access_token"));
+                .thenApply(JsonHelper::jsonToObjectMap)
+                .thenApply(map -> map.get("access_token").toString());
     }
 
     @Override

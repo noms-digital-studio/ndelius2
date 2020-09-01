@@ -10,6 +10,7 @@ import interfaces.OffenderApi;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import play.Logger;
 import play.cache.AsyncCacheApi;
 import play.libs.Json;
@@ -150,11 +151,17 @@ public class DeliusOffenderApi implements OffenderApi {
 
         return CompletableFuture.allOf(futureAreas)
                 .thenApply(ignoredVoid ->
-                        Arrays
-                            .stream(futureAreas)
-                            .map(CompletableFuture::join)
-                            .collect(toMap(Entry::getKey, Entry::getValue)));
+                        allAreas(futureAreas));
 
+    }
+
+    @NotNull
+    private Map<String, String> allAreas(CompletableFuture<Entry<String, String>>[] futureAreas) {
+        Map<String, String> allAreas =  Arrays
+                .stream(futureAreas)
+                .map(CompletableFuture::join)
+                .collect(toMap(Entry::getKey, Entry::getValue));
+        return allAreas;
     }
 
     @Override

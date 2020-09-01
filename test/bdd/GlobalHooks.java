@@ -69,6 +69,8 @@ public class GlobalHooks extends WithChromeBrowser {
                 .configure("store.alfresco.url", String.format("http://localhost:%d/", Ports.ALFRESCO.getPort()))
                 .configure("offender.api.url", String.format("http://localhost:%d/", Ports.OFFENDER_API.getPort()))
                 .configure("nomis.api.url", String.format("http://localhost:%d/", Ports.CUSTODY_API.getPort()))
+                // HMPPS Auth currently using prison api port for wiremock
+                .configure("hmpps.auth.url", String.format("http://localhost:%d/", Ports.CUSTODY_API.getPort()))
                 .configure("prisoner.api.provider", "elite")
                 .configure("custody.api.auth.username", "username")
                 .configure("custody.api.auth.password", "password")

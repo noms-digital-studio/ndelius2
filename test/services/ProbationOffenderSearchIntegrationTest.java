@@ -47,7 +47,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
     protected Application provideApplication() {
         return new GuiceApplicationBuilder()
                 .configure("probation.offender.search.url", String.format("http://localhost:%d/", SEARCH_API_PORT))
-                .configure("nomis.api.url", String.format("http://localhost:%d/", HMPPS_AUTH_PORT))
+                .configure("hmpps.auth.url", String.format("http://localhost:%d/", HMPPS_AUTH_PORT))
                 .configure("offender.search.provider", "probation-offender-search")
                 .build();
     }
@@ -67,7 +67,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
 
     @Test
     public void willRequestATokenForTheLoggedOnUser() {
-        probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+        probationOffenderSearch.search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                 ImmutableList.of(),
                 "john smith",
                 10,
@@ -83,7 +83,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
     @Test
     public void willCallProbationSearchWithToken() {
         String expectedToken = Json.parse(loadResource("/nomsoffender/token.json")).get("access_token").asText();
-        probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+        probationOffenderSearch.search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                 ImmutableList.of(),
                 "john smith",
                 10,
@@ -98,7 +98,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
 
     @Test
     public void pageNumberIsMappedToZeroIndexedNumber() {
-        probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+        probationOffenderSearch.search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                 ImmutableList.of(),
                 "john smith",
                 10,
@@ -112,7 +112,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
 
     @Test
     public void pageSizeIsPassedAsRequestParameter() {
-        probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+        probationOffenderSearch.search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                 ImmutableList.of(),
                 "john smith",
                 20,
@@ -126,7 +126,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
 
     @Test
     public void phraseAndSearchTypeAndFilterPassedInBody() {
-        probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+        probationOffenderSearch.search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                 ImmutableList.of("N01", "N02"),
                 "john smith",
                 20,
@@ -152,7 +152,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
         Map<String, Object> results = probationOffenderSearch
-                .search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                         ImmutableList.of("N01", "N02"),
                         "john smith",
                         10,
@@ -173,7 +173,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
         Map<String, Object> results = probationOffenderSearch
-                .search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                         ImmutableList.of("N01", "N02"),
                         "john smith",
                         10,
@@ -190,14 +190,17 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
         Map<String, Object> results = probationOffenderSearch
-                .search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                         ImmutableList.of("N01", "N02"),
                         "john smith",
                         10,
                         1,
                         SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
 
-        List<Map<String, Object>> aggregations = (List<Map<String, Object>>) results.get("aggregations");
+        Map<String, Object> aggregationsWrapper = (Map<String, Object>)results.get("aggregations");
+
+        assertThat(aggregationsWrapper.get("byProbationArea")).isNotNull();
+        List<Map<String, Object>> aggregations = (List<Map<String, Object>>) aggregationsWrapper.get("byProbationArea");
 
         assertThat(aggregations.size()).isEqualTo(7);
         assertThat(aggregations.get(0).get("code")).isEqualTo("N03");
@@ -213,7 +216,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
         Map<String, Object> results = probationOffenderSearch
-                .search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                         ImmutableList.of("N01", "N02"),
                         "john smith",
                         10,

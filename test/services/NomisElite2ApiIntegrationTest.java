@@ -301,10 +301,11 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     protected Application provideApplication() {
         return new GuiceApplicationBuilder()
                 .configure("nomis.api.url", String.format("http://localhost:%d/", PORT))
+                .configure("hmpps.auth.url", String.format("http://localhost:%d/", PORT))
                 .configure("prisoner.api.provider", "elite")
-                .configure("custody.api.auth.username", "my_username")
-                .configure("custody.api.auth.password", "my_password")
-                .configure("custody.api.token.cache.time.seconds", "1")
+                .configure("hmpps.auth.username", "my_username")
+                .configure("hmpps.auth.password", "my_password")
+                .configure("hmpps.auth.token.cache.time.seconds", "1")
                 .build();
     }
 

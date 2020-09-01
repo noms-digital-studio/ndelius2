@@ -21,10 +21,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 
 import static interfaces.HealthCheckResult.healthy;
 import static interfaces.HealthCheckResult.unhealthy;
 import static play.mvc.Http.HeaderNames.AUTHORIZATION;
+import static play.mvc.Http.HeaderNames.CONTENT_TYPE;
+import static play.mvc.Http.MimeTypes.JSON;
 import static play.mvc.Http.Status.OK;
 
 public class ProbationOffenderSearch implements OffenderSearch {
@@ -46,24 +49,36 @@ public class ProbationOffenderSearch implements OffenderSearch {
 
     @Override
     public CompletionStage<Map<String, Object>> search(String bearerToken, List<String> probationAreasFilter, String searchTerm, int pageSize, int pageNumber, SearchQueryBuilder.QUERY_TYPE queryType) {
-        return userAwareApiToken.get(JwtHelper.principal(bearerToken))
+        return userAwareApiToken.get(JwtHelper.username(bearerToken))
                 .thenCompose(token -> wsClient
                         .url(String.format("%sphrase", apiBaseUrl))
                         .addQueryParameter("page", String.valueOf(pageNumber - 1))
                         .addQueryParameter("size", String.valueOf(pageSize))
                         .addHeader(AUTHORIZATION, "Bearer " + token)
+                        .addHeader(CONTENT_TYPE, JSON)
                         .post(JsonHelper.stringify(ImmutableMap.of(
                                 "phrase", searchTerm,
                                 "matchAllTerms", queryType == SearchQueryBuilder.QUERY_TYPE.MUST,
                                 "probationAreasFilter", probationAreasFilter)))
-                        .thenApply(WSResponse::getBody)
+                        .thenApply(this::assertOkResponse)
+                        .thenApply(WSResponse::asJson)
                         .thenApply(JsonHelper::jsonToObjectMap)
                         .thenApply(body -> ImmutableMap.of(
                                 "offenders", body.get("content"),
-                                "aggregations", body.get("probationAreaAggregations"),
+                                "aggregations", getProbationAreaAggregations(body),
                                 "total", body.get("totalElements"),
                                 "suggestions", body.get("suggestions")
                         )));
+    }
+
+    private Map<String, List<Map<String, Object>>> getProbationAreaAggregations(Map<String, Object> body) {
+        List<Map<String, Object>> aggregations = (List<Map<String, Object>>)body.get("probationAreaAggregations");
+
+        return ImmutableMap.of("byProbationArea", aggregations.stream().map(areaAggregation -> ImmutableMap.of(
+                "code", areaAggregation.get("code"),
+                "count", areaAggregation.get("count"),
+                "description", areaAggregation.get("code").toString()
+        )).collect(Collectors.toList()));
     }
 
     @Override
@@ -88,4 +103,13 @@ public class ProbationOffenderSearch implements OffenderSearch {
     public CompletionStage<MatchedOffenders> findMatch(String bearerToken, CourtDefendant offender) {
         return CompletableFuture.completedFuture(MatchedOffenders.noMatch());
     }
+
+    private WSResponse assertOkResponse(WSResponse response) {
+        if(response.getStatus() != OK) {
+            Logger.error("{} API bad response {}", "search", response.getStatus());
+            throw new RuntimeException(String.format("Unable to call %s. Status = %d", "search", response.getStatus()));
+        }
+        return response;
+    }
+
 }

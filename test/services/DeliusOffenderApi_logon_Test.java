@@ -55,7 +55,7 @@ public class DeliusOffenderApi_logon_Test {
     public void sendsLdapPrincipleToApi() {
         offenderApi.logon("john.smith");
 
-        Mockito.verify(wsRequest).post("cn=john.smith,cn=Users,dc=moj,dc=com");
+        Mockito.verify(wsRequest).post("cn=john.smith,ou=Users,dc=moj,dc=com");
     }
 
     @Test
