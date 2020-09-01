@@ -24,7 +24,6 @@ import java.util.concurrent.CompletionStage;
 
 import static interfaces.HealthCheckResult.healthy;
 import static interfaces.HealthCheckResult.unhealthy;
-import static play.libs.Json.parse;
 import static play.mvc.Http.HeaderNames.AUTHORIZATION;
 import static play.mvc.Http.Status.OK;
 
@@ -50,7 +49,7 @@ public class ProbationOffenderSearch implements OffenderSearch {
         return userAwareApiToken.get(JwtHelper.principal(bearerToken))
                 .thenCompose(token -> wsClient
                         .url(String.format("%sphrase", apiBaseUrl))
-                        .addQueryParameter("page", String.valueOf(pageNumber - 1 ))
+                        .addQueryParameter("page", String.valueOf(pageNumber - 1))
                         .addQueryParameter("size", String.valueOf(pageSize))
                         .addHeader(AUTHORIZATION, "Bearer " + token)
                         .post(JsonHelper.stringify(ImmutableMap.of(
@@ -58,10 +57,12 @@ public class ProbationOffenderSearch implements OffenderSearch {
                                 "matchAllTerms", queryType == SearchQueryBuilder.QUERY_TYPE.MUST,
                                 "probationAreasFilter", probationAreasFilter)))
                         .thenApply(WSResponse::getBody)
+                        .thenApply(JsonHelper::jsonToObjectMap)
                         .thenApply(body -> ImmutableMap.of(
-                                "offenders", parse("[]"),
-                                "total", 0,
-                                "suggestions", parse("{}")
+                                "offenders", body.get("content"),
+                                "aggregations", body.get("probationAreaAggregations"),
+                                "total", body.get("totalElements"),
+                                "suggestions", body.get("suggestions")
                         )));
     }
 

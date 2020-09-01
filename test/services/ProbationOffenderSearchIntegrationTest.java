@@ -15,6 +15,9 @@ import play.libs.Json;
 import play.test.WithApplication;
 import services.helpers.SearchQueryBuilder;
 
+import java.util.List;
+import java.util.Map;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.okForContentType;
@@ -22,18 +25,23 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.assertj.core.api.Assertions.assertThat;
 import static scala.io.Source.fromInputStream;
 
-public class ProbationOffenderSearchIntegrationTest  extends WithApplication {
+public class ProbationOffenderSearchIntegrationTest extends WithApplication {
     private static final int SEARCH_API_PORT = 18081;
     private static final int HMPPS_AUTH_PORT = 18082;
-
+    @Rule
+    public WireMockRule searchApiMock = new WireMockRule(wireMockConfig().port(SEARCH_API_PORT)
+            .jettyStopTimeout(10000L));
+    @Rule
+    public WireMockRule hmppsAuthWireMock = new WireMockRule(wireMockConfig().port(HMPPS_AUTH_PORT)
+            .jettyStopTimeout(10000L));
     private OffenderSearch probationOffenderSearch;
 
-    @Rule
-    public WireMockRule searchApiMock = new WireMockRule(wireMockConfig().port(SEARCH_API_PORT).jettyStopTimeout(10000L));
-    @Rule
-    public WireMockRule hmppsAuthWireMock = new WireMockRule(wireMockConfig().port(HMPPS_AUTH_PORT).jettyStopTimeout(10000L));
+    private static String loadResource(String resource) {
+        return fromInputStream(new Environment(Mode.TEST).resourceAsStream(resource), "UTF-8").mkString();
+    }
 
     @Override
     protected Application provideApplication() {
@@ -68,7 +76,8 @@ public class ProbationOffenderSearchIntegrationTest  extends WithApplication {
 
         hmppsAuthWireMock.verify(
                 1,
-                postRequestedFor(urlPathEqualTo("/auth/oauth/token")).withQueryParam("username", equalTo("sandrablacknps")));
+                postRequestedFor(urlPathEqualTo("/auth/oauth/token"))
+                        .withQueryParam("username", equalTo("sandrablacknps")));
     }
 
     @Test
@@ -83,7 +92,8 @@ public class ProbationOffenderSearchIntegrationTest  extends WithApplication {
 
         searchApiMock.verify(
                 1,
-                postRequestedFor(urlPathEqualTo("/phrase")).withHeader("Authorization", equalTo("Bearer " + expectedToken)));
+                postRequestedFor(urlPathEqualTo("/phrase"))
+                        .withHeader("Authorization", equalTo("Bearer " + expectedToken)));
     }
 
     @Test
@@ -113,6 +123,7 @@ public class ProbationOffenderSearchIntegrationTest  extends WithApplication {
                 1,
                 postRequestedFor(urlPathEqualTo("/phrase")).withQueryParam("size", equalTo("20")));
     }
+
     @Test
     public void phraseAndSearchTypeAndFilterPassedInBody() {
         probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
@@ -133,7 +144,91 @@ public class ProbationOffenderSearchIntegrationTest  extends WithApplication {
                 )));
     }
 
-    private static String loadResource(String resource) {
-        return fromInputStream(new Environment(Mode.TEST).resourceAsStream(resource), "UTF-8").mkString();
+    @Test
+    public void willPassThroughAllOffenders() {
+        searchApiMock.stubFor(
+                post(urlPathEqualTo("/phrase"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
+
+        Map<String, Object> results = probationOffenderSearch
+                .search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                        ImmutableList.of("N01", "N02"),
+                        "john smith",
+                        10,
+                        1,
+                        SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        List<Map<String, Object>> offenders = (List<Map<String, Object>>) results.get("offenders");
+
+        assertThat(offenders.size()).isEqualTo(10);
+        assertThat(offenders.get(0).get("offenderId")).isEqualTo(2500195236L);
+        assertThat(offenders.get(9).get("offenderId")).isEqualTo(2500196465L);
     }
+    @Test
+    public void willSetTotalFromTotalElements() {
+        searchApiMock.stubFor(
+                post(urlPathEqualTo("/phrase"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
+
+        Map<String, Object> results = probationOffenderSearch
+                .search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                        ImmutableList.of("N01", "N02"),
+                        "john smith",
+                        10,
+                        1,
+                        SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        assertThat(results.get("total")).isEqualTo(37);
+    }
+    @Test
+    public void willPassThroughAggregations() {
+        searchApiMock.stubFor(
+                post(urlPathEqualTo("/phrase"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
+
+        Map<String, Object> results = probationOffenderSearch
+                .search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                        ImmutableList.of("N01", "N02"),
+                        "john smith",
+                        10,
+                        1,
+                        SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        List<Map<String, Object>> aggregations = (List<Map<String, Object>>) results.get("aggregations");
+
+        assertThat(aggregations.size()).isEqualTo(7);
+        assertThat(aggregations.get(0).get("code")).isEqualTo("N03");
+        assertThat(aggregations.get(0).get("count")).isEqualTo(21);
+        assertThat(aggregations.get(6).get("code")).isEqualTo("N05");
+        assertThat(aggregations.get(6).get("count")).isEqualTo(1);
+    }
+    @Test
+    public void willPassThroughSuggestions() {
+        searchApiMock.stubFor(
+                post(urlPathEqualTo("/phrase"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
+
+        Map<String, Object> results = probationOffenderSearch
+                .search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                        ImmutableList.of("N01", "N02"),
+                        "john smith",
+                        10,
+                        1,
+                        SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        Map<String, Object> suggestionsWrapper = (Map<String, Object>) results.get("suggestions");
+
+        assertThat(suggestionsWrapper.get("suggest")).isNotNull();
+
+        Map<String, Object> suggestions = (Map<String, Object>) suggestionsWrapper.get("suggest");
+
+        assertThat(suggestions.size()).isEqualTo(2);
+        assertThat(suggestions.get("firstName")).isNotNull();
+        assertThat(suggestions.get("surname")).isNotNull();
+    }
+
 }
