@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import data.CourtDefendant;
 import data.MatchedOffenders;
+import helpers.JsonHelper;
 import helpers.JwtHelper;
 import interfaces.HealthCheckResult;
 import interfaces.OffenderSearch;
@@ -49,8 +50,13 @@ public class ProbationOffenderSearch implements OffenderSearch {
         return userAwareApiToken.get(JwtHelper.principal(bearerToken))
                 .thenCompose(token -> wsClient
                         .url(String.format("%sphrase", apiBaseUrl))
+                        .addQueryParameter("page", String.valueOf(pageNumber - 1 ))
+                        .addQueryParameter("size", String.valueOf(pageSize))
                         .addHeader(AUTHORIZATION, "Bearer " + token)
-                        .post("")
+                        .post(JsonHelper.stringify(ImmutableMap.of(
+                                "phrase", searchTerm,
+                                "matchAllTerms", queryType == SearchQueryBuilder.QUERY_TYPE.MUST,
+                                "probationAreasFilter", probationAreasFilter)))
                         .thenApply(WSResponse::getBody)
                         .thenApply(body -> ImmutableMap.of(
                                 "offenders", parse("[]"),

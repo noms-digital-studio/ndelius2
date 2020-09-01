@@ -16,6 +16,7 @@ import play.test.WithApplication;
 import services.helpers.SearchQueryBuilder;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.okForContentType;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
@@ -77,12 +78,59 @@ public class ProbationOffenderSearchIntegrationTest  extends WithApplication {
                 ImmutableList.of(),
                 "john smith",
                 10,
-                0,
+                1,
                 SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
 
         searchApiMock.verify(
                 1,
                 postRequestedFor(urlPathEqualTo("/phrase")).withHeader("Authorization", equalTo("Bearer " + expectedToken)));
+    }
+
+    @Test
+    public void pageNumberIsMappedToZeroIndexedNumber() {
+        probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                ImmutableList.of(),
+                "john smith",
+                10,
+                1,
+                SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        searchApiMock.verify(
+                1,
+                postRequestedFor(urlPathEqualTo("/phrase")).withQueryParam("page", equalTo("0")));
+    }
+
+    @Test
+    public void pageSizeIsPassedAsRequestParameter() {
+        probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                ImmutableList.of(),
+                "john smith",
+                20,
+                1,
+                SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        searchApiMock.verify(
+                1,
+                postRequestedFor(urlPathEqualTo("/phrase")).withQueryParam("size", equalTo("20")));
+    }
+    @Test
+    public void phraseAndSearchTypeAndFilterPassedInBody() {
+        probationOffenderSearch.search(JwtHelperTest.generateTokenWithSubject("sandrablacknps"),
+                ImmutableList.of("N01", "N02"),
+                "john smith",
+                20,
+                1,
+                SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        searchApiMock.verify(
+                1,
+                postRequestedFor(urlPathEqualTo("/phrase")).withRequestBody(equalToJson("" +
+                        "{" +
+                        " \"phrase\": \"john smith\"," +
+                        " \"matchAllTerms\": true," +
+                        " \"probationAreasFilter\": [\"N01\", \"N02\"]" +
+                        "}"
+                )));
     }
 
     private static String loadResource(String resource) {
