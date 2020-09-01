@@ -264,9 +264,9 @@ workflows:
             - deploysmoketest:
                 requires:
                     - artifacts
-            - smoketest:
-                requires:
-                    - deploysmoketest
+#            - smoketest:
+#                requires:
+#                    - deploysmoketest
             - deploy:
                 requires:
                     - artifacts

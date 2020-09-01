@@ -23,6 +23,7 @@ public class Module extends AbstractModule {
 
         bind(PdfGenerator.class).to(RestPdfGenerator.class);
         bind(OffenderSearch.class).toProvider(OffenderSearchProvider.class);
+        bind(UserAwareApiToken.class).to(UserAwareAuthenticationApi.class);
 
         bind(PrisonerApi.class).toProvider(PrisonerApiProvider.class);
         bind(PrisonerCategoryApi.class).toProvider(PrisonerCategoryApiProvider.class);

@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import data.CourtDefendant;
 import data.MatchedOffenders;
+import helpers.JwtHelper;
 import interfaces.HealthCheckResult;
 import interfaces.OffenderSearch;
+import interfaces.UserAwareApiToken;
 import lombok.val;
 import play.Logger;
 import play.cache.AsyncCacheApi;
@@ -28,23 +30,26 @@ public class ProbationOffenderSearch implements OffenderSearch {
     private final AsyncCacheApi cache;
     private final int cacheTime;
     private final String apiBaseUrl;
+    private final UserAwareApiToken userAwareApiToken;
 
 
     @Inject
-    public ProbationOffenderSearch(Config configuration, WSClient wsClient, AsyncCacheApi cache) {
+    public ProbationOffenderSearch(Config configuration, WSClient wsClient, AsyncCacheApi cache, UserAwareApiToken userAwareApiToken) {
         apiBaseUrl = configuration.getString("probation.offender.search.url");
         this.wsClient = wsClient;
         cacheTime = configuration.getInt("offender.api.probationAreas.cache.time.seconds");
         this.cache = cache;
+        this.userAwareApiToken = userAwareApiToken;
     }
 
     @Override
     public CompletionStage<Map<String, Object>> search(String bearerToken, List<String> probationAreasFilter, String searchTerm, int pageSize, int pageNumber, SearchQueryBuilder.QUERY_TYPE queryType) {
-        return CompletableFuture.completedFuture(ImmutableMap.of(
-                "offenders", parse("[]"),
-                "total", 0,
-                "suggestions", parse("{}")
-        ));
+        return userAwareApiToken.get(JwtHelper.principal(bearerToken))
+                .thenApply(jwtToken -> ImmutableMap.of(
+                        "offenders", parse("[]"),
+                        "total", 0,
+                        "suggestions", parse("{}")
+                ));
     }
 
     @Override

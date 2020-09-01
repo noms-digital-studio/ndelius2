@@ -1,6 +1,7 @@
 package services;
 
 import com.typesafe.config.ConfigFactory;
+import interfaces.UserAwareApiToken;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,10 +36,13 @@ public class ProbationOffenderSearch_isHealthy_Test {
     @Mock
     private AsyncCacheApi cache;
 
+    @Mock
+    private UserAwareApiToken userAwareApiToken;
+
 
     @Before
     public void setup() {
-        probationOffenderSearch = new ProbationOffenderSearch(ConfigFactory.load(), wsClient, cache);
+        probationOffenderSearch = new ProbationOffenderSearch(ConfigFactory.load(), wsClient, cache, userAwareApiToken);
         when(wsClient.url(any())).thenReturn(wsRequest);
         when(wsRequest.addHeader(any(), any())).thenReturn(wsRequest);
         when(wsRequest.get()).thenReturn(CompletableFuture.completedFuture(wsResponse));
