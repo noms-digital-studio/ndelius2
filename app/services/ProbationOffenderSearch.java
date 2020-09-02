@@ -31,6 +31,7 @@ import static play.mvc.Http.MimeTypes.JSON;
 import static play.mvc.Http.Status.OK;
 
 public class ProbationOffenderSearch implements OffenderSearch {
+    private static final String CENTRAL_TEAM_CODE = "N40";
     private final WSClient wsClient;
     private final String apiBaseUrl;
     private final UserAwareApiToken userAwareApiToken;
@@ -63,7 +64,8 @@ public class ProbationOffenderSearch implements OffenderSearch {
                         .thenApply(JsonHelper::jsonToObjectMap)
                         .thenApply(body -> ImmutableMap.of(
                                 "offenders", body.get("content"),
-                                "aggregations", getProbationAreaAggregations(body),
+                                "aggregations", getProbationAreaAggregations(body, JwtHelper
+                                        .probationAreaCodes(bearerToken)),
                                 "total", body.get("totalElements"),
                                 "suggestions", body.get("suggestions")
                         ))
@@ -118,13 +120,19 @@ public class ProbationOffenderSearch implements OffenderSearch {
         return aggregations.stream().map(area -> area.get("code")).map(Object::toString).collect(Collectors.toList());
     }
 
-    private Map<String, List<Map<String, Object>>> getProbationAreaAggregations(Map<String, Object> body) {
+    private Map<String, List<Map<String, Object>>> getProbationAreaAggregations(Map<String, Object> body, List<String> usersProbationAreas) {
         List<Map<String, Object>> aggregations = probationAggregationsFromResults(body);
 
-        return ImmutableMap.of("byProbationArea", aggregations.stream().map(areaAggregation -> ImmutableMap.of(
-                "code", areaAggregation.get("code"),
-                "count", areaAggregation.get("count")
-        )).collect(Collectors.toList()));
+        return ImmutableMap.of("byProbationArea", aggregations.stream()
+                .filter(area -> allowedToSeeArea(area.get("code"), usersProbationAreas))
+                .map(areaAggregation -> ImmutableMap.of(
+                        "code", areaAggregation.get("code"),
+                        "count", areaAggregation.get("count")
+                )).collect(Collectors.toList()));
+    }
+
+    private boolean allowedToSeeArea(Object code, List<String> usersProbationAreas) {
+        return !CENTRAL_TEAM_CODE.equals(code) || usersProbationAreas.contains(CENTRAL_TEAM_CODE);
     }
 
     private Map<String, List<Map<String, Object>>> addProbationAreaDescription(Map<String, List<Map<String, Object>>> aggregationsWrapper, Map<String, String> descriptions) {
@@ -144,6 +152,7 @@ public class ProbationOffenderSearch implements OffenderSearch {
     private Map<String, List<Map<String, Object>>> aggregationsWrapper(ImmutableMap<String, Object> body) {
         return (Map<String, List<Map<String, Object>>>) body.get("aggregations");
     }
+
     @SuppressWarnings("unchecked")
     private List<Map<String, Object>> probationAggregationsFromResults(Map<String, Object> body) {
         return (List<Map<String, Object>>) body.get("probationAreaAggregations");

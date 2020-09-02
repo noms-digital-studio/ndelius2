@@ -226,14 +226,14 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> aggregations = (List<Map<String, Object>>) aggregationsWrapper.get("byProbationArea");
 
-        assertThat(aggregations.size()).isEqualTo(7);
+        assertThat(aggregations.size()).isEqualTo(6);
         assertThat(aggregations.get(0).get("code")).isEqualTo("N03");
         assertThat(aggregations.get(0).get("count")).isEqualTo(21);
-        assertThat(aggregations.get(6).get("code")).isEqualTo("N05");
-        assertThat(aggregations.get(6).get("count")).isEqualTo(1);
+        assertThat(aggregations.get(5).get("code")).isEqualTo("N05");
+        assertThat(aggregations.get(5).get("count")).isEqualTo(1);
     }
     @Test
-    public void willAddDescriptionsToProbationArea() {
+    public void willAddDescriptionsToProbationAreaAggregation() {
         searchApiMock.stubFor(
                 post(urlPathEqualTo("/phrase"))
                         .willReturn(
@@ -247,16 +247,46 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         1,
                         SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
 
-        @SuppressWarnings("unchecked")
-        Map<String, Object> aggregationsWrapper = (Map<String, Object>)results.get("aggregations");
-
-        assertThat(aggregationsWrapper.get("byProbationArea")).isNotNull();
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> aggregations = (List<Map<String, Object>>) aggregationsWrapper.get("byProbationArea");
+        List<Map<String, Object>> aggregations = getAggregations(results);
 
         assertThat(aggregations.get(2).get("code")).isEqualTo("N02");
         assertThat(aggregations.get(2).get("description")).isEqualTo("NPS North East");
     }
+    @Test
+    public void willFilterOutCentralTeamProbationAreaAggregation() {
+        searchApiMock.stubFor(
+                post(urlPathEqualTo("/phrase"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
+
+        Map<String, Object> results = probationOffenderSearch
+                .search(JwtHelperTest.generateTokenWithProbationAreaCodes(ImmutableList.of("N01")),
+                        ImmutableList.of("N01", "N02"),
+                        "john smith",
+                        10,
+                        1,
+                        SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        assertThat(getAggregations(results).stream().map(m -> m.get("code"))).doesNotContain("N40");
+    }
+    @Test
+    public void willAllCentralTeamProbationAreaAggregationWhenUserInThatArea() {
+        searchApiMock.stubFor(
+                post(urlPathEqualTo("/phrase"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
+
+        Map<String, Object> results = probationOffenderSearch
+                .search(JwtHelperTest.generateTokenWithProbationAreaCodes(ImmutableList.of("N40", "N01")),
+                        ImmutableList.of(),
+                        "john smith",
+                        10,
+                        1,
+                        SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        assertThat(getAggregations(results).stream().map(m -> m.get("code"))).contains("N40");
+    }
+
     @Test
     public void willPassThroughSuggestions() {
         searchApiMock.stubFor(
@@ -284,5 +314,17 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
         assertThat(suggestions.get("firstName")).isNotNull();
         assertThat(suggestions.get("surname")).isNotNull();
     }
+
+    private List<Map<String, Object>> getAggregations(Map<String, Object> results) {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> aggregationsWrapper = (Map<String, Object>)results.get("aggregations");
+
+        assertThat(aggregationsWrapper.get("byProbationArea")).isNotNull();
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> aggregations = (List<Map<String, Object>>) aggregationsWrapper.get("byProbationArea");
+
+        return aggregations;
+    }
+
 
 }
