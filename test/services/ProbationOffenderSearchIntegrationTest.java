@@ -2,8 +2,11 @@ package services;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableList;
+import helpers.Encryption;
+import helpers.JsonHelper;
 import helpers.JwtHelperTest;
 import interfaces.OffenderSearch;
+import lombok.val;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,6 +20,7 @@ import services.helpers.SearchQueryBuilder;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
@@ -172,7 +176,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
-        Map<String, Object> results = probationOffenderSearch
+        val results = probationOffenderSearch
                 .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                         ImmutableList.of("N01", "N02"),
                         "john smith",
@@ -188,13 +192,44 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
         assertThat(offenders.get(9).get("offenderId")).isEqualTo(2500196465L);
     }
     @Test
+    public void willAddEncryptedPrisonImageLinkCode() {
+        Function<String, String> decryptor = encrypted -> Encryption.decrypt(encrypted, app.config().getString("params.secret.key")).orElseThrow(() -> new RuntimeException("Decrypt failed"));
+        
+        searchApiMock.stubFor(
+                post(urlPathEqualTo("/phrase"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
+
+        val results = probationOffenderSearch
+                .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
+                        ImmutableList.of("N01", "N02"),
+                        "john smith",
+                        10,
+                        1,
+                        SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        @SuppressWarnings("unchecked")
+        val offenders = (List<Map<String, Object>>) results.get("offenders");
+
+        assertThat(offenders.size()).isEqualTo(10);
+        //offender has noms number
+        assertThat(offenders.get(0).get("oneTimeNomisRef")).isNotNull();
+        //offender has no noms number
+        assertThat(offenders.get(1).get("oneTimeNomisRef")).isNull();
+
+        val token = offenders.get(0).get("oneTimeNomisRef");
+        val json = JsonHelper.jsonToMap(decryptor.apply(token.toString()));
+        
+        assertThat(json.get("noms")).isEqualTo("A5194DY");
+    }
+    @Test
     public void willSetTotalFromTotalElements() {
         searchApiMock.stubFor(
                 post(urlPathEqualTo("/phrase"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
-        Map<String, Object> results = probationOffenderSearch
+        val results = probationOffenderSearch
                 .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                         ImmutableList.of("N01", "N02"),
                         "john smith",
@@ -211,7 +246,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
-        Map<String, Object> results = probationOffenderSearch
+        val results = probationOffenderSearch
                 .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                         ImmutableList.of("N01", "N02"),
                         "john smith",
@@ -239,7 +274,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
-        Map<String, Object> results = probationOffenderSearch
+        val results = probationOffenderSearch
                 .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                         ImmutableList.of("N01", "N02"),
                         "john smith",
@@ -259,7 +294,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
-        Map<String, Object> results = probationOffenderSearch
+        val results = probationOffenderSearch
                 .search(JwtHelperTest.generateTokenWithProbationAreaCodes(ImmutableList.of("N01")),
                         ImmutableList.of("N01", "N02"),
                         "john smith",
@@ -276,7 +311,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
-        Map<String, Object> results = probationOffenderSearch
+        val results = probationOffenderSearch
                 .search(JwtHelperTest.generateTokenWithProbationAreaCodes(ImmutableList.of("N40", "N01")),
                         ImmutableList.of(),
                         "john smith",
@@ -294,7 +329,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         .willReturn(
                                 okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
 
-        Map<String, Object> results = probationOffenderSearch
+        val results = probationOffenderSearch
                 .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
                         ImmutableList.of("N01", "N02"),
                         "john smith",

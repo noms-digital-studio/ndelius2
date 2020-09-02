@@ -2,8 +2,10 @@ package services;
 
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
+import controllers.OffenderController;
 import data.CourtDefendant;
 import data.MatchedOffenders;
+import helpers.Encryption;
 import helpers.JsonHelper;
 import helpers.JwtHelper;
 import interfaces.HealthCheckResult;
@@ -19,8 +21,10 @@ import services.helpers.SearchQueryBuilder;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static interfaces.HealthCheckResult.healthy;
@@ -36,6 +40,7 @@ public class ProbationOffenderSearch implements OffenderSearch {
     private final String apiBaseUrl;
     private final UserAwareApiToken userAwareApiToken;
     private final OffenderApi offenderApi;
+    private final Function<String, String> encrypter;
 
 
     @Inject
@@ -44,6 +49,8 @@ public class ProbationOffenderSearch implements OffenderSearch {
         this.wsClient = wsClient;
         this.userAwareApiToken = userAwareApiToken;
         this.offenderApi = offenderApi;
+        encrypter = plainText -> Encryption.encrypt(plainText, configuration.getString("params.secret.key"))
+                .orElseThrow(() -> new RuntimeException("Encrypt failed"));
     }
 
     @Override
@@ -69,11 +76,14 @@ public class ProbationOffenderSearch implements OffenderSearch {
                                 "total", body.get("totalElements"),
                                 "suggestions", body.get("suggestions")
                         ))
-                        .thenCompose(body -> withProbationAreaDescriptions(bearerToken, body)));
+                        .thenCompose(body -> withProbationAreaDescriptions(bearerToken, body))
+                        .thenApply(body -> withPrisonImageLinkCodes(bearerToken, body))
+                );
+
     }
 
     private CompletionStage<Map<String, Object>> withProbationAreaDescriptions(String bearerToken, ImmutableMap<String, Object> body) {
-        Map<String, List<Map<String, Object>>> aggregationsWrapper = aggregationsWrapper(body);
+        val aggregationsWrapper = aggregationsWrapper(body);
         return offenderApi.probationAreaDescriptions(bearerToken,
                 extractProbationAreaCodes(aggregationsWrapper))
                 .thenApply(areas -> ImmutableMap.of(
@@ -82,6 +92,19 @@ public class ProbationOffenderSearch implements OffenderSearch {
                         "total", body.get("total"),
                         "suggestions", body.get("suggestions")
                 ));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> withPrisonImageLinkCodes(String bearerToken, Map<String, Object> body) {
+        final Function<String, String> oneTimeNomisRef = nomsNumber -> OffenderController
+                .generateOneTimeImageReference(encrypter, nomsNumber, bearerToken);
+
+        val offenders = (List<Map<String, Object>>) body.get("offenders");
+        offenders.forEach(offender -> Optional.ofNullable(offender.get("otherIds"))
+                .flatMap(otherIds -> Optional.ofNullable(((Map<String, Object>) otherIds).get("nomsNumber")))
+                .ifPresent(nomsNumber -> offender
+                        .put("oneTimeNomisRef", oneTimeNomisRef.apply(nomsNumber.toString()))));
+        return body;
     }
 
     @Override
@@ -104,6 +127,7 @@ public class ProbationOffenderSearch implements OffenderSearch {
 
     @Override
     public CompletionStage<MatchedOffenders> findMatch(String bearerToken, CourtDefendant offender) {
+        // Not implementing this Spike that is not used in production
         return CompletableFuture.completedFuture(MatchedOffenders.noMatch());
     }
 
@@ -116,12 +140,12 @@ public class ProbationOffenderSearch implements OffenderSearch {
     }
 
     private List<String> extractProbationAreaCodes(Map<String, List<Map<String, Object>>> aggregationsWrapper) {
-        List<Map<String, Object>> aggregations = aggregationsWrapper.get("byProbationArea");
+        val aggregations = aggregationsWrapper.get("byProbationArea");
         return aggregations.stream().map(area -> area.get("code")).map(Object::toString).collect(Collectors.toList());
     }
 
     private Map<String, List<Map<String, Object>>> getProbationAreaAggregations(Map<String, Object> body, List<String> usersProbationAreas) {
-        List<Map<String, Object>> aggregations = probationAggregationsFromResults(body);
+        val aggregations = probationAggregationsFromResults(body);
 
         return ImmutableMap.of("byProbationArea", aggregations.stream()
                 .filter(area -> allowedToSeeArea(area.get("code"), usersProbationAreas))
@@ -136,7 +160,7 @@ public class ProbationOffenderSearch implements OffenderSearch {
     }
 
     private Map<String, List<Map<String, Object>>> addProbationAreaDescription(Map<String, List<Map<String, Object>>> aggregationsWrapper, Map<String, String> descriptions) {
-        List<Map<String, Object>> aggregations = aggregationsWrapper.get("byProbationArea");
+        val aggregations = aggregationsWrapper.get("byProbationArea");
 
         return ImmutableMap.of("byProbationArea", aggregations.stream().map(areaAggregation -> {
             String code = areaAggregation.get("code").toString();
