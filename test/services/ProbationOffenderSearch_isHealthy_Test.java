@@ -1,13 +1,13 @@
 package services;
 
 import com.typesafe.config.ConfigFactory;
+import interfaces.OffenderApi;
 import interfaces.UserAwareApiToken;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import play.cache.AsyncCacheApi;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
@@ -34,15 +34,15 @@ public class ProbationOffenderSearch_isHealthy_Test {
     private WSResponse wsResponse;
 
     @Mock
-    private AsyncCacheApi cache;
+    private UserAwareApiToken userAwareApiToken;
 
     @Mock
-    private UserAwareApiToken userAwareApiToken;
+    private OffenderApi offenderApi;
 
 
     @Before
     public void setup() {
-        probationOffenderSearch = new ProbationOffenderSearch(ConfigFactory.load(), wsClient, cache, userAwareApiToken);
+        probationOffenderSearch = new ProbationOffenderSearch(ConfigFactory.load(), wsClient, userAwareApiToken, offenderApi);
         when(wsClient.url(any())).thenReturn(wsRequest);
         when(wsRequest.addHeader(any(), any())).thenReturn(wsRequest);
         when(wsRequest.get()).thenReturn(CompletableFuture.completedFuture(wsResponse));

@@ -7,11 +7,11 @@ import data.MatchedOffenders;
 import helpers.JsonHelper;
 import helpers.JwtHelper;
 import interfaces.HealthCheckResult;
+import interfaces.OffenderApi;
 import interfaces.OffenderSearch;
 import interfaces.UserAwareApiToken;
 import lombok.val;
 import play.Logger;
-import play.cache.AsyncCacheApi;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 import services.helpers.SearchQueryBuilder;
@@ -32,19 +32,17 @@ import static play.mvc.Http.Status.OK;
 
 public class ProbationOffenderSearch implements OffenderSearch {
     private final WSClient wsClient;
-    private final AsyncCacheApi cache;
-    private final int cacheTime;
     private final String apiBaseUrl;
     private final UserAwareApiToken userAwareApiToken;
+    private final OffenderApi offenderApi;
 
 
     @Inject
-    public ProbationOffenderSearch(Config configuration, WSClient wsClient, AsyncCacheApi cache, UserAwareApiToken userAwareApiToken) {
+    public ProbationOffenderSearch(Config configuration, WSClient wsClient, UserAwareApiToken userAwareApiToken, OffenderApi offenderApi) {
         apiBaseUrl = configuration.getString("probation.offender.search.url");
         this.wsClient = wsClient;
-        cacheTime = configuration.getInt("offender.api.probationAreas.cache.time.seconds");
-        this.cache = cache;
         this.userAwareApiToken = userAwareApiToken;
+        this.offenderApi = offenderApi;
     }
 
     @Override
@@ -68,17 +66,20 @@ public class ProbationOffenderSearch implements OffenderSearch {
                                 "aggregations", getProbationAreaAggregations(body),
                                 "total", body.get("totalElements"),
                                 "suggestions", body.get("suggestions")
-                        )));
+                        ))
+                        .thenCompose(body -> withProbationAreaDescriptions(bearerToken, body)));
     }
 
-    private Map<String, List<Map<String, Object>>> getProbationAreaAggregations(Map<String, Object> body) {
-        List<Map<String, Object>> aggregations = (List<Map<String, Object>>)body.get("probationAreaAggregations");
-
-        return ImmutableMap.of("byProbationArea", aggregations.stream().map(areaAggregation -> ImmutableMap.of(
-                "code", areaAggregation.get("code"),
-                "count", areaAggregation.get("count"),
-                "description", areaAggregation.get("code").toString()
-        )).collect(Collectors.toList()));
+    private CompletionStage<Map<String, Object>> withProbationAreaDescriptions(String bearerToken, ImmutableMap<String, Object> body) {
+        Map<String, List<Map<String, Object>>> aggregationsWrapper = aggregationsWrapper(body);
+        return offenderApi.probationAreaDescriptions(bearerToken,
+                extractProbationAreaCodes(aggregationsWrapper))
+                .thenApply(areas -> ImmutableMap.of(
+                        "offenders", body.get("offenders"),
+                        "aggregations", addProbationAreaDescription(aggregationsWrapper, areas),
+                        "total", body.get("total"),
+                        "suggestions", body.get("suggestions")
+                ));
     }
 
     @Override
@@ -105,11 +106,47 @@ public class ProbationOffenderSearch implements OffenderSearch {
     }
 
     private WSResponse assertOkResponse(WSResponse response) {
-        if(response.getStatus() != OK) {
+        if (response.getStatus() != OK) {
             Logger.error("{} API bad response {}", "search", response.getStatus());
             throw new RuntimeException(String.format("Unable to call %s. Status = %d", "search", response.getStatus()));
         }
         return response;
+    }
+
+    private List<String> extractProbationAreaCodes(Map<String, List<Map<String, Object>>> aggregationsWrapper) {
+        List<Map<String, Object>> aggregations = aggregationsWrapper.get("byProbationArea");
+        return aggregations.stream().map(area -> area.get("code")).map(Object::toString).collect(Collectors.toList());
+    }
+
+    private Map<String, List<Map<String, Object>>> getProbationAreaAggregations(Map<String, Object> body) {
+        List<Map<String, Object>> aggregations = probationAggregationsFromResults(body);
+
+        return ImmutableMap.of("byProbationArea", aggregations.stream().map(areaAggregation -> ImmutableMap.of(
+                "code", areaAggregation.get("code"),
+                "count", areaAggregation.get("count")
+        )).collect(Collectors.toList()));
+    }
+
+    private Map<String, List<Map<String, Object>>> addProbationAreaDescription(Map<String, List<Map<String, Object>>> aggregationsWrapper, Map<String, String> descriptions) {
+        List<Map<String, Object>> aggregations = aggregationsWrapper.get("byProbationArea");
+
+        return ImmutableMap.of("byProbationArea", aggregations.stream().map(areaAggregation -> {
+            String code = areaAggregation.get("code").toString();
+            return ImmutableMap.of(
+                    "code", code,
+                    "count", areaAggregation.get("count"),
+                    "description", descriptions.get(code)
+            );
+        }).collect(Collectors.toList()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, List<Map<String, Object>>> aggregationsWrapper(ImmutableMap<String, Object> body) {
+        return (Map<String, List<Map<String, Object>>>) body.get("aggregations");
+    }
+    @SuppressWarnings("unchecked")
+    private List<Map<String, Object>> probationAggregationsFromResults(Map<String, Object> body) {
+        return (List<Map<String, Object>>) body.get("probationAreaAggregations");
     }
 
 }

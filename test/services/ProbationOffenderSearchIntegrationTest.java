@@ -20,10 +20,12 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okForContentType;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static scala.io.Source.fromInputStream;
@@ -31,12 +33,18 @@ import static scala.io.Source.fromInputStream;
 public class ProbationOffenderSearchIntegrationTest extends WithApplication {
     private static final int SEARCH_API_PORT = 18081;
     private static final int HMPPS_AUTH_PORT = 18082;
+    private static final int COMMUNITY_API_PORT = 18083;
     @Rule
     public WireMockRule searchApiMock = new WireMockRule(wireMockConfig().port(SEARCH_API_PORT)
             .jettyStopTimeout(10000L));
     @Rule
     public WireMockRule hmppsAuthWireMock = new WireMockRule(wireMockConfig().port(HMPPS_AUTH_PORT)
             .jettyStopTimeout(10000L));
+
+    @Rule
+    public WireMockRule communityApiWireMock = new WireMockRule(wireMockConfig().port(COMMUNITY_API_PORT)
+            .jettyStopTimeout(10000L));
+
     private OffenderSearch probationOffenderSearch;
 
     private static String loadResource(String resource) {
@@ -48,6 +56,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
         return new GuiceApplicationBuilder()
                 .configure("probation.offender.search.url", String.format("http://localhost:%d/", SEARCH_API_PORT))
                 .configure("hmpps.auth.url", String.format("http://localhost:%d/", HMPPS_AUTH_PORT))
+                .configure("offender.api.url", String.format("http://localhost:%d/api/", COMMUNITY_API_PORT))
                 .configure("offender.search.provider", "probation-offender-search")
                 .build();
     }
@@ -63,6 +72,18 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                 post(urlPathEqualTo("/phrase"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/probationoffendersearch/singleResult.json"))));
+        communityApiWireMock.stubFor(
+                get(urlPathMatching("/api/probationAreas/code/.*"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/probationAreaByCode_Other.json"))));
+        communityApiWireMock.stubFor(
+                get(urlPathEqualTo("/api/probationAreas/code/N01"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/probationAreaByCode_N01.json"))));
+        communityApiWireMock.stubFor(
+                get(urlPathEqualTo("/api/probationAreas/code/N02"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/probationAreaByCode_N02.json"))));
     }
 
     @Test
@@ -159,6 +180,7 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         1,
                         SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
 
+        @SuppressWarnings("unchecked")
         List<Map<String, Object>> offenders = (List<Map<String, Object>>) results.get("offenders");
 
         assertThat(offenders.size()).isEqualTo(10);
@@ -197,9 +219,11 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         1,
                         SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
 
+        @SuppressWarnings("unchecked")
         Map<String, Object> aggregationsWrapper = (Map<String, Object>)results.get("aggregations");
 
         assertThat(aggregationsWrapper.get("byProbationArea")).isNotNull();
+        @SuppressWarnings("unchecked")
         List<Map<String, Object>> aggregations = (List<Map<String, Object>>) aggregationsWrapper.get("byProbationArea");
 
         assertThat(aggregations.size()).isEqualTo(7);
@@ -207,6 +231,31 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
         assertThat(aggregations.get(0).get("count")).isEqualTo(21);
         assertThat(aggregations.get(6).get("code")).isEqualTo("N05");
         assertThat(aggregations.get(6).get("count")).isEqualTo(1);
+    }
+    @Test
+    public void willAddDescriptionsToProbationArea() {
+        searchApiMock.stubFor(
+                post(urlPathEqualTo("/phrase"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/probationoffendersearch/multipleResults.json"))));
+
+        Map<String, Object> results = probationOffenderSearch
+                .search(JwtHelperTest.generateTokenWithUsername("sandrablacknps"),
+                        ImmutableList.of("N01", "N02"),
+                        "john smith",
+                        10,
+                        1,
+                        SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> aggregationsWrapper = (Map<String, Object>)results.get("aggregations");
+
+        assertThat(aggregationsWrapper.get("byProbationArea")).isNotNull();
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> aggregations = (List<Map<String, Object>>) aggregationsWrapper.get("byProbationArea");
+
+        assertThat(aggregations.get(2).get("code")).isEqualTo("N02");
+        assertThat(aggregations.get(2).get("description")).isEqualTo("NPS North East");
     }
     @Test
     public void willPassThroughSuggestions() {
@@ -223,10 +272,12 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
                         1,
                         SearchQueryBuilder.QUERY_TYPE.MUST).toCompletableFuture().join();
 
+        @SuppressWarnings("unchecked")
         Map<String, Object> suggestionsWrapper = (Map<String, Object>) results.get("suggestions");
 
         assertThat(suggestionsWrapper.get("suggest")).isNotNull();
 
+        @SuppressWarnings("unchecked")
         Map<String, Object> suggestions = (Map<String, Object>) suggestionsWrapper.get("suggest");
 
         assertThat(suggestions.size()).isEqualTo(2);
