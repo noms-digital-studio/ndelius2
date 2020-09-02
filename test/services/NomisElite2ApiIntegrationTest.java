@@ -38,7 +38,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     public void beforeEach() {
 
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/.*"))
+                get(urlMatching("/api/bookings/offenderNo/.*"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG.json"))));
 
@@ -48,7 +48,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
                                 okForContentType("application/json", loadResource("/nomsoffender/token.json"))));
 
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/offenders/.*"))
+                get(urlMatching("/api/offenders/.*"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG.json"))));
 
@@ -83,7 +83,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
 
         wireMock.verify(
                 3,
-                getRequestedFor(urlMatching("/elite2api/api/bookings/offenderNo/G8020GG\\?fullInfo=true")));
+                getRequestedFor(urlMatching("/api/bookings/offenderNo/G8020GG\\?fullInfo=true")));
 
     }
 
@@ -117,7 +117,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     @Test
     public void unauthorisedResponseCompletesExceptionally() {
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/.*"))
+                get(urlMatching("/api/bookings/offenderNo/.*"))
                         .willReturn(
                                 aResponse().withStatus(401)));
 
@@ -130,7 +130,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     @Test
     public void forbiddenResponseCompletesExceptionally() {
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/.*"))
+                get(urlMatching("/api/bookings/offenderNo/.*"))
                         .willReturn(
                                 aResponse().withStatus(403)));
 
@@ -143,7 +143,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     @Test
     public void unauthorisedResponseClearsCachedToken() {
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/.*"))
+                get(urlMatching("/api/bookings/offenderNo/.*"))
                         .willReturn(
                                 aResponse().withStatus(401)));
 
@@ -160,7 +160,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     @Test
     public void completesExceptionallyIfOffenderServiceErrors() {
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/.*"))
+                get(urlMatching("/api/bookings/offenderNo/.*"))
                         .willReturn(
                                 aResponse().withStatus(500)));
 
@@ -177,7 +177,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
 
         prisonerCategoryApi.getOffenderCategoryByNomsNumber("G8020GG").toCompletableFuture().join();
 
-        wireMock.verify( getRequestedFor(urlMatching("/elite2api/api/bookings/offenderNo/.*")).withHeader("Authorization", equalTo(String.format("Bearer %s", tokenFromFakeAuthResponse))));
+        wireMock.verify( getRequestedFor(urlMatching("/api/bookings/offenderNo/.*")).withHeader("Authorization", equalTo(String.format("Bearer %s", tokenFromFakeAuthResponse))));
 
     }
 
@@ -195,14 +195,14 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
         prisonerCategoryApi.getOffenderCategoryByNomsNumber("G8020GG").toCompletableFuture().join();
 
         wireMock.verify(
-                getRequestedFor(urlEqualTo("/elite2api/api/bookings/offenderNo/G8020GG?fullInfo=true")));
+                getRequestedFor(urlEqualTo("/api/bookings/offenderNo/G8020GG?fullInfo=true")));
 
     }
 
     @Test
     public void categoryIsReturnedWhenOffenderFound() {
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/G8020GG\\?fullInfo=true"))
+                get(urlMatching("/api/bookings/offenderNo/G8020GG\\?fullInfo=true"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG.json"))));
 
@@ -216,7 +216,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     @Test
     public void categoryIsNotReturnedWhenOffenderNotFound() {
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/G8020GG\\?fullInfo=true"))
+                get(urlMatching("/api/bookings/offenderNo/G8020GG\\?fullInfo=true"))
                         .willReturn(
                                 notFound()));
 
@@ -230,7 +230,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     @Test
     public void categoryIsNotReturnedWhenOffenderHasNoCategory() {
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/G8020GG\\?fullInfo=true"))
+                get(urlMatching("/api/bookings/offenderNo/G8020GG\\?fullInfo=true"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomselite2offender/offender_G8020GG_no_category.json"))));
 
@@ -247,7 +247,7 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
 
         assertThat(maybeOffender.isPresent()).isTrue();
 
-        wireMock.verify(getRequestedFor(urlMatching("/elite2api/api/offenders/G8020GG")));
+        wireMock.verify(getRequestedFor(urlMatching("/api/offenders/G8020GG")));
     }
 
     @Test
@@ -275,19 +275,19 @@ public class NomisElite2ApiIntegrationTest extends WithApplication {
     @Test
     public void willGetImageFromElite() {
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/.*/image/data"))
+                get(urlMatching("/api/bookings/offenderNo/.*/image/data"))
                         .willReturn(
                                 ok().withHeader(CONTENT_TYPE, "image/jpeg").withBody(loadResourceBytes("/nomsoffender/image_3.jpeg"))));
 
         prisonerApi.getImage("G8020GG").toCompletableFuture().join();
 
-        wireMock.verify(getRequestedFor(urlMatching("/elite2api/api/bookings/offenderNo/G8020GG/image/data")));
+        wireMock.verify(getRequestedFor(urlMatching("/api/bookings/offenderNo/G8020GG/image/data")));
     }
 
     @Test
     public void returnsBytesFromMatchingImage() {
         wireMock.stubFor(
-                get(urlMatching("/elite2api/api/bookings/offenderNo/.*/image/data"))
+                get(urlMatching("/api/bookings/offenderNo/.*/image/data"))
                         .willReturn(
                                 ok().withHeader(CONTENT_TYPE, "image/jpeg").withBody(loadResourceBytes("/nomsoffender/image_3.jpeg"))));
 
