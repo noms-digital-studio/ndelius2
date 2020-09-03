@@ -5,14 +5,6 @@ defaults: &defaults
     # fixes issue with compatible issue with v12.18.3 and graceful-fs webjar
     - image: circleci/openjdk@sha256:0ab7db4ecdc5966baaa44f64075725c22a53dc63922492c26cabd98b7c961ae0
 
-install_aws_cli: &install_aws_cli
-  run:
-    name: Set up aws
-    command: |
-      sudo apt-get --assume-yes update
-      sudo apt-get --assume-yes install python3-pip
-      sudo pip3 install awscli
-
 version: 2
 general:
   branches:
@@ -65,7 +57,7 @@ jobs:
             - store_artifacts:
                 path: ./target/test-reports/
                 destination: reports
-    bddOfffenderSummary:
+    bddOffenderSummary:
         <<: *defaults
         steps:
             - attach_workspace:
@@ -80,6 +72,27 @@ jobs:
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
                   export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   export CUCUMBER_OPTIONS="--tags @OffenderSummary"
+                  sbt "test-only bdd.RunCucumber" < /dev/null
+            - store_test_results:
+                path: ./target/test-reports/
+            - store_artifacts:
+                path: ./target/test-reports/
+                destination: reports
+    bddNationalSearch:
+        <<: *defaults
+        steps:
+            - attach_workspace:
+                  at: ~/ndelius-new-tech
+            - restore_cache:
+                keys:
+                  - v2-ndelius-new-tech-{{ checksum "build.sbt" }}
+                  - v2-ndelius-new-tech-
+            - run:
+                name: BDD - National Search
+                command: |
+                  export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
+                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export CUCUMBER_OPTIONS="--tags @Search"
                   sbt "test-only bdd.RunCucumber" < /dev/null
             - store_test_results:
                 path: ./target/test-reports/
@@ -188,50 +201,6 @@ jobs:
             - store_artifacts:
                 path: target/artifacts
                 destination: jars
-    deploysmoketest:
-        docker:
-          - image: paulodiovani/aws-eb-cli
-        working_directory: ~/ndelius-new-tech
-        steps:
-        - attach_workspace:
-            at: /workspace
-        - checkout
-        - run:
-            name: Deploy to Elastic Beanstalk Smoke Test environment
-            command: |
-                export PATH=$PATH:~/.local/bin/
-                eb deploy delius-new-tech-2-secure --label $(cat /workspace/version.txt)
-    smoketest:
-        docker:
-            - image: circleci/openjdk:8-node-browsers
-        working_directory: ~/ndelius-new-tech
-        steps:
-        - run:
-            name: Checkout smoke test
-            command: |
-                git clone https://github.com/noms-digital-studio/ndelius-new-tech-smoke-test.git .
-                git checkout "$CIRCLE_BRANCH" || true
-        - run:
-            name: Build and run test
-            command: |
-                gradle test
-        - store_test_results:
-            path: ./build/reports/
-        - store_artifacts:
-            path: ./build/reports/
-            destination: reports
-    deploy:
-        docker:
-          - image: paulodiovani/aws-eb-cli
-        working_directory: ~/ndelius-new-tech
-        steps:
-        - attach_workspace:
-            at: /workspace
-        - checkout
-        - run:
-            name: Deploy to Elastic Beanstalk
-            command: |
-                eb deploy --label $(cat /workspace/version.txt)
 
 workflows:
     version: 2
@@ -247,7 +216,10 @@ workflows:
             - bddSFR:
                 requires:
                     - build
-            - bddOfffenderSummary:
+            - bddOffenderSummary:
+                requires:
+                    - build
+            - bddNationalSearch:
                 requires:
                     - build
             - unitTests:
@@ -259,17 +231,6 @@ workflows:
                     - bddOther
                     - bddParom1
                     - bddSFR
-                    - bddOfffenderSummary
+                    - bddOffenderSummary
+                    - bddNationalSearch
                     - unitTests
-            - deploysmoketest:
-                requires:
-                    - artifacts
-#            - smoketest:
-#                requires:
-#                    - deploysmoketest
-            - deploy:
-                requires:
-                    - artifacts
-                filters:
-                    branches:
-                      only: master

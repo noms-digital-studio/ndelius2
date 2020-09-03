@@ -33,7 +33,7 @@ public class CustodyApiMock {
 
     public CustodyApiMock stubDefaults() {
         custodyApiWireMock.stubFor(
-                post(urlEqualTo("/auth/oauth/token"))
+                post(urlPathEqualTo("/auth/oauth/token"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/nomsoffender/token.json"))));
 

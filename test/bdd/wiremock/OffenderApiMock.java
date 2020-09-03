@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import helpers.JsonHelper;
+import helpers.JwtHelperTest;
 import interfaces.OffenderApi;
 import lombok.Builder;
 import lombok.Data;
@@ -121,7 +122,7 @@ public class OffenderApiMock {
                 post(urlEqualTo("/documentLink")).willReturn(created()));
 
         offenderApiWireMock.stubFor(
-                post(urlEqualTo("/logon")).willReturn(ok().withBody("aBearerToken")));
+                post(urlEqualTo("/logon")).willReturn(ok().withBody(JwtHelperTest.generateTokenWithProbationAreaCodes(ImmutableList.of("N01")))));
 
         offenderApiWireMock.stubFor(
                 get(urlMatching("/offenders/crn/.*/all"))
@@ -185,6 +186,11 @@ public class OffenderApiMock {
                 get(urlPathMatching("/offenders/offenderId/.*/personalCircumstances"))
                         .willReturn(
                                 okForContentType("application/json", loadResource("/deliusoffender/offenderPersonalCircumstances.json"))));
+
+        offenderApiWireMock.stubFor(
+                get(urlPathMatching("/probationAreas/code/.*"))
+                        .willReturn(
+                                okForContentType("application/json", loadResource("/deliusoffender/probationAreaByCode_Other.json"))));
 
         return this;
     }
