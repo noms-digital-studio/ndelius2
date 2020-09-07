@@ -67,7 +67,7 @@ public class NomisElite2Api implements PrisonerCategoryApi, PrisonerApi {
         return apiToken
                 .getAsync()
                 .thenCompose(token -> wsClient
-                        .url(String.format("%selite2api/api/bookings/offenderNo/%s?fullInfo=true", apiBaseUrl, nomsNumber))
+                        .url(String.format("%sapi/bookings/offenderNo/%s?fullInfo=true", apiBaseUrl, nomsNumber))
                         .addHeader(AUTHORIZATION, "Bearer " + token)
                         .get()
                         .thenApply(this::checkForMaybeResponse)
@@ -80,7 +80,7 @@ public class NomisElite2Api implements PrisonerCategoryApi, PrisonerApi {
         return apiToken
                 .getAsync()
                 .thenCompose(token -> wsClient
-                        .url(String.format("%selite2api/api/offenders/%s", apiBaseUrl, nomsNumber))
+                        .url(String.format("%sapi/offenders/%s", apiBaseUrl, nomsNumber))
                         .addHeader(AUTHORIZATION, "Bearer " + token)
                         .get()
                         .thenApply(this::checkForMaybeResponse)
@@ -95,7 +95,7 @@ public class NomisElite2Api implements PrisonerCategoryApi, PrisonerApi {
         return apiToken
                 .getAsync()
                 .thenCompose(token -> wsClient
-                        .url(String.format("%selite2api/api/bookings/offenderNo/%s/image/data", apiBaseUrl, nomsNumber))
+                        .url(String.format("%sapi/bookings/offenderNo/%s/image/data", apiBaseUrl, nomsNumber))
                         .addHeader(AUTHORIZATION, "Bearer " + token)
                         .get()
                         .thenApply(checkForValidImageResponse)
@@ -121,7 +121,7 @@ public class NomisElite2Api implements PrisonerCategoryApi, PrisonerApi {
     @Override
     public CompletionStage<HealthCheckResult> isHealthy() {
 
-        return wsClient.url(apiBaseUrl + "elite2api/health").
+        return wsClient.url(apiBaseUrl + "health").
                 get().
                 thenApply(wsResponse -> {
 

@@ -151,8 +151,8 @@ public class DeliusOffenderApi implements OffenderApi {
         return CompletableFuture.allOf(futureAreas)
                 .thenApply(ignoredVoid ->
                         Arrays
-                            .stream(futureAreas)
-                            .map(CompletableFuture::join)
+                .stream(futureAreas)
+                .map(CompletableFuture::join)
                             .collect(toMap(Entry::getKey, Entry::getValue)));
 
     }
