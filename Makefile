@@ -2,7 +2,8 @@
 
 aws_region := eu-west-2
 image := hmpps/new-tech-web
-sbt_builder_image := circleci/openjdk:8-node-browsers
+# fixes issue with compatible issue with v12.18.3 and graceful-fs webjar
+sbt_builder_image := circleci/openjdk@sha256:0ab7db4ecdc5966baaa44f64075725c22a53dc63922492c26cabd98b7c961ae0
 # newtechweb_version should be passed from command line
 all:
 	$(MAKE) ecr-login
