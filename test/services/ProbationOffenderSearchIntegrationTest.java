@@ -102,7 +102,8 @@ public class ProbationOffenderSearchIntegrationTest extends WithApplication {
         hmppsAuthWireMock.verify(
                 1,
                 postRequestedFor(urlPathEqualTo("/auth/oauth/token"))
-                        .withQueryParam("username", equalTo("sandrablacknps")));
+                        .withQueryParam("username", equalTo("sandrablacknps"))
+                        .withQueryParam("auth_source", equalTo("delius")));
     }
 
     @Test

@@ -36,6 +36,7 @@ public class UserAwareAuthenticationApi implements UserAwareApiToken {
     public CompletionStage<String> get(String currentUsername) {
         return wsClient.url(apiBaseUrl + "auth/oauth/token")
                 .addQueryParameter("username", currentUsername)
+                .addQueryParameter("auth_source", "delius")
                 .setContentType("application/x-www-form-urlencoded")
                 .setAuth(username, password, WSAuthScheme.BASIC)
                 .post("grant_type=client_credentials")
