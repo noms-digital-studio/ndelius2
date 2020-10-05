@@ -1,0 +1,108 @@
+@import data._
+@import helper._
+@import oralReport.hiddenInputs._
+@import play.Environment
+@import com.typesafe.config.Config
+@import data.viewModel.PageStatus
+@import helpers.CallHelper.relative
+@import org.webjars.play.WebJarsUtil
+
+@import java.time.OffsetDateTime
+@import java.time.Duration
+
+@(reportForm: Form[OralReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@main_oralReport("Start your report - Oral Pre-Sentence Report", true, Some(1)) {
+
+<div class="moj-interrupt">
+    <h1 class="govuk-heading-xl govuk-!-margin-top-6 moj-!-color-white">Oral Pre-Sentence Report</h1>
+    <ul class="govuk-list govuk-list--bullet moj-!-color-white">
+        <li class="govuk-body govuk-!-margin-top-0 moj-!-color-white govuk-!-margin-bottom-4">
+            <span class="govuk-heading-m moj-!-color-white govuk-!-margin-bottom-1">Save and close your report at any point</span>
+            You can save and close your report so you don't have to complete the whole thing at once.
+        </li>
+        <li class="govuk-body govuk-!-margin-top-0 moj-!-color-white govuk-!-margin-bottom-4">
+            <span class="govuk-heading-m moj-!-color-white govuk-!-margin-bottom-1">Save as you write</span>
+            Your report will be saved as you write so you'll never lose your work.
+        </li>
+        <li class="govuk-body govuk-!-margin-top-0 moj-!-color-white govuk-!-margin-bottom-4">
+            <span class="govuk-heading-m moj-!-color-white govuk-!-margin-bottom-1">Return to complete your report later</span>
+            You can finish your report when it suits you.
+        </li>
+        <li class="govuk-body govuk-!-margin-top-0 moj-!-color-white">
+            <span class="govuk-heading-m moj-!-color-white govuk-!-margin-bottom-1">Edit your completed report</span>
+            You can edit your report whenever you want, even after you've finished.
+        </li>
+    </ul>
+
+    <p class="govuk-body moj-!-color-white govuk-!-margin-bottom-0">@reportForm("lastUpdated").getValue.map( _ => "This draft report was last saved:").orElse("")
+        <span id="lastUpdated">@reportForm("lastUpdated").getValue.map( dateTime => asDuration(dateTime)).orElse("")</span></p>
+
+    @helper.form(action = relative(routes.OralReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+    @CSRF.formField
+
+    @commonFields(reportForm, encrypter)
+    @page2Fields(reportForm, encrypter)
+
+    @pageNumber(
+    reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
+    Some(reportForm("originalPageNumber").getValue.fold(("Start now", None))(_ => ("Continue now", None))),
+    Some("popup-launcher"),
+    reportForm("originalPageNumber").getValue)
+    <div class="new-window"><span class="govuk-body-s moj-!-color-white">Launches in a separate window</span></div>
+    }
+
+</div>
+<a class="js-back-link govuk-back-link" href="#" title="Back to document list">Back to document list</a>
+}
+
+<script type="text/javascript">
+  var isExistingReport = @reportForm("lastUpdated").getValue.map( _ => "true").orElse("false")
+  var $form = document.getElementById('ndForm')
+
+  function encodeValue(selector) {
+    return encodeURIComponent(document.querySelector(selector).value)
+  }
+
+  document.querySelector('.popup-launcher').addEventListener('click', function (event) {
+    event.preventDefault()
+
+    if (isExistingReport) {
+      var onBehalfOfUser = encodeValue('#onBehalfOfUser')
+      var documentId = encodeValue('#documentId')
+      var url = $form.getAttribute('action') + '?documentId=' + documentId + '&onBehalfOfUser=' + onBehalfOfUser + '&continue=true'
+      window.openPopup(url)
+    } else {
+      window.openPopup('about:blank')
+      $form.setAttribute('target', 'reportpopup')
+      $form.submit()
+      isExistingReport = true
+    }
+  })
+
+  document.querySelector('.js-back-link').addEventListener('click', function (event) {
+    event.preventDefault()
+    parent.postMessage(JSON.stringify({ action: 'documentList', data: null }), '*')
+  })
+</script>
+
+@asDuration(dateTime: String) = @{
+val duration = Duration.between(OffsetDateTime.parse(dateTime), OffsetDateTime.now())
+
+val (number, unit) = (duration.toMinutes, duration.toHours, duration.toDays) match {
+
+case (0, 0, 0) => (duration.toMillis / 1000, "second")
+case (minutes, 0, 0) => (minutes, "minute")
+case (_, hours, 0) => (hours, "hour")
+case (_, _, days) => (days, "day")
+}
+
+s"$number $unit${plural(number)} ago"
+}
+
+
+@plural(number: Long) = @{
+if (number > 1) "s" else ""
+}
