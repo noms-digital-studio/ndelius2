@@ -1,0 +1,33 @@
+@import data._
+@import helper._
+@import play.Environment
+@import com.typesafe.config.Config
+@import data.viewModel.PageStatus
+@import helpers.CallHelper.relative
+@import org.webjars.play.WebJarsUtil
+@import fragment._
+
+@(reportForm: Form[OralReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@popup(reportForm, encrypter, "Offender details", 2) {
+
+@readOnlyField(reportForm("name"), "Full name", encrypter)
+@readOnlyField(reportForm("dateOfBirth"), "Date of birth", encrypter)
+@readOnlyField(reportForm("age"), "Age", encrypter)
+@readOnlyField(reportForm("crn"), "Delius CRN", encrypter)
+@if(Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
+@readOnlyField(reportForm("address"), "Address", encrypter)
+}
+@if(Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
+@readOnlyField(reportForm("pnc"), "PNC ID", encrypter)
+}
+
+@if(!Boolean.parseBoolean(reportForm("addressSupplied").getValue.orElse("false"))) {
+@inputText(reportForm("address"), '_label -> "Address")
+}
+@if(!Boolean.parseBoolean(reportForm("pncSupplied").getValue.orElse("false"))) {
+@inputText(reportForm("pnc"), '_label -> "PNC ID (if available)", 'class -> "half-width")
+}
+}

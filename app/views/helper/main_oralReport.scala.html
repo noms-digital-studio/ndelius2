@@ -1,0 +1,63 @@
+@import helper._
+@import org.webjars.play.WebJarsUtil
+@import com.typesafe.config.Config
+@import helpers.CallHelper.relative
+
+@(title: String, banner: Boolean = true, hashName: Option[Any] = None)(content: Html)(implicit webJarsUtil: WebJarsUtil, configuration: Config)
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>@title - Oral Pre-Sentence Report</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+
+    <link rel="stylesheet" media="screen" href='@relative(routes.Assets.versioned("stylesheets/main.css"))' />
+    <link rel="shortcut icon" type="image/x-icon" href='@relative(routes.Assets.versioned("images/favicon.ico"))' />
+
+    @googleAnalyticsHead(hashName)
+
+    <script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/polyfills/formdata.min.js"))'></script>
+    <script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/polyfills/classlist.min.js"))'></script>
+    <script type="text/javascript" src='@relative(routes.Assets.versioned("javascripts/vendor/polyfills/element-closest.min.js"))'></script>
+
+    <script type="text/javascript">
+      window.localPath = '@relative(routes.Assets.versioned(""))'
+    </script>
+
+</head>
+<body class="govuk-template__body">
+
+<script>
+  document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled')
+</script>
+
+<div class="moj-width-container@if(hashName.contains(1) || hashName.contains("cancelled") || hashName.contains("completed")) { govuk-width-container }">
+<main class="govuk-main-wrapper@if(!hashName.contains(1) && !hashName.contains("cancelled") && !hashName.contains("completed")) { moj-scroll-container}" id="content">
+
+<div class="@if(!hashName.contains(1) && !hashName.contains("cancelled") && !hashName.contains("completed")) { app-max-width-container }">
+
+@if(banner) {
+<div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content"><strong class="govuk-tag govuk-phase-banner__content__tag">
+        BETA</strong><span class="govuk-phase-banner__text">
+                            This is a new service – your <a class="js-feedback-link govuk-link govuk-link--no-visited-state" href="@configuration.getString("feedback.form.url")" id="feedback-link" target="_blank" title="Feedback: opens in a new window">
+                            feedback</a> will help us to improve it.</span></p>
+</div>
+}
+
+@content
+
+<div id="tinymce-toolbar"></div>
+
+</div>
+
+</main>
+</div>
+
+<script src='@relative(routes.Assets.versioned("reports.js"))'></script>
+
+</body>
+</html>
