@@ -1,0 +1,19 @@
+@import helper._
+
+@(reportForm: Form[_])
+
+@inputHidden(reportForm("issueAccommodation"))
+@inputHidden(reportForm("issueEmployment"))
+@inputHidden(reportForm("issueFinance"))
+@inputHidden(reportForm("issueRelationships"))
+@inputHidden(reportForm("issueSubstanceMisuse"))
+@inputHidden(reportForm("issueHealth"))
+@inputHidden(reportForm("issueBehaviour"))
+@inputHidden(reportForm("issueMaturity"))
+@inputHidden(reportForm("issueOther"))
+
+@inputHidden(reportForm("issueOtherDetails"))
+
+@inputHidden(reportForm("experienceTrauma"))
+@inputHidden(reportForm("caringResponsibilities"))
+@inputHidden(reportForm("assessmentEvidence"))

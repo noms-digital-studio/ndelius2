@@ -1,0 +1,72 @@
+@import data._
+@import helper._
+@import play.Environment
+@import com.typesafe.config.Config
+@import data.viewModel.PageStatus
+@import helpers.CallHelper.relative
+@import org.webjars.play.WebJarsUtil
+@import fragment._
+
+@(reportForm: Form[OralReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@analysisHint = {
+    <p>Your analysis needs to go beyond the facts provided by the CPS. It needs to reflect motivation and the person’s own understanding of their behaviour.</p>
+    <p>Consider the offender’s account and attitude, and make links to any previous offending behaviour and previous reports, interventions and periods of supervision.</p>
+    <p>Do they accept responsibility? Is the offence admitted or denied? It is important to be clear where lack of remorse differs from any inability to show remorse. There could be a reason for an inability to show remorse, for example, autism, or learning disability. People who have suffered trauma may also present very differently, so it is important to consider a person’s history and the impact of any trauma.</p>
+    <p>To what extent is the offender aware of the impact on the victim? Reference should be made to lasting impacts, whether physical, psychological or emotional. Has there been any deliberate targeting of specific groups? Is there repeat victimisation?</p>
+    <p>Outline the emotional or cognitive factors that underpin the crime. Were there sexual motivations, financial gains or addictions? What level of premeditation or planning was involved? Are there any patterns suggesting likelihood of similar offending?</p>
+    <p>Is there any evidence of discrimination in their attitude or behaviour?</p>
+    <p>Consider whether the offender’s own experience as a victim of others is relevant to their commission of this offence. Has this person been a victim of domestic abuse? What impact has that had? Has this person been subject to racism? Have they suffered trauma in their past that has impacted upon their ability to engage and respond?</p>
+    <p>If this report is about a person aged 18-24, consider whether their maturity is an issue in this offence. Are they easily led or influenced by a peer group?</p>
+    <p>This section should lead to some potential considerations of rehabilitative interventions.</p>
+}
+
+@patternsHint = {
+    <p>Previous behaviour is an indicator of future behaviour. Specify if this is an escalation in severity.</p>
+    <p>Detail any gaps in offending, consider lapse and relapse in any addictions and make clear the triggers that initiate the behaviours.</p>
+}
+
+@popup(reportForm, encrypter, "Offence analysis", 5) {
+
+    @textarea(reportForm("offenceAnalysis"), '_label -> "Offence analysis", '_hint -> analysisHint, Symbol("data-limit") -> "4000")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
+
+    <div class="govuk-form-group" data-module="radios">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Is current offending part of a pattern of offending behaviour?
+            </legend>
+
+            @inputRadioGroup(
+            reportForm("patternOfOffending"),
+            options(
+            "yes" -> "Yes",
+            "no" -> "No"
+            ),
+            Symbol("_inline") -> "true"
+            )
+        </fieldset>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
+
+    <div class="govuk-form-group" data-module="radios">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">
+                Does current offending represent an escalation in seriousness?
+            </legend>
+
+            @inputRadioGroup(
+            reportForm("escalationInSeriousness"),
+            options(
+            "yes" -> "Yes",
+            "no" -> "No"
+            ),
+            Symbol("_inline") -> "true"
+            )
+        </fieldset>
+    </div>
+}

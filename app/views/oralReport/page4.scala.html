@@ -1,0 +1,22 @@
+@import data._
+@import helper._
+@import play.Environment
+@import com.typesafe.config.Config
+@import data.viewModel.PageStatus
+@import helpers.CallHelper.relative
+@import org.webjars.play.WebJarsUtil
+@import fragment._
+
+@(reportForm: Form[OralReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@popup(reportForm, encrypter, "Offence details", 4) {
+
+    @textarea(reportForm("mainOffence"), '_label -> "Main offence and date", 'class -> "moj-textarea--prefilled")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0" />
+
+    @textarea(reportForm("otherOffences"), '_label -> "Other offences and dates (if applicable)", 'class -> "moj-textarea--prefilled")
+
+}

@@ -92,10 +92,6 @@ public class OralReportData extends ReportGeneratorWizardData {
     @JsonProperty("OTHER_OFFENCE")
     private String otherOffences;
 
-    @RequiredOnPage(value = 4, message = "Enter a brief summary of the offence")
-    @JsonProperty("OFFENCE_SUMMARY")
-    private String offenceSummary;
-
 
     // Page 5
 
@@ -103,9 +99,13 @@ public class OralReportData extends ReportGeneratorWizardData {
     @JsonProperty("OFFENCE_ANALYSIS")
     private String offenceAnalysis;
 
-    @RequiredOnPage(value = 5, message = "Enter the patterns of offending behaviour")
+    @RequiredOnPage(value = 5, message = "Is current offending part of a pattern of offending behaviour?")
     @JsonProperty("PATTERN_OF_OFFENDING")
     private String patternOfOffending;
+
+    @RequiredOnPage(value = 5, message = "Does current offending represent an escalation in seriousness?")
+    @JsonProperty("ESCALATION_IN_SERIOUSNESS")
+    private String escalationInSeriousness;
 
 
     // Page 6
@@ -114,100 +114,88 @@ public class OralReportData extends ReportGeneratorWizardData {
     @JsonProperty("ISSUE_ACCOMMODATION")
     private boolean issueAccommodation;
 
-    @OnPage(value = 6)
-    @JsonProperty("ISSUE_ACCOMMODATION_DETAILS")
-    private String issueAccommodationDetails;
-
     @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_EMPLOYMENT")
     private boolean issueEmployment;
-
-    @OnPage(value = 6)
-    @JsonProperty("ISSUE_EMPLOYMENT_DETAILS")
-    private String issueEmploymentDetails;
 
     @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_FINANCE")
     private boolean issueFinance;
 
-    @OnPage(value = 6)
-    @JsonProperty("ISSUE_FINANCE_DETAILS")
-    private String issueFinanceDetails;
-
     @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_RELATIONSHIPS")
     private boolean issueRelationships;
-
-    @OnPage(value = 6)
-    @JsonProperty("ISSUE_RELATIONSHIPS_DETAILS")
-    private String issueRelationshipsDetails;
 
     @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_SUBSTANCE_MISUSE")
     private boolean issueSubstanceMisuse;
 
-    @OnPage(value = 6)
-    @JsonProperty("ISSUE_SUBSTANCE_MISUSE_DETAILS")
-    private String issueSubstanceMisuseDetails;
-
     @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_HEALTH")
     private boolean issueHealth;
-
-    @OnPage(value = 6)
-    @JsonProperty("ISSUE_HEALTH_DETAILS")
-    private String issueHealthDetails;
 
     @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_BEHAVIOUR")
     private boolean issueBehaviour;
 
-    @OnPage(value = 6)
-    @JsonProperty("ISSUE_BEHAVIOUR_DETAILS")
-    private String issueBehaviourDetails;
+    @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
+    @JsonProperty("ISSUE_MATURITY")
+    private boolean issueMaturity;
 
     @RequiredGroupOnPage(value = 6, errorWhenInvalid = false)
     @JsonProperty("ISSUE_OTHER")
     private boolean issueOther;
 
-    @OnPage(value = 6)
-    @JsonProperty("ISSUE_OTHER_DETAILS")
-    private String issueOtherDetails;
-
     @RequiredOnPage(value = 6, message = "Specify whether there is evidence of the offender experiencing trauma")
     @JsonProperty("EXPERIENCE_TRAUMA")
     private String experienceTrauma;
-
-    @RequiredOnPage(value = 6, message = "Enter the experience of trauma", onlyIfField = "experienceTrauma", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("EXPERIENCE_TRAUMA_DETAILS")
-    private String experienceTraumaDetails;
 
     @RequiredOnPage(value = 6, message = "Specify whether the offender has caring responsibilities for children or adults")
     @JsonProperty("CARING_RESPONSIBILITIES")
     private String caringResponsibilities;
 
-    @RequiredOnPage(value = 6, message = "Enter the caring responsibilities", onlyIfField = "caringResponsibilities", onlyIfFieldMatchValue = "yes")
-    @JsonProperty("CARING_RESPONSIBILITIES_DETAILS")
-    private String caringResponsibilitiesDetails;
+    @RequiredOnPage(value = 6, message = "Evidence for assessment")
+    @JsonProperty("ASSESSMENT_EVIDENCE")
+    private String assessmentEvidence;
 
 
     // Page 7
 
-    @RequiredOnPage(value = 7, message = "Enter the likelihood of further offending")
-    @JsonProperty("LIKELIHOOD_OF_RE_OFFENDING")
-    private String likelihoodOfReOffending;
+    @RequiredOnPage(value = 7, message = "Tool")
+    @JsonProperty("LIKELIHOOD_TOOL_1")
+    private String likelihoodTool1;
+
+    @RequiredOnPage(value = 7, message = "Assessment level")
+    @JsonProperty("LIKELIHOOD_LEVEL_1")
+    private String likelihoodLevel1;
+
+    @OnPage(value = 7)
+    @JsonProperty("LIKELIHOOD_TOOL_2")
+    private String likelihoodTool2;
+
+    @OnPage(value = 7)
+    @JsonProperty("LIKELIHOOD_LEVEL_2")
+    private String likelihoodLevel2;
+
+    @OnPage(value = 7)
+    @JsonProperty("LIKELIHOOD_TOOL_3")
+    private String likelihoodTool3;
+
+    @OnPage(value = 7)
+    @JsonProperty("LIKELIHOOD_LEVEL_3")
+    private String likelihoodLevel3;
 
     @RequiredOnPage(value = 7, message = "Enter the risk of serious harm")
-    @JsonProperty("RISK_OF_SERIOUS_HARM")
+    @JsonProperty("ROSH_LEVEL")
     private String riskOfSeriousHarm;
+
+    @RequiredOnPage(value = 7, message = "Enter the evidence for Risk Assessment level")
+    @JsonProperty("ROSH_EVIDENCE")
+    private String roshEvidence;
 
     @RequiredOnPage(value = 7, message = "Enter the response to previous supervision")
     @JsonProperty("PREVIOUS_SUPERVISION_RESPONSE")
     private String previousSupervisionResponse;
-
-    @OnPage(7)
-    @JsonProperty("ADDITIONAL_PREVIOUS_SUPERVISION")
-    private String additionalPreviousSupervision;
 
     // Page 8
 
