@@ -12,20 +12,22 @@
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
 @proposalHint = {
-    <p>Have you used the Effective Proposal Framework?</p>
-    <p>Be aware of the sentencing guidelines and relevant legislation. Remember to refer to the sentencing intentions of the court, if they were made clear.</p>
-    <p>Be clear how your proposal will manage risk.</p>
-    <p>Consider the impact of the sentence on the offender.</p>
-    <p>Consider how the proposed sentence will affect the offender’s family and anyone for whom they have caring responsibilities. Remember, evidence shows that imprisoning mothers significantly impacts on children in their care.
-    </p>
-    <p>A persuasive proposal for sentence considers the relevance of other options. For example, when deciding between proposals for custody or a high end Community Order, explaining the reasons for the proposal adds to the confidence of sentencers.</p>
-    <p>When proposing a sentence for a high end Community Order, outlining why the proposal is being made - and explaining why a proposal for custody is not being made - makes the report more persuasive.</p>
-    <p>Likewise, when custody is not inevitable, being clear why custody is being proposed, and explaining why a Community Order is not manageable, assures the sentencer that options have been considered.</p>
-    <p>Consider what equality and diversity issues are present and how they can help inform your proposal. Do specific needs such as gender, diversity, maturity make particular sentences more appropriate?
-        For women offenders, ensure that you consider women-specific disposals.</p>
-    <p>Are there any relevant alternative requirements that the offender is eligible for, but circumstances make them unsuitable?</p>
-    <p>Remember, your proposal should be commensurate with risk and need. Proposals should not be made for Suspended Sentence Orders, if an offender is manageable in the community, a Community Order should be proposed.</p>
+    <p>Your proposal should:</p>
+    <ul>
+        <li>use the Effective Proposal Framework</li>
+        <li>be in line with sentence guidelines and relevant legislation, including any sentencing intentions from the court</li>
+        <li>be clear on how risk will be managed</li>
+        <li>be proportionate to the risk and need of the person</li>
+        <li>consider the relevance and reasons for proposing one type of sentence over another (e.g explaining why a Community Order is appropriate and a custodial sentence is not being proposed)</li>
+        <li>consider any alternative requirements the person may have been eligible for but circumstances make them unsuitable</li>
+    </ul>
 
+    <p>You should also consider:</p>
+    <ul>
+        <li>the impact of the sentence on the person</li>
+        <li>the impact on the person’s family and anyone they have caring responsibilities for</li>
+        <li>any equality and diversity issues present (gender, maturity etc)</li>
+    </ul>
 }
 
 @popup(reportForm, encrypter, "Proposal", 8) {
@@ -33,7 +35,14 @@
     <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-label">I confirm that equalities and diversity information has been considered as part of preparing the report and proposal</legend>
         <div class="govuk-radios" data-module="progressive-radios">
-            @inputRadioGroup(reportForm("confirmEIF"), options = Seq("yes"->"Yes","no"->"No"))
+            @inputRadioGroup(
+                reportForm("confirmEIF"),
+                options(
+                    "yes"->"Yes",
+                    "no"->"No"
+                ),
+                Symbol("_inline") -> "true"
+            )
         </div>
     </fieldset>
     </div>
