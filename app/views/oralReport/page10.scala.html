@@ -1,0 +1,66 @@
+@import data._
+@import helper._
+@import shortFormatPreSentenceReport.hiddenInputs._
+@import play.Environment
+@import com.typesafe.config.Config
+@import data.viewModel.PageStatus
+@import helpers.CallHelper.relative
+@import org.webjars.play.WebJarsUtil
+@import play.twirl.api.Template1
+@import menu._
+@import fragment._
+
+@(reportForm: Form[OralReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@renderCheckList(entries: Seq[String]) = {
+
+    @for((entry, index) <- entries.zipWithIndex.filter({shouldRender(_, entries.size)})) {
+        @checkReportEntry(index + 2, entry, pageStatuses.get(index + 2))
+    }
+}
+
+@completed() = @{
+    pageStatuses.values().drop(1).dropRight(1).forall { pageStatus => pageStatus.isValid }
+}
+
+@shouldRender(entry: (String, Int), numberOfPages: Int) = @{
+    // when completed drop `Check Your Report` when incomplete drop last two pages
+    if(completed()) entry._2 != numberOfPages - 2 else entry._2 < numberOfPages - 2
+}
+
+@main("Check your report - Short Format Pre Sentence Report", true, Some(10)) {
+
+    <h1 class="govuk-heading-xl govuk-!-margin-top-6">Check your report</h1>
+
+    <table class="govuk-table moj-table moj-table--split-rows moj-table--row-counting" role="presentation">
+        <tbody>
+            @navigationEntries(renderCheckList)
+        </tbody>
+    </table>
+
+    <div class="margin-top medium">&nbsp;</div>
+
+    @helper.form(action = relative(routes.OralReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+        @CSRF.formField
+        @commonFields(reportForm, encrypter)
+
+        @page2Fields(reportForm, encrypter)
+        @page3Fields(reportForm, encrypter)
+        @pageStatuses.keySet.drop(3).take(6).filter(_ != 10).map(hiddenFieldsFor)
+        @page11Fields(reportForm, encrypter)
+
+        @footer(10, reportForm, encrypter, Some(("Sign", Some("Sign your report"))), true, completed())
+    }
+}
+
+@hiddenFieldsFor(pageNumberToLoad: Int) = @{
+    def getTemplate[T](name : String)(implicit manifest: Manifest[T]) : T =
+        Class.forName(name + "$").getField("MODULE$").get(manifest.runtimeClass).asInstanceOf[T]
+
+    def render(pageNumberToLoad: Int) =
+        getTemplate[Template1[Form[OralReportData], play.twirl.api.Html]](s"views.html.oralReport.hiddenInputs.page${pageNumberToLoad}Fields").render(reportForm)
+
+    render(pageNumberToLoad)
+}

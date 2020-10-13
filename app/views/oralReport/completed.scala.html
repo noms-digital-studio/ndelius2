@@ -12,7 +12,7 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main_oralReport("Report saved - Oral Pre-Sentence Report", true, Some("completed")) {
+@main_oralReport("Report saved - Record of Oral Pre-Sentence Report", true, Some("completed")) {
 
 <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-top-6">
     <h1 class="govuk-panel__title govuk-!-margin-top-6">Report saved</h1>
@@ -27,7 +27,7 @@
         <tr>
             <td style="width: 36px; vertical-align: top;"><span class="moj-icon moj-icon--pdf" /></td>
             <td>
-                <p class="govuk-body" id="view-pdf">Review and print your 'Oral Pre-Sentence Report'<br>
+                <p class="govuk-body" id="view-pdf">Review and print your 'Record of Oral Pre-Sentence Report'<br>
                     <a class="govuk-link govuk-link--no-visited-state" href="@relative(routes.OralReportController.getPdf(encrypter(reportForm("documentId").getValue.getOrElse("")), encrypter(reportForm("onBehalfOfUser").getValue.getOrElse(""))))" aria-label="View PDF">View your completed PDF report</a>
                 </p>
             </td>

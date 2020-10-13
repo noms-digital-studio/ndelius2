@@ -14,10 +14,10 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main_oralReport("Start your report - Oral Pre-Sentence Report", true, Some(1)) {
+@main_oralReport("Start your report - Record of Oral Pre-Sentence Report", true, Some(1)) {
 
 <div class="moj-interrupt">
-    <h1 class="govuk-heading-xl govuk-!-margin-top-6 moj-!-color-white">Oral Pre-Sentence Report</h1>
+    <h1 class="govuk-heading-xl govuk-!-margin-top-6 moj-!-color-white">Record of Oral Pre-Sentence Report</h1>
     <ul class="govuk-list govuk-list--bullet moj-!-color-white">
         <li class="govuk-body govuk-!-margin-top-0 moj-!-color-white govuk-!-margin-bottom-4">
             <span class="govuk-heading-m moj-!-color-white govuk-!-margin-bottom-1">Save and close your report at any point</span>
@@ -45,13 +45,21 @@
 
     @commonFields(reportForm, encrypter)
     @page2Fields(reportForm, encrypter)
+    @page3Fields(reportForm, encrypter)
+    @page4Fields(reportForm)
+    @page5Fields(reportForm)
+    @page6Fields(reportForm)
+    @page7Fields(reportForm)
+    @page8Fields(reportForm)
+    @page9Fields(reportForm)
+    @page11Fields(reportForm, encrypter)
 
     @pageNumber(
-    reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
-    Some(reportForm("originalPageNumber").getValue.fold(("Start now", None))(_ => ("Continue now", None))),
-    Some("popup-launcher"),
-    reportForm("originalPageNumber").getValue)
-    <div class="new-window"><span class="govuk-body-s moj-!-color-white">Launches in a separate window</span></div>
+        reportForm("originalPageNumber").getValue.getOrElse("1").toInt,
+        Some(reportForm("originalPageNumber").getValue.fold(("Start now", None))(_ => ("Continue now", None))),
+        Some("popup-launcher"),
+        reportForm("originalPageNumber").getValue)
+        <div class="new-window"><span class="govuk-body-s moj-!-color-white">Launches in a separate window</span></div>
     }
 
 </div>

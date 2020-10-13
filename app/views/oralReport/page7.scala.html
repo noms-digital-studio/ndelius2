@@ -1,0 +1,125 @@
+@import data._
+@import helper._
+@import play.Environment
+@import com.typesafe.config.Config
+@import data.viewModel.PageStatus
+@import helpers.CallHelper.relative
+@import org.webjars.play.WebJarsUtil
+@import fragment._
+
+@(reportForm: Form[OralReportData], encrypter: String => String)(implicit pageStatuses: Map[Int, PageStatus], webJarsUtil: WebJarsUtil, environment: Environment, configuration: Config)
+
+@implicitField = @{ FieldConstructor(govukElements.f) }
+
+@popup(reportForm, encrypter, "Risk assessment", 7) {
+
+    <p class="govuk-fieldset__legend govuk-label">
+        <span>Likelihood of further general offending</span>
+    </p>
+    <span class="govuk-hint">
+        Static Assessment Scores
+    </span>
+
+    @inputText(reportForm("likelihoodTool1"), '_label -> "Tool")
+
+    <div class="govuk-form-group" data-module="progressive-radios">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">
+                <span>Level</span>
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("likelihoodLevel1"),
+                options(
+                    "Low" -> "Low",
+                    "Medium" -> "Medium",
+                    "High" -> "High",
+                )
+            )
+        </fieldset>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    @inputText(reportForm("likelihoodTool2"), '_label -> "Tool")
+
+    <div class="govuk-form-group" data-module="progressive-radios">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">
+                <span>Level</span>
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("likelihoodLevel2"),
+                options(
+                    "Low" -> "Low",
+                    "Medium" -> "Medium",
+                    "High" -> "High",
+                )
+            )
+        </fieldset>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    @inputText(reportForm("likelihoodTool3"), '_label -> "Tool")
+
+    <div class="govuk-form-group" data-module="progressive-radios">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">
+                <span>Level</span>
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("likelihoodLevel3"),
+                options(
+                    "Low" -> "Low",
+                    "Medium" -> "Medium",
+                    "High" -> "High",
+                )
+            )
+        </fieldset>
+    </div>
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <div class="govuk-form-group" data-module="progressive-radios">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">
+                <span>Risk of serious harm</span>
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("riskOfSeriousHarm"),
+                options(
+                    "Low" -> "Low",
+                    "Medium" -> "Medium",
+                    "High" -> "High",
+                )
+            )
+        </fieldset>
+    </div>
+
+    @textarea(reportForm("roshEvidence"), '_label -> "Evidence for Risk Assessment level")
+
+    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+    <div class="govuk-form-group" data-module="progressive-radios">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">
+                <span>Response to previous supervision</span>
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("previousSupervisionResponse"),
+                options(
+                    "Good" -> "Good",
+                    "Satisfactory" -> "Satisfactory",
+                    "Low engagement" -> "Low engagement",
+                    "Non-compliance" -> "Non-compliance",
+                    "Not applicable" -> "Not applicable"
+                )
+            )
+        </fieldset>
+    </div>
+}
