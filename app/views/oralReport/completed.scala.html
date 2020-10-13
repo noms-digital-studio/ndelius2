@@ -12,7 +12,7 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@main_oralReport("Report saved - Record of Oral Pre-Sentence Report", true, Some("completed")) {
+@main_oralReport("Report saved", true, Some("completed")) {
 
 <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-top-6">
     <h1 class="govuk-panel__title govuk-!-margin-top-6">Report saved</h1>
@@ -52,11 +52,6 @@
     </table>
 
 </div>
-
-<p class="govuk-body">
-    <a class="govuk-link govuk-link--no-visited-state feedback-link" href="@configuration.getString("feedback.form.url")" target="_blank" id="footerFeedbackForm" title="feedback">
-    What did you think of this service?</a> (takes 30 seconds)
-</p>
 
 @helper.form(action = relative(routes.OralReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
 @CSRF.formField
