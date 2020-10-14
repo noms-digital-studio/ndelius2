@@ -11,11 +11,58 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@roshEvidenceGuidance = {
+    <p>You should provide evidence on the nature and imminence of harm.</p>
+    <p class="govuk-!-margin-top-2">You should include if you have made a referral to other agencies or attempted contact and not received a satisfactory response.</p>
+}
+
 @popup(reportForm, encrypter, "Risk assessment", 7) {
+
+<div class="govuk-warning-text moj-warning-text">
+    <span aria-hidden="true" class="govuk-warning-text__icon">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        Very high risk is not included as an option. If the person is assessed as having a very high risk of serious harm, an oral report is not the appropriate means for assessment.
+    </strong>
+</div>
+
+<div class="govuk-form-group" data-module="progressive-radios">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-label">
+            <span>Risk of serious harm</span>
+        </legend>
+
+        @inputRadioGroup(
+        reportForm("riskOfSeriousHarm"),
+        options(
+        "High" -> "High",
+        "Medium" -> "Medium",
+        "Low" -> "Low"
+        )
+        )
+    </fieldset>
+</div>
+
+@textarea(reportForm("roshEvidence"), '_label -> "Provide evidence for risk level", '_form_hint -> "Only for high or medium risk of serious harm", '_hint -> roshEvidenceGuidance)
+
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
     <p class="govuk-fieldset__legend govuk-label">
         <span>Likelihood of further general offending</span>
     </p>
+
+<details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">What to include</span>
+    </summary>
+    <div class="govuk-details__text panel panel-border-narrow">
+
+        <p>You should include the scores of any static assessments are supported in the scoring section e.g. OGRS, OVP, RM2000, RSR scores.</p>
+        <p class="govuk-!-margin-top-2">Your assessment should include any evidence of the risk of reoffending. If your assessment differs from static scores, there should be a brief account.</p>
+
+    </div>
+</details>
+
     <span class="govuk-hint">
         Static Assessment Scores
     </span>
@@ -31,9 +78,9 @@
             @inputRadioGroup(
                 reportForm("likelihoodLevel1"),
                 options(
-                    "Low" -> "Low",
-                    "Medium" -> "Medium",
                     "High" -> "High",
+                    "Medium" -> "Medium",
+                    "Low" -> "Low"
                 )
             )
         </fieldset>
@@ -52,13 +99,15 @@
             @inputRadioGroup(
                 reportForm("likelihoodLevel2"),
                 options(
-                    "Low" -> "Low",
-                    "Medium" -> "Medium",
                     "High" -> "High",
+                    "Medium" -> "Medium",
+                    "Low" -> "Low"
                 )
             )
         </fieldset>
     </div>
+
+    @textarea(reportForm("likelihoodAssessment"), '_label -> "Your assessment")
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
@@ -73,34 +122,13 @@
             @inputRadioGroup(
                 reportForm("likelihoodLevel3"),
                 options(
-                    "Low" -> "Low",
-                    "Medium" -> "Medium",
                     "High" -> "High",
+                    "Medium" -> "Medium",
+                    "Low" -> "Low"
                 )
             )
         </fieldset>
     </div>
-
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-    <div class="govuk-form-group" data-module="progressive-radios">
-        <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-label">
-                <span>Risk of serious harm</span>
-            </legend>
-
-            @inputRadioGroup(
-                reportForm("riskOfSeriousHarm"),
-                options(
-                    "Low" -> "Low",
-                    "Medium" -> "Medium",
-                    "High" -> "High",
-                )
-            )
-        </fieldset>
-    </div>
-
-    @textarea(reportForm("roshEvidence"), '_label -> "Evidence for Risk Assessment level")
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
