@@ -46,14 +46,14 @@
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-label">Select the relevant options</legend>
             <div class="govuk-checkboxes" data-module="checkboxes">
-                @checkbox(reportForm("issueAccommodation"), '_label -> "Accommodation")
-                @checkbox(reportForm("issueEmployment"), '_label -> "Employment")
-                @checkbox(reportForm("issueFinance"), '_label -> "Finances")
-                @checkbox(reportForm("issueRelationships"), '_label -> "Relationships")
-                @checkbox(reportForm("issueSubstanceMisuse"), '_label -> "Substance misuse")
-                @checkbox(reportForm("issueHealth"), '_label -> "Physical & mental health")
-                @checkbox(reportForm("issueBehaviour"), '_label -> "Thinking & behaviour")
-                @checkbox(reportForm("issueMaturity"), '_label -> "Maturity")
+                @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment of accommodation")
+                @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment of employment, training and education")
+                @checkboxDetailsField(reportForm, "issueFinance", "Finances", "Provide a brief assessment of finances")
+                @checkboxDetailsField(reportForm, "issueRelationships", "Relationships", "Provide a brief assessment of relationships")
+                @checkboxDetailsField(reportForm, "issueSubstanceMisuse", "Substance misuse", "Provide a brief assessment of substance misuse")
+                @checkboxDetailsField(reportForm, "issueHealth", "Physical & mental health", "Provide a brief assessment of physical & mental health")
+                @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment of thinking & behaviour")
+                @checkboxDetailsField(reportForm, "issueMaturity", "Maturity", "Provide a brief assessment of maturity")
                 @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues")
             </div>
         </fieldset>
