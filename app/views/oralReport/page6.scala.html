@@ -11,34 +11,34 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
-@traumaGuidance = {
-    <p>Trauma can affect an offender's ability to engage and make decisions. Detail the offender's experience of trauma. How has it affected their offending? Has it affected their engagement with rehabilitative interventions?</p>
-}
-
-@caringResponsibilitiesGuidance = {
-    <p>Detail the offender’s current and past caring responsibilities.</p>
-    <p>Take account of caring for both children and adults.</p>
-    <p>How have those responsibilities affected their offending?</p>
-    <p>Have they affected their engagement with rehabilitative interventions?</p>
-    <p>Remember that evidence shows that imprisonment of mothers has significant impacts on those that they care for.</p>
-}
 @popup(reportForm, encrypter, "Offender assessment", 6) {
-
-    <h2 class="govuk-fieldset__heading"><span class="govuk-caption-xl">Select the factors relating to offending behaviour and offender need. Include protective factors.</span></h2>
 
     <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
         <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">Offender assessment guidance</span>
+            <span class="govuk-details__summary-text">What to include</span>
         </summary>
         <div class="govuk-details__text panel panel-border-narrow">
 
-            <p>You should consider diversity issues for each factor in terms of the offender’s own experiences or protected characteristics.</p>
-            <p>Key aspects of the person’s circumstances should be detailed. Those which are linked to their offending behaviour should be highlighted.</p>
-            <p>Make sure that you select all of the factors that have impacted on offending, and that may impact on future risk of re offending.</p>
-            <p>Also, consider if there are factors that are not directly linked. These may cause difficulties for the offender and impact on their desistance from crime.</p>
-            <p>Include information on protective factors that may support desistance.</p>
-            <p>Provide an explanation of the offender's motivation and readiness to change.</p>
+            <p>You should:</p>
+            <ul>
+                <li>select all factors that impact offending and may impact on any future risk of reoffending</li>
+                <li>include information on protective factors that may support desistance
+                </li>
+                <li>provide an explanation of the offender's motivation and readiness to change
+                </li>
+                <li>use bullet points to outline key information
+                </li>
+            </ul>
 
+            <p>You should also consider:</p>
+            <ul>
+                <li>diversity issues in terms of the offender’s own experiences or protected characteristics
+                </li>
+                <li>the person’s circumstances, particularly those linked to offending behaviour
+                </li>
+                <li>factors which may not be directly linked but cause difficulties for the person and impact on their desistance from crime
+                </li>
+            </ul>
         </div>
     </details>
 
@@ -59,45 +59,4 @@
         </fieldset>
     </div>
 
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-        <div class="govuk-form-group" data-module="radios">
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-label">
-                    Is there evidence of the offender experiencing trauma?
-                </legend>
-
-                @inputRadioGroup(
-                    reportForm("experienceTrauma"),
-                    options(
-                        "yes" -> "Yes",
-                        "no" -> "No"
-                    ),
-                    Symbol("_inline") -> "true"
-                )
-            </fieldset>
-        </div>
-
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-        <div class="govuk-form-group" data-module="radios">
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-label">
-                    Does the offender have caring responsibilities for children or adults, or have they ever had caring responsibilities for children or adults?
-                </legend>
-
-                @inputRadioGroup(
-                    reportForm("caringResponsibilities"),
-                    options(
-                        "yes" -> "Yes",
-                        "no" -> "No"
-                    ),
-                    Symbol("_inline") -> "true"
-                )
-            </fieldset>
-        </div>
-
-        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-        @textarea(reportForm("assessmentEvidence"), '_label -> "Evidence for assessment")
 }

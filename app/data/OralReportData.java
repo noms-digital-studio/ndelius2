@@ -182,9 +182,6 @@ public class OralReportData extends ReportGeneratorWizardData {
     @JsonProperty("ISSUE_OTHER_DETAILS")
     private String issueOtherDetails;
 
-    @RequiredOnPage(value = 6, message = "Evidence for assessment")
-    @JsonProperty("ASSESSMENT_EVIDENCE")
-    private String assessmentEvidence;
 
 
     // Page 7
