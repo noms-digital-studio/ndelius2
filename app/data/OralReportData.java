@@ -182,7 +182,21 @@ public class OralReportData extends ReportGeneratorWizardData {
     @JsonProperty("ISSUE_OTHER_DETAILS")
     private String issueOtherDetails;
 
+    @RequiredOnPage(value = 6, message = "Specify whether there is evidence of the offender experiencing trauma")
+    @JsonProperty("EXPERIENCE_TRAUMA")
+    private String experienceTrauma;
 
+    @RequiredOnPage(value = 6, message = "Enter the experience of trauma", onlyIfField = "experienceTrauma", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("EXPERIENCE_TRAUMA_DETAILS")
+    private String experienceTraumaDetails;
+
+    @RequiredOnPage(value = 6, message = "Specify whether the offender has caring responsibilities for children or adults")
+    @JsonProperty("CARING_RESPONSIBILITIES")
+    private String caringResponsibilities;
+
+    @RequiredOnPage(value = 6, message = "Enter the caring responsibilities", onlyIfField = "caringResponsibilities", onlyIfFieldMatchValue = "yes")
+    @JsonProperty("CARING_RESPONSIBILITIES_DETAILS")
+    private String caringResponsibilitiesDetails;
 
     // Page 7
 

@@ -11,6 +11,18 @@
 
 @implicitField = @{ FieldConstructor(govukElements.f) }
 
+@traumaGuidance = {
+<p>Trauma can affect an offender's ability to engage and make decisions. Detail the offender's experience of trauma. How has it affected their offending? Has it affected their engagement with rehabilitative interventions?</p>
+}
+
+@caringResponsibilitiesGuidance = {
+<p>Detail the offender’s current and past caring responsibilities.</p>
+<p>Take account of caring for both children and adults.</p>
+<p>How have those responsibilities affected their offending?</p>
+<p>Have they affected their engagement with rehabilitative interventions?</p>
+<p>Remember that evidence shows that imprisonment of mothers has significant impacts on those that they care for.</p>
+}
+
 @popup(reportForm, encrypter, "Offender assessment", 6) {
 
     <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
@@ -57,6 +69,53 @@
                 @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues")
             </div>
         </fieldset>
+    </div>
+
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+<div class="govuk-form-group" data-module="radios">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-label">
+            Is there evidence of the offender experiencing trauma?
+        </legend>
+
+        @inputRadioGroup(
+        reportForm("experienceTrauma"),
+        options(
+        "yes" -> "Yes",
+        "no" -> "No"
+        ),
+        Symbol("_inline") -> "true",
+        Symbol("data-aria-controls") -> "experience-trauma"
+        )
+    </fieldset>
+
+    <div class="govuk-radios__conditional govuk-radios__conditional--hidden govuk-!-margin-top-2" id="experience-trauma-yes">
+        @textarea(reportForm("experienceTraumaDetails"), '_label -> "Experience of trauma", '_hint -> traumaGuidance)
+    </div>
+</div>
+
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+<div class="govuk-form-group" data-module="radios">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-label">
+            Does the offender have caring responsibilities for children or adults, or have they ever had caring responsibilities for children or adults?
+        </legend>
+
+        @inputRadioGroup(
+        reportForm("caringResponsibilities"),
+        options(
+        "yes" -> "Yes",
+        "no" -> "No"
+        ),
+        Symbol("_inline") -> "true",
+        Symbol("data-aria-controls") -> "caring-responsibilities"
+        )
+    </fieldset>
+
+    <div class="govuk-radios__conditional govuk-radios__conditional--hidden govuk-!-margin-top-2" id="caring-responsibilities-yes">
+        @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance)
     </div>
 
 }
