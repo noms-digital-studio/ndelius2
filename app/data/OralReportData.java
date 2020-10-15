@@ -185,11 +185,15 @@ public class OralReportData extends ReportGeneratorWizardData {
     @JsonProperty("LIKELIHOOD_LEVEL_3")
     private String likelihoodLevel3;
 
+    @RequiredOnPage(value = 7, message = "Enter your assessment")
+    @JsonProperty("LIKELIHOOD_ASSESSMENT")
+    private String likelihoodAssessment;
+
     @RequiredOnPage(value = 7, message = "Enter the risk of serious harm")
     @JsonProperty("ROSH_LEVEL")
     private String riskOfSeriousHarm;
 
-    @RequiredOnPage(value = 7, message = "Enter the evidence for Risk Assessment level")
+    @OnPage(value = 7)
     @JsonProperty("ROSH_EVIDENCE")
     private String roshEvidence;
 
@@ -231,8 +235,8 @@ public class OralReportData extends ReportGeneratorWizardData {
     private boolean previousConvictionsInformationSource;
 
     @OnPage(9)
-    @JsonProperty("VICTIM_STATEMENT_INFORMATION_SOURCE")
-    private boolean victimStatementInformationSource;
+    @JsonProperty("WITNESS_STATEMENT_INFORMATION_SOURCE")
+    private boolean witnessStatementInformationSource;
 
     @OnPage(9)
     @JsonProperty("CHILDREN_SERVICES_INFORMATION_SOURCE")
@@ -249,6 +253,10 @@ public class OralReportData extends ReportGeneratorWizardData {
     @OnPage(9)
     @JsonProperty("DOMESTIC_ABUSE_INFORMATION_SOURCE")
     private boolean domesticAbuseInformationSource;
+
+    @OnPage(9)
+    @JsonProperty("MEDICAL_INFORMATION_SOURCE")
+    private boolean medicalInformationSource;
 
     @OnPage(9)
     @JsonProperty("EQUALITY_INFORMATION_FORM_INFORMATION_SOURCE")
@@ -280,10 +288,6 @@ public class OralReportData extends ReportGeneratorWizardData {
     @OnPage(11)
     @JsonProperty("COURT_OFFICE_PHONE_NUMBER")
     private String courtOfficePhoneNumber;
-
-    @OnPage(11)
-    @JsonProperty("COUNTER_SIGNATURE")
-    private String counterSignature;
 
     @JsonProperty("REPORT_DATE")
     public String getReportDate() {
