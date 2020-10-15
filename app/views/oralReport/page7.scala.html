@@ -18,39 +18,7 @@
 
 @popup(reportForm, encrypter, "Risk assessment", 7) {
 
-<div class="govuk-warning-text moj-warning-text">
-    <span aria-hidden="true" class="govuk-warning-text__icon">!</span>
-    <strong class="govuk-warning-text__text">
-        <span class="govuk-warning-text__assistive">Warning</span>
-        Very high risk is not included as an option. If the person is assessed as having a very high risk of serious harm, an oral report is not the appropriate means for assessment.
-    </strong>
-</div>
-
-<div class="govuk-form-group" data-module="progressive-radios">
-    <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-label">
-            <span>Risk of serious harm</span>
-        </legend>
-
-        @inputRadioGroup(
-        reportForm("riskOfSeriousHarm"),
-        options(
-        "High" -> "High",
-        "Medium" -> "Medium",
-        "Low" -> "Low"
-        )
-        )
-    </fieldset>
-</div>
-
-@textarea(reportForm("roshEvidence"), '_label -> "Provide evidence for risk level", '_form_hint -> "Only for high or medium risk of serious harm", '_hint -> roshEvidenceGuidance)
-
-<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-    <p class="govuk-fieldset__legend govuk-label">
-        <span>Likelihood of further general offending</span>
-    </p>
-
+<h2 class="govuk-fieldset__heading"><span class="govuk-caption-xl">Likelihood of further general offending</span></h2>
 <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
     <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text">What to include</span>
@@ -63,13 +31,13 @@
     </div>
 </details>
 
-    <span class="govuk-hint">
-        Static Assessment Scores
-    </span>
+<p class="govuk-fieldset__legend govuk-label govuk-!-margin-bottom-2">
+    <span>Static Assessment Scores</span>
+</p>
 
-    @inputText(reportForm("likelihoodTool1"), '_label -> "Tool")
+    @inputText(reportForm("likelihoodTool1"), '_label -> "Tool name")
 
-    <div class="govuk-form-group" data-module="progressive-radios">
+    <div class="govuk-form-group govuk-!-margin-bottom-8" data-module="progressive-radios">
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-label">
                 <span>Level</span>
@@ -86,11 +54,9 @@
         </fieldset>
     </div>
 
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+    @inputText(reportForm("likelihoodTool2"), '_label -> "Tool name")
 
-    @inputText(reportForm("likelihoodTool2"), '_label -> "Tool")
-
-    <div class="govuk-form-group" data-module="progressive-radios">
+    <div class="govuk-form-group govuk-!-margin-bottom-8" data-module="progressive-radios">
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-label">
                 <span>Level</span>
@@ -107,13 +73,9 @@
         </fieldset>
     </div>
 
-    @textarea(reportForm("likelihoodAssessment"), '_label -> "Your assessment")
+    @inputText(reportForm("likelihoodTool3"), '_label -> "Tool name")
 
-    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
-
-    @inputText(reportForm("likelihoodTool3"), '_label -> "Tool")
-
-    <div class="govuk-form-group" data-module="progressive-radios">
+    <div class="govuk-form-group govuk-!-margin-bottom-8" data-module="progressive-radios">
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-label">
                 <span>Level</span>
@@ -130,12 +92,47 @@
         </fieldset>
     </div>
 
+    @textarea(reportForm("likelihoodAssessment"), '_label -> "Your assessment")
+
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
 
-    <div class="govuk-form-group" data-module="progressive-radios">
+<h2 class="govuk-fieldset__heading"><span class="govuk-caption-xl">Risk of serious harm</span></h2>
+
+<div class="govuk-warning-text moj-warning-text govuk-!-margin-top-4">
+    <span aria-hidden="true" class="govuk-warning-text__icon">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        Very high risk is not included as an option. If the person is assessed as having a very high risk of serious harm, an oral report is not the appropriate means for assessment.
+    </strong>
+</div>
+
+<div class="govuk-form-group" data-module="progressive-radios">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-label">
+            <span>Level</span>
+        </legend>
+
+        @inputRadioGroup(
+        reportForm("riskOfSeriousHarm"),
+        options(
+        "High" -> "High",
+        "Medium" -> "Medium",
+        "Low" -> "Low"
+        )
+        )
+    </fieldset>
+</div>
+
+@textarea(reportForm("roshEvidence"), '_label -> "Evidence for risk level", '_form_hint -> "Only for medium or high risk of serious harm", '_hint -> roshEvidenceGuidance)
+
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+<h2 class="govuk-fieldset__heading"><span class="govuk-caption-xl">Response to previous supervision</span></h2>
+
+    <div class="govuk-form-group govuk-!-margin-top-4" data-module="progressive-radios">
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-label">
-                <span>Response to previous supervision</span>
+                <span>Response</span>
             </legend>
 
             @inputRadioGroup(
