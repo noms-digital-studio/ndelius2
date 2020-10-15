@@ -44,7 +44,7 @@
 
     <div class="govuk-form-group@if(reportForm.allErrors.stream.anyMatch(_.key.contains("issue"))) { govuk-form-group--error}">
         <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-label">Select the relevant options</legend>
+            <legend class="govuk-fieldset__legend govuk-label">Select any factors relating to offending behaviour and the individual’s need, including any protective factors.</legend>
             <div class="govuk-checkboxes" data-module="checkboxes">
                 @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment of accommodation")
                 @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment of employment, training and education")
