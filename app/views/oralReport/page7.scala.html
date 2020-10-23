@@ -19,6 +19,7 @@
 @popup(reportForm, encrypter, "Risk assessment", 7) {
 
 <h2 class="govuk-fieldset__heading"><span class="govuk-caption-xl">Likelihood of further general offending</span></h2>
+<p class="govuk-body">You can include up to 4 static assessment tool scores.</p>
 <details class="govuk-details govuk-!-margin-top-0 govuk-!-margin-bottom-6 no-margin-top margin-bottom medium">
     <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text">What to include</span>
@@ -83,6 +84,25 @@
 
             @inputRadioGroup(
                 reportForm("likelihoodLevel3"),
+                options(
+                    "High" -> "High",
+                    "Medium" -> "Medium",
+                    "Low" -> "Low"
+                )
+            )
+        </fieldset>
+    </div>
+
+    @inputText(reportForm("likelihoodTool4"), '_label -> "Tool name")
+
+    <div class="govuk-form-group govuk-!-margin-bottom-8" data-module="progressive-radios">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">
+                <span>Level</span>
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("likelihoodLevel4"),
                 options(
                     "High" -> "High",
                     "Medium" -> "Medium",

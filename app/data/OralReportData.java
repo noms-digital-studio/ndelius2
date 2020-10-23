@@ -224,6 +224,14 @@ public class OralReportData extends ReportGeneratorWizardData {
     @JsonProperty("LIKELIHOOD_LEVEL_3")
     private String likelihoodLevel3;
 
+    @OnPage(value = 7)
+    @JsonProperty("LIKELIHOOD_TOOL_4")
+    private String likelihoodTool4;
+
+    @OnPage(value = 7)
+    @JsonProperty("LIKELIHOOD_LEVEL_4")
+    private String likelihoodLevel4;
+
     @RequiredOnPage(value = 7, message = "Enter your assessment")
     @JsonProperty("LIKELIHOOD_ASSESSMENT")
     private String likelihoodAssessment;
