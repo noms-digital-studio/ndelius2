@@ -92,6 +92,25 @@
         </fieldset>
     </div>
 
+    @inputText(reportForm("likelihoodTool4"), '_label -> "Tool name")
+
+    <div class="govuk-form-group govuk-!-margin-bottom-8" data-module="progressive-radios">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-label">
+                <span>Level</span>
+            </legend>
+
+            @inputRadioGroup(
+                reportForm("likelihoodLevel4"),
+                options(
+                    "High" -> "High",
+                    "Medium" -> "Medium",
+                    "Low" -> "Low"
+                )
+            )
+        </fieldset>
+    </div>
+
     @textarea(reportForm("likelihoodAssessment"), '_label -> "Your assessment")
 
     <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
