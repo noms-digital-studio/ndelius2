@@ -200,11 +200,11 @@ public class OralReportData extends ReportGeneratorWizardData {
 
     // Page 7
 
-    @RequiredOnPage(value = 7, message = "Tool")
+    @RequiredOnPage(value = 7, message = "Enter the tool name")
     @JsonProperty("LIKELIHOOD_TOOL_1")
     private String likelihoodTool1;
 
-    @RequiredOnPage(value = 7, message = "Assessment level")
+    @RequiredOnPage(value = 7, message = "Specify the assessment level")
     @JsonProperty("LIKELIHOOD_LEVEL_1")
     private String likelihoodLevel1;
 
@@ -236,7 +236,7 @@ public class OralReportData extends ReportGeneratorWizardData {
     @JsonProperty("LIKELIHOOD_ASSESSMENT")
     private String likelihoodAssessment;
 
-    @RequiredOnPage(value = 7, message = "Enter the risk of serious harm")
+    @RequiredOnPage(value = 7, message = "Specify the risk of serious harm")
     @JsonProperty("ROSH_LEVEL")
     private String riskOfSeriousHarm;
 
@@ -244,7 +244,7 @@ public class OralReportData extends ReportGeneratorWizardData {
     @JsonProperty("ROSH_EVIDENCE")
     private String roshEvidence;
 
-    @RequiredOnPage(value = 7, message = "Enter the response to previous supervision")
+    @RequiredOnPage(value = 7, message = "Specify the response to previous supervision")
     @JsonProperty("PREVIOUS_SUPERVISION_RESPONSE")
     private String previousSupervisionResponse;
 
