@@ -53,14 +53,23 @@
 
 </div>
 
-@helper.form(action = relative(routes.OralReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
-@CSRF.formField
+    @helper.form(action = relative(routes.OralReportController.wizardPost()), 'id -> "ndForm", 'novalidate -> "") {
+        @CSRF.formField
 
-<input type="hidden" name="jumpNumber" id="jumpNumber"/>
-<input type="hidden" name="pageNumber" id="pageNumber" value="@reviewPage"/>
+        <input type="hidden" name="jumpNumber" id="jumpNumber"/>
+        <input type="hidden" name="pageNumber" id="pageNumber" value="@reviewPage"/>
 
-@commonFields(reportForm, encrypter)
-}
+        @commonFields(reportForm, encrypter)
+        @page2Fields(reportForm, encrypter)
+        @page3Fields(reportForm, encrypter)
+        @page4Fields(reportForm)
+        @page5Fields(reportForm)
+        @page6Fields(reportForm)
+        @page7Fields(reportForm)
+        @page8Fields(reportForm)
+        @page9Fields(reportForm)
+        @page11Fields(reportForm, encrypter)
+    }
 }
 
 <script type="text/javascript">
