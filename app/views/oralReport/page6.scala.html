@@ -58,15 +58,17 @@
         <fieldset class="govuk-fieldset">
             <legend class="govuk-fieldset__legend govuk-label">Select any factors relating to offending behaviour and the individual’s need, including any protective factors.</legend>
             <div class="govuk-checkboxes" data-module="checkboxes">
-                @checkboxDetailsField(reportForm, "issueAccommodation", "Accommodation", "Provide a brief assessment of accommodation")
-                @checkboxDetailsField(reportForm, "issueEmployment", "Employment, training and education", "Provide a brief assessment of employment, training and education")
-                @checkboxDetailsField(reportForm, "issueFinance", "Finance", "Provide a brief assessment of finances")
-                @checkboxDetailsField(reportForm, "issueRelationships", "Relationships", "Provide a brief assessment of relationships")
-                @checkboxDetailsField(reportForm, "issueSubstanceMisuse", "Substance misuse", "Provide a brief assessment of substance misuse")
-                @checkboxDetailsField(reportForm, "issueHealth", "Physical & mental health", "Provide a brief assessment of physical & mental health")
-                @checkboxDetailsField(reportForm, "issueBehaviour", "Thinking & behaviour", "Provide a brief assessment of thinking & behaviour")
-                @checkboxDetailsField(reportForm, "issueMaturity", "Maturity", "Provide a brief assessment of maturity")
-                @checkboxDetailsField(reportForm, "issueOther", "Other (Please specify below)", "Provide a brief assessment of other issues")
+                @checkbox(reportForm("interviewInformationSource"), '_label -> "Interview")
+
+                @checkbox(reportForm("issueAccommodation"), '_label -> "Accommodation")
+                @checkbox(reportForm("issueEmployment"), '_label -> "Employment, training and education")
+                @checkbox(reportForm("issueFinance"), '_label -> "Finance")
+                @checkbox(reportForm("issueRelationships"), '_label -> "Relationships")
+                @checkbox(reportForm("issueSubstanceMisuse"), '_label -> "Substance misuse")
+                @checkbox(reportForm("issueHealth"), '_label -> "Physical & mental health")
+                @checkbox(reportForm("issueBehaviour"), '_label -> "Thinking & behaviour")
+                @checkbox(reportForm("issueMaturity"), '_label -> "Maturity")
+                @checkbox(reportForm("issueOther"), '_label -> "Other")
             </div>
         </fieldset>
     </div>
@@ -85,14 +87,9 @@
         "yes" -> "Yes",
         "no" -> "No"
         ),
-        Symbol("_inline") -> "true",
-        Symbol("data-aria-controls") -> "experience-trauma"
+        Symbol("_inline") -> "true"
         )
     </fieldset>
-
-    <div class="govuk-radios__conditional govuk-radios__conditional--hidden govuk-!-margin-top-2" id="experience-trauma-yes">
-        @textarea(reportForm("experienceTraumaDetails"), '_label -> "Experience of trauma", '_hint -> traumaGuidance)
-    </div>
 </div>
 
 <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
@@ -109,13 +106,12 @@
         "yes" -> "Yes",
         "no" -> "No"
         ),
-        Symbol("_inline") -> "true",
-        Symbol("data-aria-controls") -> "caring-responsibilities"
+        Symbol("_inline") -> "true"
         )
     </fieldset>
 
-    <div class="govuk-radios__conditional govuk-radios__conditional--hidden govuk-!-margin-top-2" id="caring-responsibilities-yes">
-        @textarea(reportForm("caringResponsibilitiesDetails"), '_label -> "Caring responsibilities", '_hint -> caringResponsibilitiesGuidance)
-    </div>
+</div>
+
+@textarea(reportForm("offenderAssessmentEvidence"), '_label -> "Evidence for assessment")
 
 }
