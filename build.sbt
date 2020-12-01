@@ -52,7 +52,7 @@ libraryDependencies ++= Seq(
   "info.cukes" % "cucumber-java" % "1.2.2" % "test",
   "info.cukes" % "cucumber-junit" % "1.2.2" % "test",
 
-  ("org.languagetool" % "language-en" % "4.6").exclude("com.typesafe.akka", "akka-actor_2.11")
+  ("org.languagetool" % "language-en" % "4.9").exclude("com.typesafe.akka", "akka-actor_2.11")
 )
 
 excludeDependencies ++= Seq(
