@@ -5,7 +5,7 @@ defaults: &defaults
     # fixes issue with compatible issue with v12.18.3 and graceful-fs webjar
     - image: circleci/openjdk@sha256:0ab7db4ecdc5966baaa44f64075725c22a53dc63922492c26cabd98b7c961ae0
 
-version: 2
+version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@1.4.0
