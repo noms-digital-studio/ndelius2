@@ -12,8 +12,8 @@ name := "ndelius2"
 
 organization := "uk.gov.justice.digital"
 
-version := conf.getString("app.version")
-version += sys.env.getOrElse("CIRCLE_BUILD_NUM", "SNAPSHOT")
+version := sys.env.getOrElse("APP_VERSION",
+  conf.getString("app.version") + sys.env.getOrElse("CIRCLE_BUILD_NUM", "SNAPSHOT"))
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava, SbtWeb, SbtJsEngine).configs( IntegrationTest )
 
