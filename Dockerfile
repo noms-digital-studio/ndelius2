@@ -1,19 +1,13 @@
-FROM openjdk:8
+FROM openjdk:8-jre-slim
 
-MAINTAINER Nick Talbot <nick.talbot@digital.justice.gov.uk>
+COPY target/scala-2.12/ndelius2-*.jar /root/app.jar
 
-RUN addgroup --gid 2000 --system appgroup && \
-    adduser --uid 2000 --system appuser --gid 2000
+RUN apt-get update && \
+    apt-get install -y curl && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /app
-WORKDIR /app
+HEALTHCHECK CMD curl --fail http://localhost:9000/newTech/healthcheck || exit 1
 
+EXPOSE 9000
 
-COPY ndelius2.jar /app/ndelius2.jar
-
-RUN chown -R appuser:appgroup /app
-
-USER 2000
-
-ENTRYPOINT ["java", "-jar", "/app/ndelius2.jar"]
-
+CMD ["java", "-jar", "/root/app.jar"]

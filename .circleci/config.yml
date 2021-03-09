@@ -6,6 +6,56 @@ defaults: &defaults
     - image: circleci/openjdk@sha256:0ab7db4ecdc5966baaa44f64075725c22a53dc63922492c26cabd98b7c961ae0
 
 version: 2
+
+orbs:
+  aws-cli: circleci/aws-cli@1.4.0
+  aws-ecr: circleci/aws-ecr@6.15.3
+  aws-ecs: circleci/aws-ecs@2.0.0
+  hmpps: ministryofjustice/hmpps@2.2
+  mem: circleci/rememborb@0.0.1
+  queue: eddiewebb/queue@1.5.0
+
+commands:
+  assume_role:
+    parameters:
+      role-arn:
+        type: string
+    steps:
+      - run:
+          name: Assume IAM role
+          # This is a workaround for the aws-ecs/update-service CircleCI command not taking a profile parameter, and the underlying aws cli command not honouring the AWS_PROFILE env var.
+          # See https://github.com/CircleCI-Public/aws-ecs-orb/issues/41 for further details
+          command: |
+            temp_role=$(aws sts assume-role --role-arn <<parameters.role-arn>> --role-session-name "circleci-$CIRCLE_BUILD_NUM-$RANDOM")
+            echo "export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)" >> $BASH_ENV; source $BASH_ENV;
+            echo "export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)" >> $BASH_ENV; source $BASH_ENV;
+            echo "export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)" >> $BASH_ENV; source $BASH_ENV;
+            aws configure set aws_session_token "$(echo $temp_role | jq .Credentials.SessionToken | xargs)" --profile default
+  deploy_to_ecs:
+    parameters:
+      role-arn:
+        type: string
+      family:
+        type: string
+      cluster-name:
+        type: string
+      service-name:
+        type: string
+      env-name:
+        type: string
+    steps:
+      - mem/recall:
+          env_var: APP_VERSION
+      - aws-cli/setup
+      - assume_role:
+          role-arn: <<parameters.role-arn>>
+      - aws-ecs/update-service:
+          family: <<parameters.family>>
+          cluster-name: <<parameters.cluster-name>>
+          service-name: <<parameters.service-name>>
+          container-image-name-updates: container=???,tag=$APP_VERSION
+          verify-revision-is-deployed: true
+
 general:
   branches:
 jobs:
@@ -168,6 +218,7 @@ jobs:
     artifacts:
         <<: *defaults
         steps:
+            - hmpps/create_app_version
             - attach_workspace:
                   at: ~/ndelius-new-tech
             - restore_cache:
@@ -178,7 +229,7 @@ jobs:
                 name: Run sbt assembly
                 command: |
                   export _JAVA_OPTIONS="-Xms512m -Xmx1224m"
-                  export SBT_OPTS="${SBT_OPTS} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
+                  export SBT_OPTS="${SBT_OPTS} -Dapp.version=${VERSION} -Dsbt.jse.engineType=Node -Dsbt.jse.command=$(which nodejs)"
                   sbt 'set test in assembly := {}' assembly < /dev/null
             - save_cache:
                 key: v2-ndelius-new-tech-{{ checksum "build.sbt" }}
@@ -190,17 +241,46 @@ jobs:
                 command: |
                   mkdir -p ./target/artifacts
                   rm target/scala-2.12/ndelius2_*-web-assets.jar
-                  mv target/scala-2.12/*.jar ./target/artifacts/
-                  ls -1 ./target/artifacts/ndelius2-*.jar | sed 's/^.*ndelius2-\(.*\)\.jar.*$/\1/' > ./target/artifacts/version.txt
+                  cp target/scala-2.12/*.jar ./target/artifacts/
                   cp ./target/artifacts/ndelius2*.jar ./target/artifacts/ndelius2.jar
             - persist_to_workspace:
                 root: ./target/artifacts/
                 paths:
                   - ./ndelius2.jar
-                  - ./version.txt
             - store_artifacts:
                 path: target/artifacts
                 destination: jars
+            - aws-cli/setup
+            - assume_role:
+                role-arn: $ROLE_ARN_PUSH_DOCKER_IMAGE
+            - setup_remote_docker:
+                docker_layer_caching: true
+            - aws-ecr/build-and-push-image:
+                checkout: false
+                repo: hmpps/new-tech-web
+                tag: $VERSION
+            - when:
+                condition:
+                  equal: [ master, << pipeline.git.branch >> ]
+                steps:
+                  - aws-ecr/build-and-push-image:
+                      checkout: false
+                      repo: hmpps/new-tech-web
+                      tag: latest
+    deploy_to_dev:
+      docker:
+        - image: circleci/python
+      steps:
+        - queue/until_front_of_line:
+            consider-branch: false
+            time: '10'
+        - deploy_to_ecs:
+            role-arn: $ROLE_ARN_DEPLOY_DEV
+            cluster-name: dlc-dlc-dev-ecscluster-private-ecs
+            service-name: dlc-dev-new-tech-ui-service
+            family: dlc-dev-new-tech-ui-task-definition
+            env-name: delius-core-dev
+  # ... add more environments here as needed
 
 workflows:
     version: 2
