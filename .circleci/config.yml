@@ -253,7 +253,7 @@ jobs:
                 destination: jars
             - aws-cli/setup
             - assume_role:
-                role-arn: $ROLE_ARN_PUSH_DOCKER_IMAGE
+                role-arn: $ROLE_ARN
             - setup_remote_docker:
                 docker_layer_caching: true
             - aws-ecr/build-and-push-image:
@@ -307,6 +307,8 @@ workflows:
                 requires:
                     - build
             - artifacts:
+                context:
+                    - hmpps-delius-push-to-ecr
                 requires:
                     - build
                     - bddOther
