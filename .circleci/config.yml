@@ -277,9 +277,7 @@ jobs:
           family: $AWS_ECS_ENV_NAME-new-tech-task-definition
           service-name: $AWS_ECS_ENV_NAME-new-tech-service
           container-image-name-updates: container=new-tech,tag=$APP_VERSION
-          container-env-var-updates: >
-            << parameters.common_vars >>
-            << parameters.env_vars >>
+          container-env-var-updates: << parameters.common_vars >><< parameters.env_vars >>
           verify-revision-is-deployed: true
 
 workflows:
