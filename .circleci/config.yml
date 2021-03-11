@@ -245,6 +245,22 @@ jobs:
                 repo: hmpps/new-tech-web
                 tag: latest
   deploy:
+    parameters:
+      common_vars:
+        type: string
+        default: >
+          container=new-tech,name=PARAMS_USER_TOKEN_VALID_DURATION,   value=2h,
+          container=new-tech,name=STORE_PROVIDER,                     value=alfresco,
+          container=new-tech,name=STORE_ALFRESCO_USER,                value=N00,
+          container=new-tech,name=DELIUS_API_BASE_URL,                value=http://community-api.ecs.cluster:8080/api/,
+          container=new-tech,name=PDF_GENERATOR_URL,                  value=http://pdf-generator.ecs.cluster:8080/,
+          container=new-tech,name=FEEDBACK_FORM_URL,                  value=https://goo.gl/forms/6HezOsoLUEDYkDgX2,
+          container=new-tech,name=FEEDBACK_PAROM1_FORM_URL,           value=https://goo.gl/forms/tau33AGsZhYCbTpk1,
+          container=new-tech,name=FEEDBACK_SEARCH_FORM_URL,           value=https://forms.gle/iWpkM21KtNDgzFAm7,
+          container=new-tech,name=FEEDBACK_OFFENDER_SUMMARY_FORM_URL, value=https://goo.gl/forms/SVgL3CuCNpvkuHxJ2,
+      env_vars:
+        type: string
+        default: container=new-tech,name=ENVIRONMENT_NAME,value=$AWS_ECS_ENV_NAME
     docker:
       - image: circleci/python
     steps:
@@ -261,9 +277,9 @@ jobs:
           family: $AWS_ECS_ENV_NAME-new-tech-task-definition
           service-name: $AWS_ECS_ENV_NAME-new-tech-service
           container-image-name-updates: container=new-tech,tag=$APP_VERSION
-          container-env-var-updates: "\
-            container=new-tech,name=PARAMS_USER_TOKEN_VALID_DURATION,value=2h,\
-            container=new-tech,name=TEST,value=ABC123"
+          container-env-var-updates: >
+            << parameters.common_vars >>
+            << parameters.env_vars >>
           verify-revision-is-deployed: true
 
 workflows:
@@ -302,6 +318,12 @@ workflows:
       - deploy:
           name: deploy_to_dev
           context: hmpps-delius-deploy-to-ecs-dev
+          env_vars: >
+            container=new-tech,name=OFFENDER_SEARCH_PROVIDER,       value=probation-offender-search,
+            container=new-tech,name=PROBATION_OFFENDER_SEARCH_URL,  value=https://probation-offender-search-dev.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=PRISONER_API_PROVIDER,          value=elite,
+            container=new-tech,name=HMPPS_AUTH_BASE_URL,            value=https://sign-in-dev.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=NOMIS_API_BASE_URL,             value=https://api-dev.prison.service.justice.gov.uk/
           requires:
             - artifacts
       - deploy:
