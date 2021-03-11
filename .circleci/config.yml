@@ -272,7 +272,6 @@ jobs:
       - aws-cli/setup
       - assume_role:
           role-arn: $AWS_ROLE_ARN
-      - run: echo "<< parameters.common_vars >><< parameters.env_vars >>"
       - aws-ecs/update-service:
           cluster-name: $AWS_ECS_CLUSTER_NAME
           family: $AWS_ECS_ENV_NAME-new-tech-task-definition
@@ -286,34 +285,34 @@ workflows:
   build-deploy-test:
     jobs:
       - build
-#      - bddOther:
-#          requires:
-#            - build
-#      - bddParom1:
-#          requires:
-#            - build
-#      - bddSFR:
-#          requires:
-#            - build
-#      - bddOffenderSummary:
-#          requires:
-#            - build
-#      - bddNationalSearch:
-#          requires:
-#            - build
-#      - unitTests:
-#          requires:
-#            - build
+      - bddOther:
+          requires:
+            - build
+      - bddParom1:
+          requires:
+            - build
+      - bddSFR:
+          requires:
+            - build
+      - bddOffenderSummary:
+          requires:
+            - build
+      - bddNationalSearch:
+          requires:
+            - build
+      - unitTests:
+          requires:
+            - build
       - artifacts:
           context: hmpps-delius-push-to-ecr
           requires:
             - build
-#            - bddOther
-#            - bddParom1
-#            - bddSFR
-#            - bddOffenderSummary
-#            - bddNationalSearch
-#            - unitTests
+            - bddOther
+            - bddParom1
+            - bddSFR
+            - bddOffenderSummary
+            - bddNationalSearch
+            - unitTests
       - deploy:
           name: deploy_to_dev
           context: hmpps-delius-deploy-to-ecs-dev
@@ -328,6 +327,12 @@ workflows:
       - deploy:
           name: deploy_to_test
           context: hmpps-delius-deploy-to-ecs-test
+          env_vars: >-
+            container=new-tech,name=OFFENDER_SEARCH_PROVIDER,       value=probation-offender-search,
+            container=new-tech,name=PROBATION_OFFENDER_SEARCH_URL,  value=https://probation-offender-search-dev.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=PRISONER_API_PROVIDER,          value=elite,
+            container=new-tech,name=HMPPS_AUTH_BASE_URL,            value=https://sign-in-dev.hmpps.service.justice.gov.uk/,
+            container=new-tech,name=NOMIS_API_BASE_URL,             value=https://api-dev.prison.service.justice.gov.uk/
           requires:
             - deploy_to_dev
           filters:
