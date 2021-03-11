@@ -249,7 +249,7 @@ jobs:
       common_vars:
         type: string
         default: >
-          container=new-tech,name=PARAMS_USER_TOKEN_VALID_DURATION,   value=2h,
+          container=new-tech,name=PARAMS_USER_TOKEN_VALID_DURATION,   value=1h,
           container=new-tech,name=STORE_PROVIDER,                     value=alfresco,
           container=new-tech,name=STORE_ALFRESCO_USER,                value=N00,
           container=new-tech,name=DELIUS_API_BASE_URL,                value=http://community-api.ecs.cluster:8080/api/,
@@ -272,12 +272,13 @@ jobs:
       - aws-cli/setup
       - assume_role:
           role-arn: $AWS_ROLE_ARN
+      - run: echo "<< parameters.common_vars >><< parameters.env_vars >>"
       - aws-ecs/update-service:
           cluster-name: $AWS_ECS_CLUSTER_NAME
           family: $AWS_ECS_ENV_NAME-new-tech-task-definition
           service-name: $AWS_ECS_ENV_NAME-new-tech-service
           container-image-name-updates: container=new-tech,tag=$APP_VERSION
-          container-env-var-updates: << parameters.common_vars >><< parameters.env_vars >>
+          container-env-var-updates: << parameters.common_vars >> << parameters.env_vars >>
           verify-revision-is-deployed: true
 
 workflows:
