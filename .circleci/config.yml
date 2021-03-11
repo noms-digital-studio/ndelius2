@@ -248,7 +248,7 @@ jobs:
     parameters:
       common_vars:
         type: string
-        default: >
+        default: >-
           container=new-tech,name=PARAMS_USER_TOKEN_VALID_DURATION,   value=1h,
           container=new-tech,name=STORE_PROVIDER,                     value=alfresco,
           container=new-tech,name=STORE_ALFRESCO_USER,                value=N00,
@@ -317,7 +317,7 @@ workflows:
       - deploy:
           name: deploy_to_dev
           context: hmpps-delius-deploy-to-ecs-dev
-          env_vars: >
+          env_vars: >-
             container=new-tech,name=OFFENDER_SEARCH_PROVIDER,       value=probation-offender-search,
             container=new-tech,name=PROBATION_OFFENDER_SEARCH_URL,  value=https://probation-offender-search-dev.hmpps.service.justice.gov.uk/,
             container=new-tech,name=PRISONER_API_PROVIDER,          value=elite,
