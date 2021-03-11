@@ -286,34 +286,34 @@ workflows:
   build-deploy-test:
     jobs:
       - build
-      - bddOther:
-          requires:
-            - build
-      - bddParom1:
-          requires:
-            - build
-      - bddSFR:
-          requires:
-            - build
-      - bddOffenderSummary:
-          requires:
-            - build
-      - bddNationalSearch:
-          requires:
-            - build
-      - unitTests:
-          requires:
-            - build
+#      - bddOther:
+#          requires:
+#            - build
+#      - bddParom1:
+#          requires:
+#            - build
+#      - bddSFR:
+#          requires:
+#            - build
+#      - bddOffenderSummary:
+#          requires:
+#            - build
+#      - bddNationalSearch:
+#          requires:
+#            - build
+#      - unitTests:
+#          requires:
+#            - build
       - artifacts:
           context: hmpps-delius-push-to-ecr
           requires:
             - build
-            - bddOther
-            - bddParom1
-            - bddSFR
-            - bddOffenderSummary
-            - bddNationalSearch
-            - unitTests
+#            - bddOther
+#            - bddParom1
+#            - bddSFR
+#            - bddOffenderSummary
+#            - bddNationalSearch
+#            - unitTests
       - deploy:
           name: deploy_to_dev
           context: hmpps-delius-deploy-to-ecs-dev
