@@ -261,8 +261,10 @@ jobs:
           family: $AWS_ECS_ENV_NAME-new-tech-task-definition
           service-name: $AWS_ECS_ENV_NAME-new-tech-service
           container-image-name-updates: container=new-tech,tag=$APP_VERSION
+          container-env-var-updates: >
+            container=new-tech,name=PARAMS_USER_TOKEN_VALID_DURATION,value=2h,
+            container=new-tech,name=TEST,value=ABC123
           verify-revision-is-deployed: true
-  # ... add more environments here as needed
 
 workflows:
   version: 2
